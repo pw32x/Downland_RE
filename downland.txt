@@ -86,7 +86,7 @@ Coco Ram:002d                   ??          ??
 Coco Ram:002e                   ??          ??                                      
                             Player_CantJumpAfterLanding...;XREF[6,0]:   c542,c722,c74d,c770,c873,c877
 Coco Ram:002f                   ??          ??                                      
-                            SomeValue_0x30:               ;XREF[4,0]:   c3cb,c54a,c54c,c550
+                            Player_DeathPauseInTheAirTi...;XREF[4,0]:   c3cb,c54a,c54c,c550
 Coco Ram:0030                   ??          ??                                      
                             Player_IsJumping_0x31:        ;XREF[3,0]:   c76a,c76e,c7c7
 Coco Ram:0031                   ??          ??                                      
@@ -563,16 +563,17 @@ Coco Ram:01a5                   db          ??                                  
                                                                                     ;resets when changing rooms
                             ;facing left: 0
                             ;facing right: ff
-                            Player_FacingDirection_0x1a6: ;XREF[14,0]:  c3f6,c44d,c4d8,c558,c753,c75c,c788,c7db
-                                                          ;             c7e1,c835,c83d,c978,c988,c9bf
+                            Player_FacingDirection_0x1a6: ;XREF[15,0]:  c3f6,c44d,c4d8,c558,c55b,c753,c75c,c788
+                                                          ;             c7db,c7e1,c835,c83d,c978,c988,c9bf
 Coco Ram:01a6                   undefined1  ??                                      
                             Player_DeathAndRegenMiniCou...;XREF[6,0]:   c566,c5ac,c5c3,c6ab,c6cd,c6d2
 Coco Ram:01a7                   undefined1  ??                                      ;used for pausing between deaths and ...
+                            ;Alive: 0
+                            ;Dead: 1
+                            ;Regenerating: FF
                             Player_State_AliveDeadRegen...;XREF[11,0]:  c3d1,c502,c52e,c56a,c575,c5b2,c6b4,c6fd
                                                           ;             c9a9,c9b9,cbfc
-Coco Ram:01a8                   db          ??                                      ;Alive: 0
-                                                                                    ;Dead: 1
-                                                                                    ;Regenerating: FF
+Coco Ram:01a8                   db          ??                                      
                             Player_NumRowsInSprite_0x1a9: ;XREF[8,0]:   c391,c5b8,c5bf,c701,ca37,ce72,d899,d8b9
 Coco Ram:01a9                   db          ??                                      
                             ;Player Physics Data
@@ -17337,7 +17338,7 @@ ROM:c3ae        39              RTS
                             LAB_c3af:                     ;XREF[2,0]:   c39f,c3a9
 ROM:c3af        86ff            LDA         #0xff                                   
 ROM:c3b1        39              RTS                                                 
-                            LAB_c3b2:                     ;XREF[5,0]:   c3c3,c56c,c5ae,c5c5,c9b2
+                            Jump_Return:                  ;XREF[5,0]:   c3c3,c56c,c5ae,c5c5,c9b2
 ROM:c3b2        39              RTS                                                 
                             ;************************************************************************************************
                             ;*                                           FUNCTION                                           *
@@ -17356,10 +17357,10 @@ ROM:c3bc        c63f            LDB         #Coco Ram:NumberOfDropsToProcess    
 ROM:c3be        f7ff20          STB         PIA1_A_DATA_REG__FF20                   
                             LAB_c3c1:                     ;XREF[1,0]:   c3ba
 ROM:c3c1        a63b            LDA         -0x5,Y=>Coco Ram:Player_SomeGameState...;= ??
-ROM:c3c3        27ed            BEQ         LAB_c3b2                                
+ROM:c3c3        27ed            BEQ         Jump_IsAlreadyClimbing::Jump_Return     ;inactive, so just return
 ROM:c3c5        8101            CMPA        #0x1                                    
 ROM:c3c7        102700c1        LBEQ        LAB_c48c                                
-ROM:c3cb        9630            LDA         <Coco Ram:SomeValue_0x30                ;= ??
+ROM:c3cb        9630            LDA         <Coco Ram:Player_DeathPauseInTheAirTimer;= ??
 ROM:c3cd        1026017b        LBNE        LAB_c54c                                
 ROM:c3d1        a63e            LDA         -0x2,Y=>Coco Ram:Player_State_AliveDe...;= ??
 ROM:c3d3        102b02e1        LBMI        LAB_c6b8                                
@@ -17383,10 +17384,10 @@ ROM:c3f8        2604            BNE         LAB_c3fe
 ROM:c3fa        33c90168        LEAU        0x168,U                                 
                             LAB_c3fe:                     ;XREF[2,0]:   c3f4,c3f8
 ROM:c3fe        ae2c            LDX         0xc,Y=>Coco Ram:PlayerY_PreviousVideo...;= ??
-ROM:c400        308820          LEAX        0x20,X                                  
+ROM:c400        308820          LEAX        0x20,X                                  ;one pixel under
 ROM:c403        3420            PSHS         Y                                      
 ROM:c405        108e0074        LDY         #0x74                                   
-ROM:c409        8605            LDA         #0x5                                    
+ROM:c409        8605            LDA         #0x5                                    ;five lines? 
 ROM:c40b        9726            STA         <Coco Ram:UtilityCounter_0x26           ;= ??
                             LAB_c40d:                     ;XREF[1,0]:   c42e
                                                           ; FWD[4,0]:   0168,0169,016b,016c
@@ -17408,7 +17409,7 @@ ROM:c421        a402            ANDA        0x2,X
 ROM:c423        aa891802        ORA         0x1802,X=>Coco Ram:DAT_1822             ;= ??
                                                           ; FWD[2,0]:   0076,0079
 ROM:c427        a7a0            STA         ,Y+=>Coco Ram:DAT_0076                  ;= ??
-ROM:c429        308860          LEAX        0x60,X                                  
+ROM:c429        308860          LEAX        0x60,X                                  ;three pixels below
 ROM:c42c        0a26            DEC         <Coco Ram:UtilityCounter_0x26           ;= ??
 ROM:c42e        26dd            BNE         LAB_c40d                                
 ROM:c430        3520            PULS         Y                                      
@@ -17466,17 +17467,19 @@ ROM:c498        8d4d            BSR         ComputeVideoPageDestination_Maybe   
 ROM:c49a        30890200        LEAX        0x200,X                                 ;sixteen lines underneath X, maybe
 ROM:c49e        cec50d          LDU         #SomeFourBitPatternTable                ;= 0000001111000000b
 ROM:c4a1        ecc6            LDD         A,U=>SomeFourBitPatternTable            ;= 0000001111000000b
+                            ;
+                            ;detecting whether we're standing or not, maybe
 ROM:c4a3        a4891800        ANDA        0x1800,X=>Coco Ram:DAT_3280             ;= ??
 ROM:c4a7        e4891801        ANDB        0x1801,X=>Coco Ram:DAT_3281             ;= ??
 ROM:c4ab        10931b          CMPD        <Coco Ram:ZeroValue                     ;= ??
-ROM:c4ae        270e            BEQ         LAB_c4be                                
+ROM:c4ae        270e            BEQ         Jump_HandleFall                         
 ROM:c4b0        3404            PSHS         B                                      
 ROM:c4b2        bdca9b          JSR         SomeWeirdBitShiftingFunction            ;byte SomeWeirdBitShiftingFunction(by...
 ROM:c4b5        3502            PULS         A                                      
 ROM:c4b7        2673            BNE         Jump_IsClimbing                         
 ROM:c4b9        bdca9b          JSR         SomeWeirdBitShiftingFunction            ;byte SomeWeirdBitShiftingFunction(by...
 ROM:c4bc        266e            BNE         Jump_IsClimbing                         
-                            LAB_c4be:                     ;XREF[1,0]:   c4ae
+                            Jump_HandleFall:              ;XREF[1,0]:   c4ae
 ROM:c4be        86ff            LDA         #0xff                                   
 ROM:c4c0        972d            STA         <Coco Ram:Player_IsTouchingGround_May...;= ??
 ROM:c4c2        eca4            LDD         ,Y=>Coco Ram:Player_SpeedY_0x1aa        ;= ??
@@ -17493,9 +17496,9 @@ ROM:c4d8        a63c            LDA         -0x4,Y=>Coco Ram:Player_FacingDirect
 ROM:c4da        2b1b            BMI         LAB_c4f7                                
 ROM:c4dc        ec22            LDD         0x2,Y=>Coco Ram:Player_SpeedX_0x1ac     ;= ??
 ROM:c4de        c30001          ADDD        #0x1                                    
-ROM:c4e1        2b1d            BMI         LAB_c500                                
+ROM:c4e1        2b1d            BMI         Jump_SetPlayerYSpeed                    
 ROM:c4e3        dc1b            LDD         <Coco Ram:ZeroValue                     ;= ??
-ROM:c4e5        2019            BRA         LAB_c500                                
+ROM:c4e5        2019            BRA         Jump_SetPlayerYSpeed                    
                             ;************************************************************************************************
                             ;*                                           FUNCTION                                           *
                             ;************************************************************************************************
@@ -17514,14 +17517,14 @@ ROM:c4f6        39              RTS
                             LAB_c4f7:                     ;XREF[1,0]:   c4da
 ROM:c4f7        ec22            LDD         0x2,Y=>Coco Ram:Player_SpeedX_0x1ac     ;= ??
 ROM:c4f9        c3ffff          ADDD        #0xffff                                 
-ROM:c4fc        2a02            BPL         LAB_c500                                
+ROM:c4fc        2a02            BPL         Jump_SetPlayerYSpeed                    
 ROM:c4fe        dc1b            LDD         <Coco Ram:ZeroValue                     ;= ??
-                            LAB_c500:                     ;XREF[3,0]:   c4e1,c4e5,c4fc
+                            Jump_SetPlayerYSpeed:         ;XREF[3,0]:   c4e1,c4e5,c4fc
 ROM:c500        ed22            STD         0x2,Y=>Coco Ram:Player_SpeedX_0x1ac     ;= ??
                             LAB_c502:                     ;XREF[1,0]:   c4d6
 ROM:c502        a63e            LDA         -0x2,Y=>Coco Ram:Player_State_AliveDe...;= ??
-ROM:c504        2669            BNE         LAB_c56f                                
-                            LAB_c506:                     ;XREF[1,0]:   c571
+ROM:c504        2669            BNE         Jump_PlayerIsAlive                      
+                            Jump_NotTouchingGround:       ;XREF[1,0]:   c571
 ROM:c506        7ec783          JMP         LAB_c783                                
                             SomeKindOfHorizontalBitOffs...;XREF[8,0]:   c4e7,c4f0,c921,c92a,cac4,cacd,cb4d,cb56
 ROM:c509        00              db          0h                                      
@@ -17555,7 +17558,7 @@ ROM:c52b        39              RTS
                             Jump_IsClimbing:              ;XREF[3,0]:   c494,c4b7,c4bc
 ROM:c52c        0f2d            CLR         <Coco Ram:Player_IsTouchingGround_May...;= ??
 ROM:c52e        a63e            LDA         -0x2,Y=>Coco Ram:Player_State_AliveDe...;= ??
-ROM:c530        263d            BNE         LAB_c56f                                
+ROM:c530        263d            BNE         Jump_PlayerIsAlive                      
 ROM:c532        eca4            LDD         ,Y=>Coco Ram:Player_SpeedY_0x1aa        ;= ??
 ROM:c534        10830100        CMPD        #0x100                                  
 ROM:c538        102601dc        LBNE        BigInitFunction_Maybe::Jump_PlayerLan...
@@ -17565,31 +17568,34 @@ ROM:c53e        6f35            CLR         -0xb,Y=>Coco Ram:Player_IsClimbingRo
 ROM:c540        0f2c            CLR         <Coco Ram:Player_JumpUpInTheAirCounte...;= ??
 ROM:c542        0f2f            CLR         <Coco Ram:Player_CantJumpAfterLanding...;= ??
 ROM:c544        962d            LDA         <Coco Ram:Player_IsTouchingGround_May...;= ??
-ROM:c546        271c            BEQ         LAB_c564                                
+ROM:c546        271c            BEQ         Jump_PlayerTouchingGround               
 ROM:c548        8632            LDA         #0x32                                   
-ROM:c54a        9730            STA         <Coco Ram:SomeValue_0x30                ;= ??
+ROM:c54a        9730            STA         <Coco Ram:Player_DeathPauseInTheAirTimer;= ??
                             LAB_c54c:                     ;XREF[1,0]:   c3cd
-ROM:c54c        0a30            DEC         <Coco Ram:SomeValue_0x30                ;= ??
-ROM:c54e        2714            BEQ         LAB_c564                                
-ROM:c550        9630            LDA         <Coco Ram:SomeValue_0x30                ;= ??
-ROM:c552        8404            ANDA        #0x4                                    
-ROM:c554        2705            BEQ         LAB_c55a+1                              
-ROM:c556        86ff            LDA         #0xff                                   
+ROM:c54c        0a30            DEC         <Coco Ram:Player_DeathPauseInTheAirTimer;= ??
+ROM:c54e        2714            BEQ         Jump_PlayerTouchingGround               
+ROM:c550        9630            LDA         <Coco Ram:Player_DeathPauseInTheAirTimer;= ??
+ROM:c552        8404            ANDA        #0x4                                    ;use the timer to swap the player dir...
+                                                                                    ;hanging in the air, maybe
+ROM:c554        2705            BEQ         Jump_FaceLeftInTheAir                   
+ROM:c556        86ff            LDA         #0xff                                   ;set facing right
 ROM:c558        a73c            STA         -0x4,Y=>Coco Ram:Player_FacingDirecti...;= ??
-                                                          ;XREF[0,1]:   c554
 ROM:c55a        8c6f3c          CMPX        #0x6f3c                                 
+                            Jump_FaceLeftInTheAir:        ;XREF[1,0]:   c554
+ROM:c55b        6f3c            CLR         -0x4,Y=>Coco Ram:Player_FacingDirecti...;set facing left
+                            LAB_c55d:                     ;XREF[1,0]:   c55a
 ROM:c55d        8602            LDA         #0x2                                    
 ROM:c55f        a738            STA         -0x8,Y=>Coco Ram:Player_CurrentAnimat...;= ??
 ROM:c561        7ec97f          JMP         LAB_c97f                                
-                            LAB_c564:                     ;XREF[2,0]:   c546,c54e
+                            Jump_PlayerTouchingGround:    ;XREF[2,0]:   c546,c54e
 ROM:c564        860a            LDA         #0xa                                    
 ROM:c566        a73d            STA         -0x3,Y=>Coco Ram:Player_DeathAndRegen...;= ??
 ROM:c568        8602            LDA         #0x2                                    
 ROM:c56a        a73e            STA         -0x2,Y=>Coco Ram:Player_State_AliveDe...;= ??
-ROM:c56c        7ec3b2          JMP         LAB_c3b2                                
-                            LAB_c56f:                     ;XREF[2,0]:   c504,c530
+ROM:c56c        7ec3b2          JMP         Jump_IsAlreadyClimbing::Jump_Return     
+                            Jump_PlayerIsAlive:           ;XREF[2,0]:   c504,c530
 ROM:c56f        962d            LDA         <Coco Ram:Player_IsTouchingGround_May...;= ??
-ROM:c571        2693            BNE         LAB_c506                                
+ROM:c571        2693            BNE         Jump_NotTouchingGround                  
 ROM:c573        8db0            BSR         ClearSpeedToZero                        ;undefined ClearSpeedToZero(void)
 ROM:c575        a63e            LDA         -0x2,Y=>Coco Ram:Player_State_AliveDe...;= ??
 ROM:c577        4a              DECA                                                
@@ -17624,7 +17630,7 @@ ROM:c5a6        ce0083          LDU         #0x83
 ROM:c5a9        bdc9a2          JSR         PlayerSpriteDrawFunction_Maybe          ;undefined PlayerSpriteDrawFunction_M...
                             LAB_c5ac:                     ;XREF[1,0]:   c578
 ROM:c5ac        6a3d            DEC         -0x3,Y=>Coco Ram:Player_DeathAndRegen...;= ??
-ROM:c5ae        1026fe00        LBNE        LAB_c3b2                                
+ROM:c5ae        1026fe00        LBNE        Jump_IsAlreadyClimbing::Jump_Return     
 ROM:c5b2        6a3e            DEC         -0x2,Y=>Coco Ram:Player_State_AliveDe...;= ??
 ROM:c5b4        2728            BEQ         ResetTimerTo2048IfAtZeroWhenDied_Maybe  
 ROM:c5b6        860c            LDA         #0xc                                    
@@ -17634,7 +17640,7 @@ ROM:c5bd        8610            LDA         #0x10
 ROM:c5bf        a73f            STA         -0x1,Y=>Coco Ram:Player_NumRowsInSpri...;= ??
 ROM:c5c1        8646            LDA         #0x46                                   
 ROM:c5c3        a73d            STA         -0x3,Y=>Coco Ram:Player_DeathAndRegen...;= ??
-ROM:c5c5        16fdea          LBRA        LAB_c3b2                                
+ROM:c5c5        16fdea          LBRA        Jump_IsAlreadyClimbing::Jump_Return     
                             ;************************************************************************************************
                             ;*                                           FUNCTION                                           *
                             ;************************************************************************************************
@@ -18216,7 +18222,7 @@ ROM:c9a9        a63e            LDA         -0x2,Y=>Coco Ram:Player_State_AliveD
 ROM:c9ab        2b0c            BMI         LAB_c9b9                                
 ROM:c9ad        ee28            LDU         0x8,Y=>Coco Ram:Player_VideoPageDrawD...;= ??
 ROM:c9af        11a32c          CMPU        0xc,Y=>Coco Ram:PlayerY_PreviousVideo...;= ??
-ROM:c9b2        1027f9fc        LBEQ        LAB_c3b2                                
+ROM:c9b2        1027f9fc        LBEQ        Jump_IsAlreadyClimbing::Jump_Return     
 ROM:c9b6        0c48            INC         <Coco Ram:Player_IsMoving_Maybe_0x48    ;= ??
 ROM:c9b8        39              RTS                                                 
                             LAB_c9b9:                     ;XREF[2,0]:   c9a7,c9ab
