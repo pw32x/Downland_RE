@@ -137,7 +137,7 @@ Coco Ram:004a                   ??          ??
                             Player_RegenerationTimer_0x4b:;XREF[5,0]:   c6b0,c6c1,c6c4,c6cb,c6d6
 Coco Ram:004b                   ??          ??                                      
 Coco Ram:004c                   ??          ??                                      
-                            UtilityCounter_0x4d:          ;XREF[12,0]:  c35f,c376,c8bc,caab,cda9,cdb1,cf1f,cf3e
+                            SecondUtilityCounter_0x4d:    ;XREF[12,0]:  c35f,c376,c8bc,caab,cda9,cdb1,cf1f,cf3e
                                                           ;             d18d,d191,d19d,d1b4
 Coco Ram:004d                   ??          ??                                      
                             CurrentVideoMemLocation_0x4e: ;XREF[6,0]:   c09c,c30e,c316,cd11,cd33,d85d
@@ -224,7 +224,13 @@ Coco Ram:007f                   ??          ??
 Coco Ram:0080                   ??          ??                                      
 Coco Ram:0081                   ??          ??                                      
 Coco Ram:0082                   ??          ??                                      
-                            DAT_0083:                     ;XREF[4,0]:   c57f,cdad,cdce,cdd4
+                            ;This is a 48 byte buffer for the player splat sprite
+                            ;and doors. 
+                            ;The splat sprite is 3 bytes for 9 lines, but this space
+                            ;is 3 bytes for 16 lines.
+                            ;The door is 2 bytes for 16 lines.
+                            SpriteDrawingBuffer_0x83:     ;XREF[9,0]:   c57a,c57f,c5a6,cda1,cdad,cdbf,cdc9,cdce
+                                                          ;             cdd4
 Coco Ram:0083                   undefined1  ??                                      
                             DAT_0084:                     ;XREF[3,0]:   c57f,cdd0,cdd6
 Coco Ram:0084                   undefined1  ??                                      
@@ -249,7 +255,7 @@ Coco Ram:0094                   ??          ??
 Coco Ram:0095                   ??          ??                                      
 Coco Ram:0096                   ??          ??                                      
 Coco Ram:0097                   ??          ??                                      
-                            DAT_0098:                     ;XREF[1,0]:   c58e
+                            PlayerSplatSpriteInRam_0x98:  ;XREF[2,0]:   c584,c58e
 Coco Ram:0098                   undefined1  ??                                      
                             DAT_0099:                     ;XREF[1,0]:   c58e
 Coco Ram:0099                   undefined1  ??                                      
@@ -278,7 +284,8 @@ Coco Ram:00af                   ??          ??
 Coco Ram:00b0                   ??          ??                                      
 Coco Ram:00b1                   ??          ??                                      
 Coco Ram:00b2                   ??          ??                                      
-                            HighScoreString_0xb3:         ;XREF[4,0]:   c0e1,c222,c22b,c239
+                            SpriteDrawingBufferEnd_0xb3:  ;XREF[4,0]:   c0e1,c222,c22b,c239
+                            HighScoreString_0xb3:         
 Coco Ram:00b3                   ??          ??                                      
 Coco Ram:00b4                   ??          ??                                      
 Coco Ram:00b5                   ??          ??                                      
@@ -17278,7 +17285,7 @@ ROM:c35e        39              RTS
           ;A             undefined            A                      
           ;B             undefined            B                      
                                                           ;XREF[2,0]:   c348,c5a3
-ROM:c35f        974d            STA         <Coco Ram:UtilityCounter_0x4d           ;= ??
+ROM:c35f        974d            STA         <Coco Ram:SecondUtilityCounter_0x4d     ;= ??
 ROM:c361        d726            STB         <Coco Ram:UtilityCounter_0x26           ;= ??
                             Loop_UpdateRegisters:         ;XREF[1,0]:   c373
 ROM:c363        86ff            LDA         #11111111b                              
@@ -17295,7 +17302,7 @@ ROM:c375        39              RTS
                             ;************************************************************************************************
                             ;undefined DoIdleLoopOnB(void)
                                                           ;XREF[2,0]:   c368,c36f
-ROM:c376        d64d            LDB         <Coco Ram:UtilityCounter_0x4d           ;= ??
+ROM:c376        d64d            LDB         <Coco Ram:SecondUtilityCounter_0x4d     ;= ??
                             Loop_DecrementB:              ;XREF[1,0]:   c379
 ROM:c378        5a              DECB                                                
 ROM:c379        26fd            BNE         Loop_DecrementB                         
@@ -17590,7 +17597,7 @@ ROM:c561        7ec97f          JMP         LAB_c97f
                             Jump_PlayerTouchingGround:    ;XREF[2,0]:   c546,c54e
 ROM:c564        860a            LDA         #0xa                                    
 ROM:c566        a73d            STA         -0x3,Y=>Coco Ram:Player_DeathAndRegen...;= ??
-ROM:c568        8602            LDA         #0x2                                    
+ROM:c568        8602            LDA         #0x2                                    ;set to the mid-air jump frame
 ROM:c56a        a73e            STA         -0x2,Y=>Coco Ram:Player_State_AliveDe...;= ??
 ROM:c56c        7ec3b2          JMP         Jump_IsAlreadyClimbing::Jump_Return     
                             Jump_PlayerIsAlive:           ;XREF[2,0]:   c504,c530
@@ -17600,33 +17607,45 @@ ROM:c573        8db0            BSR         ClearSpeedToZero                    
 ROM:c575        a63e            LDA         -0x2,Y=>Coco Ram:Player_State_AliveDe...;= ??
 ROM:c577        4a              DECA                                                
 ROM:c578        2732            BEQ         LAB_c5ac                                
-ROM:c57a        8e0083          LDX         #0x83                                   
-ROM:c57d        8630            LDA         #0x30                                   
-                            LAB_c57f:                     ;XREF[1,0]:   c582
+                            ;
+                            ;clear from 0x83 to 0xb3 for the
+                            ;sprite drawing buffer
+ROM:c57a        8e0083          LDX         #Coco Ram:SpriteDrawingBuffer_0x83      ;= ??
+ROM:c57d        8630            LDA         #0x30                                   ;clean 48 bytes
+                            Loop_ClearSpriteDrawingBuffer:;XREF[1,0]:   c582
                                                           ; FWD[2,0]:   0083,0084
-ROM:c57f        6f80            CLR         ,X+=>Coco Ram:DAT_0083                  ;= ??
+ROM:c57f        6f80            CLR         ,X+=>Coco Ram:SpriteDrawingBuffer_0x83  ;= ??
 ROM:c581        4a              DECA                                                
-ROM:c582        26fb            BNE         LAB_c57f                                
-ROM:c584        8e0098          LDX         #0x98                                   
-ROM:c587        cedeef          LDU         #SomeUnidentifiedSpritesOrRandomData    ;= 0000010000000000b
-ROM:c58a        861b            LDA         #0x1b                                   ;27
-                            LAB_c58c:                     ;XREF[1,0]:   c591
+ROM:c582        26fb            BNE         Loop_ClearSpriteDrawingBuffer           
+                            ;
+                            ;from 0x98 to 0xb3, load the splat sprite
+ROM:c584        8e0098          LDX         #Coco Ram:PlayerSplatSpriteInRam_0x98   ;= ??
+ROM:c587        cedeef          LDU         #PlayerSplatSprite                      ;= 0000010000000000b
+ROM:c58a        861b            LDA         #0x1b                                   ;27 bytes. 9 lines of 3 bytes each
+                            Loop_LoadUndentifiedData:     ;XREF[1,0]:   c591
                                                           ; FWD[2,0]:   deef,def0
-ROM:c58c        e6c0            LDB         ,U+=>SomeUnidentifiedSpritesOrRandomData;= 0000010000000000b
+ROM:c58c        e6c0            LDB         ,U+=>PlayerSplatSprite                  ;= 0000010000000000b
                                                           ; FWD[2,0]:   0098,0099
-ROM:c58e        e780            STB         ,X+=>Coco Ram:DAT_0098                  ;= ??
+ROM:c58e        e780            STB         ,X+=>Coco Ram:PlayerSplatSpriteInRam_...;= ??
 ROM:c590        4a              DECA                                                
-ROM:c591        26f9            BNE         LAB_c58c                                
-ROM:c593        a626            LDA         0x6,Y=>Coco Ram:PlayerX_0x1b0           ;= ??
-ROM:c595        8403            ANDA        #0x3                                    
-ROM:c597        2707            BEQ         LAB_c5a0                                
-ROM:c599        9726            STA         <Coco Ram:UtilityCounter_0x26           ;= ??
-ROM:c59b        c610            LDB         #0x10                                   
-ROM:c59d        bdcdc9          JSR         FUN_cdc9                                ;undefined FUN_cdc9(undefined param_1...
-                            LAB_c5a0:                     ;XREF[1,0]:   c597
+ROM:c591        26f9            BNE         Loop_LoadUndentifiedData                ;27 bytes
+                            ;
+                            ;
+ROM:c593        a626            LDA         0x6,Y=>Coco Ram:PlayerX_0x1b0           ;	
+ROM:c595        8403            ANDA        #0x3                                    ;get 0 to 3 offset
+                                                                                    ;so, for every four pixels...
+ROM:c597        2707            BEQ         Jump_PlaySplatSound                     ;don't need to adjust if we are on pi...
+                            ;
+                            ;adjust the sprite to draw
+ROM:c599        9726            STA         <Coco Ram:UtilityCounter_0x26           ;pixel offset
+ROM:c59b        c610            LDB         #0x10                                   ;16 lines in the sprite
+ROM:c59d        bdcdc9          JSR         ShiftBitsInSpriteDrawingBuffer          ;undefined ShiftBitsInSpriteDrawingBu...
+                            Jump_PlaySplatSound:          ;XREF[1,0]:   c597
 ROM:c5a0        cc2508          LDD         #0x2508                                 ;setup A and B parameters for splat s...
 ROM:c5a3        bdc35f          JSR         PlaySound                               ;play splat sound
-ROM:c5a6        ce0083          LDU         #0x83                                   
+                            ;
+                            ;perform actual drawing of sprite
+ROM:c5a6        ce0083          LDU         #Coco Ram:SpriteDrawingBuffer_0x83      ;= ??
 ROM:c5a9        bdc9a2          JSR         PlayerSpriteDrawFunction_Maybe          ;undefined PlayerSpriteDrawFunction_M...
                             LAB_c5ac:                     ;XREF[1,0]:   c578
 ROM:c5ac        6a3d            DEC         -0x3,Y=>Coco Ram:Player_DeathAndRegen...;= ??
@@ -18080,7 +18099,7 @@ ROM:c8b7        203e            BRA         LAB_c8f7
           ;param_1       byte                 A                      
                                                           ;XREF[5,0]:   c89a,c8a0,c8e5,c8eb,d007
 ROM:c8b9        bdca9b          JSR         SomeWeirdBitShiftingFunction            ;byte SomeWeirdBitShiftingFunction(by...
-ROM:c8bc        964d            LDA         <Coco Ram:UtilityCounter_0x4d           ;= ??
+ROM:c8bc        964d            LDA         <Coco Ram:SecondUtilityCounter_0x4d     ;= ??
 ROM:c8be        43              COMA                                                
 ROM:c8bf        9434            ANDA        <Coco Ram:SomeValue_0x34                ;= ??
 ROM:c8c1        39              RTS                                                 
@@ -18363,7 +18382,7 @@ ROM:caa4        84aa            ANDA        #10101010b
 ROM:caa6        44              LSRA                                                
 ROM:caa7        9a35            ORA         <Coco Ram:SomeValue_0x35                ;= ??
 ROM:caa9        9834            EORA        <Coco Ram:SomeValue_0x34                ;= ??
-ROM:caab        974d            STA         <Coco Ram:UtilityCounter_0x4d           ;= ??
+ROM:caab        974d            STA         <Coco Ram:SecondUtilityCounter_0x4d     ;= ??
 ROM:caad        9434            ANDA        <Coco Ram:SomeValue_0x34                ;= ??
 ROM:caaf        8455            ANDA        #01010101b                              
 ROM:cab1        39              RTS                                                 
@@ -18810,62 +18829,77 @@ ROM:cd90        c004            SUBB        #0x4
                             LAB_cd92:                     ;XREF[1,0]:   cd8f
 ROM:cd92        3404            PSHS         B                                      
 ROM:cd94        bdd856          JSR         ComputeScreenLocationFromAAndB          ;undefined ComputeScreenLocationFromA...
+                            ;save the drawing location into U
 ROM:cd97        1f03            TFR         B,U                                     
 ROM:cd99        3502            PULS         A                                      
 ROM:cd9b        8403            ANDA        #0x3                                    
-ROM:cd9d        9726            STA         <Coco Ram:UtilityCounter_0x26           ;= ??
+ROM:cd9d        9726            STA         <Coco Ram:UtilityCounter_0x26           ;pixel offset to draw door with?
 ROM:cd9f        3440            PSHS         U                                      
-ROM:cda1        ce0083          LDU         #0x83                                   ;destination to write the door sprite?
-ROM:cda4        8edf0a          LDX         #Data_DoorSprite_0xdf0a                 ;= 0010101010000000b
+ROM:cda1        ce0083          LDU         #Coco Ram:SpriteDrawingBuffer_0x83      ;destination to write the door sprite?
+ROM:cda4        8edf0a          LDX         #Data_DoorSprite_0xdf0a                 ;sprite source
 ROM:cda7        8610            LDA         #16                                     ;16 lines of the door sprite
-ROM:cda9        974d            STA         <Coco Ram:UtilityCounter_0x4d           ;= ??
-                            LOOP_CopyDoor:                ;XREF[1,0]:   cdb3
+ROM:cda9        974d            STA         <Coco Ram:SecondUtilityCounter_0x4d     ;= ??
+                            LOOP_DrawOneLineOfDoorToBuf...;XREF[1,0]:   cdb3
                                                           ; FWD[2,0]:   df0a,df0c
 ROM:cdab        ec81            LDD         ,X++=>Data_DoorSprite_0xdf0a            ;copy two bytes from sprite
                                                           ; FWD[2,0]:   0083,0086
-ROM:cdad        edc1            STD         ,U++=>Coco Ram:DAT_0083                 ;paste two bytes to U
+ROM:cdad        edc1            STD         ,U++=>Coco Ram:SpriteDrawingBuffer_0x83 ;paste two bytes to U
                                                           ; FWD[2,0]:   0085,0088
-ROM:cdaf        6fc0            CLR         ,U+=>Coco Ram:DAT_0085                  ;clear the nexte byte in U (but why?)
-ROM:cdb1        0a4d            DEC         <Coco Ram:UtilityCounter_0x4d           ;= ??
-ROM:cdb3        26f6            BNE         LOOP_CopyDoor                           
+ROM:cdaf        6fc0            CLR         ,U+=>Coco Ram:DAT_0085                  ;clear the nexte byte in U.
+                                                                                    ;this takes into account any shifting
+                                                                                    ;of the sprite in the buffer
+ROM:cdb1        0a4d            DEC         <Coco Ram:SecondUtilityCounter_0x4d     ;= ??
+ROM:cdb3        26f6            BNE         LOOP_DrawOneLineOfDoorToBufferAt0x83    
+                            ;
+                            ;
+                            ;for the 1 to 3 offset in UtilityCounter, shift the graphics in the buffer
+                            ;by offset * 2 bits
 ROM:cdb5        9626            LDA         <Coco Ram:UtilityCounter_0x26           ;= ??
-ROM:cdb7        2729            BEQ         FUN_cdc9::Jump_DoneWork_RTS_cde2        
-ROM:cdb9        c610            LDB         #0x10                                   
-ROM:cdbb        8d0c            BSR         FUN_cdc9                                ;undefined FUN_cdc9(undefined param_1...
-ROM:cdbd        3540            PULS         U                                      
-ROM:cdbf        8e0083          LDX         #0x83                                   
-ROM:cdc2        8610            LDA         #16                                     ;16 count
-ROM:cdc4        bdd89b          JSR         Some3ByteDrawingFunction                ;undefined Some3ByteDrawingFunction()
+ROM:cdb7        2729            BEQ         ShiftBitsInSpriteDrawingBuffer::Jump_...
+ROM:cdb9        c610            LDB         #0x10                                   ;num lines in a sprite? 16
+ROM:cdbb        8d0c            BSR         ShiftBitsInSpriteDrawingBuffer          ;undefined ShiftBitsInSpriteDrawingBu...
+ROM:cdbd        3540            PULS         U                                      ;pull back the drawing location into U
+ROM:cdbf        8e0083          LDX         #Coco Ram:SpriteDrawingBuffer_0x83      ;= ??
+ROM:cdc2        8610            LDA         #16                                     ;16 lines of a sprite
+ROM:cdc4        bdd89b          JSR         Some3ByteDrawingFunction                ;draw the sprite from the buffer in 0x83
                             LOOP_AlreadyDone:             ;XREF[1,0]:   cd87
 ROM:cdc7        35d0            PULS         X U PC                                 
                             ;************************************************************************************************
-                            ;*                                           FUNCTION                                           *
+                            ;*  ShiftBitsInSpriteDrawingBuffer                                                              *
+                            ;*  To maintain the CRT artifacts when drawing to the screen                                    *
+                            ;*  we use this function to shift the graphics in a sprite                                      *
+                            ;*  drawing buffer so that they land on the appropriate pixels.                                 *
                             ;************************************************************************************************
-                            ;undefined FUN_cdc9(undefined param_1, char param_2)
+                            ;undefined ShiftBitsInSpriteDrawingBuffer(undefined param_1, char param_2)
           ;param_1       undefined            A                      
           ;param_2       char                 B                      
+                            ;A: number of bits to shift by. the result will be A * 2
+                            ;B: number of lines of the sprite to process
                                                           ;XREF[2,0]:   c59d,cdbb
-ROM:cdc9        8e0083          LDX         #0x83                                   
-                            LAB_cdcc:                     ;XREF[1,0]:   cde0
-ROM:cdcc        9626            LDA         <Coco Ram:UtilityCounter_0x26           ;= ??
-                            LAB_cdce:                     ;XREF[1,0]:   cddb
+ROM:cdc9        8e0083          LDX         #Coco Ram:SpriteDrawingBuffer_0x83      ;= ??
+                            Jump_ProcessThreeBytes:       ;XREF[1,0]:   cde0
+ROM:cdcc        9626            LDA         <Coco Ram:UtilityCounter_0x26           ;values from 1 to 3
+                            ;shift by two bits at a time to the right
+                            ;because the screen is 256 pixels wide
+                            ;and graphics are treated as 128?
+                            Jump_ShuffleBitsAround:       ;XREF[1,0]:   cddb
                                                           ; FWD[2,0]:   0083,0086
-ROM:cdce        6484            LSR         ,X=>Coco Ram:DAT_0083                   ;= ??
+ROM:cdce        6484            LSR         ,X=>Coco Ram:SpriteDrawingBuffer_0x83   ;= ??
                                                           ; FWD[2,0]:   0084,0087
 ROM:cdd0        6601            ROR         0x1,X=>Coco Ram:DAT_0084                ;= ??
                                                           ; FWD[2,0]:   0085,0088
 ROM:cdd2        6602            ROR         0x2,X=>Coco Ram:DAT_0085                ;= ??
                                                           ; FWD[2,0]:   0083,0086
-ROM:cdd4        6484            LSR         ,X=>Coco Ram:DAT_0083                   ;= ??
+ROM:cdd4        6484            LSR         ,X=>Coco Ram:SpriteDrawingBuffer_0x83   ;= ??
                                                           ; FWD[2,0]:   0084,0087
 ROM:cdd6        6601            ROR         0x1,X=>Coco Ram:DAT_0084                ;= ??
                                                           ; FWD[2,0]:   0085,0088
 ROM:cdd8        6602            ROR         0x2,X=>Coco Ram:DAT_0085                ;= ??
 ROM:cdda        4a              DECA                                                
-ROM:cddb        26f1            BNE         LAB_cdce                                
+ROM:cddb        26f1            BNE         Jump_ShuffleBitsAround                  
 ROM:cddd        3003            LEAX        0x3,X                                   
-ROM:cddf        5a              DECB                                                
-ROM:cde0        26ea            BNE         LAB_cdcc                                
+ROM:cddf        5a              DECB                                                ;next three bytes
+ROM:cde0        26ea            BNE         Jump_ProcessThreeBytes                  
                             Jump_DoneWork_RTS_cde2:       ;XREF[1,0]:   cdb7
 ROM:cde2        39              RTS                                                 
                             ;************************************************************************************************
@@ -19147,7 +19181,7 @@ ROM:cf1a        109f3d          STY         <Coco Ram:PerRoomPickupDataAddress_0
           ;X             byte *               X                      
                                                           ;XREF[1,0]:   ccb1
 ROM:cf1d        8605            LDA         #0x5                                    
-ROM:cf1f        974d            STA         <Coco Ram:UtilityCounter_0x4d           ;= ??
+ROM:cf1f        974d            STA         <Coco Ram:SecondUtilityCounter_0x4d     ;= ??
 ROM:cf21        109e3d          LDY         <Coco Ram:PerRoomPickupDataAddress_0x3d ;= ??
                             Jump_ProcessPickup:           ;XREF[1,0]:   cf40
 ROM:cf24        a6a4            LDA         ,Y                                      
@@ -19164,7 +19198,7 @@ ROM:cf38        d726            STB         <Coco Ram:UtilityCounter_0x26       
 ROM:cf3a        8d07            BSR         DrawSprite_16PixelsWide                 ;undefined DrawSprite_16PixelsWide(un...
                             Jump_SkipToNextPickup:        ;XREF[1,0]:   cf28
 ROM:cf3c        3125            LEAY        0x5,Y                                   
-ROM:cf3e        0a4d            DEC         <Coco Ram:UtilityCounter_0x4d           ;= ??
+ROM:cf3e        0a4d            DEC         <Coco Ram:SecondUtilityCounter_0x4d     ;= ??
 ROM:cf40        26e2            BNE         Jump_ProcessPickup                      
 ROM:cf42        39              RTS                                                 
                             ;************************************************************************************************
@@ -19633,10 +19667,10 @@ ROM:d186        d726            STB         <Coco Ram:UtilityCounter_0x26       
 ROM:d188        8e0271          LDX         #Coco Ram:PerRoomPickupData_0x271       ;= ??
                             Jump_ProcessRoomPickUps:      ;XREF[1,0]:   d1bf
 ROM:d18b        c605            LDB         #0x5                                    ;for the five pickups in a room maybe
-ROM:d18d        d74d            STB         <Coco Ram:UtilityCounter_0x4d           ;= ??
+ROM:d18d        d74d            STB         <Coco Ram:SecondUtilityCounter_0x4d     ;= ??
                             Loop_ProcessRoomPickups:      ;XREF[1,0]:   d1b6
 ROM:d18f        3410            PSHS         X                                      
-ROM:d191        d64d            LDB         <Coco Ram:UtilityCounter_0x4d           ;= ??
+ROM:d191        d64d            LDB         <Coco Ram:SecondUtilityCounter_0x4d     ;= ??
 ROM:d193        5a              DECB                                                ;going from 5 to 4
 ROM:d194        8605            LDA         #0x5                                    ;find the correct pick up data
                                                                                     ;key index (0 - 4) * key data size (5...
@@ -19644,7 +19678,7 @@ ROM:d196        3d              MUL
 ROM:d197        308b            LEAX        D,X                                     ;set X to the correct key data
 ROM:d199        8603            LDA         #0x3                                    ;set the initial visible/enable state...
 ROM:d19b        a784            STA         ,X=>Coco Ram:PerRoomPickupData_0x271    ;= ??
-ROM:d19d        d64d            LDB         <Coco Ram:UtilityCounter_0x4d           ;= ??
+ROM:d19d        d64d            LDB         <Coco Ram:SecondUtilityCounter_0x4d     ;= ??
 ROM:d19f        5a              DECB                                                ;we've processed a pick up data
 ROM:d1a0        1f98            TFR         B,A                                     ;A now contains B (5 on the first loop)
 ROM:d1a2        48              LSLA                                                ;double A (5 -> 10 on the first loop)
@@ -19665,7 +19699,7 @@ ROM:d1ae        c401            ANDB        #0x1
 ROM:d1b0        e701            STB         0x1,X=>Coco Ram:PickUp_Type             ;= ??
                             Jump_DontCreateTreasure:      ;XREF[1,0]:   d1a9
 ROM:d1b2        3510            PULS         X                                      
-ROM:d1b4        0a4d            DEC         <Coco Ram:UtilityCounter_0x4d           ;= ??
+ROM:d1b4        0a4d            DEC         <Coco Ram:SecondUtilityCounter_0x4d     ;= ??
 ROM:d1b6        26d7            BNE         Loop_ProcessRoomPickups                 
 ROM:d1b8        308819          LEAX        0x19,X                                  ;move to next room's pick updata
 ROM:d1bb        334a            LEAU        0xa,U                                   ;move U by 10 bytes in Pickup_StartPo...
@@ -22541,56 +22575,56 @@ ROM:de11        08ae            dw          0000100010101110b
 ROM:de13        1c06            dw          0001110000000110b                       
 ROM:de15        1c00            dw          0001110000000000b                       
                             SomeUnidentifiedSprites:      ;XREF[1,0]:   dbc9
-ROM:de17        3ff0            dw          0011111111110000b                       
-ROM:de19        3ff0            dw          0011111111110000b                       
-ROM:de1b        3fc0            dw          0011111111000000b                       
-ROM:de1d        3fc0            dw          0011111111000000b                       
-ROM:de1f        0fc0            dw          0000111111000000b                       
-ROM:de21        3ff0            dw          0011111111110000b                       
-ROM:de23        3ff0            dw          0011111111110000b                       
-ROM:de25        0fc0            dw          0000111111000000b                       
-ROM:de27        6ff8            dw          0110111111111000b                       
-ROM:de29        3f38            dw          0011111100111000b                       
-ROM:de2b        0fc0            dw          0000111111000000b                       
-ROM:de2d        3ff0            dw          0011111111110000b                       
-ROM:de2f        0ff6            dw          0000111111110110b                       
-ROM:de31        0ff0            dw          0000111111110000b                       
-ROM:de33        7f0e            dw          0111111100001110b                       
-ROM:de35        3ff0            dw          0011111111110000b                       
-ROM:de37        3ff0            dw          0011111111110000b                       
-ROM:de39        0fc0            dw          0000111111000000b                       
-ROM:de3b        6ff0            dw          0110111111110000b                       
-ROM:de3d        6c70            dw          0110110001110000b                       
-ROM:de3f        3ff0            dw          0011111111110000b                       
-ROM:de41        3ffc            dw          0011111111111100b                       
-ROM:de43        fff0            dw          1111111111110000b                       
-ROM:de45        3ff0            dw          0011111111110000b                       
-ROM:de47        3cf0            dw          0011110011110000b                       
-ROM:de49        ffc0            dw          1111111111000000b                       
-ROM:de4b        fff0            dw          1111111111110000b                       
-ROM:de4d        fff0            dw          1111111111110000b                       
-ROM:de4f        3ff0            dw          0011111111110000b                       
-ROM:de51        3fc0            dw          0011111111000000b                       
-ROM:de53        0ffc            dw          0000111111111100b                       
-ROM:de55        1ff8            dw          0001111111111000b                       
-ROM:de57        03f0            dw          0000001111110000b                       
-ROM:de59        03f0            dw          0000001111110000b                       
-ROM:de5b        03f0            dw          0000001111110000b                       
-ROM:de5d        0ff8            dw          0000111111111000b                       
-ROM:de5f        1ff8            dw          0001111111111000b                       
-ROM:de61        03f0            dw          0000001111110000b                       
-ROM:de63        1ff6            dw          0001111111110110b                       
-ROM:de65        1cfe            dw          0001110011111110b                       
-ROM:de67        03f0            dw          0000001111110000b                       
-ROM:de69        0ff8            dw          0000111111111000b                       
-ROM:de6b        6ff0            dw          0110111111110000b                       
-ROM:de6d        0ff0            dw          0000111111110000b                       
-ROM:de6f        7cfe            dw          0111110011111110b                       
-ROM:de71        0ff8            dw          0000111111111000b                       
-ROM:de73        1ff8            dw          0001111111111000b                       
-ROM:de75        03f0            dw          0000001111110000b                       
-ROM:de77        1ff6            dw          0001111111110110b                       
-ROM:de79        0cfe            dw          0000110011111110b                       
+ROM:de17        3ff0            dw          3FF0h                                   
+ROM:de19        3ff0            dw          3FF0h                                   
+ROM:de1b        3fc0            dw          3FC0h                                   
+ROM:de1d        3fc0            dw          3FC0h                                   
+ROM:de1f        0fc0            dw          0FC0h                                   
+ROM:de21        3ff0            dw          3FF0h                                   
+ROM:de23        3ff0            dw          3FF0h                                   
+ROM:de25        0fc0            dw          0FC0h                                   
+ROM:de27        6ff8            dw          6FF8h                                   
+ROM:de29        3f38            dw          3F38h                                   
+ROM:de2b        0fc0            dw          0FC0h                                   
+ROM:de2d        3ff0            dw          3FF0h                                   
+ROM:de2f        0ff6            dw          0FF6h                                   
+ROM:de31        0ff0            dw          0FF0h                                   
+ROM:de33        7f0e            dw          7F0Eh                                   
+ROM:de35        3ff0            dw          3FF0h                                   
+ROM:de37        3ff0            dw          3FF0h                                   
+ROM:de39        0fc0            dw          0FC0h                                   
+ROM:de3b        6ff0            dw          6FF0h                                   
+ROM:de3d        6c70            dw          6C70h                                   
+ROM:de3f        3ff0            dw          3FF0h                                   
+ROM:de41        3ffc            dw          3FFCh                                   
+ROM:de43        fff0            dw          FFF0h                                   
+ROM:de45        3ff0            dw          3FF0h                                   
+ROM:de47        3cf0            dw          3CF0h                                   
+ROM:de49        ffc0            dw          FFC0h                                   
+ROM:de4b        fff0            dw          FFF0h                                   
+ROM:de4d        fff0            dw          FFF0h                                   
+ROM:de4f        3ff0            dw          3FF0h                                   
+ROM:de51        3fc0            dw          3FC0h                                   
+ROM:de53        0ffc            dw          0FFCh                                   
+ROM:de55        1ff8            dw          1FF8h                                   
+ROM:de57        03f0            dw          03F0h                                   
+ROM:de59        03f0            dw          03F0h                                   
+ROM:de5b        03f0            dw          03F0h                                   
+ROM:de5d        0ff8            dw          0FF8h                                   
+ROM:de5f        1ff8            dw          1FF8h                                   
+ROM:de61        03f0            dw          03F0h                                   
+ROM:de63        1ff6            dw          1FF6h                                   
+ROM:de65        1cfe            dw          1CFEh                                   
+ROM:de67        03f0            dw          03F0h                                   
+ROM:de69        0ff8            dw          0FF8h                                   
+ROM:de6b        6ff0            dw          6FF0h                                   
+ROM:de6d        0ff0            dw          0FF0h                                   
+ROM:de6f        7cfe            dw          7CFEh                                   
+ROM:de71        0ff8            dw          0FF8h                                   
+ROM:de73        1ff8            dw          1FF8h                                   
+ROM:de75        03f0            dw          03F0h                                   
+ROM:de77        1ff6            dw          1FF6h                                   
+ROM:de79        0cfe            dw          0CFEh                                   
                             BouncyBallSprite1:            ;XREF[1,0]:   dbcf
 ROM:de7b        0100            dw          0000000100000000b                       
 ROM:de7d        0540            dw          0000010101000000b                       
@@ -22657,7 +22691,9 @@ ROM:dee7        8b55            dw          1000101101010101b
 ROM:dee9        8833            dw          1000100000110011b                       
 ROM:deeb        2833            dw          0010100000110011b                       
 ROM:deed        2000            dw          0010000000000000b                       
-                            SomeUnidentifiedSpritesOrRa...;XREF[2,1]:   c587,c58c,c58c
+                            ;Unlike the other sprites, this is 3 bytes per line
+                            ;for 9 lines. 
+                            PlayerSplatSprite:            ;XREF[2,1]:   c587,c58c,c58c
 ROM:deef        0400            dw          0000010000000000b                       
 ROM:def1        0003            dw          0000000000000011b                       
 ROM:def3        0700            dw          0000011100000000b                       
