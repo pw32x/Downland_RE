@@ -19952,17 +19952,17 @@
             d05c 39                 RTS
                              Drops_SpawnPositionsTable                       XREF[2]:     UpdateAndDrawDrops:cfc8(*), 
                                                                                           UpdateAndDrawDrops:cfce(*)  
-            d05d d0 73              dw         D073h
-            d05f d0 89              dw         D089h
-            d061 d0 9c              dw         D09Ch
-            d063 d0 ac              dw         D0ACh
-            d065 d0 bf              dw         D0BFh
-            d067 d0 cf              dw         D0CFh
-            d069 d0 df              dw         D0DFh
-            d06b d0 e6              dw         D0E6h
-            d06d d0 fc              dw         D0FCh
-            d06f d1 0c              dw         D10Ch
-            d071 d1 16              dw         D116h
+            d05d d0 73              dw         Room0_DropPositions                           = 6
+            d05f d0 89              dw         Room1_DropPositions                           = 5
+            d061 d0 9c              dw         Room2_DropPositions                           = 4
+            d063 d0 ac              dw         Room3_DropPositions                           = 5
+            d065 d0 bf              dw         Room4_DropPositions                           = 4
+            d067 d0 cf              dw         Room5_DropPositions                           = 4
+            d069 d0 df              dw         Room6_DropPositions                           = 1
+            d06b d0 e6              dw         Room7_DropPositions                           = 6
+            d06d d0 fc              dw         Room8_DropPositions                           = 4
+            d06f d1 0c              dw         Room9_DropPositions                           = 2
+            d071 d1 16              dw         Room10_DropPositions
                              Drop Positions
                              Format:
                              byte 0: number of drops areas (add 1)
@@ -19970,7 +19970,7 @@
                              byte 0: drop positions count
                              byte 1: vertical position in screen pixels
                              byte 2: horizontal position in screen pixels
-                             Room0_DropPositions
+                             Room0_DropPositions                             XREF[1]:     d05d(*)  
             d073 06                 db         6
             d074 0c                 db         12
             d075 11                 db         17
@@ -19993,7 +19993,7 @@
             d086 01                 db         1
             d087 98                 db         152
             d088 5f                 db         95
-                             Room1_DropPositions
+                             Room1_DropPositions                             XREF[1]:     d05f(*)  
             d089 05                 db         5
             d08a 05                 db         5
             d08b 11                 db         17
@@ -20013,7 +20013,7 @@
             d099 02                 db         2
             d09a 98                 db         152
             d09b 47                 db         71
-                             Room2_DropPositions
+                             Room2_DropPositions                             XREF[1]:     d061(*)  
             d09c 04                 db         4
             d09d 0c                 db         12
             d09e 11                 db         17
@@ -20030,7 +20030,7 @@
             d0a9 04                 db         4
             d0aa 98                 db         152
             d0ab 0f                 db         15
-                             Room3_DropPositions
+                             Room3_DropPositions                             XREF[1]:     d063(*)  
             d0ac 05                 db         5
             d0ad 0c                 db         12
             d0ae 11                 db         17
@@ -20050,7 +20050,7 @@
             d0bc 01                 db         1
             d0bd 98                 db         152
             d0be 2f                 db         47
-                             Room4_DropPositions
+                             Room4_DropPositions                             XREF[1]:     d065(*)  
             d0bf 04                 db         4
             d0c0 0c                 db         12
             d0c1 11                 db         17
@@ -20067,7 +20067,7 @@
             d0cc 01                 db         1
             d0cd 98                 db         152
             d0ce 57                 db         87
-                             Room5_DropPositions
+                             Room5_DropPositions                             XREF[1]:     d067(*)  
             d0cf 04                 db         4
             d0d0 0c                 db         12
             d0d1 11                 db         17
@@ -20084,7 +20084,7 @@
             d0dc 02                 db         2
             d0dd 98                 db         152
             d0de 47                 db         71
-                             Room6_DropPositions
+                             Room6_DropPositions                             XREF[1]:     d069(*)  
             d0df 01                 db         1
             d0e0 0c                 db         12
             d0e1 11                 db         17
@@ -20092,7 +20092,7 @@
             d0e3 09                 db         9
             d0e4 5c                 db         92
             d0e5 27                 db         39
-                             Room7_DropPositions
+                             Room7_DropPositions                             XREF[1]:     d06b(*)  
             d0e6 06                 db         6
             d0e7 05                 db         5
             d0e8 11                 db         17
@@ -20115,7 +20115,7 @@
             d0f9 00                 db         0
             d0fa 6b                 db         107
             d0fb 4f                 db         79
-                             Room8_DropPositions
+                             Room8_DropPositions                             XREF[1]:     d06d(*)  
             d0fc 04                 db         4
             d0fd 0c                 db         12
             d0fe 11                 db         17
@@ -20132,7 +20132,7 @@
             d109 0a                 db         10
             d10a 98                 db         152
             d10b 0f                 db         15
-                             Room9_DropPositions
+                             Room9_DropPositions                             XREF[1]:     d06f(*)  
             d10c 02                 db         2
             d10d 0c                 db         12
             d10e 11                 db         17
@@ -20143,7 +20143,7 @@
             d113 05                 db         5
             d114 5c                 db         92
             d115 37                 db         55
-                             Room10_DropPositions
+                             Room10_DropPositions                            XREF[1]:     d071(*)  
             d116 00                 db         0                                             count of drops areas
             d117 0c                 db         12                                            number of drops
             d118 11                 db         17                                            vertical position in screen pixels
