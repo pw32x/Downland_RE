@@ -250,8 +250,7 @@
                                                                                           GetRoomDataForCurrentRoom:cf1a(*
                                                                                           DrawPickups:cf21(*)  
             003d                    dw         ??
-                             NumberOfDropsToProcess                          XREF[4]:     FUN_c3b3:c28a(*), 
-                                                                                          FUN_c3b3:c3bc(*), 
+                             NumberOfDropsToProcess                          XREF[3]:     FUN_c3b3:c28a(*), 
                                                                                           FUN_c3b3:c670(*), 
                                                                                           InitDrops:d130(*)  
             003f                    ??         ??
@@ -393,12 +392,12 @@
             0062                    ??         ??
                              InterruptHitCount                               XREF[1]:     InterruptHandler:dc52(*)  
             0063                    ??         ??                                            not really used, but incremented in the vsync interrupt
-                             SomeValue_RelatedToDrops_0x64                   XREF[4]:     DropsFunction_MaybeToHandleDropD
-                                                                                          DropsFunction_MaybeToHandleDropD
-                                                                                          DropsFunction_MaybeToHandleDropD
-                                                                                          DropsFunction_MaybeToHandleDropD
+                             SomeValue_RelatedToDrops_0x64                   XREF[4]:     GenerateRandomNumberFrom0ToB:dc2
+                                                                                          GenerateRandomNumberFrom0ToB:dc2
+                                                                                          GenerateRandomNumberFrom0ToB:dc2
+                                                                                          GenerateRandomNumberFrom0ToB:dc3
             0064                    ??         ??
-                             SomeValue_AlsoRelatedToDrops_0x65               XREF[1]:     DropsFunction_MaybeToHandleDropD
+                             SomeValue_AlsoRelatedToDrops_0x65               XREF[1]:     GenerateRandomNumberFrom0ToB:dc3
             0065                    ??         ??
             0066                    ??         ??
             0067                    ??         ??
@@ -1172,11 +1171,12 @@
                              byte 12: which side of the rope (or other) to appear at.
                                       0x03 -> right side of the rope
                                       0x0f -> left side of the rope
-                             Drop0_Data_0x1ef                                XREF[7]:     FUN_c3b3:c27e(*), 
+                             Drop0_Data_0x1ef                                XREF[8]:     FUN_c3b3:c27e(*), 
                              Drop0_CeilingWiggleTimer_0x1ef                               FUN_c3b3:c28c(R), 
                              DropDataBlock_0x1ef                                          FUN_c3b3:c29d(R), 
                                                                                           UpdateAndDrawDrops:cf53(*), 
                                                                                           UpdateAndDrawDrops:cf5f(R), 
+                                                                                          UpdateAndDrawDrops:cfc6(*), 
                                                                                           InitFirstByteOfEachDrop:d137(*), 
                                                                                           InitFirstByteOfEachDrop:d13a(W)  
             01ef                    db         ??
@@ -1194,11 +1194,10 @@
             01f9                    dw         ??
                              Drop0_WhichSideToSpawn_0x1fb
             01fb                    db         ??
-                             Drop0_WhichSideToSpawn                          XREF[6]:     FUN_c3b3:c28c(R), 
+                             Drop0_WhichSideToSpawn                          XREF[5]:     FUN_c3b3:c28c(R), 
                                                                                           UpdateAndDrawDrops:cf5f(R), 
                                                                                           UpdateAndDrawDrops:cfae(RW), 
                                                                                           UpdateAndDrawDrops:cfb0(R), 
-                                                                                          UpdateAndDrawDrops:cfc6(W), 
                                                                                           InitFirstByteOfEachDrop:d13a(W)  
             01fc                    db         ??
                              Drop1_Data_0x1fd                                XREF[3]:     UpdateAndDrawDrops:cf83(R), 
@@ -17877,10 +17876,10 @@
             c3b3 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     = ??
             c3b7 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
             c3b9 4a                 DECA
-            c3ba 26 05              BNE        LAB_c3c1
-            c3bc c6 3f              LDB        #NumberOfDropsToProcess                       = ??
-            c3be f7 ff 20           STB        PIA1_A_DATA_REG__FF20
-                             LAB_c3c1                                        XREF[1]:     c3ba(j)  
+            c3ba 26 05              BNE        Jump_SkipPlaySound
+            c3bc c6 3f              LDB        #00111111b
+            c3be f7 ff 20           STB        PIA1_A_DATA_REG__FF20                         play sound when animation frame is not 0?
+                             Jump_SkipPlaySound                              XREF[1]:     c3ba(j)  
             c3c1 a6 3b              LDA        -0x5,Y=>Player_SomeGameState_0x1a5            = ??
             c3c3 27 ed              BEQ        Jump_IsAlreadyClimbing::Jump_Return           inactive, so just return
             c3c5 81 01              CMPA       #0x1
@@ -18274,7 +18273,7 @@
             c669 26 f5              BNE        LOOP_Copy_Page0_to_Page1
             c66b bd d1 1a           JSR        InitDrops                                     undefined InitDrops(void)
             c66e 86 0a              LDA        #10                                           menu screen room number
-            c670 97 3f              STA        <NumberOfDropsToProcess                       set to 10 drops?
+            c670 97 3f              STA        <NumberOfDropsToProcess                       set to 10 drops
             c672 97 39              STA        <CurrentRoomNumber_0x39                       = ??
                              Loop_ProcessGetReadyScreen                      XREF[3]:     c686(j), c68a(j), c694(j)  
             c674 bd cf 53           JSR        UpdateAndDrawDrops                            undefined UpdateAndDrawDrops(void)
@@ -19860,39 +19859,42 @@
                              LAB_cfc2                                        XREF[2]:     cf75(j), cf7f(j)  
             cfc2 8d 71              BSR        ClearDrop                                     byte ClearDrop(void)
                              LAB_cfc4                                        XREF[1]:     cf66(j)  
-            cfc4 c6 a8              LDB        #0xa8
-            cfc6 e7 a4              STB        ,Y=>Drop0_WhichSideToSpawn                    = ??
-            cfc8 8e d0 5d           LDX        #SomePerRoomTable                             = D073h
+            cfc4 c6 a8              LDB        #0xa8                                         pre-drop wiggle countdown
+            cfc6 e7 a4              STB        ,Y=>DropDataBlock_0x1ef                       = ??
+            cfc8 8e d0 5d           LDX        #Drops_SpawnPositionsTable                    = D073h
             cfcb 96 39              LDA        <CurrentRoomNumber_0x39                       figure out which pointer to room data to use
             cfcd 48                 LSLA
-            cfce ae 86              LDX        A,X=>SomePerRoomTable                         jump to the actual per-room data
-            cfd0 86 03              LDA        #0x3
-            cfd2 e6 80              LDB        ,X+
-            cfd4 bd dc 1f           JSR        DropsFunction_MaybeToHandleDropDeath          undefined DropsFunction_MaybeToHandleDropDeath()
-            cfd7 3d                 MUL
-            cfd8 3a                 ABX
-            cfd9 e6 84              LDB        ,X
-            cfdb bd dc 1f           JSR        DropsFunction_MaybeToHandleDropDeath          undefined DropsFunction_MaybeToHandleDropDeath()
-            cfde 86 08              LDA        #0x8
-            cfe0 3d                 MUL
-            cfe1 eb 02              ADDB       0x2,X
+            cfce ae 86              LDX        A,X=>Drops_SpawnPositionsTable                jump to the actual per-room data
+            cfd0 86 03              LDA        #0x3                                          data size for each drops area
+            cfd2 e6 80              LDB        ,X+                                           store the number of drops areas into B
+                                                                                             move X to first drops area in the data
+                                                                                             The number in the data is one less than the actual count
+                                                                                             ie having one area means the value is 0, three areas makes 
+            cfd4 bd dc 1f           JSR        GenerateRandomNumberFrom0ToB                  undefined GenerateRandomNumberFrom0ToB()
+            cfd7 3d                 MUL                                                      multiply A and B to figure out which drops area to use
+            cfd8 3a                 ABX                                                      move X to the selected drops area
+            cfd9 e6 84              LDB        ,X                                            load the number of drops positions in the area into B
+            cfdb bd dc 1f           JSR        GenerateRandomNumberFrom0ToB                  undefined GenerateRandomNumberFrom0ToB()
+            cfde 86 08              LDA        #0x8                                          spacing between drops
+            cfe0 3d                 MUL                                                      multiply the selected horizontal drops position by the spac
+            cfe1 eb 02              ADDB       0x2,X                                         add the horizontal position of the drop area
             cfe3 96 3a              LDA        <GameCompletionCount_0x3a                     = ??
             cfe5 81 03              CMPA       #0x3
-            cfe7 25 02              BCS        LAB_cfeb
-            cfe9 c4 fe              ANDB       #254
-                             LAB_cfeb                                        XREF[1]:     cfe7(j)  
-            cfeb a6 01              LDA        0x1,X
-            cfed a7 23              STA        0x3,Y=>Drop1_Y_0x1ff                          = ??
+            cfe7 25 02              BCS        Jump_SkipPositionAdjustment
+            cfe9 c4 fe              ANDB       #11111110b                                    ensure X position is even when in hard mode?
+                             Jump_SkipPositionAdjustment                     XREF[1]:     cfe7(j)  
+            cfeb a6 01              LDA        0x1,X                                         get the vertical position of the drops area
+            cfed a7 23              STA        0x3,Y=>Drop1_Y_0x1ff                          store it in the drop data
             cfef e7 25              STB        0x5,Y=>Drop1_X_0x201                          = ??
             cff1 8b 06              ADDA       #0x6
             cff3 cb 04              ADDB       #0x4
             cff5 bd d8 56           JSR        ComputeScreenLocationFromAAndB                undefined ComputeScreenLocationFromAAndB(void)
             cff8 1f 01              TFR        D,X
-            cffa a6 89 18 00        LDA        0x1800,X
-            cffe 8e d8 4a           LDX        #SomeData_0xd84a                              = C0h
+            cffa a6 89 18 00        LDA        0x1800,X                                      load source pixel
+            cffe 8e d8 4a           LDX        #Drops_HorizontalAdjustmentValues             = C0h
             d001 e6 25              LDB        0x5,Y=>Drop1_X_0x201                          = ??
-            d003 c4 03              ANDB       #0x3
-            d005 a4 85              ANDA       B,X=>SomeData_0xd84a                          = C0h
+            d003 c4 03              ANDB       #0x3                                          adjust horizontal position
+            d005 a4 85              ANDA       B,X=>Drops_HorizontalAdjustmentValues         = C0h
             d007 bd c8 b9           JSR        FUN_c8b9                                      byte FUN_c8b9(byte param_1)
             d00a 27 02              BEQ        LAB_d00e
             d00c 6a 25              DEC        0x5,Y=>Drop1_X_0x201                          = ??
@@ -19948,7 +19950,7 @@
             d058 0a 26              DEC        <UtilityCounter_0x26                          next sprite line
             d05a 26 e1              BNE        Jump_DoSpriteLine
             d05c 39                 RTS
-                             SomePerRoomTable                                XREF[2]:     UpdateAndDrawDrops:cfc8(*), 
+                             Drops_SpawnPositionsTable                       XREF[2]:     UpdateAndDrawDrops:cfc8(*), 
                                                                                           UpdateAndDrawDrops:cfce(*)  
             d05d d0 73              dw         D073h
             d05f d0 89              dw         D089h
@@ -19961,184 +19963,191 @@
             d06d d0 fc              dw         D0FCh
             d06f d1 0c              dw         D10Ch
             d071 d1 16              dw         D116h
-                             Room0_SomeData
-            d073 06                 db         00000110b
-            d074 0c                 db         00001100b
-            d075 11                 db         00010001b
-            d076 0f                 db         00001111b
-            d077 09                 db         00001001b
-            d078 3e                 db         00111110b
-            d079 27                 db         00100111b
-            d07a 01                 db         00000001b
-            d07b 6b                 db         01101011b
-            d07c 0f                 db         00001111b
-            d07d 05                 db         00000101b
-            d07e 6b                 db         01101011b
-            d07f 2f                 db         00101111b
-            d080 01                 db         00000001b
-            d081 98                 db         10011000b
-            d082 1f                 db         00011111b
-            d083 01                 db         00000001b
-            d084 98                 db         10011000b
-            d085 3f                 db         00111111b
-            d086 01                 db         00000001b
-            d087 98                 db         10011000b
-            d088 5f                 db         01011111b
-                             Room1_SomeData
-            d089 05                 db         00000101b
-            d08a 05                 db         00000101b
-            d08b 11                 db         00010001b
-            d08c 0f                 db         00001111b
-            d08d 04                 db         00000100b
-            d08e 11                 db         00010001b
-            d08f 4f                 db         01001111b
-            d090 05                 db         00000101b
-            d091 3e                 db         00111110b
-            d092 0f                 db         00001111b
-            d093 01                 db         00000001b
-            d094 3e                 db         00111110b
-            d095 4f                 db         01001111b
-            d096 01                 db         00000001b
-            d097 6b                 db         01101011b
-            d098 67                 db         01100111b
-            d099 02                 db         00000010b
-            d09a 98                 db         10011000b
-            d09b 47                 db         01000111b
-                             Room2_SomeData
-            d09c 04                 db         00000100b
-            d09d 0c                 db         00001100b
-            d09e 11                 db         00010001b
-            d09f 0f                 db         00001111b
-            d0a0 02                 db         00000010b
-            d0a1 3e                 db         00111110b
-            d0a2 0f                 db         00001111b
-            d0a3 01                 db         00000001b
-            d0a4 3e                 db         00111110b
-            d0a5 37                 db         00110111b
-            d0a6 09                 db         00001001b
-            d0a7 6b                 db         01101011b
-            d0a8 27                 db         00100111b
-            d0a9 04                 db         00000100b
-            d0aa 98                 db         10011000b
-            d0ab 0f                 db         00001111b
-                             Room3_SomeData
-            d0ac 05                 db         00000101b
-            d0ad 0c                 db         00001100b
-            d0ae 11                 db         00010001b
-            d0af 0f                 db         00001111b
-            d0b0 03                 db         00000011b
-            d0b1 3e                 db         00111110b
-            d0b2 0f                 db         00001111b
-            d0b3 06                 db         00000110b
-            d0b4 3e                 db         00111110b
-            d0b5 3f                 db         00111111b
-            d0b6 03                 db         00000011b
-            d0b7 6b                 db         01101011b
-            d0b8 0f                 db         00001111b
-            d0b9 00                 db         00000000b
-            d0ba 98                 db         10011000b
-            d0bb 0f                 db         00001111b
-            d0bc 01                 db         00000001b
-            d0bd 98                 db         10011000b
-            d0be 2f                 db         00101111b
-                             Room4_SomeData
-            d0bf 04                 db         00000100b
-            d0c0 0c                 db         00001100b
-            d0c1 11                 db         00010001b
-            d0c2 0f                 db         00001111b
-            d0c3 01                 db         00000001b
-            d0c4 3e                 db         00111110b
-            d0c5 0f                 db         00001111b
-            d0c6 08                 db         00001000b
-            d0c7 4d                 db         01001101b
-            d0c8 1f                 db         00011111b
-            d0c9 01                 db         00000001b
-            d0ca 98                 db         10011000b
-            d0cb 2f                 db         00101111b
-            d0cc 01                 db         00000001b
-            d0cd 98                 db         10011000b
-            d0ce 57                 db         01010111b
-                             Room5_SomeData
-            d0cf 04                 db         00000100b
-            d0d0 0c                 db         00001100b
-            d0d1 11                 db         00010001b
-            d0d2 0f                 db         00001111b
-            d0d3 01                 db         00000001b
-            d0d4 3e                 db         00111110b
-            d0d5 67                 db         01100111b
-            d0d6 0a                 db         00001010b
-            d0d7 6b                 db         01101011b
-            d0d8 1f                 db         00011111b
-            d0d9 01                 db         00000001b
-            d0da 98                 db         10011000b
-            d0db 0f                 db         00001111b
-            d0dc 02                 db         00000010b
-            d0dd 98                 db         10011000b
-            d0de 47                 db         01000111b
-                             Room6_SomeData
-            d0df 01                 db         00000001b
-            d0e0 0c                 db         00001100b
-            d0e1 11                 db         00010001b
-            d0e2 0f                 db         00001111b
-            d0e3 09                 db         00001001b
-            d0e4 5c                 db         01011100b
-            d0e5 27                 db         00100111b
-                             Room7_SomeData
-            d0e6 06                 db         00000110b
-            d0e7 05                 db         00000101b
-            d0e8 11                 db         00010001b
-            d0e9 0f                 db         00001111b
-            d0ea 01                 db         00000001b
-            d0eb 20                 db         00100000b
-            d0ec 3f                 db         00111111b
-            d0ed 04                 db         00000100b
-            d0ee 11                 db         00010001b
-            d0ef 4f                 db         01001111b
-            d0f0 00                 db         00000000b
-            d0f1 5c                 db         01011100b
-            d0f2 27                 db         00100111b
-            d0f3 00                 db         00000000b
-            d0f4 5c                 db         01011100b
-            d0f5 57                 db         01010111b
-            d0f6 00                 db         00000000b
-            d0f7 6b                 db         01101011b
-            d0f8 2f                 db         00101111b
-            d0f9 00                 db         00000000b
-            d0fa 6b                 db         01101011b
-            d0fb 4f                 db         01001111b
-                             Room8_SomeData
-            d0fc 04                 db         00000100b
-            d0fd 0c                 db         00001100b
-            d0fe 11                 db         00010001b
-            d0ff 0f                 db         00001111b
-            d100 08                 db         00001000b
-            d101 3e                 db         00111110b
-            d102 2f                 db         00101111b
-            d103 0a                 db         00001010b
-            d104 5c                 db         01011100b
-            d105 0f                 db         00001111b
-            d106 0a                 db         00001010b
-            d107 7a                 db         01111010b
-            d108 1f                 db         00011111b
-            d109 0a                 db         00001010b
-            d10a 98                 db         10011000b
-            d10b 0f                 db         00001111b
-                             Room9_SomeData
-            d10c 02                 db         00000010b
-            d10d 0c                 db         00001100b
-            d10e 11                 db         00010001b
-            d10f 0f                 db         00001111b
-            d110 03                 db         00000011b
-            d111 3e                 db         00111110b
-            d112 0f                 db         00001111b
-            d113 05                 db         00000101b
-            d114 5c                 db         01011100b
-            d115 37                 db         00110111b
-                             Room10_SomeData
-            d116 00                 db         00000000b
-            d117 0c                 db         00001100b
-            d118 11                 db         00010001b
-            d119 0e                 db         00001110b
+                             Drop Positions
+                             Format:
+                             byte 0: number of drops areas (add 1)
+                             for every area
+                             byte 0: drop positions count
+                             byte 1: vertical position in screen pixels
+                             byte 2: horizontal position in screen pixels
+                             Room0_DropPositions
+            d073 06                 db         6
+            d074 0c                 db         12
+            d075 11                 db         17
+            d076 0f                 db         15
+            d077 09                 db         9
+            d078 3e                 db         62
+            d079 27                 db         39
+            d07a 01                 db         1
+            d07b 6b                 db         107
+            d07c 0f                 db         15
+            d07d 05                 db         5
+            d07e 6b                 db         107
+            d07f 2f                 db         47
+            d080 01                 db         1
+            d081 98                 db         152
+            d082 1f                 db         31
+            d083 01                 db         1
+            d084 98                 db         152
+            d085 3f                 db         63
+            d086 01                 db         1
+            d087 98                 db         152
+            d088 5f                 db         95
+                             Room1_DropPositions
+            d089 05                 db         5
+            d08a 05                 db         5
+            d08b 11                 db         17
+            d08c 0f                 db         15
+            d08d 04                 db         4
+            d08e 11                 db         17
+            d08f 4f                 db         79
+            d090 05                 db         5
+            d091 3e                 db         62
+            d092 0f                 db         15
+            d093 01                 db         1
+            d094 3e                 db         62
+            d095 4f                 db         79
+            d096 01                 db         1
+            d097 6b                 db         107
+            d098 67                 db         103
+            d099 02                 db         2
+            d09a 98                 db         152
+            d09b 47                 db         71
+                             Room2_DropPositions
+            d09c 04                 db         4
+            d09d 0c                 db         12
+            d09e 11                 db         17
+            d09f 0f                 db         15
+            d0a0 02                 db         2
+            d0a1 3e                 db         62
+            d0a2 0f                 db         15
+            d0a3 01                 db         1
+            d0a4 3e                 db         62
+            d0a5 37                 db         55
+            d0a6 09                 db         9
+            d0a7 6b                 db         107
+            d0a8 27                 db         39
+            d0a9 04                 db         4
+            d0aa 98                 db         152
+            d0ab 0f                 db         15
+                             Room3_DropPositions
+            d0ac 05                 db         5
+            d0ad 0c                 db         12
+            d0ae 11                 db         17
+            d0af 0f                 db         15
+            d0b0 03                 db         3
+            d0b1 3e                 db         62
+            d0b2 0f                 db         15
+            d0b3 06                 db         6
+            d0b4 3e                 db         62
+            d0b5 3f                 db         63
+            d0b6 03                 db         3
+            d0b7 6b                 db         107
+            d0b8 0f                 db         15
+            d0b9 00                 db         0
+            d0ba 98                 db         152
+            d0bb 0f                 db         15
+            d0bc 01                 db         1
+            d0bd 98                 db         152
+            d0be 2f                 db         47
+                             Room4_DropPositions
+            d0bf 04                 db         4
+            d0c0 0c                 db         12
+            d0c1 11                 db         17
+            d0c2 0f                 db         15
+            d0c3 01                 db         1
+            d0c4 3e                 db         62
+            d0c5 0f                 db         15
+            d0c6 08                 db         8
+            d0c7 4d                 db         77
+            d0c8 1f                 db         31
+            d0c9 01                 db         1
+            d0ca 98                 db         152
+            d0cb 2f                 db         47
+            d0cc 01                 db         1
+            d0cd 98                 db         152
+            d0ce 57                 db         87
+                             Room5_DropPositions
+            d0cf 04                 db         4
+            d0d0 0c                 db         12
+            d0d1 11                 db         17
+            d0d2 0f                 db         15
+            d0d3 01                 db         1
+            d0d4 3e                 db         62
+            d0d5 67                 db         103
+            d0d6 0a                 db         10
+            d0d7 6b                 db         107
+            d0d8 1f                 db         31
+            d0d9 01                 db         1
+            d0da 98                 db         152
+            d0db 0f                 db         15
+            d0dc 02                 db         2
+            d0dd 98                 db         152
+            d0de 47                 db         71
+                             Room6_DropPositions
+            d0df 01                 db         1
+            d0e0 0c                 db         12
+            d0e1 11                 db         17
+            d0e2 0f                 db         15
+            d0e3 09                 db         9
+            d0e4 5c                 db         92
+            d0e5 27                 db         39
+                             Room7_DropPositions
+            d0e6 06                 db         6
+            d0e7 05                 db         5
+            d0e8 11                 db         17
+            d0e9 0f                 db         15
+            d0ea 01                 db         1
+            d0eb 20                 db         32
+            d0ec 3f                 db         63
+            d0ed 04                 db         4
+            d0ee 11                 db         17
+            d0ef 4f                 db         79
+            d0f0 00                 db         0
+            d0f1 5c                 db         92
+            d0f2 27                 db         39
+            d0f3 00                 db         0
+            d0f4 5c                 db         92
+            d0f5 57                 db         87
+            d0f6 00                 db         0
+            d0f7 6b                 db         107
+            d0f8 2f                 db         47
+            d0f9 00                 db         0
+            d0fa 6b                 db         107
+            d0fb 4f                 db         79
+                             Room8_DropPositions
+            d0fc 04                 db         4
+            d0fd 0c                 db         12
+            d0fe 11                 db         17
+            d0ff 0f                 db         15
+            d100 08                 db         8
+            d101 3e                 db         62
+            d102 2f                 db         47
+            d103 0a                 db         10
+            d104 5c                 db         92
+            d105 0f                 db         15
+            d106 0a                 db         10
+            d107 7a                 db         122
+            d108 1f                 db         31
+            d109 0a                 db         10
+            d10a 98                 db         152
+            d10b 0f                 db         15
+                             Room9_DropPositions
+            d10c 02                 db         2
+            d10d 0c                 db         12
+            d10e 11                 db         17
+            d10f 0f                 db         15
+            d110 03                 db         3
+            d111 3e                 db         62
+            d112 0f                 db         15
+            d113 05                 db         5
+            d114 5c                 db         92
+            d115 37                 db         55
+                             Room10_DropPositions
+            d116 00                 db         0                                             count of drops areas
+            d117 0c                 db         12                                            number of drops
+            d118 11                 db         17                                            vertical position in screen pixels
+            d119 0e                 db         14                                            horizontal position in screen pixels
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
@@ -21875,22 +21884,22 @@
             d82b 1f 02              TFR        D,Y
             d82d d6 22              LDB        <SomeValue_0x22                               = ??
             d82f c4 03              ANDB       #0x3
-            d831 ce d8 4a           LDU        #SomeData_0xd84a                              = C0h
+            d831 ce d8 4a           LDU        #Drops_HorizontalAdjustmentValues             = C0h
             d834 30 44              LEAX       0x4,U                                         choose the second 4 byte table at d84a
                                                                                              for some reason
             d836 96 20              LDA        <SomeValue_0x20                               = ??
             d838 2b 0f              BMI        LAB_d849
             d83a a6 86              LDA        A,X=>DAT_d84e
-            d83c a4 c5              ANDA       B,U=>SomeData_0xd84a                          = C0h
+            d83c a4 c5              ANDA       B,U=>Drops_HorizontalAdjustmentValues         = C0h
             d83e a7 e2              STA        ,-S=>local_1
-            d840 a6 c5              LDA        B,U=>SomeData_0xd84a                          = C0h
+            d840 a6 c5              LDA        B,U=>Drops_HorizontalAdjustmentValues         = C0h
             d842 43                 COMA
             d843 a4 a4              ANDA       ,Y
             d845 aa e0              ORA        ,S+
             d847 a7 a4              STA        ,Y
                              LAB_d849                                        XREF[1]:     d838(j)  
             d849 39                 RTS
-                             SomeData_0xd84a                                 XREF[5]:     UpdateAndDrawDrops:cffe(*), 
+                             Drops_HorizontalAdjustmentValues                XREF[5]:     UpdateAndDrawDrops:cffe(*), 
                                                                                           UpdateAndDrawDrops:d005(*), 
                                                                                           FUN_d827:d831(*), 
                                                                                           FUN_d827:d83c(*), 
@@ -22895,9 +22904,9 @@
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined DropsFunction_MaybeToHandleDropDeath()
+                             undefined GenerateRandomNumberFrom0ToB()
              undefined         A:1            <RETURN>
-                             DropsFunction_MaybeToHandleDropDeath            XREF[2]:     UpdateAndDrawDrops:cfd4(c), 
+                             GenerateRandomNumberFrom0ToB                    XREF[2]:     UpdateAndDrawDrops:cfd4(c), 
                                                                                           UpdateAndDrawDrops:cfdb(c)  
             dc1f 34 12              PSHS        X A
             dc21 4f                 CLRA
@@ -22933,7 +22942,7 @@
                                                                                           UpdateRoomTimers:cc2b(c), 
                                                                                           UpdateRoomTimers:cc30(c), 
                                                                                           InitRoomKeysAndPickups:d1ab(c), 
-                                                                                          DropsFunction_MaybeToHandleDropD
+                                                                                          GenerateRandomNumberFrom0ToB:dc2
             dc39 34 10              PSHS        X
             dc3b 9e 61              LDX        <RomAddressCounter_0xc000to0xdf5a_0x61        = ??
             dc3d 30 01              LEAX       0x1,X
