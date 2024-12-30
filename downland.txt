@@ -74,17 +74,18 @@
                                                                                           ClearVideoMemory_0x0400_to_0x340
                                                                                           InitBouncingBall:ce9b(*), [more]
             001b                    dw         ??
-                             SomeValue_CounterMaybe_0x1d                     XREF[4]:     FUN_d762:d76e(*), 
-                                                                                          SomeOtherFunctionFromATable:d7e8
-                                                                                          SomeOtherFunctionFromATable:d7f4
+                             SomeValue_CounterMaybe_0x1d                     XREF[4]:     DrawBackgroundPiece:d76e(*), 
+                                                                                          JUMP_d7e6:d7e8(*), 
+                                                                                          JUMP_d7e6:d7f4(*), 
                                                                                           UpdateObjectPhysics_Maybe:d888(*
             001d                    ??         ??
-                             SomeValue_0x1e                                  XREF[5]:     FUN_d762:d766(*), d801(*), 
+                             SomeValue_0x1e                                  XREF[5]:     DrawBackgroundPiece:d766(*), 
+                                                                                          d801(*), 
                                                                                           SomeReferencedFunction:d810(*), 
                                                                                           d824(*), 
                                                                                           UpdateObjectPhysics_Maybe:d884(*
             001e                    ??         ??
-                             SomeValue_0x1f                                  XREF[1]:     FUN_d762:d76a(*)  
+                             SomeValue_0x1f                                  XREF[1]:     DrawBackgroundPiece:d76a(*)  
             001f                    ??         ??
                              SomeValue_0x20                                  XREF[9]:     DrawBackground:d250(*), d672(*), 
                                                                                           d678(*), d684(*), d68a(*), 
@@ -97,20 +98,19 @@
                                                                                           d822(*), FUN_d827:d827(*), 
                                                                                           UpdateObjectPhysics_Maybe:d87e(*
             0021                    ??         ??
-                             SomeValue_0x22                                  XREF[3]:     SomeOtherFunctionFromATable:d7e6
-                                                                                          SomeOtherFunctionFromATable:d7fa
+                             SomeValue_0x22                                  XREF[3]:     JUMP_d7e6:d7e6(*), 
+                                                                                          JUMP_d7e6:d7fa(*), 
                                                                                           FUN_d827:d82d(*)  
             0022                    ??         ??
                              PlayerY_Byte_0x23                               XREF[2]:     Jump_IsAlreadyClimbing:c907(*), 
                                                                                           Jump_IsAlreadyClimbing:c91b(*)  
             0023                    ??         ??
-                             SomeValue_0x24                                  XREF[2]:     FUN_d762:d764(*), 
-                                                                                          FUN_d762:d778(*)  
+                             SomeValue_0x24                                  XREF[2]:     DrawBackgroundPiece:d764(*), 
+                                                                                          DrawBackgroundPiece:d778(*)  
             0024                    ??         ??
                              SomeValue_0x25                                  XREF[4]:     d790(*), 
                                                                                           SomeOtherFunctionFromATable:d7a7
-                                                                                          d7c9(*), 
-                                                                                          SomeOtherFunctionFromATable:d7ec
+                                                                                          d7c9(*), JUMP_d7e6:d7ec(*)  
             0025                    ??         ??
                              UtilityCounter_0x26                             XREF[39]:    FUN_c3b3:c0ac(*), 
                                                                                           FUN_c3b3:c0b9(*), 
@@ -17328,7 +17328,7 @@
                              **************************************************************
                              * Draw Title Screen                                          *
                              **************************************************************
-            c09e ce ce c4           LDU        #SomeBackgroundDrawingOffsets_0xcec4          = 80h
+            c09e ce ce c4           LDU        #TitleScreenBackground_DrawCommands           = 80h
             c0a1 bd d2 4e           JSR        DrawBackground                                = ??
                                                                                              undefined DrawBackground(void)
                              Print Intro Text To Screen
@@ -18253,7 +18253,7 @@
             c634 bd ce 10           JSR        ClearVideoMemory_0x0400_to_0x3400             undefined ClearVideoMemory_0x0400_to_0x3400(void)
             c637 cc 1c 00           LDD        #VideoMemory_Page1_0x1c00                     = ??
             c63a bd cd f7           JSR        SetupSAMPages                                 undefined SetupSAMPages(byte param_1)
-            c63d ce ce c4           LDU        #SomeBackgroundDrawingOffsets_0xcec4          = 80h
+            c63d ce ce c4           LDU        #TitleScreenBackground_DrawCommands           = 80h
             c640 bd d2 4e           JSR        DrawBackground                                undefined DrawBackground(void)
             c643 96 52              LDA        <CurrentPlayer_0x52                           = ??
             c645 84 02              ANDA       #0x2
@@ -19656,19 +19656,19 @@
             cebf 9f 3b              STX        <RoomGraphicsAndDoorDataAddress_0x3b          = ??
             cec1 0f 39              CLR        <CurrentRoomNumber_0x39                       = ??
             cec3 39                 RTS
-                             SomeBackgroundDrawingOffsets_0xcec4             XREF[2]:     FUN_c3b3:c09e(*), 
+                             TitleScreenBackground_DrawCommands              XREF[2]:     FUN_c3b3:c09e(*), 
                                                                                           FUN_c3b3:c63d(*)  
-            cec4 80                 ??         80h
-            cec5 0c                 ??         0Ch
-            cec6 04                 ??         04h
-            cec7 81                 ??         81h
-            cec8 0a                 ??         0Ah
-            cec9 89                 ??         89h
-            ceca 0e                 ??         0Eh
-            cecb 87                 ??         87h
-            cecc 0a                 ??         0Ah
-            cecd 02                 ??         02h
-            cece ff                 ??         FFh
+            cec4 80                 db         80h                                           shape code: over 127 means that it repeats. stalactite
+            cec5 0c                 db         Ch                                            repeat count for previous shape.
+            cec6 04                 db         4h                                            top right hand corner piece
+            cec7 81                 db         81h                                           repeatable wall, going down
+            cec8 0a                 db         Ah                                            repeat 10 times
+            cec9 89                 db         89h                                           repeatable floor piece going left
+            ceca 0e                 db         Eh                                            repeat 15 times
+            cecb 87                 db         87h                                           repeatable wall, going up
+            cecc 0a                 db         Ah                                            do it 10 times
+            cecd 02                 db         2h                                            left hand corner piece
+            cece ff                 db         FFh                                           end
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
@@ -20450,11 +20450,43 @@
                              **************************************************************
                              undefined __stdcall DrawBackground(void)
              undefined         A:1            <RETURN>
-                             No idea how this function draws. Something
-                             about going up and down. Maybe it's for 
-                             line drawing? It's not tile based, that's for
-                             sure. Drawing seems to jump from small function
-                             to small function.
+                             Each room has an array of draw commands. 
+                             Each command defines a shape to draw. 
+                             Commands with the highest bit set get repeated 
+                             with the next byte in the buffer being the repeat count. 
+                             Background Piece codes
+                                     0: normal stalagtite going right
+                                     1: single wall piece going down
+                                     2: left hand corner piece
+                                     3: top right hand corner piece / bottom left side of 
+                                     4: top right hand corner piece
+                                     5: bottom right side of floating platforms
+                                     6: floor piece going right
+                                     7: wall piece going up
+                                     8: corner piece going down-left
+                                     9: floor piece going left
+                                     a: short line going down
+                                     b: short line going up
+                                     c: very short rope
+                                     d: short rope
+                                     e: mid-length rope
+                                     f: long rope
+                                     10: very long rope
+                                     11: super long rope
+                                     12: excessively long rope
+                                     13: rediculously long rope
+                                     14: horizontal rope start going right
+                                     15: horizontal rope end going right
+                                     16: horizontal rope going right
+                                     17: blank area going right
+                                     18: blank area going left, maybe
+                                     19: blank area going down-right
+                                     repeatable pieces (code + count)
+                                     80: stalagtite (80 + 0)
+                                     81: wall going down (80 + 1)
+                                     82: left hand corner piece going up-right (80 + 2)
+                                     83: etc, etc.
+                             U contains the pointer to the room draw commands
                              DrawBackground                                  XREF[3]:     FUN_c3b3:c0a1(c), 
                                                                                           FUN_c3b3:c640(c), 
                                                                                           InitRoom_Maybe:cd16(c)  
@@ -20462,7 +20494,7 @@
             d250 97 20              STA        <SomeValue_0x20                               store 1 at 0x20
             d252 cc 10 0f           LDD        #0x100f
             d255 dd 21              STD        <SomeValue_RandomSeedMaybe_0x21               store 0x100f at 0x21-0x22
-            d257 7e d5 9e           JMP        JUMP_ToSomeDataProcessing
+            d257 7e d5 9e           JMP        Jump_ProcessDrawCommands
                              RoomGraphicsAndDoorData_0xd25a                  XREF[1]:     InitVideoAndSetupRoomAndGraphics
             d25a d2 6e              dw         Room0_GraphicsAndDoorData                     = D35Eh
             d25c d2 7d              dw         Room1_GraphicsAndDoorData                     = D3A0h
@@ -20475,7 +20507,7 @@
             d26a d3 3a              dw         Room8_GraphicsAndDoorData                     = D52Fh
             d26c d3 49              dw         Room9_GraphicsAndDoorData                     = D561h
                              Room0_GraphicsAndDoorData                       XREF[1]:     d25a(*)  
-            d26e d3 5e              dw         Room0_AdditionalData                          first level exit door?
+            d26e d3 5e              dw         Room0_DrawCommands                            first level exit door?
             d270 ff ff              dw         FFFFh                                         initial start up "door", maybe
                              InitialPlayerPosition_0xd272                    XREF[1]:     FUN_c3b3:c15e(R)  
             d272 a5 70              dw         A570h                                         initial game start position
@@ -20487,7 +20519,7 @@
             d27b 01                 db         1h                                            global door index
             d27c 00                 db         0h                                            end tag
                              Room1_GraphicsAndDoorData                       XREF[1]:     d25c(*)  
-            d27d d3 a0              dw         Room1_AdditionalData                          = 80h
+            d27d d3 a0              dw         Room1_DrawCommands                            = 80h
             d27f 87 05              dw         8705h                                         first door spawn position
             d281 1e 70              dw         1E70h                                         spawn here in next room
             d283 00                 db         0h                                            room index, maybe
@@ -20506,7 +20538,7 @@
             d296 1a                 db         1Ah
             d297 00                 db         0h
                              Room2_GraphicsAndDoorData                       XREF[1]:     d25e(*)  
-            d298 d3 e4              dw         Room2_AdditionalData                          = 80h
+            d298 d3 e4              dw         Room2_DrawCommands                            = 80h
             d29a a5 05              dw         A505h
             d29c 4b 70              dw         4B70h
             d29e 01                 db         1h
@@ -20533,7 +20565,7 @@
             d2bd 15                 db         15h
             d2be 00                 db         0h
                              Room3_GraphicsAndDoorData                       XREF[1]:     d260(*)  
-            d2bf d4 26              dw         Room3_AdditionalData                          = 80h
+            d2bf d4 26              dw         Room3_DrawCommands                            = 80h
             d2c1 78 05              dw         7805h
             d2c3 78 70              dw         7870h
             d2c5 02                 db         2h
@@ -20564,7 +20596,7 @@
             d2ea 10                 db         10h
             d2eb 00                 db         0h
                              Room4_GraphicsAndDoorData                       XREF[1]:     d262(*)  
-            d2ec d4 67              dw         Room4_AdditionalData                          = 80h
+            d2ec d4 67              dw         Room4_DrawCommands                            = 80h
             d2ee a5 05              dw         A505h
             d2f0 a5 70              dw         A570h
             d2f2 03                 db         3h
@@ -20583,7 +20615,7 @@
             d305 0f                 db         Fh
             d306 00                 db         0h
                              Room5_GraphicsAndDoorData                       XREF[1]:     d264(*)  
-            d307 d4 a2              dw         Room5_AdditionalData                          = 12h
+            d307 d4 a2              dw         Room5_DrawCommands                            = 12h
             d309 87 72              dw         8772h
             d30b 1e 07              dw         1E07h
             d30d 02                 db         2h
@@ -20598,7 +20630,7 @@
             d31a 1a                 db         1Ah
             d31b 00                 db         0h
                              Room6_GraphicsAndDoorData                       XREF[1]:     d266(*)  
-            d31c d4 d9              dw         Room6_AdditionalData                          = 13h
+            d31c d4 d9              dw         Room6_DrawCommands                            = 13h
             d31e 78 72              dw         7872h
             d320 1e 07              dw         1E07h
             d322 01                 db         1h
@@ -20609,7 +20641,7 @@
             d329 18                 db         18h
             d32a 00                 db         0h
                              Room7_GraphicsAndDoorData                       XREF[1]:     d268(*)  
-            d32b d4 f6              dw         Room7_AdditionalData
+            d32b d4 f6              dw         Room7_DrawCommands
             d32d a5 05              dw         A505h
             d32f 4b 70              dw         4B70h
             d331 05                 db         5h
@@ -20620,7 +20652,7 @@
             d338 1c                 db         1Ch
             d339 00                 db         0h
                              Room8_GraphicsAndDoorData                       XREF[1]:     d26a(*)  
-            d33a d5 2f              dw         Room8_AdditionalData                          = 14h
+            d33a d5 2f              dw         Room8_DrawCommands                            = 14h
             d33c a5 05              dw         A505h
             d33e 4b 70              dw         4B70h
             d340 07                 db         7h
@@ -20631,7 +20663,7 @@
             d347 1e                 db         1Eh
             d348 00                 db         0h
                              Room9_GraphicsAndDoorData                       XREF[1]:     d26c(*)  
-            d349 d5 61              dw         Room9_AdditionalData                          = 80h
+            d349 d5 61              dw         Room9_DrawCommands                            = 80h
             d34b 96 05              dw         9605h
             d34d a5 70              dw         A570h
             d34f 08                 db         8h
@@ -20645,7 +20677,7 @@
             d35b 00                 db         0h
             d35c 21                 db         21h
             d35d 00                 db         0h
-                             Room0_AdditionalData                            XREF[1]:     d26e(*)  
+                             Room0_DrawCommands                              XREF[1]:     d26e(*)  
             d35e 0f                 db         Fh
             d35f 80                 db         80h
             d360 06                 db         6h
@@ -20712,592 +20744,589 @@
             d39d 04                 db         4h
             d39e 02                 db         2h
             d39f ff                 db         FFh
-                             Room1_AdditionalData                            XREF[1]:     d27d(*)  
-            d3a0 80                 ??         80h
-            d3a1 05                 ??         05h
-            d3a2 04                 ??         04h
-            d3a3 17                 ??         17h
-            d3a4 02                 ??         02h
-            d3a5 00                 ??         00h
-            d3a6 00                 ??         00h
-            d3a7 0d                 ??         0Dh
-            d3a8 00                 ??         00h
-            d3a9 04                 ??         04h
-            d3aa 0a                 ??         0Ah
-            d3ab 09                 ??         09h
-            d3ac 03                 ??         03h
-            d3ad 01                 ??         01h
-            d3ae 0a                 ??         0Ah
-            d3af 89                 ??         89h
-            d3b0 03                 ??         03h
-            d3b1 03                 ??         03h
-            d3b2 0f                 ??         0Fh
-            d3b3 04                 ??         04h
-            d3b4 81                 ??         81h
-            d3b5 04                 ??         04h
-            d3b6 89                 ??         89h
-            d3b7 0a                 ??         0Ah
-            d3b8 87                 ??         87h
-            d3b9 06                 ??         06h
-            d3ba 09                 ??         09h
-            d3bb 81                 ??         81h
-            d3bc 05                 ??         05h
-            d3bd 09                 ??         09h
-            d3be 09                 ??         09h
-            d3bf 07                 ??         07h
-            d3c0 09                 ??         09h
-            d3c1 0b                 ??         0Bh
-            d3c2 87                 ??         87h
-            d3c3 04                 ??         04h
-            d3c4 02                 ??         02h
-            d3c5 10                 ??         10h
-            d3c6 80                 ??         80h
-            d3c7 03                 ??         03h
-            d3c8 12                 ??         12h
-            d3c9 04                 ??         04h
-            d3ca 81                 ??         81h
-            d3cb 04                 ??         04h
-            d3cc 03                 ??         03h
-            d3cd 00                 ??         00h
-            d3ce 00                 ??         00h
-            d3cf 05                 ??         05h
-            d3d0 09                 ??         09h
-            d3d1 07                 ??         07h
-            d3d2 09                 ??         09h
-            d3d3 07                 ??         07h
-            d3d4 09                 ??         09h
-            d3d5 07                 ??         07h
-            d3d6 07                 ??         07h
-            d3d7 02                 ??         02h
-            d3d8 0d                 ??         0Dh
-            d3d9 07                 ??         07h
-            d3da 09                 ??         09h
-            d3db 09                 ??         09h
-            d3dc 07                 ??         07h
-            d3dd 18                 ??         18h
-            d3de 01                 ??         01h
-            d3df 89                 ??         89h
-            d3e0 07                 ??         07h
-            d3e1 0b                 ??         0Bh
-            d3e2 02                 ??         02h
-            d3e3 ff                 ??         FFh
-                             Room2_AdditionalData                            XREF[1]:     d298(*)  
-            d3e4 80                 ??         80h
-            d3e5 03                 ??         03h
-            d3e6 0c                 ??         0Ch
-            d3e7 80                 ??         80h
-            d3e8 04                 ??         04h
-            d3e9 0f                 ??         0Fh
-            d3ea 00                 ??         00h
-            d3eb 0d                 ??         0Dh
-            d3ec 00                 ??         00h
-            d3ed 04                 ??         04h
-            d3ee 0a                 ??         0Ah
-            d3ef 09                 ??         09h
-            d3f0 03                 ??         03h
-            d3f1 01                 ??         01h
-            d3f2 0a                 ??         0Ah
-            d3f3 89                 ??         89h
-            d3f4 09                 ??         09h
-            d3f5 19                 ??         19h
-            d3f6 00                 ??         00h
-            d3f7 0f                 ??         0Fh
-            d3f8 80                 ??         80h
-            d3f9 03                 ??         03h
-            d3fa 0c                 ??         0Ch
-            d3fb 00                 ??         00h
-            d3fc 00                 ??         00h
-            d3fd 04                 ??         04h
-            d3fe 0a                 ??         0Ah
-            d3ff 09                 ??         09h
-            d400 09                 ??         09h
-            d401 01                 ??         01h
-            d402 09                 ??         09h
-            d403 09                 ??         09h
-            d404 01                 ??         01h
-            d405 09                 ??         09h
-            d406 09                 ??         09h
-            d407 01                 ??         01h
-            d408 89                 ??         89h
-            d409 08                 ??         08h
-            d40a 0b                 ??         0Bh
-            d40b 02                 ??         02h
-            d40c 80                 ??         80h
-            d40d 04                 ??         04h
-            d40e 07                 ??         07h
-            d40f 89                 ??         89h
-            d410 05                 ??         05h
-            d411 0b                 ??         0Bh
-            d412 87                 ??         87h
-            d413 03                 ??         03h
-            d414 02                 ??         02h
-            d415 0f                 ??         0Fh
-            d416 00                 ??         00h
-            d417 04                 ??         04h
-            d418 01                 ??         01h
-            d419 09                 ??         09h
-            d41a 03                 ??         03h
-            d41b 00                 ??         00h
-            d41c 1a                 ??         1Ah
-            d41d 07                 ??         07h
-            d41e 02                 ??         02h
-            d41f 0c                 ??         0Ch
-            d420 05                 ??         05h
-            d421 89                 ??         89h
-            d422 08                 ??         08h
-            d423 0b                 ??         0Bh
-            d424 02                 ??         02h
-            d425 ff                 ??         FFh
-                             Room3_AdditionalData                            XREF[1]:     d2bf(*)  
-            d426 80                 ??         80h
-            d427 0c                 ??         0Ch
-            d428 04                 ??         04h
-            d429 0a                 ??         0Ah
-            d42a 89                 ??         89h
-            d42b 0d                 ??         0Dh
-            d42c 19                 ??         19h
-            d42d 80                 ??         80h
-            d42e 03                 ??         03h
-            d42f 04                 ??         04h
-            d430 01                 ??         01h
-            d431 09                 ??         09h
-            d432 09                 ??         09h
-            d433 01                 ??         01h
-            d434 0f                 ??         0Fh
-            d435 04                 ??         04h
-            d436 01                 ??         01h
-            d437 01                 ??         01h
-            d438 00                 ??         00h
-            d439 87                 ??         87h
-            d43a 05                 ??         05h
-            d43b 02                 ??         02h
-            d43c 12                 ??         12h
-            d43d 00                 ??         00h
-            d43e 0d                 ??         0Dh
-            d43f 00                 ??         00h
-            d440 12                 ??         12h
-            d441 00                 ??         00h
-            d442 04                 ??         04h
-            d443 0a                 ??         0Ah
-            d444 09                 ??         09h
-            d445 03                 ??         03h
-            d446 01                 ??         01h
-            d447 0a                 ??         0Ah
-            d448 09                 ??         09h
-            d449 03                 ??         03h
-            d44a 01                 ??         01h
-            d44b 0a                 ??         0Ah
-            d44c 89                 ??         89h
-            d44d 04                 ??         04h
-            d44e 87                 ??         87h
-            d44f 03                 ??         03h
-            d450 08                 ??         08h
-            d451 81                 ??         81h
-            d452 02                 ??         02h
-            d453 89                 ??         89h
-            d454 09                 ??         09h
-            d455 0b                 ??         0Bh
-            d456 02                 ??         02h
-            d457 05                 ??         05h
-            d458 09                 ??         09h
-            d459 09                 ??         09h
-            d45a 0b                 ??         0Bh
-            d45b 02                 ??         02h
-            d45c 00                 ??         00h
-            d45d 07                 ??         07h
-            d45e 09                 ??         09h
-            d45f 09                 ??         09h
-            d460 0b                 ??         0Bh
-            d461 02                 ??         02h
-            d462 1a                 ??         1Ah
-            d463 09                 ??         09h
-            d464 0b                 ??         0Bh
-            d465 02                 ??         02h
-            d466 ff                 ??         FFh
-                             Room4_AdditionalData                            XREF[1]:     d2ec(*)  
-            d467 80                 ??         80h
-            d468 0b                 ??         0Bh
-            d469 12                 ??         12h
-            d46a 04                 ??         04h
-            d46b 81                 ??         81h
-            d46c 0a                 ??         0Ah
-            d46d 89                 ??         89h
-            d46e 0e                 ??         0Eh
-            d46f 0b                 ??         0Bh
-            d470 07                 ??         07h
-            d471 05                 ??         05h
-            d472 09                 ??         09h
-            d473 0b                 ??         0Bh
-            d474 07                 ??         07h
-            d475 05                 ??         05h
-            d476 09                 ??         09h
-            d477 0b                 ??         0Bh
-            d478 02                 ??         02h
-            d479 00                 ??         00h
-            d47a 04                 ??         04h
-            d47b 11                 ??         11h
-            d47c 00                 ??         00h
-            d47d 14                 ??         14h
-            d47e 96                 ??         96h
-            d47f 04                 ??         04h
-            d480 15                 ??         15h
-            d481 98                 ??         98h
-            d482 06                 ??         06h
-            d483 80                 ??         80h
-            d484 06                 ??         06h
-            d485 19                 ??         19h
-            d486 19                 ??         19h
-            d487 09                 ??         09h
-            d488 98                 ??         98h
-            d489 04                 ??         04h
-            d48a 09                 ??         09h
-            d48b 81                 ??         81h
-            d48c 03                 ??         03h
-            d48d 0c                 ??         0Ch
-            d48e 87                 ??         87h
-            d48f 03                 ??         03h
-            d490 97                 ??         97h
-            d491 04                 ??         04h
-            d492 81                 ??         81h
-            d493 03                 ??         03h
-            d494 0c                 ??         0Ch
-            d495 87                 ??         87h
-            d496 03                 ??         03h
-            d497 1a                 ??         1Ah
-            d498 1a                 ??         1Ah
-            d499 07                 ??         07h
-            d49a 89                 ??         89h
-            d49b 07                 ??         07h
-            d49c 07                 ??         07h
-            d49d 89                 ??         89h
-            d49e 04                 ??         04h
-            d49f 0b                 ??         0Bh
-            d4a0 02                 ??         02h
-            d4a1 ff                 ??         FFh
-                             Room5_AdditionalData                            XREF[1]:     d307(*)  
-            d4a2 12                 ??         12h
-            d4a3 80                 ??         80h
-            d4a4 07                 ??         07h
-            d4a5 0d                 ??         0Dh
-            d4a6 80                 ??         80h
-            d4a7 03                 ??         03h
-            d4a8 04                 ??         04h
-            d4a9 0a                 ??         0Ah
-            d4aa 89                 ??         89h
-            d4ab 03                 ??         03h
-            d4ac 03                 ??         03h
-            d4ad 00                 ??         00h
-            d4ae 04                 ??         04h
-            d4af 0a                 ??         0Ah
-            d4b0 89                 ??         89h
-            d4b1 04                 ??         04h
-            d4b2 07                 ??         07h
-            d4b3 09                 ??         09h
-            d4b4 07                 ??         07h
-            d4b5 09                 ??         09h
-            d4b6 07                 ??         07h
-            d4b7 89                 ??         89h
-            d4b8 05                 ??         05h
-            d4b9 81                 ??         81h
-            d4ba 04                 ??         04h
-            d4bb 0d                 ??         0Dh
-            d4bc 00                 ??         00h
-            d4bd 0f                 ??         0Fh
-            d4be 80                 ??         80h
-            d4bf 07                 ??         07h
-            d4c0 04                 ??         04h
-            d4c1 01                 ??         01h
-            d4c2 0a                 ??         0Ah
-            d4c3 09                 ??         09h
-            d4c4 09                 ??         09h
-            d4c5 07                 ??         07h
-            d4c6 89                 ??         89h
-            d4c7 05                 ??         05h
-            d4c8 03                 ??         03h
-            d4c9 00                 ??         00h
-            d4ca 00                 ??         00h
-            d4cb 04                 ??         04h
-            d4cc 01                 ??         01h
-            d4cd 89                 ??         89h
-            d4ce 0b                 ??         0Bh
-            d4cf 0b                 ??         0Bh
-            d4d0 02                 ??         02h
-            d4d1 00                 ??         00h
-            d4d2 07                 ??         07h
-            d4d3 09                 ??         09h
-            d4d4 09                 ??         09h
-            d4d5 87                 ??         87h
-            d4d6 07                 ??         07h
-            d4d7 02                 ??         02h
-            d4d8 ff                 ??         FFh
-                             Room6_AdditionalData                            XREF[1]:     d31c(*)  
-            d4d9 13                 ??         13h
-            d4da 80                 ??         80h
-            d4db 09                 ??         09h
-            d4dc 0d                 ??         0Dh
-            d4dd 00                 ??         00h
-            d4de 04                 ??         04h
-            d4df 01                 ??         01h
-            d4e0 01                 ??         01h
-            d4e1 0a                 ??         0Ah
-            d4e2 89                 ??         89h
-            d4e3 0b                 ??         0Bh
-            d4e4 03                 ??         03h
-            d4e5 80                 ??         80h
-            d4e6 07                 ??         07h
-            d4e7 10                 ??         10h
-            d4e8 00                 ??         00h
-            d4e9 04                 ??         04h
-            d4ea 01                 ??         01h
-            d4eb 0a                 ??         0Ah
-            d4ec 09                 ??         09h
-            d4ed 03                 ??         03h
-            d4ee 01                 ??         01h
-            d4ef 01                 ??         01h
-            d4f0 89                 ??         89h
-            d4f1 0e                 ??         0Eh
-            d4f2 87                 ??         87h
-            d4f3 0a                 ??         0Ah
-            d4f4 02                 ??         02h
-            d4f5 ff                 ??         FFh
-                             Room7_AdditionalData                            XREF[1]:     d32b(*)  
-            d4f6 00                 ??         00h
-            d4f7 13                 ??         13h
-            d4f8 80                 ??         80h
-            d4f9 03                 ??         03h
-            d4fa 04                 ??         04h
-            d4fb 00                 ??         00h
-            d4fc 02                 ??         02h
-            d4fd 00                 ??         00h
-            d4fe 00                 ??         00h
-            d4ff 13                 ??         13h
-            d500 00                 ??         00h
-            d501 04                 ??         04h
-            d502 81                 ??         81h
-            d503 03                 ??         03h
-            d504 0a                 ??         0Ah
-            d505 09                 ??         09h
-            d506 03                 ??         03h
-            d507 81                 ??         81h
-            d508 05                 ??         05h
-            d509 89                 ??         89h
-            d50a 07                 ??         07h
-            d50b 07                 ??         07h
-            d50c 07                 ??         07h
-            d50d 05                 ??         05h
-            d50e 07                 ??         07h
-            d50f 02                 ??         02h
-            d510 02                 ??         02h
-            d511 07                 ??         07h
-            d512 07                 ??         07h
-            d513 09                 ??         09h
-            d514 01                 ??         01h
-            d515 09                 ??         09h
-            d516 01                 ??         01h
-            d517 09                 ??         09h
-            d518 09                 ??         09h
-            d519 07                 ??         07h
-            d51a 09                 ??         09h
-            d51b 07                 ??         07h
-            d51c 09                 ??         09h
-            d51d 01                 ??         01h
-            d51e 01                 ??         01h
-            d51f 84                 ??         84h
-            d520 03                 ??         03h
-            d521 08                 ??         08h
-            d522 01                 ??         01h
-            d523 01                 ??         01h
-            d524 89                 ??         89h
-            d525 06                 ??         06h
-            d526 87                 ??         87h
-            d527 06                 ??         06h
-            d528 05                 ??         05h
-            d529 09                 ??         09h
-            d52a 0b                 ??         0Bh
-            d52b 87                 ??         87h
-            d52c 02                 ??         02h
-            d52d 02                 ??         02h
-            d52e ff                 ??         FFh
-                             Room8_AdditionalData                            XREF[1]:     d33a(*)  
-            d52f 14                 ??         14h
-            d530 96                 ??         96h
-            d531 09                 ??         09h
-            d532 15                 ??         15h
-            d533 98                 ??         98h
-            d534 0b                 ??         0Bh
-            d535 0f                 ??         0Fh
-            d536 80                 ??         80h
-            d537 09                 ??         09h
-            d538 0d                 ??         0Dh
-            d539 00                 ??         00h
-            d53a 04                 ??         04h
-            d53b 01                 ??         01h
-            d53c 0a                 ??         0Ah
-            d53d 89                 ??         89h
-            d53e 09                 ??         09h
-            d53f 86                 ??         86h
-            d540 07                 ??         07h
-            d541 0e                 ??         0Eh
-            d542 04                 ??         04h
-            d543 81                 ??         81h
-            d544 03                 ??         03h
-            d545 89                 ??         89h
-            d546 0b                 ??         0Bh
-            d547 86                 ??         86h
-            d548 09                 ??         09h
-            d549 0e                 ??         0Eh
-            d54a 04                 ??         04h
-            d54b 81                 ??         81h
-            d54c 03                 ??         03h
-            d54d 89                 ??         89h
-            d54e 0e                 ??         0Eh
-            d54f 0b                 ??         0Bh
-            d550 02                 ??         02h
-            d551 86                 ??         86h
-            d552 0a                 ??         0Ah
-            d553 89                 ??         89h
-            d554 0b                 ??         0Bh
-            d555 87                 ??         87h
-            d556 03                 ??         03h
-            d557 02                 ??         02h
-            d558 0e                 ??         0Eh
-            d559 86                 ??         86h
-            d55a 09                 ??         09h
-            d55b 89                 ??         89h
-            d55c 0b                 ??         0Bh
-            d55d 87                 ??         87h
-            d55e 04                 ??         04h
-            d55f 02                 ??         02h
-            d560 ff                 ??         FFh
-                             Room9_AdditionalData                            XREF[1]:     d349(*)  
-            d561 80                 ??         80h
-            d562 05                 ??         05h
-            d563 0d                 ??         0Dh
-            d564 00                 ??         00h
-            d565 0d                 ??         0Dh
-            d566 00                 ??         00h
-            d567 0d                 ??         0Dh
-            d568 00                 ??         00h
-            d569 12                 ??         12h
-            d56a 04                 ??         04h
-            d56b 81                 ??         81h
-            d56c 0a                 ??         0Ah
-            d56d 89                 ??         89h
-            d56e 0a                 ??         0Ah
-            d56f 9a                 ??         9Ah
-            d570 03                 ??         03h
-            d571 05                 ??         05h
-            d572 09                 ??         09h
-            d573 09                 ??         09h
-            d574 03                 ??         03h
-            d575 99                 ??         99h
-            d576 03                 ??         03h
-            d577 09                 ??         09h
-            d578 09                 ??         09h
-            d579 07                 ??         07h
-            d57a 09                 ??         09h
-            d57b 09                 ??         09h
-            d57c 87                 ??         87h
-            d57d 06                 ??         06h
-            d57e 02                 ??         02h
-            d57f 11                 ??         11h
-            d580 00                 ??         00h
-            d581 00                 ??         00h
-            d582 19                 ??         19h
-            d583 17                 ??         17h
-            d584 17                 ??         17h
-            d585 01                 ??         01h
-            d586 0d                 ??         0Dh
-            d587 07                 ??         07h
-            d588 17                 ??         17h
-            d589 01                 ??         01h
-            d58a 0d                 ??         0Dh
-            d58b 07                 ??         07h
-            d58c 17                 ??         17h
-            d58d 01                 ??         01h
-            d58e 0d                 ??         0Dh
-            d58f 07                 ??         07h
-            d590 09                 ??         09h
-            d591 18                 ??         18h
-            d592 09                 ??         09h
-            d593 18                 ??         18h
-            d594 09                 ??         09h
-            d595 18                 ??         18h
-            d596 18                 ??         18h
-            d597 1a                 ??         1Ah
-            d598 05                 ??         05h
-            d599 89                 ??         89h
-            d59a 05                 ??         05h
-            d59b 0b                 ??         0Bh
-            d59c 02                 ??         02h
-            d59d ff                 ??         FFh
-                             JUMP_ToSomeDataProcessing                       XREF[1]:     d257(j)  
-            d59e 8e d5 bb           LDX        #BackgroundDrawingFunctionAddresses_d5bb      load the address of a data block to X
-                             U will have SomeBackgroundDrawingOffsets_0xcec4
-                             LOOP_GetNextOffset_d5a1                         XREF[1]:     d5b8(j)  
-            d5a1 a6 c0              LDA        ,U+                                           load value at U to A, increment U
-            d5a3 2a 07              BPL        JUMP_IsPlus
+                             Room1_DrawCommands                              XREF[1]:     d27d(*)  
+            d3a0 80                 db         80h
+            d3a1 05                 db         5h
+            d3a2 04                 db         4h
+            d3a3 17                 db         17h
+            d3a4 02                 db         2h
+            d3a5 00                 db         0h
+            d3a6 00                 db         0h
+            d3a7 0d                 db         Dh
+            d3a8 00                 db         0h
+            d3a9 04                 db         4h
+            d3aa 0a                 db         Ah
+            d3ab 09                 db         9h
+            d3ac 03                 db         3h
+            d3ad 01                 db         1h
+            d3ae 0a                 db         Ah
+            d3af 89                 db         89h
+            d3b0 03                 db         3h
+            d3b1 03                 db         3h
+            d3b2 0f                 db         Fh
+            d3b3 04                 db         4h
+            d3b4 81                 db         81h
+            d3b5 04                 db         4h
+            d3b6 89                 db         89h
+            d3b7 0a                 db         Ah
+            d3b8 87                 db         87h
+            d3b9 06                 db         6h
+            d3ba 09                 db         9h
+            d3bb 81                 db         81h
+            d3bc 05                 db         5h
+            d3bd 09                 db         9h
+            d3be 09                 db         9h
+            d3bf 07                 db         7h
+            d3c0 09                 db         9h
+            d3c1 0b                 db         Bh
+            d3c2 87                 db         87h
+            d3c3 04                 db         4h
+            d3c4 02                 db         2h
+            d3c5 10                 db         10h
+            d3c6 80                 db         80h
+            d3c7 03                 db         3h
+            d3c8 12                 db         12h
+            d3c9 04                 db         4h
+            d3ca 81                 db         81h
+            d3cb 04                 db         4h
+            d3cc 03                 db         3h
+            d3cd 00                 db         0h
+            d3ce 00                 db         0h
+            d3cf 05                 db         5h
+            d3d0 09                 db         9h
+            d3d1 07                 db         7h
+            d3d2 09                 db         9h
+            d3d3 07                 db         7h
+            d3d4 09                 db         9h
+            d3d5 07                 db         7h
+            d3d6 07                 db         7h
+            d3d7 02                 db         2h
+            d3d8 0d                 db         Dh
+            d3d9 07                 db         7h
+            d3da 09                 db         9h
+            d3db 09                 db         9h
+            d3dc 07                 db         7h
+            d3dd 18                 db         18h
+            d3de 01                 db         1h
+            d3df 89                 db         89h
+            d3e0 07                 db         7h
+            d3e1 0b                 db         Bh
+            d3e2 02                 db         2h
+            d3e3 ff                 db         FFh
+                             Room2_DrawCommands                              XREF[1]:     d298(*)  
+            d3e4 80                 db         80h
+            d3e5 03                 db         3h
+            d3e6 0c                 db         Ch
+            d3e7 80                 db         80h
+            d3e8 04                 db         4h
+            d3e9 0f                 db         Fh
+            d3ea 00                 db         0h
+            d3eb 0d                 db         Dh
+            d3ec 00                 db         0h
+            d3ed 04                 db         4h
+            d3ee 0a                 db         Ah
+            d3ef 09                 db         9h
+            d3f0 03                 db         3h
+            d3f1 01                 db         1h
+            d3f2 0a                 db         Ah
+            d3f3 89                 db         89h
+            d3f4 09                 db         9h
+            d3f5 19                 db         19h
+            d3f6 00                 db         0h
+            d3f7 0f                 db         Fh
+            d3f8 80                 db         80h
+            d3f9 03                 db         3h
+            d3fa 0c                 db         Ch
+            d3fb 00                 db         0h
+            d3fc 00                 db         0h
+            d3fd 04                 db         4h
+            d3fe 0a                 db         Ah
+            d3ff 09                 db         9h
+            d400 09                 db         9h
+            d401 01                 db         1h
+            d402 09                 db         9h
+            d403 09                 db         9h
+            d404 01                 db         1h
+            d405 09                 db         9h
+            d406 09                 db         9h
+            d407 01                 db         1h
+            d408 89                 db         89h
+            d409 08                 db         8h
+            d40a 0b                 db         Bh
+            d40b 02                 db         2h
+            d40c 80                 db         80h
+            d40d 04                 db         4h
+            d40e 07                 db         7h
+            d40f 89                 db         89h
+            d410 05                 db         5h
+            d411 0b                 db         Bh
+            d412 87                 db         87h
+            d413 03                 db         3h
+            d414 02                 db         2h
+            d415 0f                 db         Fh
+            d416 00                 db         0h
+            d417 04                 db         4h
+            d418 01                 db         1h
+            d419 09                 db         9h
+            d41a 03                 db         3h
+            d41b 00                 db         0h
+            d41c 1a                 db         1Ah
+            d41d 07                 db         7h
+            d41e 02                 db         2h
+            d41f 0c                 db         Ch
+            d420 05                 db         5h
+            d421 89                 db         89h
+            d422 08                 db         8h
+            d423 0b                 db         Bh
+            d424 02                 db         2h
+            d425 ff                 db         FFh
+                             Room3_DrawCommands                              XREF[1]:     d2bf(*)  
+            d426 80                 db         80h
+            d427 0c                 db         Ch
+            d428 04                 db         4h
+            d429 0a                 db         Ah
+            d42a 89                 db         89h
+            d42b 0d                 db         Dh
+            d42c 19                 db         19h
+            d42d 80                 db         80h
+            d42e 03                 db         3h
+            d42f 04                 db         4h
+            d430 01                 db         1h
+            d431 09                 db         9h
+            d432 09                 db         9h
+            d433 01                 db         1h
+            d434 0f                 db         Fh
+            d435 04                 db         4h
+            d436 01                 db         1h
+            d437 01                 db         1h
+            d438 00                 db         0h
+            d439 87                 db         87h
+            d43a 05                 db         5h
+            d43b 02                 db         2h
+            d43c 12                 db         12h
+            d43d 00                 db         0h
+            d43e 0d                 db         Dh
+            d43f 00                 db         0h
+            d440 12                 db         12h
+            d441 00                 db         0h
+            d442 04                 db         4h
+            d443 0a                 db         Ah
+            d444 09                 db         9h
+            d445 03                 db         3h
+            d446 01                 db         1h
+            d447 0a                 db         Ah
+            d448 09                 db         9h
+            d449 03                 db         3h
+            d44a 01                 db         1h
+            d44b 0a                 db         Ah
+            d44c 89                 db         89h
+            d44d 04                 db         4h
+            d44e 87                 db         87h
+            d44f 03                 db         3h
+            d450 08                 db         8h
+            d451 81                 db         81h
+            d452 02                 db         2h
+            d453 89                 db         89h
+            d454 09                 db         9h
+            d455 0b                 db         Bh
+            d456 02                 db         2h
+            d457 05                 db         5h
+            d458 09                 db         9h
+            d459 09                 db         9h
+            d45a 0b                 db         Bh
+            d45b 02                 db         2h
+            d45c 00                 db         0h
+            d45d 07                 db         7h
+            d45e 09                 db         9h
+            d45f 09                 db         9h
+            d460 0b                 db         Bh
+            d461 02                 db         2h
+            d462 1a                 db         1Ah
+            d463 09                 db         9h
+            d464 0b                 db         Bh
+            d465 02                 db         2h
+            d466 ff                 db         FFh
+                             Room4_DrawCommands                              XREF[1]:     d2ec(*)  
+            d467 80                 db         80h
+            d468 0b                 db         Bh
+            d469 12                 db         12h
+            d46a 04                 db         4h
+            d46b 81                 db         81h
+            d46c 0a                 db         Ah
+            d46d 89                 db         89h
+            d46e 0e                 db         Eh
+            d46f 0b                 db         Bh
+            d470 07                 db         7h
+            d471 05                 db         5h
+            d472 09                 db         9h
+            d473 0b                 db         Bh
+            d474 07                 db         7h
+            d475 05                 db         5h
+            d476 09                 db         9h
+            d477 0b                 db         Bh
+            d478 02                 db         2h
+            d479 00                 db         0h
+            d47a 04                 db         4h
+            d47b 11                 db         11h
+            d47c 00                 db         0h
+            d47d 14                 db         14h
+            d47e 96                 db         96h
+            d47f 04                 db         4h
+            d480 15                 db         15h
+            d481 98                 db         98h
+            d482 06                 db         6h
+            d483 80                 db         80h
+            d484 06                 db         6h
+            d485 19                 db         19h
+            d486 19                 db         19h
+            d487 09                 db         9h
+            d488 98                 db         98h
+            d489 04                 db         4h
+            d48a 09                 db         9h
+            d48b 81                 db         81h
+            d48c 03                 db         3h
+            d48d 0c                 db         Ch
+            d48e 87                 db         87h
+            d48f 03                 db         3h
+            d490 97                 db         97h
+            d491 04                 db         4h
+            d492 81                 db         81h
+            d493 03                 db         3h
+            d494 0c                 db         Ch
+            d495 87                 db         87h
+            d496 03                 db         3h
+            d497 1a                 db         1Ah
+            d498 1a                 db         1Ah
+            d499 07                 db         7h
+            d49a 89                 db         89h
+            d49b 07                 db         7h
+            d49c 07                 db         7h
+            d49d 89                 db         89h
+            d49e 04                 db         4h
+            d49f 0b                 db         Bh
+            d4a0 02                 db         2h
+            d4a1 ff                 db         FFh
+                             Room5_DrawCommands                              XREF[1]:     d307(*)  
+            d4a2 12                 db         12h
+            d4a3 80                 db         80h
+            d4a4 07                 db         7h
+            d4a5 0d                 db         Dh
+            d4a6 80                 db         80h
+            d4a7 03                 db         3h
+            d4a8 04                 db         4h
+            d4a9 0a                 db         Ah
+            d4aa 89                 db         89h
+            d4ab 03                 db         3h
+            d4ac 03                 db         3h
+            d4ad 00                 db         0h
+            d4ae 04                 db         4h
+            d4af 0a                 db         Ah
+            d4b0 89                 db         89h
+            d4b1 04                 db         4h
+            d4b2 07                 db         7h
+            d4b3 09                 db         9h
+            d4b4 07                 db         7h
+            d4b5 09                 db         9h
+            d4b6 07                 db         7h
+            d4b7 89                 db         89h
+            d4b8 05                 db         5h
+            d4b9 81                 db         81h
+            d4ba 04                 db         4h
+            d4bb 0d                 db         Dh
+            d4bc 00                 db         0h
+            d4bd 0f                 db         Fh
+            d4be 80                 db         80h
+            d4bf 07                 db         7h
+            d4c0 04                 db         4h
+            d4c1 01                 db         1h
+            d4c2 0a                 db         Ah
+            d4c3 09                 db         9h
+            d4c4 09                 db         9h
+            d4c5 07                 db         7h
+            d4c6 89                 db         89h
+            d4c7 05                 db         5h
+            d4c8 03                 db         3h
+            d4c9 00                 db         0h
+            d4ca 00                 db         0h
+            d4cb 04                 db         4h
+            d4cc 01                 db         1h
+            d4cd 89                 db         89h
+            d4ce 0b                 db         Bh
+            d4cf 0b                 db         Bh
+            d4d0 02                 db         2h
+            d4d1 00                 db         0h
+            d4d2 07                 db         7h
+            d4d3 09                 db         9h
+            d4d4 09                 db         9h
+            d4d5 87                 db         87h
+            d4d6 07                 db         7h
+            d4d7 02                 db         2h
+            d4d8 ff                 db         FFh
+                             Room6_DrawCommands                              XREF[1]:     d31c(*)  
+            d4d9 13                 db         13h
+            d4da 80                 db         80h
+            d4db 09                 db         9h
+            d4dc 0d                 db         Dh
+            d4dd 00                 db         0h
+            d4de 04                 db         4h
+            d4df 01                 db         1h
+            d4e0 01                 db         1h
+            d4e1 0a                 db         Ah
+            d4e2 89                 db         89h
+            d4e3 0b                 db         Bh
+            d4e4 03                 db         3h
+            d4e5 80                 db         80h
+            d4e6 07                 db         7h
+            d4e7 10                 db         10h
+            d4e8 00                 db         0h
+            d4e9 04                 db         4h
+            d4ea 01                 db         1h
+            d4eb 0a                 db         Ah
+            d4ec 09                 db         9h
+            d4ed 03                 db         3h
+            d4ee 01                 db         1h
+            d4ef 01                 db         1h
+            d4f0 89                 db         89h
+            d4f1 0e                 db         Eh
+            d4f2 87                 db         87h
+            d4f3 0a                 db         Ah
+            d4f4 02                 db         2h
+            d4f5 ff                 db         FFh
+                             Room7_DrawCommands                              XREF[1]:     d32b(*)  
+            d4f6 00                 db         0h
+            d4f7 13                 db         13h
+            d4f8 80                 db         80h
+            d4f9 03                 db         3h
+            d4fa 04                 db         4h
+            d4fb 00                 db         0h
+            d4fc 02                 db         2h
+            d4fd 00                 db         0h
+            d4fe 00                 db         0h
+            d4ff 13                 db         13h
+            d500 00                 db         0h
+            d501 04                 db         4h
+            d502 81                 db         81h
+            d503 03                 db         3h
+            d504 0a                 db         Ah
+            d505 09                 db         9h
+            d506 03                 db         3h
+            d507 81                 db         81h
+            d508 05                 db         5h
+            d509 89                 db         89h
+            d50a 07                 db         7h
+            d50b 07                 db         7h
+            d50c 07                 db         7h
+            d50d 05                 db         5h
+            d50e 07                 db         7h
+            d50f 02                 db         2h
+            d510 02                 db         2h
+            d511 07                 db         7h
+            d512 07                 db         7h
+            d513 09                 db         9h
+            d514 01                 db         1h
+            d515 09                 db         9h
+            d516 01                 db         1h
+            d517 09                 db         9h
+            d518 09                 db         9h
+            d519 07                 db         7h
+            d51a 09                 db         9h
+            d51b 07                 db         7h
+            d51c 09                 db         9h
+            d51d 01                 db         1h
+            d51e 01                 db         1h
+            d51f 84                 db         84h
+            d520 03                 db         3h
+            d521 08                 db         8h
+            d522 01                 db         1h
+            d523 01                 db         1h
+            d524 89                 db         89h
+            d525 06                 db         6h
+            d526 87                 db         87h
+            d527 06                 db         6h
+            d528 05                 db         5h
+            d529 09                 db         9h
+            d52a 0b                 db         Bh
+            d52b 87                 db         87h
+            d52c 02                 db         2h
+            d52d 02                 db         2h
+            d52e ff                 db         FFh
+                             Room8_DrawCommands                              XREF[1]:     d33a(*)  
+            d52f 14                 db         14h
+            d530 96                 db         96h
+            d531 09                 db         9h
+            d532 15                 db         15h
+            d533 98                 db         98h
+            d534 0b                 db         Bh
+            d535 0f                 db         Fh
+            d536 80                 db         80h
+            d537 09                 db         9h
+            d538 0d                 db         Dh
+            d539 00                 db         0h
+            d53a 04                 db         4h
+            d53b 01                 db         1h
+            d53c 0a                 db         Ah
+            d53d 89                 db         89h
+            d53e 09                 db         9h
+            d53f 86                 db         86h
+            d540 07                 db         7h
+            d541 0e                 db         Eh
+            d542 04                 db         4h
+            d543 81                 db         81h
+            d544 03                 db         3h
+            d545 89                 db         89h
+            d546 0b                 db         Bh
+            d547 86                 db         86h
+            d548 09                 db         9h
+            d549 0e                 db         Eh
+            d54a 04                 db         4h
+            d54b 81                 db         81h
+            d54c 03                 db         3h
+            d54d 89                 db         89h
+            d54e 0e                 db         Eh
+            d54f 0b                 db         Bh
+            d550 02                 db         2h
+            d551 86                 db         86h
+            d552 0a                 db         Ah
+            d553 89                 db         89h
+            d554 0b                 db         Bh
+            d555 87                 db         87h
+            d556 03                 db         3h
+            d557 02                 db         2h
+            d558 0e                 db         Eh
+            d559 86                 db         86h
+            d55a 09                 db         9h
+            d55b 89                 db         89h
+            d55c 0b                 db         Bh
+            d55d 87                 db         87h
+            d55e 04                 db         4h
+            d55f 02                 db         2h
+            d560 ff                 db         FFh
+                             Room9_DrawCommands                              XREF[1]:     d349(*)  
+            d561 80                 db         80h
+            d562 05                 db         5h
+            d563 0d                 db         Dh
+            d564 00                 db         0h
+            d565 0d                 db         Dh
+            d566 00                 db         0h
+            d567 0d                 db         Dh
+            d568 00                 db         0h
+            d569 12                 db         12h
+            d56a 04                 db         4h
+            d56b 81                 db         81h
+            d56c 0a                 db         Ah
+            d56d 89                 db         89h
+            d56e 0a                 db         Ah
+            d56f 9a                 db         9Ah
+            d570 03                 db         3h
+            d571 05                 db         5h
+            d572 09                 db         9h
+            d573 09                 db         9h
+            d574 03                 db         3h
+            d575 99                 db         99h
+            d576 03                 db         3h
+            d577 09                 db         9h
+            d578 09                 db         9h
+            d579 07                 db         7h
+            d57a 09                 db         9h
+            d57b 09                 db         9h
+            d57c 87                 db         87h
+            d57d 06                 db         6h
+            d57e 02                 db         2h
+            d57f 11                 db         11h
+            d580 00                 db         0h
+            d581 00                 db         0h
+            d582 19                 db         19h
+            d583 17                 db         17h
+            d584 17                 db         17h
+            d585 01                 db         1h
+            d586 0d                 db         Dh
+            d587 07                 db         7h
+            d588 17                 db         17h
+            d589 01                 db         1h
+            d58a 0d                 db         Dh
+            d58b 07                 db         7h
+            d58c 17                 db         17h
+            d58d 01                 db         1h
+            d58e 0d                 db         Dh
+            d58f 07                 db         7h
+            d590 09                 db         9h
+            d591 18                 db         18h
+            d592 09                 db         9h
+            d593 18                 db         18h
+            d594 09                 db         9h
+            d595 18                 db         18h
+            d596 18                 db         18h
+            d597 1a                 db         1Ah
+            d598 05                 db         5h
+            d599 89                 db         89h
+            d59a 05                 db         5h
+            d59b 0b                 db         Bh
+            d59c 02                 db         2h
+            d59d ff                 db         FFh
+                             Jump_ProcessDrawCommands                        XREF[1]:     d257(j)  
+            d59e 8e d5 bb           LDX        #DrawCommandFunctions_d5bb                    load the address of a data block to X
+                             U will point to the room's draw commands
+                             LOOP_GetNextDrawCommand                         XREF[1]:     d5b8(j)  
+            d5a1 a6 c0              LDA        ,U+                                           get next command, increment U
+            d5a3 2a 07              BPL        Jump_SingleDrawCommand
             d5a5 4c                 INCA                                                     is not plus, so increment
-            d5a6 27 12              BEQ        JUMP_IsZero
+            d5a6 27 12              BEQ        Jump_EncounteredFFEndValue                    Ju
             d5a8 4a                 DECA
-            d5a9 e6 c0              LDB        ,U+                                           move to next value in 
-                                                                                             SomeBackgroundDrawingOffsets_0xcec4
-            d5ab 8c c6 01           CMPX       #0xc601                                       if JUMP_IsPlus and JUMP_IsZero are skipped, then it 
-                                                                                             falls through this comparison instruction (3 bytes) 
-                                                                                             that does nothing. If JUMP_IsPlus is used, then it 
-                                                                                             lands in the middle of the instruction, which becomes 
-                                                                                             a LDB 0x1
+            d5a9 e6 c0              LDB        ,U+                                           This is a repeatable command, get the count and store in B
+            d5ab 8c c6 01           CMPX       #0xc601
                              -- Length Override: 1 (actual length is 3)
                              -- Fallthrough: d5ae
-                             JUMP_IsPlus                                     XREF[1]:     d5a3(j)  
+                             Jump_SingleDrawCommand                          XREF[1]:     d5a3(j)  
             d5ac c6 01              LDB        #0x1                                          load 1 to B, overriding above. but why?
                              LAB_d5ae                                        XREF[1]:     d5ab  
-            d5ae 48                 LSLA                                                     double A
-                             LOOP_d5af                                       XREF[1]:     d5b6(j)  
+            d5ae 48                 LSLA                                                     double A to get the appropriate function address
+                                                                                             offset from the DrawCommandFunctions array
+                             Loop_CallDrawCommand                            XREF[1]:     d5b6(j)  
             d5af 34 56              PSHS        U X B A                                      push to the stack
-            d5b1 ad 96              JSR        [A,X]                                         call function from
-                                                                                             BackgroundDrawingFunctionAddresses_d5bb
-                                                                                             table
-                                                                                             A is the offset
+            d5b1 ad 96              JSR        [A,X]                                         call function from DrawCommandFunctions_d5bb table 
+                                                                                             A is the offset into the table
             d5b3 35 56              PULS        A B X U                                      done calling the function
             d5b5 5a                 DECB
-            d5b6 26 f7              BNE        LOOP_d5af                                     are we done?
-            d5b8 20 e7              BRA        LOOP_GetNextOffset_d5a1
-                             JUMP_IsZero                                     XREF[1]:     d5a6(j)  
+            d5b6 26 f7              BNE        Loop_CallDrawCommand                          are we done?
+            d5b8 20 e7              BRA        LOOP_GetNextDrawCommand
+                             Jump_EncounteredFFEndValue                      XREF[1]:     d5a6(j)  
             d5ba 39                 RTS
-                             BackgroundDrawingFunctionAddresses_d5bb         XREF[1]:     DrawBackground:d59e(*)  
-            d5bb d5 f1              dw         LAB_d5f1
-            d5bd d6 06              dw         LAB_d606
-            d5bf d6 20              dw         LAB_d620
-            d5c1 d6 3f              dw         LAB_d63f
-            d5c3 d6 4e              addr       SomeFunction_FromTable
-            d5c5 d6 5e              dw         LAB_d65e
-            d5c7 d6 91              dw         DAT_d691                                      = CEh
-            d5c9 d6 01              dw         LAB_d601
-            d5cb d6 2f              dw         LAB_d62f
-            d5cd d6 9b              dw         DAT_d69b                                      = CEh
-            d5cf d6 a4              dw         DAT_d6a4                                      = CEh
-            d5d1 d6 ad              dw         DAT_d6ad                                      = CEh
-            d5d3 d6 d4              dw         DAT_d6d4                                      = 8Eh
-            d5d5 d6 e0              dw         DAT_d6e0                                      = 8Eh
-            d5d7 d6 ec              dw         DAT_d6ec                                      = 8Eh
-            d5d9 d6 f8              dw         DAT_d6f8                                      = 8Eh
-            d5db d7 04              dw         DAT_d704                                      = 8Eh
-            d5dd d7 10              dw         DAT_d710                                      = 8Eh
-            d5df d7 1c              dw         DAT_d71c                                      = 8Eh
-            d5e1 d7 28              dw         DAT_d728                                      = 8Eh
-            d5e3 d6 6d              dw         LAB_d66d
-            d5e5 d6 7f              dw         LAB_d67f
-            d5e7 d7 54              dw         DAT_d754                                      = CEh
-            d5e9 d6 b6              dw         DAT_d6b6                                      = CEh
-            d5eb d6 c5              dw         DAT_d6c5                                      = CEh
-            d5ed d6 ca              dw         DAT_d6ca                                      = CEh
-            d5ef d6 cf              dw         LAB_d6cf
-                             LAB_d5f1                                        XREF[1]:     d5bb(*)  
-            d5f1 ce d5 f7           LDU        #DAT_d5f7                                     = 03h
-            d5f4 7e d7 62           JMP        FUN_d762
+                             there are more than two dozen different pieces
+                             these seem to be the function related to drawing
+                             each piece. maybe.
+                             DrawCommandFunctions_d5bb                       XREF[1]:     DrawBackground:d59e(*)  
+            d5bb d5 f1              dw         DrawPiece_00_Stalagtite
+            d5bd d6 06              dw         DrawPiece_01_WallGoingDown
+            d5bf d6 20              dw         DrawPiece_02_LeftHandCornerPiece
+            d5c1 d6 3f              dw         DrawPiece_03_TopRightHandCornerPiece
+            d5c3 d6 4e              dw *       DrawPiece_04_TopRightHandCornerPiece2
+            d5c5 d6 5e              dw         DrawPiece_05_BottomRightSideOfFloatingPlatfo
+            d5c7 d6 91              dw         DrawPiece_06_FloorPieceGoingRight             = CEh
+            d5c9 d6 01              dw         DrawPiece_07_WallPieceGoingUp
+            d5cb d6 2f              dw         DrawPiece_08_CornerPieceGoingDownLeft
+            d5cd d6 9b              dw         DrawPiece_09_FloorPieceGoingLeft              DrawPiece_0_
+            d5cf d6 a4              dw         DrawPiece_0a_ShortLineGoingDown
+            d5d1 d6 ad              dw         DrawPiece_0b_ShortLineGoingUp
+            d5d3 d6 d4              dw         DrawPiece_0c_VeryShortRope
+            d5d5 d6 e0              dw         DrawPiece_0d_ShortRope
+            d5d7 d6 ec              dw         DrawPiece_0e_MidLengthRope
+            d5d9 d6 f8              dw         DrawPiece_0f_LongRope
+            d5db d7 04              dw         DrawPiece_10_VeryLongRope
+            d5dd d7 10              dw         DrawPiece_11_SuperLongRope
+            d5df d7 1c              dw         DrawPiece_12_ExcessivelyLongRope
+            d5e1 d7 28              dw         DrawPiece_13_RediculouslyLongRope
+            d5e3 d6 6d              dw         DrawPiece_14_HorizontalRopeStartGoingRight
+            d5e5 d6 7f              dw         DrawPiece_15_HorizontalRopeEndGoingRight
+            d5e7 d7 54              dw         DrawPiece_16_HorizontalRopeGoingRight
+            d5e9 d6 b6              dw         DrawPiece_17_BlankAreaGoingRight
+            d5eb d6 c5              dw         DrawPiece_18_BlankAreaGoingLeft
+            d5ed d6 ca              dw         DrawPiece_19_BlankAreaGoingDownRight
+            d5ef d6 cf              dw         DrawPiece_20_UnknownOrBuggy
+                             DrawPiece_00_Stalagtite                         XREF[1]:     d5bb(*)  
+            d5f1 ce d5 f7           LDU        #DrawData_00_Stalagtite                       = 03h
+            d5f4 7e d7 62           JMP        DrawBackgroundPiece
                              -- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
-                             DAT_d5f7                                        XREF[1]:     d5f1(*)  
+                             DrawData_00_Stalagtite                          XREF[1]:     d5f1(*)  
             d5f7 03                 ??         03h
             d5f8 80                 ??         80h
             d5f9 04                 ??         04h
@@ -21308,428 +21337,395 @@
             d5fe 80                 ??         80h
             d5ff 07                 ??         07h
             d600 00                 ??         00h
-                             LAB_d601                                        XREF[1]:     d5c9(*)  
-            d601 ce d6 16           LDU        #BYTE_d616                                    = 03h
-            d604 20 03              BRA        LAB_d609
-                             LAB_d606                                        XREF[1]:     d5bd(*)  
-            d606 ce d6 0c           LDU        #BYTE_d60c                                    = 3h
-                             LAB_d609                                        XREF[1]:     d604(j)  
-            d609 7e d7 62           JMP        FUN_d762
-                             BYTE_d60c                                       XREF[1]:     d606(*)  
-            d60c 03                 db         3h
+                             DrawPiece_07_WallPieceGoingUp                   XREF[1]:     d5c9(*)  
+            d601 ce d6 16           LDU        #DrawData_07_WallPieceGoingUp                 = 03h
+            d604 20 03              BRA        Jump_JumpToDrawBackgroundPiece
+                             DrawPiece_01_WallGoingDown                      XREF[1]:     d5bd(*)  
+            d606 ce d6 0c           LDU        #DrawData_01_WallGoingDown                    = 03h
+                             Jump_JumpToDrawBackgroundPiece                  XREF[1]:     d604(j)  
+            d609 7e d7 62           JMP        DrawBackgroundPiece
+                             -- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
+                             DrawData_01_WallGoingDown                       XREF[1]:     d606(*)  
+            d60c 03                 db         03h
             d60d 40                 db         40h
-            d60e 08                 db         8h
-            d60f 04                 db         4h
+            d60e 08                 db         08h
+            d60f 04                 db         04h
             d610 40                 db         40h
-            d611 05                 db         5h
-            d612 03                 db         3h
-            d613 00                 db         0h
-            d614 05                 db         5h
-            d615 04                 db         4h
-                             BYTE_d616                                       XREF[3]:     d601(*), d6cf(*), 
-                                                                                          FUN_d762:d762(R)  
+            d611 05                 db         05h
+            d612 03                 db         03h
+            d613 00                 db         00h
+            d614 05                 db         05h
+            d615 04                 db         04h
+                             DrawData_07_WallPieceGoingUp                    XREF[2]:     d601(*), d6cf(*)  
             d616 03                 db         03h
-                             BYTE_d617                                       XREF[1]:     FUN_d762:d768(R)  
+                             BYTE_d617                                       XREF[1]:     DrawBackgroundPiece:d768(R)  
             d617 00                 db         00h
-                             BYTE_d618                                       XREF[1]:     FUN_d762:d76c(R)  
+                             BYTE_d618                                       XREF[1]:     DrawBackgroundPiece:d76c(R)  
             d618 05                 db         05h
-                             BYTE_d619                                       XREF[1]:     FUN_d762:d770(R)  
+                             BYTE_d619                                       XREF[1]:     DrawBackgroundPiece:d770(R)  
             d619 00                 db         00h
-                             BYTE_d61a                                       XREF[1]:     FUN_d762:d768(R)  
+                             BYTE_d61a                                       XREF[1]:     DrawBackgroundPiece:d768(R)  
             d61a 40                 db         40h
-                             BYTE_d61b                                       XREF[1]:     FUN_d762:d76c(R)  
+                             BYTE_d61b                                       XREF[1]:     DrawBackgroundPiece:d76c(R)  
             d61b 05                 db         05h
-                             BYTE_d61c                                       XREF[1]:     FUN_d762:d770(R)  
+                             BYTE_d61c                                       XREF[1]:     DrawBackgroundPiece:d770(R)  
             d61c 07                 db         07h
             d61d 40                 db         40h
             d61e 08                 db         08h
             d61f 00                 db         00h
-                             LAB_d620                                        XREF[1]:     d5bf(*)  
-            d620 ce d6 25           LDU        #DAT_d625                                     = 03h
-            d623 20 0d              BRA        LAB_d632
-                             DAT_d625                                        XREF[1]:     d620(*)  
-            d625 03                 ??         03h
-            d626 00                 ??         00h
-            d627 04                 ??         04h
-            d628 07                 ??         07h
-            d629 80                 ??         80h
-            d62a 07                 ??         07h
-            d62b 00                 ??         00h
-            d62c ff                 ??         FFh
-            d62d 07                 ??         07h
-            d62e 00                 ??         00h
-                             LAB_d62f                                        XREF[1]:     d5cb(*)  
-            d62f ce d6 35           LDU        #BYTE_d635                                    = 3h
-                             LAB_d632                                        XREF[1]:     d623(j)  
-            d632 7e d7 62           JMP        FUN_d762
+                             DrawPiece_02_LeftHandCornerPiece                XREF[1]:     d5bf(*)  
+            d620 ce d6 25           LDU        #DrawData_02_LeftHandCornerPiece              = 3h
+            d623 20 0d              BRA        Jump_AnotherJumpToDrawBackgroundPiece
+                             DrawData_02_LeftHandCornerPiece                 XREF[1]:     d620(*)  
+            d625 03                 db         3h
+            d626 00                 db         0h
+            d627 04                 db         4h
+            d628 07                 db         7h
+            d629 80                 db         80h
+            d62a 07                 db         7h
+            d62b 00                 db         0h
+            d62c ff                 db         FFh
+            d62d 07                 db         7h
+            d62e 00                 db         0h
+                             DrawPiece_08_CornerPieceGoingDownLeft           XREF[1]:     d5cb(*)  
+            d62f ce d6 35           LDU        #DrawData_08_CornerPieceGoingDownLeft         = 03h
+                             Jump_AnotherJumpToDrawBackgroundPiece           XREF[1]:     d623(j)  
+            d632 7e d7 62           JMP        DrawBackgroundPiece
                              -- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
-                             BYTE_d635                                       XREF[1]:     d62f(*)  
-            d635 03                 db         3h
+                             DrawData_08_CornerPieceGoingDownLeft            XREF[1]:     d62f(*)  
+            d635 03                 db         03h
             d636 ff                 db         FFh
-            d637 07                 db         7h
-            d638 04                 db         4h
+            d637 07                 db         07h
+            d638 04                 db         04h
             d639 80                 db         80h
-            d63a 07                 db         7h
-            d63b 04                 db         4h
-            d63c 00                 db         0h
-            d63d 04                 db         4h
-            d63e 03                 db         3h
-                             LAB_d63f                                        XREF[1]:     d5c1(*)  
-            d63f ce d6 44           LDU        #DAT_d644                                     = 03h
-            d642 20 0d              BRA        LAB_d651
-                             DAT_d644                                        XREF[2]:     d63f(*), FUN_d762:d762(R)  
-            d644 03                 ??         03h
-                             DAT_d645                                        XREF[1]:     FUN_d762:d768(R)  
-            d645 80                 ??         80h
-                             DAT_d646                                        XREF[1]:     FUN_d762:d76c(R)  
-            d646 06                 ??         06h
-                             DAT_d647                                        XREF[1]:     FUN_d762:d770(R)  
-            d647 03                 ??         03h
-                             DAT_d648                                        XREF[1]:     FUN_d762:d768(R)  
-            d648 00                 ??         00h
-                             DAT_d649                                        XREF[1]:     FUN_d762:d76c(R)  
-            d649 04                 ??         04h
-                             DAT_d64a                                        XREF[1]:     FUN_d762:d770(R)  
-            d64a 03                 ??         03h
-            d64b ff                 ??         FFh
-            d64c 08                 ??         08h
-            d64d 03                 ??         03h
-                             SomeFunction_FromTable                          XREF[1]:     d5c3(*)  
-            d64e ce d6 54           LDU        #DAT_d654                                     set a new U stack
-                             LAB_d651                                        XREF[2]:     d642(j), d661(j)  
-            d651 7e d7 62           JMP        FUN_d762
+            d63a 07                 db         07h
+            d63b 04                 db         04h
+            d63c 00                 db         00h
+            d63d 04                 db         04h
+            d63e 03                 db         03h
+                             DrawPiece_03_TopRightHandCornerPiece            XREF[1]:     d5c1(*)  
+            d63f ce d6 44           LDU        #DrawData_03_TopRightHandCornerPiece          = 3h
+            d642 20 0d              BRA        Jump_AgainAnotherJumpToDrawBackgroundPiece
+                             DrawData_03_TopRightHandCornerPiece             XREF[1]:     d63f(*)  
+            d644 03                 db         3h
+                             BYTE_d645                                       XREF[1]:     DrawBackgroundPiece:d768(R)  
+            d645 80                 db         80h
+                             BYTE_d646                                       XREF[1]:     DrawBackgroundPiece:d76c(R)  
+            d646 06                 db         6h
+                             BYTE_d647                                       XREF[1]:     DrawBackgroundPiece:d770(R)  
+            d647 03                 db         3h
+                             BYTE_d648                                       XREF[1]:     DrawBackgroundPiece:d768(R)  
+            d648 00                 db         0h
+                             BYTE_d649                                       XREF[1]:     DrawBackgroundPiece:d76c(R)  
+            d649 04                 db         4h
+                             BYTE_d64a                                       XREF[1]:     DrawBackgroundPiece:d770(R)  
+            d64a 03                 db         3h
+            d64b ff                 db         FFh
+            d64c 08                 db         8h
+            d64d 03                 db         3h
+                             DrawPiece_04_TopRightHandCornerPiece2           XREF[1]:     d5c3(*)  
+            d64e ce d6 54           LDU        #DrawData_04_TopRightHandCornerPiece2         set a new U stack
+                             Jump_AgainAnotherJumpToDrawBackgroundPiece      XREF[2]:     d642(j), d661(j)  
+            d651 7e d7 62           JMP        DrawBackgroundPiece
                              -- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
-                             DAT_d654                                        XREF[2]:     d64e(*), FUN_d762:d762(R)  
-            d654 03                 undefined1 03h
-                             DAT_d655                                        XREF[1]:     FUN_d762:d768(R)  
-            d655 80                 undefined1 80h
-                             DAT_d656                                        XREF[1]:     FUN_d762:d76c(R)  
-            d656 06                 undefined1 06h
-                             DAT_d657                                        XREF[1]:     FUN_d762:d770(R)  
-            d657 03                 undefined1 03h
-                             DAT_d658                                        XREF[1]:     FUN_d762:d768(R)  
-            d658 ff                 undefined1 FFh
-                             DAT_d659                                        XREF[1]:     FUN_d762:d76c(R)  
-            d659 05                 undefined1 05h
-                             DAT_d65a                                        XREF[1]:     FUN_d762:d770(R)  
-            d65a 03                 undefined1 03h
-            d65b 80                 ??         80h
-            d65c 07                 ??         07h
-            d65d 03                 ??         03h
-                             LAB_d65e                                        XREF[1]:     d5c5(*)  
-            d65e ce d6 63           LDU        #DAT_d663                                     = 03h
-            d661 20 ee              BRA        LAB_d651
-                             DAT_d663                                        XREF[2]:     d65e(*), FUN_d762:d762(R)  
-            d663 03                 undefined1 03h
-                             DAT_d664                                        XREF[1]:     FUN_d762:d768(R)  
-            d664 ff                 undefined1 FFh
-                             DAT_d665                                        XREF[1]:     FUN_d762:d76c(R)  
-            d665 08                 undefined1 08h
-                             DAT_d666                                        XREF[1]:     FUN_d762:d770(R)  
-            d666 00                 undefined1 00h
-                             DAT_d667                                        XREF[1]:     FUN_d762:d768(R)  
-            d667 00                 undefined1 00h
-                             DAT_d668                                        XREF[1]:     FUN_d762:d76c(R)  
-            d668 05                 undefined1 05h
-                             DAT_d669                                        XREF[1]:     FUN_d762:d770(R)  
-            d669 00                 undefined1 00h
-            d66a 80                 ??         80h
-            d66b 05                 ??         05h
-            d66c 00                 ??         00h
-                             LAB_d66d                                        XREF[1]:     d5e3(*)  
-            d66d ce d6 7b           LDU        #DAT_d67b                                     = 01h
+                             DrawData_04_TopRightHandCornerPiece2            XREF[1]:     d64e(*)  
+            d654 03                 db         03h
+                             BYTE_d655                                       XREF[1]:     DrawBackgroundPiece:d768(R)  
+            d655 80                 db         80h
+                             BYTE_d656                                       XREF[1]:     DrawBackgroundPiece:d76c(R)  
+            d656 06                 db         06h
+                             BYTE_d657                                       XREF[1]:     DrawBackgroundPiece:d770(R)  
+            d657 03                 db         03h
+                             BYTE_d658                                       XREF[1]:     DrawBackgroundPiece:d768(R)  
+            d658 ff                 db         FFh
+                             BYTE_d659                                       XREF[1]:     DrawBackgroundPiece:d76c(R)  
+            d659 05                 db         05h
+                             BYTE_d65a                                       XREF[1]:     DrawBackgroundPiece:d770(R)  
+            d65a 03                 db         03h
+            d65b 80                 db         80h
+            d65c 07                 db         07h
+            d65d 03                 db         03h
+                             DrawPiece_05_BottomRightSideOfFloatingPlatforms XREF[1]:     d5c5(*)  
+            d65e ce d6 63           LDU        #DrawData_05_BottomRightSideOfFloatingPlatfo  = 03h
+            d661 20 ee              BRA        Jump_AgainAnotherJumpToDrawBackgroundPiece
+                             DrawData_05_BottomRightSideOfFloatingPlatforms  XREF[1]:     d65e(*)  
+            d663 03                 db         03h
+                             BYTE_d664                                       XREF[1]:     DrawBackgroundPiece:d768(R)  
+            d664 ff                 db         FFh
+                             BYTE_d665                                       XREF[1]:     DrawBackgroundPiece:d76c(R)  
+            d665 08                 db         08h
+                             BYTE_d666                                       XREF[1]:     DrawBackgroundPiece:d770(R)  
+            d666 00                 db         00h
+                             BYTE_d667                                       XREF[1]:     DrawBackgroundPiece:d768(R)  
+            d667 00                 db         00h
+                             BYTE_d668                                       XREF[1]:     DrawBackgroundPiece:d76c(R)  
+            d668 05                 db         05h
+                             BYTE_d669                                       XREF[1]:     DrawBackgroundPiece:d770(R)  
+            d669 00                 db         00h
+            d66a 80                 db         80h
+            d66b 05                 db         05h
+            d66c 00                 db         00h
+                             DrawPiece_14_HorizontalRopeStartGoingRight      XREF[1]:     d5e3(*)  
+            d66d ce d6 7b           LDU        #DrawData_14_HorizontalRopeStartGoingRight    = 01h
             d670 86 03              LDA        #0x3
             d672 97 20              STA        <SomeValue_0x20                               = ??
-            d674 8d 1e              BSR        thunk_FUN_d762                                undefined thunk_FUN_d762(void)
+            d674 8d 1e              BSR        DrawBackgroundPieceWrapper                    undefined DrawBackgroundPieceWrapper(void)
             d676 86 01              LDA        #0x1
             d678 97 20              STA        <SomeValue_0x20                               = ??
             d67a 39                 RTS
-                             DAT_d67b                                        XREF[1]:     d66d(*)  
-            d67b 01                 ??         01h
-            d67c ff                 ??         FFh
-            d67d 0a                 ??         0Ah
-            d67e 03                 ??         03h
-                             LAB_d67f                                        XREF[1]:     d5e5(*)  
-            d67f ce d6 8d           LDU        #DAT_d68d                                     = 01h
+                             DrawData_14_HorizontalRopeStartGoingRight       XREF[1]:     d66d(*)  
+            d67b 01                 db         01h
+            d67c ff                 db         FFh
+            d67d 0a                 db         0Ah
+            d67e 03                 db         03h
+                             DrawPiece_15_HorizontalRopeEndGoingRight        XREF[1]:     d5e5(*)  
+            d67f ce d6 8d           LDU        #DrawData_15_HorizontalRopeEndGoingRight      = 01h
             d682 86 03              LDA        #0x3
             d684 97 20              STA        <SomeValue_0x20                               = ??
-            d686 8d 0c              BSR        thunk_FUN_d762                                undefined thunk_FUN_d762(void)
+            d686 8d 0c              BSR        DrawBackgroundPieceWrapper                    undefined DrawBackgroundPieceWrapper(void)
             d688 86 01              LDA        #0x1
             d68a 97 20              STA        <SomeValue_0x20                               = ??
             d68c 39                 RTS
-                             DAT_d68d                                        XREF[1]:     d67f(*)  
-            d68d 01                 ??         01h
-            d68e ff                 ??         FFh
-            d68f 0a                 ??         0Ah
-            d690 00                 ??         00h
-                             DAT_d691                                        XREF[1]:     d5c7(*)  
-            d691 ce                 ??         CEh
-            d692 d6                 ??         D6h
-            d693 97                 ??         97h
+                             DrawData_15_HorizontalRopeEndGoingRight         XREF[1]:     d67f(*)  
+            d68d 01                 db         01h
+            d68e ff                 db         FFh
+            d68f 0a                 db         0Ah
+            d690 00                 db         00h
+                             DrawPiece_06_FloorPieceGoingRight               XREF[1]:     d5c7(*)  
+            d691 ce                 db         CEh
+            d692 d6                 db         D6h
+            d693 97                 db         97h
                              **************************************************************
                              *                       THUNK FUNCTION                       *
                              **************************************************************
-                             thunk undefined __stdcall thunk_FUN_d762(void)
-                               Thunked-Function: FUN_d762
+                             thunk undefined __stdcall DrawBackgroundPieceWrapper(void)
+                               Thunked-Function: DrawBackgroundPiece
              undefined         A:1            <RETURN>
-                             thunk_FUN_d762                                  XREF[2]:     d674(c), d686(c)  
-            d694 7e d7 62           JMP        FUN_d762
-            d697 01                 ??         01h
-            d698 00                 ??         00h
-            d699 09                 ??         09h
-            d69a 02                 ??         02h
-                             DAT_d69b                                        XREF[1]:     d5cd(*)  
-            d69b ce                 ??         CEh
-            d69c d6                 ??         D6h
-            d69d a0                 ??         A0h
-            d69e 20                 ??         20h     
-            d69f f4                 ??         F4h
-            d6a0 01                 ??         01h
-            d6a1 00                 ??         00h
-            d6a2 09                 ??         09h
-            d6a3 06                 ??         06h
-                             DAT_d6a4                                        XREF[1]:     d5cf(*)  
-            d6a4 ce                 ??         CEh
-            d6a5 d6                 ??         D6h
-            d6a6 a9                 ??         A9h
-            d6a7 20                 ??         20h     
-            d6a8 eb                 ??         EBh
-            d6a9 01                 ??         01h
-            d6aa 00                 ??         00h
-            d6ab 10                 ??         10h
-            d6ac 03                 ??         03h
-                             DAT_d6ad                                        XREF[1]:     d5d1(*)  
-            d6ad ce                 ??         CEh
-            d6ae d6                 ??         D6h
-            d6af b2                 ??         B2h
-            d6b0 20                 ??         20h     
-            d6b1 e2                 ??         E2h
-            d6b2 01                 ??         01h
-            d6b3 00                 ??         00h
-            d6b4 10                 ??         10h
-            d6b5 00                 ??         00h
-                             DAT_d6b6                                        XREF[1]:     d5e9(*)  
-            d6b6 ce                 ??         CEh
-            d6b7 d6                 ??         D6h
-            d6b8 97                 ??         97h
-                             LAB_d6b9                                        XREF[1]:     d6d2(j)  
+                             DrawBackgroundPieceWrapper                      XREF[5]:     d674(c), d686(c), d69e(c), 
+                                                                                          d6a7(c), d6b0(c)  
+            d694 7e d7 62           JMP        DrawBackgroundPiece
+                             DrawData_17_BlankAreaGoingRight                 XREF[2]:     d6b6(*), d754(*)  
+            d697 01                 db         01h
+            d698 00                 db         00h
+            d699 09                 db         09h
+            d69a 02                 db         02h
+                             DrawPiece_09_FloorPieceGoingLeft                XREF[1]:     d5cd(*)  
+            d69b ce d6 a0           LDU        #DrawData_18_BlankAreaGoingLeft               = 01h
+            d69e 20 f4              BRA        DrawBackgroundPieceWrapper                    undefined DrawBackgroundPieceWrapper(void)
+                             -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+                             DrawData_18_BlankAreaGoingLeft                  XREF[2]:     d69b(*), d6c5(*)  
+            d6a0 01                 db         01h
+            d6a1 00                 db         00h
+            d6a2 09                 db         09h
+            d6a3 06                 db         06h
+                             DrawPiece_0a_ShortLineGoingDown                 XREF[1]:     d5cf(*)  
+            d6a4 ce d6 a9           LDU        #DrawData_19_BlankAreaGoingDownRight          = 01h
+            d6a7 20 eb              BRA        DrawBackgroundPieceWrapper                    undefined DrawBackgroundPieceWrapper(void)
+                             -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+                             DrawData_19_BlankAreaGoingDownRight             XREF[2]:     d6a4(*), d6ca(*)  
+            d6a9 01                 db         01h
+            d6aa 00                 db         00h
+            d6ab 10                 db         10h
+            d6ac 03                 db         03h
+                             DrawPiece_0b_ShortLineGoingUp                   XREF[1]:     d5d1(*)  
+            d6ad ce d6 b2           LDU        #DrawData_0b_ShortLineGoingUp                 = 01h
+            d6b0 20 e2              BRA        DrawBackgroundPieceWrapper                    undefined DrawBackgroundPieceWrapper(void)
+                             -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+                             DrawData_0b_ShortLineGoingUp                    XREF[1]:     d6ad(*)  
+            d6b2 01                 db         01h
+            d6b3 00                 db         00h
+            d6b4 10                 db         10h
+            d6b5 00                 db         00h
+                             DrawPiece_17_BlankAreaGoingRight                XREF[1]:     d5e9(*)  
+            d6b6 ce d6 97           LDU        #DrawData_17_BlankAreaGoingRight              = 01h
+                             Jump_DrawBlankArea                              XREF[3]:     d6c8(j), d6cd(j), d6d2(j)  
             d6b9 86 ff              LDA        #0xff
             d6bb 97 20              STA        <SomeValue_0x20                               = ??
-            d6bd bd d7 62           JSR        FUN_d762                                      undefined FUN_d762(void)
+            d6bd bd d7 62           JSR        DrawBackgroundPiece                           undefined DrawBackgroundPiece(void)
             d6c0 86 01              LDA        #0x1
             d6c2 97 20              STA        <SomeValue_0x20                               = ??
             d6c4 39                 RTS
-                             DAT_d6c5                                        XREF[1]:     d5eb(*)  
-            d6c5 ce                 ??         CEh
-            d6c6 d6                 ??         D6h
-            d6c7 a0                 ??         A0h
-            d6c8 20                 ??         20h     
-            d6c9 ef                 ??         EFh
-                             DAT_d6ca                                        XREF[1]:     d5ed(*)  
-            d6ca ce                 ??         CEh
-            d6cb d6                 ??         D6h
-            d6cc a9                 ??         A9h
-            d6cd 20                 ??         20h     
-            d6ce ea                 ??         EAh
-                             LAB_d6cf                                        XREF[1]:     d5ef(*)  
-            d6cf ce d6 16           LDU        #BYTE_d616                                    = 03h
-            d6d2 20 e5              BRA        LAB_d6b9
-                             DAT_d6d4                                        XREF[1]:     d5d3(*)  
-            d6d4 8e                 ??         8Eh
-            d6d5 d6                 ??         D6h
-            d6d6 d9                 ??         D9h
-            d6d7 20                 ??         20h     
-            d6d8 5b                 ??         5Bh    [
-            d6d9 02                 ??         02h
-            d6da 00                 ??         00h
-            d6db 07                 ??         07h
-            d6dc 03                 ??         03h
-            d6dd 00                 ??         00h
-            d6de 07                 ??         07h
-            d6df 00                 ??         00h
-                             DAT_d6e0                                        XREF[1]:     d5d5(*)  
-            d6e0 8e                 ??         8Eh
-            d6e1 d6                 ??         D6h
-            d6e2 e5                 ??         E5h
-            d6e3 20                 ??         20h     
-            d6e4 4f                 ??         4Fh    O
-            d6e5 02                 ??         02h
-            d6e6 00                 ??         00h
-            d6e7 16                 ??         16h
-            d6e8 03                 ??         03h
-            d6e9 00                 ??         00h
-            d6ea 16                 ??         16h
-            d6eb 00                 ??         00h
-                             DAT_d6ec                                        XREF[1]:     d5d7(*)  
-            d6ec 8e                 ??         8Eh
-            d6ed d6                 ??         D6h
-            d6ee f1                 ??         F1h
-            d6ef 20                 ??         20h     
-            d6f0 43                 ??         43h    C
-            d6f1 02                 ??         02h
-            d6f2 00                 ??         00h
-            d6f3 25                 ??         25h    %
-            d6f4 03                 ??         03h
-            d6f5 00                 ??         00h
-            d6f6 25                 ??         25h    %
-            d6f7 00                 ??         00h
-                             DAT_d6f8                                        XREF[1]:     d5d9(*)  
-            d6f8 8e                 ??         8Eh
-            d6f9 d6                 ??         D6h
-            d6fa fd                 ??         FDh
-            d6fb 20                 ??         20h     
-            d6fc 37                 ??         37h    7
-            d6fd 02                 ??         02h
-            d6fe 00                 ??         00h
-            d6ff 34                 ??         34h    4
-            d700 03                 ??         03h
-            d701 00                 ??         00h
-            d702 34                 ??         34h    4
-            d703 00                 ??         00h
-                             DAT_d704                                        XREF[1]:     d5db(*)  
-            d704 8e                 ??         8Eh
-            d705 d7                 ??         D7h
-            d706 09                 ??         09h
-            d707 20                 ??         20h     
-            d708 2b                 ??         2Bh    +
-            d709 02                 ??         02h
-            d70a 00                 ??         00h
-            d70b 43                 ??         43h    C
-            d70c 03                 ??         03h
-            d70d 00                 ??         00h
-            d70e 43                 ??         43h    C
-            d70f 00                 ??         00h
-                             DAT_d710                                        XREF[1]:     d5dd(*)  
-            d710 8e                 ??         8Eh
-            d711 d7                 ??         D7h
-            d712 15                 ??         15h
-            d713 20                 ??         20h     
-            d714 1f                 ??         1Fh
-            d715 02                 ??         02h
-            d716 00                 ??         00h
-            d717 52                 ??         52h    R
-            d718 03                 ??         03h
-            d719 00                 ??         00h
-            d71a 52                 ??         52h    R
-            d71b 00                 ??         00h
-                             DAT_d71c                                        XREF[1]:     d5df(*)  
-            d71c 8e                 ??         8Eh
-            d71d d7                 ??         D7h
-            d71e 21                 ??         21h    !
-            d71f 20                 ??         20h     
-            d720 13                 ??         13h
-            d721 02                 ??         02h
-            d722 00                 ??         00h
-            d723 61                 ??         61h    a
-            d724 03                 ??         03h
-            d725 00                 ??         00h
-            d726 61                 ??         61h    a
-            d727 00                 ??         00h
-                             DAT_d728                                        XREF[1]:     d5e1(*)  
-            d728 8e                 ??         8Eh
-            d729 d7                 ??         D7h
-            d72a 2d                 ??         2Dh    -
-            d72b 20                 ??         20h     
-            d72c 07                 ??         07h
-            d72d 02                 ??         02h
-            d72e 00                 ??         00h
-            d72f 8e                 ??         8Eh
-            d730 03                 ??         03h
-            d731 00                 ??         00h
-            d732 8e                 ??         8Eh
-            d733 00                 ??         00h
-            d734 34                 ??         34h    4
-            d735 10                 ??         10h
-            d736 ce                 ??         CEh
-            d737 d7                 ??         D7h
-            d738 4c                 ??         4Ch    L
-            d739 8d                 ??         8Dh
-            d73a 27                 ??         27h    '
-            d73b 86                 ??         86h
-            d73c 03                 ??         03h
-            d73d 97                 ??         97h
-            d73e 20                 ??         20h     
-            d73f 35                 ??         35h    5
-            d740 40                 ??         40h    @
-            d741 8d                 ??         8Dh
-            d742 1f                 ??         1Fh
-            d743 ce                 ??         CEh
-            d744 d7                 ??         D7h
-            d745 50                 ??         50h    P
-            d746 86                 ??         86h
-            d747 01                 ??         01h
-            d748 97                 ??         97h
-            d749 20                 ??         20h     
-            d74a 20                 ??         20h     
-            d74b 16                 ??         16h
-            d74c 01                 ??         01h
-            d74d ff                 ??         FFh
-            d74e 06                 ??         06h
-            d74f 03                 ??         03h
-            d750 01                 ??         01h
-            d751 ff                 ??         FFh
-            d752 06                 ??         06h
-            d753 00                 ??         00h
-                             DAT_d754                                        XREF[1]:     d5e7(*)  
-            d754 ce                 ??         CEh
-            d755 d6                 ??         D6h
-            d756 97                 ??         97h
-            d757 86                 ??         86h
-            d758 03                 ??         03h
-            d759 97                 ??         97h
-            d75a 20                 ??         20h     
-            d75b 8d                 ??         8Dh
-            d75c 05                 ??         05h
-            d75d 86                 ??         86h
-            d75e 01                 ??         01h
-            d75f 97                 ??         97h
-            d760 20                 ??         20h     
-            d761 39                 ??         39h    9
+                             DrawPiece_18_BlankAreaGoingLeft                 XREF[1]:     d5eb(*)  
+            d6c5 ce d6 a0           LDU        #DrawData_18_BlankAreaGoingLeft               = 01h
+            d6c8 20 ef              BRA        Jump_DrawBlankArea
+                             DrawPiece_19_BlankAreaGoingDownRight            XREF[1]:     d5ed(*)  
+            d6ca ce d6 a9           LDU        #DrawData_19_BlankAreaGoingDownRight          = 01h
+            d6cd 20 ea              BRA        Jump_DrawBlankArea
+                             DrawPiece_20_UnknownOrBuggy                     XREF[1]:     d5ef(*)  
+            d6cf ce d6 16           LDU        #DrawData_07_WallPieceGoingUp                 = 03h
+            d6d2 20 e5              BRA        Jump_DrawBlankArea
+                             DrawPiece_0c_VeryShortRope                      XREF[1]:     d5d3(*)  
+            d6d4 8e d6 d9           LDX        #DrawData_0c_VeryShortRope                    = 02h
+            d6d7 20 5b              BRA        Jump_DrawRope
+                             DrawData_0c_VeryShortRope                       XREF[1]:     d6d4(*)  
+            d6d9 02                 db         02h
+            d6da 00                 db         00h
+            d6db 07                 db         07h
+            d6dc 03                 db         03h
+            d6dd 00                 db         00h
+            d6de 07                 db         07h
+            d6df 00                 db         00h
+                             DrawPiece_0d_ShortRope                          XREF[1]:     d5d5(*)  
+            d6e0 8e d6 e5           LDX        #DrawData_0d_ShortRope                        = 02h
+            d6e3 20 4f              BRA        Jump_DrawRope
+                             DrawData_0d_ShortRope                           XREF[1]:     d6e0(*)  
+            d6e5 02                 db         02h
+            d6e6 00                 db         00h
+            d6e7 16                 db         16h
+            d6e8 03                 db         03h
+            d6e9 00                 db         00h
+            d6ea 16                 db         16h
+            d6eb 00                 db         00h
+                             DrawPiece_0e_MidLengthRope                      XREF[1]:     d5d7(*)  
+            d6ec 8e d6 f1           LDX        #DrawData_0e_MidLengthRope                    = 02h
+            d6ef 20 43              BRA        Jump_DrawRope
+                             DrawData_0e_MidLengthRope                       XREF[1]:     d6ec(*)  
+            d6f1 02                 db         02h
+            d6f2 00                 db         00h
+            d6f3 25                 db         25h
+            d6f4 03                 db         03h
+            d6f5 00                 db         00h
+            d6f6 25                 db         25h
+            d6f7 00                 db         00h
+                             DrawPiece_0f_LongRope                           XREF[1]:     d5d9(*)  
+            d6f8 8e d6 fd           LDX        #DrawData_0f_LongRope                         = 02h
+            d6fb 20 37              BRA        Jump_DrawRope
+                             DrawData_0f_LongRope                            XREF[1]:     d6f8(*)  
+            d6fd 02                 db         02h
+            d6fe 00                 db         00h
+            d6ff 34                 db         34h
+            d700 03                 db         03h
+            d701 00                 db         00h
+            d702 34                 db         34h
+            d703 00                 db         00h
+                             DrawPiece_10_VeryLongRope                       XREF[1]:     d5db(*)  
+            d704 8e d7 09           LDX        #DrawData_10_VeryLongRope                     = 02h
+            d707 20 2b              BRA        Jump_DrawRope
+                             DrawData_10_VeryLongRope                        XREF[1]:     d704(*)  
+            d709 02                 db         02h
+            d70a 00                 db         00h
+            d70b 43                 db         43h
+            d70c 03                 db         03h
+            d70d 00                 db         00h
+            d70e 43                 db         43h
+            d70f 00                 db         00h
+                             DrawPiece_11_SuperLongRope                      XREF[1]:     d5dd(*)  
+            d710 8e d7 15           LDX        #DrawData_11_SuperLongRope                    = 02h
+            d713 20 1f              BRA        Jump_DrawRope
+                             DrawData_11_SuperLongRope                       XREF[1]:     d710(*)  
+            d715 02                 db         02h
+            d716 00                 db         00h
+            d717 52                 db         52h
+            d718 03                 db         03h
+            d719 00                 db         00h
+            d71a 52                 db         52h
+            d71b 00                 db         00h
+                             DrawPiece_12_ExcessivelyLongRope                XREF[1]:     d5df(*)  
+            d71c 8e d7 21           LDX        #DrawData_12_ExcessivelyLongRope              = 02h
+            d71f 20 13              BRA        Jump_DrawRope
+                             DrawData_12_ExcessivelyLongRope                 XREF[1]:     d71c(*)  
+            d721 02                 db         02h
+            d722 00                 db         00h
+            d723 61                 db         61h
+            d724 03                 db         03h
+            d725 00                 db         00h
+            d726 61                 db         61h
+            d727 00                 db         00h
+                             DrawPiece_13_RediculouslyLongRope               XREF[1]:     d5e1(*)  
+            d728 8e d7 2d           LDX        #DrawData_13_RediculouslyLongRope             = 02h
+            d72b 20 07              BRA        Jump_DrawRope
+                             DrawData_13_RediculouslyLongRope                XREF[1]:     d728(*)  
+            d72d 02                 db         02h
+            d72e 00                 db         00h
+            d72f 8e                 db         8Eh
+            d730 03                 db         03h
+            d731 00                 db         00h
+            d732 8e                 db         8Eh
+            d733 00                 db         00h
+                             Jump_DrawRope                                   XREF[8]:     d6d7(j), d6e3(j), d6ef(j), 
+                                                                                          d6fb(j), d707(j), d713(j), 
+                                                                                          d71f(j), d72b(j)  
+            d734 34 10              PSHS        X
+            d736 ce d7 4c           LDU        #DrawData_PreRope_Maybe                       = 01h
+            d739 8d 27              BSR        DrawBackgroundPiece                           undefined DrawBackgroundPiece(void)
+            d73b 86 03              LDA        #0x3
+            d73d 97 20              STA        <0x20
+            d73f 35 40              PULS        U
+            d741 8d 1f              BSR        DrawBackgroundPiece                           undefined DrawBackgroundPiece(void)
+            d743 ce d7 50           LDU        #DrawData_PostRope_Maybe                      = 01h
+            d746 86 01              LDA        #0x1
+            d748 97 20              STA        <0x20
+            d74a 20 16              BRA        DrawBackgroundPiece                           undefined DrawBackgroundPiece(void)
+                             -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+                             DrawData_PreRope_Maybe                          XREF[1]:     d736(*)  
+            d74c 01                 db         01h
+            d74d ff                 db         FFh
+            d74e 06                 db         06h
+            d74f 03                 db         03h
+                             DrawData_PostRope_Maybe                         XREF[1]:     d743(*)  
+            d750 01                 db         01h
+            d751 ff                 db         FFh
+            d752 06                 db         06h
+            d753 00                 db         00h
+                             DrawPiece_16_HorizontalRopeGoingRight           XREF[1]:     d5e7(*)  
+            d754 ce d6 97           LDU        #DrawData_17_BlankAreaGoingRight              = 01h
+            d757 86 03              LDA        #0x3
+            d759 97 20              STA        <0x20
+            d75b 8d 05              BSR        DrawBackgroundPiece                           undefined DrawBackgroundPiece(void)
+            d75d 86 01              LDA        #0x1
+            d75f 97 20              STA        <0x20
+            d761 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall FUN_d762(void)
+                             undefined __stdcall DrawBackgroundPiece(void)
              undefined         A:1            <RETURN>
-                             FUN_d762                                        XREF[6]:     d5f4(j), d609(j), d632(j), 
-                                                                                          d651(j), thunk_FUN_d762:d694(T), 
-                                                                                          thunk_FUN_d762:d694(j), d6bd(c)  
-            d762 a6 c0              LDA        ,U+=>DAT_d644                                 = 03h
+                             DrawBackgroundPiece                             XREF[10]:    d5f4(j), d609(j), d632(j), 
+                                                                                          d651(j), 
+                                                                                          DrawBackgroundPieceWrapper:d694(
+                                                                                          DrawBackgroundPieceWrapper:d694(
+                                                                                          d6bd(c), d739(c), d741(c), 
+                                                                                          d74a(c), d75b(c)  
+            d762 a6 c0              LDA        ,U+                                           current piece
             d764 97 24              STA        <SomeValue_0x24                               = ??
             d766 0f 1e              CLR        <SomeValue_0x1e                               = ??
                              LAB_d768                                        XREF[1]:     d77a(j)  
-            d768 a6 c0              LDA        ,U+=>DAT_d645                                 = 40h
+            d768 a6 c0              LDA        ,U+=>BYTE_d645                                = 40h
                                                                                              = 80h
                                                                                              = FFh
             d76a 97 1f              STA        <SomeValue_0x1f                               = ??
-            d76c a6 c0              LDA        ,U+=>DAT_d646                                 = 05h
+            d76c a6 c0              LDA        ,U+=>BYTE_d646                                = 05h
+                                                                                             = 6h
+                                                                                             = 4h
                                                                                              = 06h
-                                                                                             = 04h
                                                                                              = 08h
             d76e 97 1d              STA        <SomeValue_CounterMaybe_0x1d                  = ??
-            d770 a6 c0              LDA        ,U+=>DAT_d647                                 = 07h
+            d770 a6 c0              LDA        ,U+=>BYTE_d647                                = 07h
+                                                                                             = 3h
                                                                                              = 03h
             d772 48                 LSLA
             d773 8e d7 7d           LDX        #SomeData_0xd77d                              = D78Dh
             d776 ad 96              JSR        [A,X]=>->SomeOtherFunctionFromATable          = d7a4
                                                                                              = D7C4h
-                                                                                             undefined SomeOtherFunctionFromATable(void)
+                                                                                             undefined SomeOtherFunctionFromATable(undefined param_1, un
             d778 0a 24              DEC        <SomeValue_0x24                               = ??
             d77a 26 ec              BNE        LAB_d768
             d77c 39                 RTS
-                             SomeData_0xd77d                                 XREF[1]:     FUN_d762:d773(*)  
+                             SomeData_0xd77d                                 XREF[1]:     DrawBackgroundPiece:d773(*)  
             d77d d7 8d              dw         D78Dh
             d77f d7 94              dw         D794h
             d781 d7 9d              dw         D79Dh
-                             PTR_SomeOtherFunctionFromATable_d783            XREF[1]:     FUN_d762:d776(R)  
+                             PTR_SomeOtherFunctionFromATable_d783            XREF[1]:     DrawBackgroundPiece:d776(R)  
             d783 d7 a4              addr       SomeOtherFunctionFromATable
             d785 d7 ab              dw         D7ABh
             d787 d7 b4              dw         D7B4h
             d789 d7 bb              dw         D7BBh
-                             DAT_d78b                                        XREF[1]:     FUN_d762:d776(R)  
+                             DAT_d78b                                        XREF[1]:     DrawBackgroundPiece:d776(R)  
             d78b d7 c4              undefined2 D7C4h
             d78d 8e d7 ff           LDX        #SUB_d7ff
             d790 0f 25              CLR        <SomeValue_0x25                               = ??
-            d792 20 52              BRA        SomeOtherFunctionFromATable::JUMP_d7e6
+            d792 20 52              BRA        JUMP_d7e6                                     undefined JUMP_d7e6(undefined param_1, undefined param_2, u
+                             -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
             d794 8e                 ??         8Eh
             d795 d8                 ??         D8h
             d796 04                 ??         04h
@@ -21749,13 +21745,17 @@
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall SomeOtherFunctionFromATable(void)
+                             undefined __stdcall SomeOtherFunctionFromATable(undefine
              undefined         A:1            <RETURN>
-                             SomeOtherFunctionFromATable                     XREF[3]:     FUN_d762:d776(c), d783(*), 
+             undefined         A:1            param_1
+             undefined         B:1            param_2
+                             SomeOtherFunctionFromATable                     XREF[3]:     DrawBackgroundPiece:d776(c), 
+                                                                                          d783(*), 
                                                                                           UpdateObjectPhysics_Maybe:d88a(c
             d7a4 8e d8 0e           LDX        #SomeReferencedFunction
             d7a7 0f 25              CLR        <SomeValue_0x25                               = ??
-            d7a9 20 3b              BRA        JUMP_d7e6
+            d7a9 20 3b              BRA        JUMP_d7e6                                     undefined JUMP_d7e6(undefined param_1, undefined param_2, u
+                             -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
             d7ab 8e                 ??         8Eh
             d7ac d8                 ??         D8h
             d7ad 13                 ??         13h
@@ -21781,11 +21781,12 @@
             d7c1 25                 ??         25h    %
             d7c2 20                 ??         20h     
             d7c3 09                 ??         09h
-                             SUB_d7c4                                        XREF[1]:     FUN_d762:d776(c)  
+                             SUB_d7c4                                        XREF[1]:     DrawBackgroundPiece:d776(c)  
             d7c4 8e d8 22           LDX        #SUB_d822
             d7c7 86 ff              LDA        #0xff
             d7c9 97 25              STA        <SomeValue_0x25                               = ??
-            d7cb 20 19              BRA        SomeOtherFunctionFromATable::JUMP_d7e6
+            d7cb 20 19              BRA        JUMP_d7e6                                     undefined JUMP_d7e6(undefined param_1, undefined param_2, u
+                             -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
             d7cd 96                 ??         96h
             d7ce 21                 ??         21h    !
             d7cf d6                 ??         D6h
@@ -21811,24 +21812,33 @@
             d7e3 20                 ??         20h     
             d7e4 f0                 ??         F0h
             d7e5 39                 ??         39h    9
-                             JUMP_d7e6                                       XREF[3]:     d792(j), d7a9(j), d7cb(j)  
+                             **************************************************************
+                             *                          FUNCTION                          *
+                             **************************************************************
+                             undefined __stdcall JUMP_d7e6(undefined param_1, undefin
+             undefined         A:1            <RETURN>
+             undefined         A:1            param_1
+             undefined         B:1            param_2
+             undefined *       X:2            param_3
+                             JUMP_d7e6                                       XREF[3]:     d792(c), 
+                                                                                          SomeOtherFunctionFromATable:d7a9
+                                                                                          d7cb(c)  
             d7e6 96 22              LDA        <SomeValue_0x22                               = ??
             d7e8 d6 1d              LDB        <SomeValue_CounterMaybe_0x1d                  = ??
-            d7ea 27 12              BEQ        JUMP_Done_d7fe
+            d7ea 27 12              BEQ        LAB_d7fe
             d7ec d6 25              LDB        <SomeValue_0x25                               = ??
-                             LOOP_Back_d7ee                                  XREF[1]:     d7fc(j)  
-            d7ee 34 56              PSHS        U X B A
+                             LAB_d7ee                                        XREF[1]:     d7fc(j)  
+            d7ee 34 56              PSHS        U param_3 param_2 param_1
             d7f0 8d 35              BSR        FUN_d827                                      undefined FUN_d827(void)
-            d7f2 35 56              PULS        A B X U
+            d7f2 35 56              PULS        param_1 param_2 param_3 U
             d7f4 0a 1d              DEC        <SomeValue_CounterMaybe_0x1d                  = ??
-            d7f6 27 06              BEQ        JUMP_Done_d7fe
-            d7f8 ad 84              JSR        ,X=>SomeReferencedFunction                    undefined SomeReferencedFunction(void)
+            d7f6 27 06              BEQ        LAB_d7fe
+            d7f8 ad 84              JSR        ,param_3=>SomeReferencedFunction              undefined SomeReferencedFunction(void)
             d7fa 97 22              STA        <SomeValue_0x22                               = ??
-            d7fc 20 f0              BRA        LOOP_Back_d7ee
-                             JUMP_Done_d7fe                                  XREF[2]:     d7ea(j), d7f6(j)  
+            d7fc 20 f0              BRA        LAB_d7ee
+                             LAB_d7fe                                        XREF[2]:     d7ea(j), d7f6(j)  
             d7fe 39                 RTS
-                             SUB_d7ff                                        XREF[2]:     d78d(*), 
-                                                                                          SomeOtherFunctionFromATable:d7f8
+                             SUB_d7ff                                        XREF[2]:     d78d(*), JUMP_d7e6:d7f8(c)  
             d7ff 0a 21              DEC        <SomeValue_RandomSeedMaybe_0x21               = ??
             d801 d3 1e              ADDD       <SomeValue_0x1e                               = ??
             d803 39                 RTS
@@ -21848,7 +21858,7 @@
                              undefined __stdcall SomeReferencedFunction(void)
              undefined         A:1            <RETURN>
                              SomeReferencedFunction                          XREF[2]:     SomeOtherFunctionFromATable:d7a4
-                                                                                          SomeOtherFunctionFromATable:d7f8
+                                                                                          JUMP_d7e6:d7f8(c)  
             d80e 0c 21              INC        <SomeValue_RandomSeedMaybe_0x21               = ??
             d810 d3 1e              ADDD       <SomeValue_0x1e                               = ??
             d812 39                 RTS
@@ -21867,8 +21877,7 @@
             d81f 93                 ??         93h
             d820 1e                 ??         1Eh
             d821 39                 ??         39h    9
-                             SUB_d822                                        XREF[2]:     d7c4(*), 
-                                                                                          SomeOtherFunctionFromATable:d7f8
+                             SUB_d822                                        XREF[2]:     d7c4(*), JUMP_d7e6:d7f8(c)  
             d822 0a 21              DEC        <SomeValue_RandomSeedMaybe_0x21               = ??
             d824 93 1e              SUBD       <SomeValue_0x1e                               = ??
             d826 39                 RTS
@@ -21878,7 +21887,7 @@
                              undefined __stdcall FUN_d827(void)
              undefined         A:1            <RETURN>
              undefined1        Stack[-0x1]:1  local_1                                 XREF[1]:     d83e(*)  
-                             FUN_d827                                        XREF[1]:     SomeOtherFunctionFromATable:d7f0
+                             FUN_d827                                        XREF[1]:     JUMP_d7e6:d7f0(c)  
             d827 dc 21              LDD        <SomeValue_RandomSeedMaybe_0x21               = ??
             d829 8d 2b              BSR        ComputeScreenLocationFromAAndB                undefined ComputeScreenLocationFromAAndB(void)
             d82b 1f 02              TFR        D,Y
@@ -21978,7 +21987,7 @@
             d884 dd 1e              STD        <SomeValue_0x1e                               = ??
             d886 86 0c              LDA        #12
             d888 97 1d              STA        <SomeValue_CounterMaybe_0x1d                  = ??
-            d88a bd d7 a4           JSR        SomeOtherFunctionFromATable                   undefined SomeOtherFunctionFromATable(void)
+            d88a bd d7 a4           JSR        SomeOtherFunctionFromATable                   undefined SomeOtherFunctionFromATable(undefined param_1, un
             d88d 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     = ??
                              Jump_SkipRopeHandling                           XREF[2]:     d872(j), d876(j)  
             d891 ee 28              LDU        0x8,Y=>Player_VideoPageDrawDestination_0x1b2  = ??
