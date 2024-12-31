@@ -74,43 +74,67 @@
                                                                                           ClearVideoMemory_0x0400_to_0x340
                                                                                           InitBouncingBall:ce9b(*), [more]
             001b                    dw         ??
-                             SomeValue_CounterMaybe_0x1d                     XREF[4]:     DrawBackgroundPiece:d76e(*), 
-                                                                                          JUMP_d7e6:d7e8(*), 
-                                                                                          JUMP_d7e6:d7f4(*), 
+                             Draw_SegmentValue2_0x1d                         XREF[6]:     DrawBackgroundPiece:d76e(*), 
+                                                                                          DrawSegmentHelper1:d7cf(*), 
+                                                                                          DrawSegmentHelper1:d7db(*), 
+                                                                                          DrawSegmentHelper2:d7e8(*), 
+                                                                                          DrawSegmentHelper2:d7f4(*), 
                                                                                           UpdateObjectPhysics_Maybe:d888(*
             001d                    ??         ??
-                             SomeValue_0x1e                                  XREF[5]:     DrawBackgroundPiece:d766(*), 
-                                                                                          d801(*), 
-                                                                                          SomeReferencedFunction:d810(*), 
-                                                                                          d824(*), 
+                             SomeValue_0x1e                                  XREF[10]:    DrawBackgroundPiece:d766(*), 
+                                                                                          DrawSegment_SubFunction0:d801(*), 
+                                                                                          DrawSegment_SubFunction1:d806(*), 
+                                                                                          DrawSegment_SubFunction2:d80b(*), 
+                                                                                          DrawSegment_SubFunction3:d810(*), 
+                                                                                          DrawSegment_SubFunction4:d815(*), 
+                                                                                          DrawSegment_SubFunction5:d81a(*), 
+                                                                                          DrawSegment_SubFunction6:d81f(*), 
+                                                                                          DrawSegment_SubFunction7:d824(*), 
                                                                                           UpdateObjectPhysics_Maybe:d884(*
             001e                    ??         ??
-                             SomeValue_0x1f                                  XREF[1]:     DrawBackgroundPiece:d76a(*)  
+                             Draw_SegmentValue1_0x1f                         XREF[1]:     DrawBackgroundPiece:d76a(*)  
             001f                    ??         ??
-                             SomeValue_0x20                                  XREF[9]:     DrawBackground:d250(*), d672(*), 
+                             SomeValue_0x20                                  XREF[13]:    DrawBackground:d250(*), d672(*), 
                                                                                           d678(*), d684(*), d68a(*), 
-                                                                                          d6bb(*), d6c2(*), 
-                                                                                          FUN_d827:d836(*), 
+                                                                                          d6bb(*), d6c2(*), d73d(*), 
+                                                                                          d748(*), d759(*), d75f(*), 
+                                                                                          CrtArtifactLineDrawingFunction_M
                                                                                           UpdateObjectPhysics_Maybe:d880(*
             0020                    ??         ??
-                             SomeValue_RandomSeedMaybe_0x21                  XREF[6]:     DrawBackground:d255(*), d7ff(*), 
-                                                                                          SomeReferencedFunction:d80e(*), 
-                                                                                          d822(*), FUN_d827:d827(*), 
+                             SomeValue_RandomSeedMaybe_0x21                  XREF[9]:     DrawBackground:d255(*), 
+                                                                                          DrawSegmentHelper1:d7cd(*), 
+                                                                                          DrawSegmentHelper1:d7e1(*), 
+                                                                                          DrawSegment_SubFunction0:d7ff(*), 
+                                                                                          DrawSegment_SubFunction3:d80e(*), 
+                                                                                          DrawSegment_SubFunction4:d813(*), 
+                                                                                          DrawSegment_SubFunction7:d822(*), 
+                                                                                          CrtArtifactLineDrawingFunction_M
                                                                                           UpdateObjectPhysics_Maybe:d87e(*
             0021                    ??         ??
-                             SomeValue_0x22                                  XREF[3]:     JUMP_d7e6:d7e6(*), 
-                                                                                          JUMP_d7e6:d7fa(*), 
-                                                                                          FUN_d827:d82d(*)  
+                             SomeValue_0x22                                  XREF[7]:     DrawSegmentHelper2:d7e6(*), 
+                                                                                          DrawSegmentHelper2:d7fa(*), 
+                                                                                          DrawSegment_SubFunction1:d804(*), 
+                                                                                          DrawSegment_SubFunction2:d809(*), 
+                                                                                          DrawSegment_SubFunction5:d818(*), 
+                                                                                          DrawSegment_SubFunction6:d81d(*), 
+                                                                                          CrtArtifactLineDrawingFunction_M
             0022                    ??         ??
                              PlayerY_Byte_0x23                               XREF[2]:     Jump_IsAlreadyClimbing:c907(*), 
                                                                                           Jump_IsAlreadyClimbing:c91b(*)  
             0023                    ??         ??
-                             SomeValue_0x24                                  XREF[2]:     DrawBackgroundPiece:d764(*), 
+                             CurrentSegmentCounter_0x24                      XREF[2]:     DrawBackgroundPiece:d764(*), 
                                                                                           DrawBackgroundPiece:d778(*)  
             0024                    ??         ??
-                             SomeValue_0x25                                  XREF[4]:     d790(*), 
-                                                                                          SomeOtherFunctionFromATable:d7a7
-                                                                                          d7c9(*), JUMP_d7e6:d7ec(*)  
+                             SomeValue_0x25                                  XREF[10]:    DrawSegment_Orientation0:d790(*), 
+                                                                                          DrawSegment_Orientation1:d799(*), 
+                                                                                          DrawSegment_Orientation2:d7a0(*), 
+                                                                                          DrawSegment_Orientation3:d7a7(*), 
+                                                                                          DrawSegment_Orientation4:d7b0(*), 
+                                                                                          DrawSegment_Orientation5:d7b7(*), 
+                                                                                          DrawSegment_Orientation6:d7c0(*), 
+                                                                                          DrawSegment_Orientation7:d7c9(*), 
+                                                                                          DrawSegmentHelper1:d7d3(*), 
+                                                                                          DrawSegmentHelper2:d7ec(*)  
             0025                    ??         ??
                              UtilityCounter_0x26                             XREF[39]:    FUN_c3b3:c0ac(*), 
                                                                                           FUN_c3b3:c0b9(*), 
@@ -19419,7 +19443,7 @@
             cdbd 35 40              PULS        U                                            pull back the drawing location into U
             cdbf 8e 00 83           LDX        #SpriteDrawingBuffer_0x83                     = ??
             cdc2 86 10              LDA        #16                                           16 lines of a sprite
-            cdc4 bd d8 9b           JSR        Some3ByteDrawingFunction                      draw the sprite from the buffer in 0x83
+            cdc4 bd d8 9b           JSR        DrawingFunctionFor3ByteWideSprites            draw the sprite from the buffer in 0x83
                              LOOP_AlreadyDone                                XREF[1]:     cd87(j)  
             cdc7 35 d0              PULS        X U PC
                              **************************************************************
@@ -19891,10 +19915,10 @@
             cff5 bd d8 56           JSR        ComputeScreenLocationFromAAndB                undefined ComputeScreenLocationFromAAndB(void)
             cff8 1f 01              TFR        D,X
             cffa a6 89 18 00        LDA        0x1800,X                                      load source pixel
-            cffe 8e d8 4a           LDX        #Drops_HorizontalAdjustmentValues             = C0h
+            cffe 8e d8 4a           LDX        #Drawing_HorizontalAdjustmentValues           = C0h
             d001 e6 25              LDB        0x5,Y=>Drop1_X_0x201                          = ??
             d003 c4 03              ANDB       #0x3                                          adjust horizontal position
-            d005 a4 85              ANDA       B,X=>Drops_HorizontalAdjustmentValues         = C0h
+            d005 a4 85              ANDA       B,X=>Drawing_HorizontalAdjustmentValues       = C0h
             d007 bd c8 b9           JSR        FUN_c8b9                                      byte FUN_c8b9(byte param_1)
             d00a 27 02              BEQ        LAB_d00e
             d00c 6a 25              DEC        0x5,Y=>Drop1_X_0x201                          = ??
@@ -21327,16 +21351,16 @@
             d5f4 7e d7 62           JMP        DrawBackgroundPiece
                              -- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
                              DrawData_00_Stalagtite                          XREF[1]:     d5f1(*)  
-            d5f7 03                 ??         03h
-            d5f8 80                 ??         80h
-            d5f9 04                 ??         04h
-            d5fa 00                 ??         00h
-            d5fb 80                 ??         80h
-            d5fc 0a                 ??         0Ah
-            d5fd 03                 ??         03h
-            d5fe 80                 ??         80h
-            d5ff 07                 ??         07h
-            d600 00                 ??         00h
+            d5f7 03                 db         03h
+            d5f8 80                 db         80h
+            d5f9 04                 db         04h
+            d5fa 00                 db         00h
+            d5fb 80                 db         80h
+            d5fc 0a                 db         0Ah
+            d5fd 03                 db         03h
+            d5fe 80                 db         80h
+            d5ff 07                 db         07h
+            d600 00                 db         00h
                              DrawPiece_07_WallPieceGoingUp                   XREF[1]:     d5c9(*)  
             d601 ce d6 16           LDU        #DrawData_07_WallPieceGoingUp                 = 03h
             d604 20 03              BRA        Jump_JumpToDrawBackgroundPiece
@@ -21358,17 +21382,11 @@
             d615 04                 db         04h
                              DrawData_07_WallPieceGoingUp                    XREF[2]:     d601(*), d6cf(*)  
             d616 03                 db         03h
-                             BYTE_d617                                       XREF[1]:     DrawBackgroundPiece:d768(R)  
             d617 00                 db         00h
-                             BYTE_d618                                       XREF[1]:     DrawBackgroundPiece:d76c(R)  
             d618 05                 db         05h
-                             BYTE_d619                                       XREF[1]:     DrawBackgroundPiece:d770(R)  
             d619 00                 db         00h
-                             BYTE_d61a                                       XREF[1]:     DrawBackgroundPiece:d768(R)  
             d61a 40                 db         40h
-                             BYTE_d61b                                       XREF[1]:     DrawBackgroundPiece:d76c(R)  
             d61b 05                 db         05h
-                             BYTE_d61c                                       XREF[1]:     DrawBackgroundPiece:d770(R)  
             d61c 07                 db         07h
             d61d 40                 db         40h
             d61e 08                 db         08h
@@ -21404,25 +21422,19 @@
             d63d 04                 db         04h
             d63e 03                 db         03h
                              DrawPiece_03_TopRightHandCornerPiece            XREF[1]:     d5c1(*)  
-            d63f ce d6 44           LDU        #DrawData_03_TopRightHandCornerPiece          = 3h
+            d63f ce d6 44           LDU        #DrawData_03_TopRightHandCornerPiece          = 03h
             d642 20 0d              BRA        Jump_AgainAnotherJumpToDrawBackgroundPiece
                              DrawData_03_TopRightHandCornerPiece             XREF[1]:     d63f(*)  
-            d644 03                 db         3h
-                             BYTE_d645                                       XREF[1]:     DrawBackgroundPiece:d768(R)  
+            d644 03                 db         03h
             d645 80                 db         80h
-                             BYTE_d646                                       XREF[1]:     DrawBackgroundPiece:d76c(R)  
-            d646 06                 db         6h
-                             BYTE_d647                                       XREF[1]:     DrawBackgroundPiece:d770(R)  
-            d647 03                 db         3h
-                             BYTE_d648                                       XREF[1]:     DrawBackgroundPiece:d768(R)  
-            d648 00                 db         0h
-                             BYTE_d649                                       XREF[1]:     DrawBackgroundPiece:d76c(R)  
-            d649 04                 db         4h
-                             BYTE_d64a                                       XREF[1]:     DrawBackgroundPiece:d770(R)  
-            d64a 03                 db         3h
+            d646 06                 db         06h
+            d647 03                 db         03h
+            d648 00                 db         00h
+            d649 04                 db         04h
+            d64a 03                 db         03h
             d64b ff                 db         FFh
-            d64c 08                 db         8h
-            d64d 03                 db         3h
+            d64c 08                 db         08h
+            d64d 03                 db         03h
                              DrawPiece_04_TopRightHandCornerPiece2           XREF[1]:     d5c3(*)  
             d64e ce d6 54           LDU        #DrawData_04_TopRightHandCornerPiece2         set a new U stack
                              Jump_AgainAnotherJumpToDrawBackgroundPiece      XREF[2]:     d642(j), d661(j)  
@@ -21430,17 +21442,11 @@
                              -- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
                              DrawData_04_TopRightHandCornerPiece2            XREF[1]:     d64e(*)  
             d654 03                 db         03h
-                             BYTE_d655                                       XREF[1]:     DrawBackgroundPiece:d768(R)  
             d655 80                 db         80h
-                             BYTE_d656                                       XREF[1]:     DrawBackgroundPiece:d76c(R)  
             d656 06                 db         06h
-                             BYTE_d657                                       XREF[1]:     DrawBackgroundPiece:d770(R)  
             d657 03                 db         03h
-                             BYTE_d658                                       XREF[1]:     DrawBackgroundPiece:d768(R)  
             d658 ff                 db         FFh
-                             BYTE_d659                                       XREF[1]:     DrawBackgroundPiece:d76c(R)  
             d659 05                 db         05h
-                             BYTE_d65a                                       XREF[1]:     DrawBackgroundPiece:d770(R)  
             d65a 03                 db         03h
             d65b 80                 db         80h
             d65c 07                 db         07h
@@ -21450,17 +21456,11 @@
             d661 20 ee              BRA        Jump_AgainAnotherJumpToDrawBackgroundPiece
                              DrawData_05_BottomRightSideOfFloatingPlatforms  XREF[1]:     d65e(*)  
             d663 03                 db         03h
-                             BYTE_d664                                       XREF[1]:     DrawBackgroundPiece:d768(R)  
             d664 ff                 db         FFh
-                             BYTE_d665                                       XREF[1]:     DrawBackgroundPiece:d76c(R)  
             d665 08                 db         08h
-                             BYTE_d666                                       XREF[1]:     DrawBackgroundPiece:d770(R)  
             d666 00                 db         00h
-                             BYTE_d667                                       XREF[1]:     DrawBackgroundPiece:d768(R)  
             d667 00                 db         00h
-                             BYTE_d668                                       XREF[1]:     DrawBackgroundPiece:d76c(R)  
             d668 05                 db         05h
-                             BYTE_d669                                       XREF[1]:     DrawBackgroundPiece:d770(R)  
             d669 00                 db         00h
             d66a 80                 db         80h
             d66b 05                 db         05h
@@ -21649,12 +21649,12 @@
             d736 ce d7 4c           LDU        #DrawData_PreRope_Maybe                       = 01h
             d739 8d 27              BSR        DrawBackgroundPiece                           undefined DrawBackgroundPiece(void)
             d73b 86 03              LDA        #0x3
-            d73d 97 20              STA        <0x20
+            d73d 97 20              STA        <SomeValue_0x20                               = ??
             d73f 35 40              PULS        U
             d741 8d 1f              BSR        DrawBackgroundPiece                           undefined DrawBackgroundPiece(void)
             d743 ce d7 50           LDU        #DrawData_PostRope_Maybe                      = 01h
             d746 86 01              LDA        #0x1
-            d748 97 20              STA        <0x20
+            d748 97 20              STA        <SomeValue_0x20                               = ??
             d74a 20 16              BRA        DrawBackgroundPiece                           undefined DrawBackgroundPiece(void)
                              -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
                              DrawData_PreRope_Maybe                          XREF[1]:     d736(*)  
@@ -21670,10 +21670,10 @@
                              DrawPiece_16_HorizontalRopeGoingRight           XREF[1]:     d5e7(*)  
             d754 ce d6 97           LDU        #DrawData_17_BlankAreaGoingRight              = 01h
             d757 86 03              LDA        #0x3
-            d759 97 20              STA        <0x20
+            d759 97 20              STA        <SomeValue_0x20                               = ??
             d75b 8d 05              BSR        DrawBackgroundPiece                           undefined DrawBackgroundPiece(void)
             d75d 86 01              LDA        #0x1
-            d75f 97 20              STA        <0x20
+            d75f 97 20              STA        <SomeValue_0x20                               = ??
             d761 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -21686,238 +21686,297 @@
                                                                                           DrawBackgroundPieceWrapper:d694(
                                                                                           d6bd(c), d739(c), d741(c), 
                                                                                           d74a(c), d75b(c)  
-            d762 a6 c0              LDA        ,U+                                           current piece
-            d764 97 24              STA        <SomeValue_0x24                               = ??
+            d762 a6 c0              LDA        ,U+                                           get segment count
+            d764 97 24              STA        <CurrentSegmentCounter_0x24                   store segment count
             d766 0f 1e              CLR        <SomeValue_0x1e                               = ??
-                             LAB_d768                                        XREF[1]:     d77a(j)  
-            d768 a6 c0              LDA        ,U+=>BYTE_d645                                = 40h
-                                                                                             = 80h
-                                                                                             = FFh
-            d76a 97 1f              STA        <SomeValue_0x1f                               = ??
-            d76c a6 c0              LDA        ,U+=>BYTE_d646                                = 05h
-                                                                                             = 6h
-                                                                                             = 4h
-                                                                                             = 06h
-                                                                                             = 08h
-            d76e 97 1d              STA        <SomeValue_CounterMaybe_0x1d                  = ??
-            d770 a6 c0              LDA        ,U+=>BYTE_d647                                = 07h
-                                                                                             = 3h
-                                                                                             = 03h
+                             Loop_ProcessSegment                             XREF[1]:     d77a(j)  
+            d768 a6 c0              LDA        ,U+                                           get first value from segment
+            d76a 97 1f              STA        <Draw_SegmentValue1_0x1f                      = ??
+            d76c a6 c0              LDA        ,U+                                           get second value from segment
+            d76e 97 1d              STA        <Draw_SegmentValue2_0x1d                      = ??
+            d770 a6 c0              LDA        ,U+                                           get and compute the drawing function offset
             d772 48                 LSLA
-            d773 8e d7 7d           LDX        #SomeData_0xd77d                              = D78Dh
-            d776 ad 96              JSR        [A,X]=>->SomeOtherFunctionFromATable          = d7a4
-                                                                                             = D7C4h
-                                                                                             undefined SomeOtherFunctionFromATable(undefined param_1, un
-            d778 0a 24              DEC        <SomeValue_0x24                               = ??
-            d77a 26 ec              BNE        LAB_d768
+            d773 8e d7 7d           LDX        #LineDrawingFunctions_0xd77d                  = D78Dh
+            d776 ad 96              JSR        [A,X]
+            d778 0a 24              DEC        <CurrentSegmentCounter_0x24                   = ??
+            d77a 26 ec              BNE        Loop_ProcessSegment
             d77c 39                 RTS
-                             SomeData_0xd77d                                 XREF[1]:     DrawBackgroundPiece:d773(*)  
-            d77d d7 8d              dw         D78Dh
-            d77f d7 94              dw         D794h
-            d781 d7 9d              dw         D79Dh
-                             PTR_SomeOtherFunctionFromATable_d783            XREF[1]:     DrawBackgroundPiece:d776(R)  
-            d783 d7 a4              addr       SomeOtherFunctionFromATable
-            d785 d7 ab              dw         D7ABh
-            d787 d7 b4              dw         D7B4h
-            d789 d7 bb              dw         D7BBh
-                             DAT_d78b                                        XREF[1]:     DrawBackgroundPiece:d776(R)  
-            d78b d7 c4              undefined2 D7C4h
-            d78d 8e d7 ff           LDX        #SUB_d7ff
-            d790 0f 25              CLR        <SomeValue_0x25                               = ??
-            d792 20 52              BRA        JUMP_d7e6                                     undefined JUMP_d7e6(undefined param_1, undefined param_2, u
-                             -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
-            d794 8e                 ??         8Eh
-            d795 d8                 ??         D8h
-            d796 04                 ??         04h
-            d797 86                 ??         86h
-            d798 ff                 ??         FFh
-            d799 97                 ??         97h
-            d79a 25                 ??         25h    %
-            d79b 20                 ??         20h     
-            d79c 30                 ??         30h    0
-            d79d 8e                 ??         8Eh
-            d79e d8                 ??         D8h
-            d79f 09                 ??         09h
-            d7a0 0f                 ??         0Fh
-            d7a1 25                 ??         25h    %
-            d7a2 20                 ??         20h     
-            d7a3 29                 ??         29h    )
+                             LineDrawingFunctions_0xd77d                     XREF[1]:     DrawBackgroundPiece:d773(*)  
+            d77d d7 8d              dw         DrawSegment_Orientation0
+            d77f d7 94              dw         DrawSegment_Orientation1
+            d781 d7 9d              dw         DrawSegment_Orientation2
+            d783 d7 a4              dw         DrawSegment_Orientation3
+            d785 d7 ab              dw         DrawSegment_Orientation4
+            d787 d7 b4              dw         DrawSegment_Orientation5
+            d789 d7 bb              dw         DrawSegment_Orientation6
+            d78b d7 c4              dw         DrawSegment_Orientation7
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall SomeOtherFunctionFromATable(undefine
+                             undefined __stdcall DrawSegment_Orientation0(undefined p
              undefined         A:1            <RETURN>
              undefined         A:1            param_1
              undefined         B:1            param_2
-                             SomeOtherFunctionFromATable                     XREF[3]:     DrawBackgroundPiece:d776(c), 
-                                                                                          d783(*), 
-                                                                                          UpdateObjectPhysics_Maybe:d88a(c
-            d7a4 8e d8 0e           LDX        #SomeReferencedFunction
-            d7a7 0f 25              CLR        <SomeValue_0x25                               = ??
-            d7a9 20 3b              BRA        JUMP_d7e6                                     undefined JUMP_d7e6(undefined param_1, undefined param_2, u
+                             DrawSegment_Orientation0                        XREF[1]:     d77d(*)  
+            d78d 8e d7 ff           LDX        #DrawSegment_SubFunction0
+            d790 0f 25              CLR        <SomeValue_0x25                               = ??
+            d792 20 52              BRA        DrawSegmentHelper2                            undefined DrawSegmentHelper2(undefined A, undefined B, unde
                              -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
-            d7ab 8e                 ??         8Eh
-            d7ac d8                 ??         D8h
-            d7ad 13                 ??         13h
-            d7ae 86                 ??         86h
-            d7af ff                 ??         FFh
-            d7b0 97                 ??         97h
-            d7b1 25                 ??         25h    %
-            d7b2 20                 ??         20h     
-            d7b3 32                 ??         32h    2
-            d7b4 8e                 ??         8Eh
-            d7b5 d8                 ??         D8h
-            d7b6 18                 ??         18h
-            d7b7 0f                 ??         0Fh
-            d7b8 25                 ??         25h    %
-            d7b9 20                 ??         20h     
-            d7ba 12                 ??         12h
-            d7bb 8e                 ??         8Eh
-            d7bc d8                 ??         D8h
-            d7bd 1d                 ??         1Dh
-            d7be 86                 ??         86h
-            d7bf ff                 ??         FFh
-            d7c0 97                 ??         97h
-            d7c1 25                 ??         25h    %
-            d7c2 20                 ??         20h     
-            d7c3 09                 ??         09h
-                             SUB_d7c4                                        XREF[1]:     DrawBackgroundPiece:d776(c)  
-            d7c4 8e d8 22           LDX        #SUB_d822
+                             **************************************************************
+                             *                          FUNCTION                          *
+                             **************************************************************
+                             undefined __stdcall DrawSegment_Orientation1(undefined p
+             undefined         A:1            <RETURN>
+             undefined         A:1            param_1
+             undefined         B:1            param_2
+                             DrawSegment_Orientation1                        XREF[1]:     d77f(*)  
+            d794 8e d8 04           LDX        #DrawSegment_SubFunction1
+            d797 86 ff              LDA        #0xff
+            d799 97 25              STA        <SomeValue_0x25                               = ??
+            d79b 20 30              BRA        DrawSegmentHelper1                            undefined DrawSegmentHelper1(undefined A, undefined B, unde
+                             -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+                             **************************************************************
+                             *                          FUNCTION                          *
+                             **************************************************************
+                             undefined __stdcall DrawSegment_Orientation2(undefined p
+             undefined         A:1            <RETURN>
+             undefined         A:1            param_1
+             undefined         B:1            param_2
+                             DrawSegment_Orientation2                        XREF[1]:     d781(*)  
+            d79d 8e d8 09           LDX        #DrawSegment_SubFunction2
+            d7a0 0f 25              CLR        <SomeValue_0x25                               = ??
+            d7a2 20 29              BRA        DrawSegmentHelper1                            undefined DrawSegmentHelper1(undefined A, undefined B, unde
+                             -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+                             **************************************************************
+                             *                          FUNCTION                          *
+                             **************************************************************
+                             undefined __stdcall DrawSegment_Orientation3(undefined p
+             undefined         A:1            <RETURN>
+             undefined         A:1            param_1
+             undefined         B:1            param_2
+                             DrawSegment_Orientation3                        XREF[2]:     d783(*), 
+                                                                                          UpdateObjectPhysics_Maybe:d88a(c
+            d7a4 8e d8 0e           LDX        #DrawSegment_SubFunction3
+            d7a7 0f 25              CLR        <SomeValue_0x25                               = ??
+            d7a9 20 3b              BRA        DrawSegmentHelper2                            undefined DrawSegmentHelper2(undefined A, undefined B, unde
+                             -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+                             **************************************************************
+                             *                          FUNCTION                          *
+                             **************************************************************
+                             undefined __stdcall DrawSegment_Orientation4(undefined p
+             undefined         A:1            <RETURN>
+             undefined         A:1            param_1
+             undefined         B:1            param_2
+                             DrawSegment_Orientation4                        XREF[1]:     d785(*)  
+            d7ab 8e d8 13           LDX        #DrawSegment_SubFunction4
+            d7ae 86 ff              LDA        #0xff
+            d7b0 97 25              STA        <SomeValue_0x25                               = ??
+            d7b2 20 32              BRA        DrawSegmentHelper2                            undefined DrawSegmentHelper2(undefined A, undefined B, unde
+                             -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+                             **************************************************************
+                             *                          FUNCTION                          *
+                             **************************************************************
+                             undefined __stdcall DrawSegment_Orientation5(undefined p
+             undefined         A:1            <RETURN>
+             undefined         A:1            param_1
+             undefined         B:1            param_2
+                             DrawSegment_Orientation5                        XREF[1]:     d787(*)  
+            d7b4 8e d8 18           LDX        #DrawSegment_SubFunction5
+            d7b7 0f 25              CLR        <SomeValue_0x25                               = ??
+            d7b9 20 12              BRA        DrawSegmentHelper1                            undefined DrawSegmentHelper1(undefined A, undefined B, unde
+                             -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+                             **************************************************************
+                             *                          FUNCTION                          *
+                             **************************************************************
+                             undefined __stdcall DrawSegment_Orientation6(undefined p
+             undefined         A:1            <RETURN>
+             undefined         A:1            param_1
+             undefined         B:1            param_2
+                             DrawSegment_Orientation6                        XREF[1]:     d789(*)  
+            d7bb 8e d8 1d           LDX        #DrawSegment_SubFunction6
+            d7be 86 ff              LDA        #0xff
+            d7c0 97 25              STA        <SomeValue_0x25                               = ??
+            d7c2 20 09              BRA        DrawSegmentHelper1                            undefined DrawSegmentHelper1(undefined A, undefined B, unde
+                             -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+                             **************************************************************
+                             *                          FUNCTION                          *
+                             **************************************************************
+                             undefined __stdcall DrawSegment_Orientation7(undefined p
+             undefined         A:1            <RETURN>
+             undefined         A:1            param_1
+             undefined         B:1            param_2
+                             DrawSegment_Orientation7                        XREF[1]:     d78b(*)  
+            d7c4 8e d8 22           LDX        #DrawSegment_SubFunction7
             d7c7 86 ff              LDA        #0xff
             d7c9 97 25              STA        <SomeValue_0x25                               = ??
-            d7cb 20 19              BRA        JUMP_d7e6                                     undefined JUMP_d7e6(undefined param_1, undefined param_2, u
+            d7cb 20 19              BRA        DrawSegmentHelper2                            undefined DrawSegmentHelper2(undefined A, undefined B, unde
                              -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
-            d7cd 96                 ??         96h
-            d7ce 21                 ??         21h    !
-            d7cf d6                 ??         D6h
-            d7d0 1d                 ??         1Dh
-            d7d1 27                 ??         27h    '
-            d7d2 12                 ??         12h
-            d7d3 d6                 ??         D6h
-            d7d4 25                 ??         25h    %
-            d7d5 34                 ??         34h    4
-            d7d6 56                 ??         56h    V
-            d7d7 8d                 ??         8Dh
-            d7d8 4e                 ??         4Eh    N
-            d7d9 35                 ??         35h    5
-            d7da 56                 ??         56h    V
-            d7db 0a                 ??         0Ah
-            d7dc 1d                 ??         1Dh
-            d7dd 27                 ??         27h    '
-            d7de 06                 ??         06h
-            d7df ad                 ??         ADh
-            d7e0 84                 ??         84h
-            d7e1 97                 ??         97h
-            d7e2 21                 ??         21h    !
-            d7e3 20                 ??         20h     
-            d7e4 f0                 ??         F0h
-            d7e5 39                 ??         39h    9
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall JUMP_d7e6(undefined param_1, undefin
+                             undefined __stdcall DrawSegmentHelper1(undefined A, unde
              undefined         A:1            <RETURN>
-             undefined         A:1            param_1
-             undefined         B:1            param_2
-             undefined *       X:2            param_3
-                             JUMP_d7e6                                       XREF[3]:     d792(c), 
-                                                                                          SomeOtherFunctionFromATable:d7a9
-                                                                                          d7cb(c)  
+             undefined         A:1            A
+             undefined         B:1            B
+             undefined *       X:2            X
+                             X contains a DrawSegment_SubFunction
+                             DrawSegmentHelper1                              XREF[4]:     DrawSegment_Orientation1:d79b(c), 
+                                                                                          DrawSegment_Orientation2:d7a2(c), 
+                                                                                          DrawSegment_Orientation5:d7b9(c), 
+                                                                                          DrawSegment_Orientation6:d7c2(c)  
+            d7cd 96 21              LDA        <SomeValue_RandomSeedMaybe_0x21               = ??
+            d7cf d6 1d              LDB        <Draw_SegmentValue2_0x1d                      = ??
+            d7d1 27 12              BEQ        Jump_DoneProcessingSegments
+            d7d3 d6 25              LDB        <SomeValue_0x25                               = ??
+                             Loop_SegmentWork                                XREF[1]:     d7e3(j)  
+            d7d5 34 56              PSHS        U X B A
+            d7d7 8d 4e              BSR        CrtArtifactLineDrawingFunction_Maybe          undefined CrtArtifactLineDrawingFunction_Maybe(void)
+            d7d9 35 56              PULS        A B X U
+            d7db 0a 1d              DEC        <Draw_SegmentValue2_0x1d                      = ??
+            d7dd 27 06              BEQ        Jump_DoneProcessingSegments
+            d7df ad 84              JSR        ,X
+            d7e1 97 21              STA        <SomeValue_RandomSeedMaybe_0x21               = ??
+            d7e3 20 f0              BRA        Loop_SegmentWork
+                             Jump_DoneProcessingSegments                     XREF[2]:     d7d1(j), d7dd(j)  
+            d7e5 39                 RTS
+                             **************************************************************
+                             *                          FUNCTION                          *
+                             **************************************************************
+                             undefined __stdcall DrawSegmentHelper2(undefined A, unde
+             undefined         A:1            <RETURN>
+             undefined         A:1            A
+             undefined         B:1            B
+             undefined *       X:2            X
+                             X contains a DrawSegment_SubFunction
+                             DrawSegmentHelper2                              XREF[4]:     DrawSegment_Orientation0:d792(c), 
+                                                                                          DrawSegment_Orientation3:d7a9(c), 
+                                                                                          DrawSegment_Orientation4:d7b2(c), 
+                                                                                          DrawSegment_Orientation7:d7cb(c)  
             d7e6 96 22              LDA        <SomeValue_0x22                               = ??
-            d7e8 d6 1d              LDB        <SomeValue_CounterMaybe_0x1d                  = ??
-            d7ea 27 12              BEQ        LAB_d7fe
+            d7e8 d6 1d              LDB        <Draw_SegmentValue2_0x1d                      = ??
+            d7ea 27 12              BEQ        Jump_DoneProcessingSegments2
             d7ec d6 25              LDB        <SomeValue_0x25                               = ??
-                             LAB_d7ee                                        XREF[1]:     d7fc(j)  
-            d7ee 34 56              PSHS        U param_3 param_2 param_1
-            d7f0 8d 35              BSR        FUN_d827                                      undefined FUN_d827(void)
-            d7f2 35 56              PULS        param_1 param_2 param_3 U
-            d7f4 0a 1d              DEC        <SomeValue_CounterMaybe_0x1d                  = ??
-            d7f6 27 06              BEQ        LAB_d7fe
-            d7f8 ad 84              JSR        ,param_3=>SomeReferencedFunction              undefined SomeReferencedFunction(void)
+                             Loop_SegmentWork2                               XREF[1]:     d7fc(j)  
+            d7ee 34 56              PSHS        U X B A
+            d7f0 8d 35              BSR        CrtArtifactLineDrawingFunction_Maybe          undefined CrtArtifactLineDrawingFunction_Maybe(void)
+            d7f2 35 56              PULS        A B X U
+            d7f4 0a 1d              DEC        <Draw_SegmentValue2_0x1d                      = ??
+            d7f6 27 06              BEQ        Jump_DoneProcessingSegments2
+            d7f8 ad 84              JSR        ,X
             d7fa 97 22              STA        <SomeValue_0x22                               = ??
-            d7fc 20 f0              BRA        LAB_d7ee
-                             LAB_d7fe                                        XREF[2]:     d7ea(j), d7f6(j)  
+            d7fc 20 f0              BRA        Loop_SegmentWork2
+                             Jump_DoneProcessingSegments2                    XREF[2]:     d7ea(j), d7f6(j)  
             d7fe 39                 RTS
-                             SUB_d7ff                                        XREF[2]:     d78d(*), JUMP_d7e6:d7f8(c)  
+                             **************************************************************
+                             *                          FUNCTION                          *
+                             **************************************************************
+                             undefined __stdcall DrawSegment_SubFunction0(void)
+             undefined         A:1            <RETURN>
+                             DrawSegment_SubFunction0                        XREF[1]:     DrawSegment_Orientation0:d78d(*)  
             d7ff 0a 21              DEC        <SomeValue_RandomSeedMaybe_0x21               = ??
             d801 d3 1e              ADDD       <SomeValue_0x1e                               = ??
             d803 39                 RTS
-            d804 0c                 ??         0Ch
-            d805 22                 ??         22h    "
-            d806 93                 ??         93h
-            d807 1e                 ??         1Eh
-            d808 39                 ??         39h    9
-            d809 0c                 ??         0Ch
-            d80a 22                 ??         22h    "
-            d80b d3                 ??         D3h
-            d80c 1e                 ??         1Eh
-            d80d 39                 ??         39h    9
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall SomeReferencedFunction(void)
+                             undefined __stdcall DrawSegment_SubFunction1(void)
              undefined         A:1            <RETURN>
-                             SomeReferencedFunction                          XREF[2]:     SomeOtherFunctionFromATable:d7a4
-                                                                                          JUMP_d7e6:d7f8(c)  
+                             DrawSegment_SubFunction1                        XREF[1]:     DrawSegment_Orientation1:d794(*)  
+            d804 0c 22              INC        <SomeValue_0x22                               = ??
+            d806 93 1e              SUBD       <SomeValue_0x1e                               = ??
+            d808 39                 RTS
+                             **************************************************************
+                             *                          FUNCTION                          *
+                             **************************************************************
+                             undefined __stdcall DrawSegment_SubFunction2(void)
+             undefined         A:1            <RETURN>
+                             DrawSegment_SubFunction2                        XREF[1]:     DrawSegment_Orientation2:d79d(*)  
+            d809 0c 22              INC        <SomeValue_0x22                               = ??
+            d80b d3 1e              ADDD       <SomeValue_0x1e                               = ??
+            d80d 39                 RTS
+                             **************************************************************
+                             *                          FUNCTION                          *
+                             **************************************************************
+                             undefined __stdcall DrawSegment_SubFunction3(void)
+             undefined         A:1            <RETURN>
+                             DrawSegment_SubFunction3                        XREF[1]:     DrawSegment_Orientation3:d7a4(*)  
             d80e 0c 21              INC        <SomeValue_RandomSeedMaybe_0x21               = ??
             d810 d3 1e              ADDD       <SomeValue_0x1e                               = ??
             d812 39                 RTS
-            d813 0c                 ??         0Ch
-            d814 21                 ??         21h    !
-            d815 93                 ??         93h
-            d816 1e                 ??         1Eh
-            d817 39                 ??         39h    9
-            d818 0a                 ??         0Ah
-            d819 22                 ??         22h    "
-            d81a d3                 ??         D3h
-            d81b 1e                 ??         1Eh
-            d81c 39                 ??         39h    9
-            d81d 0a                 ??         0Ah
-            d81e 22                 ??         22h    "
-            d81f 93                 ??         93h
-            d820 1e                 ??         1Eh
-            d821 39                 ??         39h    9
-                             SUB_d822                                        XREF[2]:     d7c4(*), JUMP_d7e6:d7f8(c)  
+                             **************************************************************
+                             *                          FUNCTION                          *
+                             **************************************************************
+                             undefined __stdcall DrawSegment_SubFunction4(void)
+             undefined         A:1            <RETURN>
+                             DrawSegment_SubFunction4                        XREF[1]:     DrawSegment_Orientation4:d7ab(*)  
+            d813 0c 21              INC        <SomeValue_RandomSeedMaybe_0x21               = ??
+            d815 93 1e              SUBD       <SomeValue_0x1e                               = ??
+            d817 39                 RTS
+                             **************************************************************
+                             *                          FUNCTION                          *
+                             **************************************************************
+                             undefined __stdcall DrawSegment_SubFunction5(void)
+             undefined         A:1            <RETURN>
+                             DrawSegment_SubFunction5                        XREF[1]:     DrawSegment_Orientation5:d7b4(*)  
+            d818 0a 22              DEC        <SomeValue_0x22                               = ??
+            d81a d3 1e              ADDD       <SomeValue_0x1e                               = ??
+            d81c 39                 RTS
+                             **************************************************************
+                             *                          FUNCTION                          *
+                             **************************************************************
+                             undefined __stdcall DrawSegment_SubFunction6(void)
+             undefined         A:1            <RETURN>
+                             DrawSegment_SubFunction6                        XREF[1]:     DrawSegment_Orientation6:d7bb(*)  
+            d81d 0a 22              DEC        <SomeValue_0x22                               = ??
+            d81f 93 1e              SUBD       <SomeValue_0x1e                               = ??
+            d821 39                 RTS
+                             **************************************************************
+                             *                          FUNCTION                          *
+                             **************************************************************
+                             undefined __stdcall DrawSegment_SubFunction7(void)
+             undefined         A:1            <RETURN>
+                             DrawSegment_SubFunction7                        XREF[1]:     DrawSegment_Orientation7:d7c4(*)  
             d822 0a 21              DEC        <SomeValue_RandomSeedMaybe_0x21               = ??
             d824 93 1e              SUBD       <SomeValue_0x1e                               = ??
             d826 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall FUN_d827(void)
+                             undefined __stdcall CrtArtifactLineDrawingFunction_Maybe
              undefined         A:1            <RETURN>
              undefined1        Stack[-0x1]:1  local_1                                 XREF[1]:     d83e(*)  
-                             FUN_d827                                        XREF[1]:     JUMP_d7e6:d7f0(c)  
+                             CrtArtifactLineDrawingFunction_Maybe            XREF[2]:     DrawSegmentHelper1:d7d7(c), 
+                                                                                          DrawSegmentHelper2:d7f0(c)  
             d827 dc 21              LDD        <SomeValue_RandomSeedMaybe_0x21               = ??
             d829 8d 2b              BSR        ComputeScreenLocationFromAAndB                undefined ComputeScreenLocationFromAAndB(void)
             d82b 1f 02              TFR        D,Y
             d82d d6 22              LDB        <SomeValue_0x22                               = ??
             d82f c4 03              ANDB       #0x3
-            d831 ce d8 4a           LDU        #Drops_HorizontalAdjustmentValues             = C0h
+            d831 ce d8 4a           LDU        #Drawing_HorizontalAdjustmentValues           = C0h
             d834 30 44              LEAX       0x4,U                                         choose the second 4 byte table at d84a
                                                                                              for some reason
             d836 96 20              LDA        <SomeValue_0x20                               = ??
             d838 2b 0f              BMI        LAB_d849
             d83a a6 86              LDA        A,X=>DAT_d84e
-            d83c a4 c5              ANDA       B,U=>Drops_HorizontalAdjustmentValues         = C0h
+            d83c a4 c5              ANDA       B,U=>Drawing_HorizontalAdjustmentValues       = C0h
             d83e a7 e2              STA        ,-S=>local_1
-            d840 a6 c5              LDA        B,U=>Drops_HorizontalAdjustmentValues         = C0h
+            d840 a6 c5              LDA        B,U=>Drawing_HorizontalAdjustmentValues       = C0h
             d842 43                 COMA
             d843 a4 a4              ANDA       ,Y
             d845 aa e0              ORA        ,S+
             d847 a7 a4              STA        ,Y
                              LAB_d849                                        XREF[1]:     d838(j)  
             d849 39                 RTS
-                             Drops_HorizontalAdjustmentValues                XREF[5]:     UpdateAndDrawDrops:cffe(*), 
+                             Drawing_HorizontalAdjustmentValues              XREF[5]:     UpdateAndDrawDrops:cffe(*), 
                                                                                           UpdateAndDrawDrops:d005(*), 
-                                                                                          FUN_d827:d831(*), 
-                                                                                          FUN_d827:d83c(*), 
-                                                                                          FUN_d827:d840(*)  
+                                                                                          CrtArtifactLineDrawingFunction_M
+                                                                                          CrtArtifactLineDrawingFunction_M
+                                                                                          CrtArtifactLineDrawingFunction_M
             d84a c0                 ??         C0h
             d84b 30                 ??         30h    0
             d84c 0c                 ??         0Ch
             d84d 03                 ??         03h
-                             DAT_d84e                                        XREF[1]:     FUN_d827:d83a(*)  
+                             DAT_d84e                                        XREF[1]:     CrtArtifactLineDrawingFunction_M
             d84e 00                 ??         00h
             d84f 55                 ??         55h    U
             d850 aa                 ??         AAh
@@ -21946,7 +22005,7 @@
                                                                                           UpdateAndDrawDrops:cff5(c), 
                                                                                           UpdateAndDrawDrops:d012(c), 
                                                                                           SetupPickupScreenLocationAndNumL
-                                                                                          FUN_d827:d829(c)  
+                                                                                          CrtArtifactLineDrawingFunction_M
             d856 58                 LSLB
             d857 44                 LSRA
             d858 56                 RORB
@@ -21966,7 +22025,7 @@
                                                                                           FUN_c3b3:c34e(j), 
                                                                                           UpdateRoomTimers:cca0(j)  
             d860 a6 3b              LDA        -0x5,Y=>Player_SomeGameState_0x1a5            = ??
-            d862 27 4e              BEQ        Some3ByteDrawingFunction::Jump_SkipUpdate
+            d862 27 4e              BEQ        DrawingFunctionFor3ByteWideSprites::Jump_Ski
             d864 2b 4d              BMI        Jump_StateIsFF
             d866 4a                 DECA
             d867 27 03              BEQ        Jump_StateIsNowZero
@@ -21986,8 +22045,8 @@
             d882 dc 1b              LDD        <ZeroValue                                    = ??
             d884 dd 1e              STD        <SomeValue_0x1e                               = ??
             d886 86 0c              LDA        #12
-            d888 97 1d              STA        <SomeValue_CounterMaybe_0x1d                  = ??
-            d88a bd d7 a4           JSR        SomeOtherFunctionFromATable                   undefined SomeOtherFunctionFromATable(undefined param_1, un
+            d888 97 1d              STA        <Draw_SegmentValue2_0x1d                      = ??
+            d88a bd d7 a4           JSR        DrawSegment_Orientation3                      undefined DrawSegment_Orientation3(undefined param_1, undef
             d88d 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     = ??
                              Jump_SkipRopeHandling                           XREF[2]:     d872(j), d876(j)  
             d891 ee 28              LDU        0x8,Y=>Player_VideoPageDrawDestination_0x1b2  = ??
@@ -21998,9 +22057,9 @@
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined Some3ByteDrawingFunction()
+                             undefined DrawingFunctionFor3ByteWideSprites()
              undefined         A:1            <RETURN>
-                             Some3ByteDrawingFunction                        XREF[1]:     DrawDoorOrMultipleDoors_Maybe:cd
+                             DrawingFunctionFor3ByteWideSprites              XREF[1]:     DrawDoorOrMultipleDoors_Maybe:cd
             d89b 97 26              STA        <UtilityCounter_0x26                          = ??
                              Loop_NextLine                                   XREF[1]:     d8b0(j)  
             d89d ec c4              LDD        ,U                                            load from page to D
