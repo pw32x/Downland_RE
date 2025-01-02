@@ -74,14 +74,14 @@
                                                                                           ClearVideoMemory_0x0400_to_0x340
                                                                                           InitBouncingBall:ce9b(*), [more]
             001b                    dw         ??
-                             Draw_SegmentValue2_0x1d                         XREF[6]:     DrawBackgroundPiece:d76e(*), 
+                             DrawSegment_Counter_0x1d                        XREF[6]:     DrawBackgroundPiece:d76e(*), 
                                                                                           DrawSegmentHelper1:d7cf(*), 
                                                                                           DrawSegmentHelper1:d7db(*), 
                                                                                           DrawSegmentHelper2:d7e8(*), 
                                                                                           DrawSegmentHelper2:d7f4(*), 
                                                                                           UpdateObjectPhysics_Maybe:d888(*
             001d                    ??         ??
-                             SomeValue_0x1e                                  XREF[10]:    DrawBackgroundPiece:d766(*), 
+                             DrawSegment_SomeModifierForD_0x1e               XREF[10]:    DrawBackgroundPiece:d766(*), 
                                                                                           DrawSegment_SubFunction0:d801(*), 
                                                                                           DrawSegment_SubFunction1:d806(*), 
                                                                                           DrawSegment_SubFunction2:d80b(*), 
@@ -92,32 +92,32 @@
                                                                                           DrawSegment_SubFunction7:d824(*), 
                                                                                           UpdateObjectPhysics_Maybe:d884(*
             001e                    ??         ??
-                             Draw_SegmentValue1_0x1f                         XREF[1]:     DrawBackgroundPiece:d76a(*)  
+                             DrawSegment_AngleOrOffset_0x1f                  XREF[1]:     DrawBackgroundPiece:d76a(*)  
             001f                    ??         ??
-                             SomeValue_0x20                                  XREF[13]:    DrawBackground:d250(*), d672(*), 
+                             CrtArtifactDrawingMaskIndex_0x20                XREF[13]:    DrawBackground:d250(*), d672(*), 
                                                                                           d678(*), d684(*), d68a(*), 
                                                                                           d6bb(*), d6c2(*), d73d(*), 
                                                                                           d748(*), d759(*), d75f(*), 
-                                                                                          CrtArtifactLineDrawingFunction_M
+                                                                                          CrtArtifactPixelDrawingFunction:
                                                                                           UpdateObjectPhysics_Maybe:d880(*
             0020                    ??         ??
-                             SomeValue_RandomSeedMaybe_0x21                  XREF[9]:     DrawBackground:d255(*), 
-                                                                                          DrawSegmentHelper1:d7cd(*), 
+                             DrawSegment_CurrentScreenYXPosition_0x21        XREF[9]:     DrawBackground:d255(*), 
+                             DrawSegment_CurrentY_0x21                                    DrawSegmentHelper1:d7cd(*), 
                                                                                           DrawSegmentHelper1:d7e1(*), 
                                                                                           DrawSegment_SubFunction0:d7ff(*), 
                                                                                           DrawSegment_SubFunction3:d80e(*), 
                                                                                           DrawSegment_SubFunction4:d813(*), 
                                                                                           DrawSegment_SubFunction7:d822(*), 
-                                                                                          CrtArtifactLineDrawingFunction_M
+                                                                                          CrtArtifactPixelDrawingFunction:
                                                                                           UpdateObjectPhysics_Maybe:d87e(*
             0021                    ??         ??
-                             SomeValue_0x22                                  XREF[7]:     DrawSegmentHelper2:d7e6(*), 
+                             DrawSegment_CurrentX_0x22                       XREF[7]:     DrawSegmentHelper2:d7e6(*), 
                                                                                           DrawSegmentHelper2:d7fa(*), 
                                                                                           DrawSegment_SubFunction1:d804(*), 
                                                                                           DrawSegment_SubFunction2:d809(*), 
                                                                                           DrawSegment_SubFunction5:d818(*), 
                                                                                           DrawSegment_SubFunction6:d81d(*), 
-                                                                                          CrtArtifactLineDrawingFunction_M
+                                                                                          CrtArtifactPixelDrawingFunction:
             0022                    ??         ??
                              PlayerY_Byte_0x23                               XREF[2]:     Jump_IsAlreadyClimbing:c907(*), 
                                                                                           Jump_IsAlreadyClimbing:c91b(*)  
@@ -217,13 +217,13 @@
             0032                    ??         ??
             0033                    ??         ??
                              SomeValue_0x34                                  XREF[5]:     FUN_c8b9:c8bf(*), 
-                                                                                          SomeWeirdBitShiftingFunction:ca9
-                                                                                          SomeWeirdBitShiftingFunction:caa
-                                                                                          SomeWeirdBitShiftingFunction:caa
-                                                                                          SomeWeirdBitShiftingFunction:caa
+                                                                                          TerrainCollisionTest_Maybe:ca9b(
+                                                                                          TerrainCollisionTest_Maybe:caa2(
+                                                                                          TerrainCollisionTest_Maybe:caa9(
+                                                                                          TerrainCollisionTest_Maybe:caad(
             0034                    ??         ??
-                             SomeValue_0x35                                  XREF[2]:     SomeWeirdBitShiftingFunction:caa
-                                                                                          SomeWeirdBitShiftingFunction:caa
+                             SomeValue_0x35                                  XREF[2]:     TerrainCollisionTest_Maybe:caa0(
+                                                                                          TerrainCollisionTest_Maybe:caa7(
             0035                    ??         ??
                              Player_MoveLeftRightHoldingRopeCounter_0x36     XREF[10]:    BigInitFunction_Maybe:c797(*), 
                                                                                           BigInitFunction_Maybe:c7df(*), 
@@ -333,7 +333,7 @@
                              SecondUtilityCounter_0x4d                       XREF[12]:    PlaySound:c35f(*), 
                                                                                           DoIdleLoopOnB:c376(*), 
                                                                                           FUN_c8b9:c8bc(*), 
-                                                                                          SomeWeirdBitShiftingFunction:caa
+                                                                                          TerrainCollisionTest_Maybe:caab(
                                                                                           DrawDoorOrMultipleDoors_Maybe:cd
                                                                                           DrawDoorOrMultipleDoors_Maybe:cd
                                                                                           DrawPickups:cf1f(*), 
@@ -8410,6 +8410,7 @@
             1d83                    ??         ??
             1d84                    ??         ??
             1d85                    ??         ??
+                             SUB_1d86                                        XREF[1]:     DrawBackgroundPiece:d776(c)  
             1d86                    ??         ??
             1d87                    ??         ??
             1d88                    ??         ??
@@ -13781,9 +13782,7 @@
             327d                    ??         ??
             327e                    ??         ??
             327f                    ??         ??
-                             DAT_3280                                        XREF[1]:     FUN_c3b3:c4a3(*)  
             3280                    ??         ??
-                             DAT_3281                                        XREF[1]:     FUN_c3b3:c4a7(*)  
             3281                    ??         ??
             3282                    ??         ??
             3283                    ??         ??
@@ -18002,18 +18001,18 @@
                              LAB_c498                                        XREF[1]:     c3d7(j)  
             c498 8d 4d              BSR        ComputeVideoPageDestination_Maybe             char ComputeVideoPageDestination_Maybe(void)
             c49a 30 89 02 00        LEAX       0x200,X                                       sixteen lines underneath X, maybe
-            c49e ce c5 0d           LDU        #SomeFourBitPatternTable                      = 0000001111000000b
-            c4a1 ec c6              LDD        A,U=>SomeFourBitPatternTable                  = 0000001111000000b
+            c49e ce c5 0d           LDU        #BitPatternTableForRopeOrFloor_Maybe          = 0000001111000000b
+            c4a1 ec c6              LDD        A,U=>BitPatternTableForRopeOrFloor_Maybe      = 0000001111000000b
                              detecting whether we're standing or not, maybe
-            c4a3 a4 89 18 00        ANDA       0x1800,X=>DAT_3280                            = ??
-            c4a7 e4 89 18 01        ANDB       0x1801,X=>DAT_3281                            = ??
+            c4a3 a4 89 18 00        ANDA       0x1800,X
+            c4a7 e4 89 18 01        ANDB       0x1801,X
             c4ab 10 93 1b           CMPD       <ZeroValue                                    = ??
             c4ae 27 0e              BEQ        Jump_HandleFall
             c4b0 34 04              PSHS        B
-            c4b2 bd ca 9b           JSR        SomeWeirdBitShiftingFunction                  byte SomeWeirdBitShiftingFunction(byte param_1)
+            c4b2 bd ca 9b           JSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
             c4b5 35 02              PULS        A
             c4b7 26 73              BNE        Jump_IsClimbing
-            c4b9 bd ca 9b           JSR        SomeWeirdBitShiftingFunction                  byte SomeWeirdBitShiftingFunction(byte param_1)
+            c4b9 bd ca 9b           JSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
             c4bc 26 6e              BNE        Jump_IsClimbing
                              Jump_HandleFall                                 XREF[1]:     c4ae(j)  
             c4be 86 ff              LDA        #0xff
@@ -18075,7 +18074,7 @@
             c50a 00                 db         0h
             c50b 00                 db         0h
             c50c 01                 db         1h
-                             SomeFourBitPatternTable                         XREF[4]:     FUN_c3b3:c49e(*), 
+                             BitPatternTableForRopeOrFloor_Maybe             XREF[4]:     FUN_c3b3:c49e(*), 
                                                                                           FUN_c3b3:c4a1(*), 
                                                                                           Jump_IsAlreadyClimbing:c93d(*), 
                                                                                           Jump_IsAlreadyClimbing:c940(*)  
@@ -18650,7 +18649,7 @@
                                                                                           Jump_IsAlreadyClimbing:c8e5(c), 
                                                                                           Jump_IsAlreadyClimbing:c8eb(c), 
                                                                                           UpdateAndDrawDrops:d007(c)  
-            c8b9 bd ca 9b           JSR        SomeWeirdBitShiftingFunction                  byte SomeWeirdBitShiftingFunction(byte param_1)
+            c8b9 bd ca 9b           JSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
             c8bc 96 4d              LDA        <SecondUtilityCounter_0x4d                    = ??
             c8be 43                 COMA
             c8bf 94 34              ANDA       <SomeValue_0x34                               = ??
@@ -18729,17 +18728,17 @@
             c937 30 89 01 e0        LEAX       0x1e0,X
             c93b 3a                 ABX
             c93c 48                 LSLA
-            c93d ce c5 0d           LDU        #SomeFourBitPatternTable                      = 0000001111000000b
-            c940 ec c6              LDD        A,U=>SomeFourBitPatternTable                  = 0000001111000000b
+            c93d ce c5 0d           LDU        #BitPatternTableForRopeOrFloor_Maybe          = 0000001111000000b
+            c940 ec c6              LDD        A,U=>BitPatternTableForRopeOrFloor_Maybe      = 0000001111000000b
             c942 a4 89 18 00        ANDA       0x1800,X
             c946 e4 89 18 01        ANDB       0x1801,X
             c94a 10 93 1b           CMPD       <ZeroValue                                    = ??
             c94d 27 30              BEQ        LAB_c97f
             c94f 34 04              PSHS        B
-            c951 bd ca 9b           JSR        SomeWeirdBitShiftingFunction                  byte SomeWeirdBitShiftingFunction(byte param_1)
+            c951 bd ca 9b           JSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
             c954 35 02              PULS        A
             c956 26 05              BNE        LAB_c95d
-            c958 bd ca 9b           JSR        SomeWeirdBitShiftingFunction                  byte SomeWeirdBitShiftingFunction(byte param_1)
+            c958 bd ca 9b           JSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
             c95b 27 22              BEQ        LAB_c97f
                              LAB_c95d                                        XREF[1]:     c956(j)  
             c95d ec 26              LDD        0x6,Y=>PlayerX_0x1b0                          = ??
@@ -18922,10 +18921,10 @@
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             byte __stdcall SomeWeirdBitShiftingFunction(byte param_1)
+                             byte __stdcall TerrainCollisionTest_Maybe(byte A)
              byte              A:1            <RETURN>
-             byte              A:1            param_1
-                             SomeWeirdBitShiftingFunction                    XREF[11]:    FUN_c3b3:c4b2(c), 
+             byte              A:1            A
+                             TerrainCollisionTest_Maybe                      XREF[11]:    FUN_c3b3:c4b2(c), 
                                                                                           FUN_c3b3:c4b9(c), 
                                                                                           FUN_c8b9:c8b9(c), 
                                                                                           Jump_IsAlreadyClimbing:c951(c), 
@@ -18934,18 +18933,18 @@
                                                                                           cb84(c), 
                                                                                           UpdateAndDrawDrops:cf72(c), 
                                                                                           UpdateAndDrawDrops:cf7c(c)  
-            ca9b 97 34              STA        <SomeValue_0x34                               = ??
-            ca9d 84 55              ANDA       #01010101b
-            ca9f 48                 LSLA
-            caa0 97 35              STA        <SomeValue_0x35                               = ??
-            caa2 96 34              LDA        <SomeValue_0x34                               = ??
-            caa4 84 aa              ANDA       #10101010b
-            caa6 44                 LSRA
-            caa7 9a 35              ORA        <SomeValue_0x35                               = ??
-            caa9 98 34              EORA       <SomeValue_0x34                               = ??
+            ca9b 97 34              STA        <SomeValue_0x34                               store pixel from A here
+            ca9d 84 55              ANDA       #01010101b                                    apply mask to A
+            ca9f 48                 LSLA                                                     double A, ie shift the pixels left
+            caa0 97 35              STA        <SomeValue_0x35                               store retult
+            caa2 96 34              LDA        <SomeValue_0x34                               load original value from A
+            caa4 84 aa              ANDA       #10101010b                                    apply another mask
+            caa6 44                 LSRA                                                     shift left
+            caa7 9a 35              ORA        <SomeValue_0x35                               combine with 0x35
+            caa9 98 34              EORA       <SomeValue_0x34                               don't combine shared pixels
             caab 97 4d              STA        <SecondUtilityCounter_0x4d                    = ??
-            caad 94 34              ANDA       <SomeValue_0x34                               = ??
-            caaf 84 55              ANDA       #01010101b
+            caad 94 34              ANDA       <SomeValue_0x34                               apply mask in 0x34
+            caaf 84 55              ANDA       #01010101b                                    apply mask
             cab1 39                 RTS
                              Jump_ToBallInit                                 XREF[1]:     cabc(j)  
             cab2 7e ce 75           JMP        InitBouncingBall
@@ -18978,10 +18977,10 @@
             cae4 10 93 1b           CMPD       <ZeroValue                                    = ??
             cae7 27 0c              BEQ        LAB_caf5
             cae9 34 04              PSHS        B
-            caeb 8d ae              BSR        SomeWeirdBitShiftingFunction                  byte SomeWeirdBitShiftingFunction(byte param_1)
+            caeb 8d ae              BSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
             caed 35 02              PULS        A
             caef 26 27              BNE        LAB_cb18
-            caf1 8d a8              BSR        SomeWeirdBitShiftingFunction                  byte SomeWeirdBitShiftingFunction(byte param_1)
+            caf1 8d a8              BSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
             caf3 26 23              BNE        LAB_cb18
                              LAB_caf5                                        XREF[1]:     cae7(j)  
             caf5 ec a4              LDD        ,Y=>Ball_SpeedY_0x1bf                         = ??
@@ -19059,10 +19058,10 @@
             cb76 10 93 1b           CMPD       <ZeroValue                                    = ??
             cb79 27 12              BEQ        LAB_cb8d
             cb7b 34 04              PSHS        B
-            cb7d bd ca 9b           JSR        SomeWeirdBitShiftingFunction                  byte SomeWeirdBitShiftingFunction(byte param_1)
+            cb7d bd ca 9b           JSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
             cb80 35 02              PULS        A
             cb82 26 05              BNE        Jump_SetBallStateToFF
-            cb84 bd ca 9b           JSR        SomeWeirdBitShiftingFunction                  byte SomeWeirdBitShiftingFunction(byte param_1)
+            cb84 bd ca 9b           JSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
             cb87 27 04              BEQ        LAB_cb8d
                              Jump_SetBallStateToFF                           XREF[1]:     cb82(j)  
             cb89 86 ff              LDA        #0xff
@@ -19840,12 +19839,12 @@
             cf6a 30 89 18 c0        LEAX       0x18c0,X
             cf6e a6 84              LDA        ,X
             cf70 a4 2c              ANDA       0xc,Y=>Drop1_WhichSideToSpawn_0x208           = ??
-            cf72 bd ca 9b           JSR        SomeWeirdBitShiftingFunction                  byte SomeWeirdBitShiftingFunction(byte param_1)
-            cf75 26 4b              BNE        LAB_cfc2
+            cf72 bd ca 9b           JSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
+            cf75 26 4b              BNE        Jump_TouchedTerrain_Maybe
             cf77 a6 88 20           LDA        0x20,X
             cf7a a4 2c              ANDA       0xc,Y=>Drop1_WhichSideToSpawn_0x208           = ??
-            cf7c bd ca 9b           JSR        SomeWeirdBitShiftingFunction                  byte SomeWeirdBitShiftingFunction(byte param_1)
-            cf7f 26 41              BNE        LAB_cfc2
+            cf7c bd ca 9b           JSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
+            cf7f 26 41              BNE        Jump_TouchedTerrain_Maybe
                              LAB_cf81                                        XREF[1]:     cfc0(j)  
             cf81 ec 23              LDD        0x3,Y=>Drop1_Y_0x1ff                          = ??
             cf83 e3 21              ADDD       offset Drop1_CeilingWiggleTimer_0x1fd,Y       = ??
@@ -19880,7 +19879,7 @@
                              LAB_cfbe                                        XREF[1]:     cfb9(j)  
             cfbe ed 21              STD        offset Drop1_CeilingWiggleTimer_0x1fd,Y       = ??
             cfc0 20 bf              BRA        LAB_cf81
-                             LAB_cfc2                                        XREF[2]:     cf75(j), cf7f(j)  
+                             Jump_TouchedTerrain_Maybe                       XREF[2]:     cf75(j), cf7f(j)  
             cfc2 8d 71              BSR        ClearDrop                                     byte ClearDrop(void)
                              LAB_cfc4                                        XREF[1]:     cf66(j)  
             cfc4 c6 a8              LDB        #0xa8                                         pre-drop wiggle countdown
@@ -19915,10 +19914,10 @@
             cff5 bd d8 56           JSR        ComputeScreenLocationFromAAndB                undefined ComputeScreenLocationFromAAndB(void)
             cff8 1f 01              TFR        D,X
             cffa a6 89 18 00        LDA        0x1800,X                                      load source pixel
-            cffe 8e d8 4a           LDX        #Drawing_HorizontalAdjustmentValues           = C0h
+            cffe 8e d8 4a           LDX        #Drawing_PixelBits_d84a                       = 11000000b
             d001 e6 25              LDB        0x5,Y=>Drop1_X_0x201                          = ??
             d003 c4 03              ANDB       #0x3                                          adjust horizontal position
-            d005 a4 85              ANDA       B,X=>Drawing_HorizontalAdjustmentValues       = C0h
+            d005 a4 85              ANDA       B,X=>Drawing_PixelBits_d84a                   = 11000000b
             d007 bd c8 b9           JSR        FUN_c8b9                                      byte FUN_c8b9(byte param_1)
             d00a 27 02              BEQ        LAB_d00e
             d00c 6a 25              DEC        0x5,Y=>Drop1_X_0x201                          = ??
@@ -20515,9 +20514,10 @@
                                                                                           FUN_c3b3:c640(c), 
                                                                                           InitRoom_Maybe:cd16(c)  
             d24e 86 01              LDA        #0x1
-            d250 97 20              STA        <SomeValue_0x20                               store 1 at 0x20
+            d250 97 20              STA        <CrtArtifactDrawingMaskIndex_0x20             store 1 at 0x20
             d252 cc 10 0f           LDD        #0x100f
-            d255 dd 21              STD        <SomeValue_RandomSeedMaybe_0x21               store 0x100f at 0x21-0x22
+            d255 dd 21              STD        <DrawSegment_CurrentY_0x21                    store 0x100f at 0x21-0x22
+                                                                                             drawing start position?
             d257 7e d5 9e           JMP        Jump_ProcessDrawCommands
                              RoomGraphicsAndDoorData_0xd25a                  XREF[1]:     InitVideoAndSetupRoomAndGraphics
             d25a d2 6e              dw         Room0_GraphicsAndDoorData                     = D35Eh
@@ -21325,7 +21325,7 @@
             d5c1 d6 3f              dw         DrawPiece_03_TopRightHandCornerPiece
             d5c3 d6 4e              dw *       DrawPiece_04_TopRightHandCornerPiece2
             d5c5 d6 5e              dw         DrawPiece_05_BottomRightSideOfFloatingPlatfo
-            d5c7 d6 91              dw         DrawPiece_06_FloorPieceGoingRight             = CEh
+            d5c7 d6 91              dw         DrawPiece_06_FloorPieceGoingRight
             d5c9 d6 01              dw         DrawPiece_07_WallPieceGoingUp
             d5cb d6 2f              dw         DrawPiece_08_CornerPieceGoingDownLeft
             d5cd d6 9b              dw         DrawPiece_09_FloorPieceGoingLeft              DrawPiece_0_
@@ -21351,16 +21351,16 @@
             d5f4 7e d7 62           JMP        DrawBackgroundPiece
                              -- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
                              DrawData_00_Stalagtite                          XREF[1]:     d5f1(*)  
-            d5f7 03                 db         03h
-            d5f8 80                 db         80h
-            d5f9 04                 db         04h
-            d5fa 00                 db         00h
-            d5fb 80                 db         80h
-            d5fc 0a                 db         0Ah
-            d5fd 03                 db         03h
-            d5fe 80                 db         80h
-            d5ff 07                 db         07h
-            d600 00                 db         00h
+            d5f7 03                 db         03h                                           num segments
+            d5f8 80                 db         80h                                           go up three lines?
+            d5f9 04                 db         04h                                           four pixels wide?
+            d5fa 00                 db         00h                                           orientation 0
+            d5fb 80                 db         80h                                           go down three lines
+            d5fc 0a                 db         0Ah                                           10 pixels wide
+            d5fd 03                 db         03h                                           orientation 3
+            d5fe 80                 db         80h                                           go up three lines
+            d5ff 07                 db         07h                                           7 pixels wide?
+            d600 00                 db         00h                                           orienation 0
                              DrawPiece_07_WallPieceGoingUp                   XREF[1]:     d5c9(*)  
             d601 ce d6 16           LDU        #DrawData_07_WallPieceGoingUp                 = 03h
             d604 20 03              BRA        Jump_JumpToDrawBackgroundPiece
@@ -21468,10 +21468,10 @@
                              DrawPiece_14_HorizontalRopeStartGoingRight      XREF[1]:     d5e3(*)  
             d66d ce d6 7b           LDU        #DrawData_14_HorizontalRopeStartGoingRight    = 01h
             d670 86 03              LDA        #0x3
-            d672 97 20              STA        <SomeValue_0x20                               = ??
+            d672 97 20              STA        <CrtArtifactDrawingMaskIndex_0x20             = ??
             d674 8d 1e              BSR        DrawBackgroundPieceWrapper                    undefined DrawBackgroundPieceWrapper(void)
             d676 86 01              LDA        #0x1
-            d678 97 20              STA        <SomeValue_0x20                               = ??
+            d678 97 20              STA        <CrtArtifactDrawingMaskIndex_0x20             = ??
             d67a 39                 RTS
                              DrawData_14_HorizontalRopeStartGoingRight       XREF[1]:     d66d(*)  
             d67b 01                 db         01h
@@ -21481,10 +21481,10 @@
                              DrawPiece_15_HorizontalRopeEndGoingRight        XREF[1]:     d5e5(*)  
             d67f ce d6 8d           LDU        #DrawData_15_HorizontalRopeEndGoingRight      = 01h
             d682 86 03              LDA        #0x3
-            d684 97 20              STA        <SomeValue_0x20                               = ??
+            d684 97 20              STA        <CrtArtifactDrawingMaskIndex_0x20             = ??
             d686 8d 0c              BSR        DrawBackgroundPieceWrapper                    undefined DrawBackgroundPieceWrapper(void)
             d688 86 01              LDA        #0x1
-            d68a 97 20              STA        <SomeValue_0x20                               = ??
+            d68a 97 20              STA        <CrtArtifactDrawingMaskIndex_0x20             = ??
             d68c 39                 RTS
                              DrawData_15_HorizontalRopeEndGoingRight         XREF[1]:     d67f(*)  
             d68d 01                 db         01h
@@ -21492,9 +21492,7 @@
             d68f 0a                 db         0Ah
             d690 00                 db         00h
                              DrawPiece_06_FloorPieceGoingRight               XREF[1]:     d5c7(*)  
-            d691 ce                 db         CEh
-            d692 d6                 db         D6h
-            d693 97                 db         97h
+            d691 ce d6 97           LDU        #DrawData_17_BlankAreaGoingRight              = 01h
                              **************************************************************
                              *                       THUNK FUNCTION                       *
                              **************************************************************
@@ -21504,7 +21502,7 @@
                              DrawBackgroundPieceWrapper                      XREF[5]:     d674(c), d686(c), d69e(c), 
                                                                                           d6a7(c), d6b0(c)  
             d694 7e d7 62           JMP        DrawBackgroundPiece
-                             DrawData_17_BlankAreaGoingRight                 XREF[2]:     d6b6(*), d754(*)  
+                             DrawData_17_BlankAreaGoingRight                 XREF[3]:     d691(*), d6b6(*), d754(*)  
             d697 01                 db         01h
             d698 00                 db         00h
             d699 09                 db         09h
@@ -21540,10 +21538,10 @@
             d6b6 ce d6 97           LDU        #DrawData_17_BlankAreaGoingRight              = 01h
                              Jump_DrawBlankArea                              XREF[3]:     d6c8(j), d6cd(j), d6d2(j)  
             d6b9 86 ff              LDA        #0xff
-            d6bb 97 20              STA        <SomeValue_0x20                               = ??
+            d6bb 97 20              STA        <CrtArtifactDrawingMaskIndex_0x20             = ??
             d6bd bd d7 62           JSR        DrawBackgroundPiece                           undefined DrawBackgroundPiece(void)
             d6c0 86 01              LDA        #0x1
-            d6c2 97 20              STA        <SomeValue_0x20                               = ??
+            d6c2 97 20              STA        <CrtArtifactDrawingMaskIndex_0x20             = ??
             d6c4 39                 RTS
                              DrawPiece_18_BlankAreaGoingLeft                 XREF[1]:     d5eb(*)  
             d6c5 ce d6 a0           LDU        #DrawData_18_BlankAreaGoingLeft               = 01h
@@ -21649,12 +21647,12 @@
             d736 ce d7 4c           LDU        #DrawData_PreRope_Maybe                       = 01h
             d739 8d 27              BSR        DrawBackgroundPiece                           undefined DrawBackgroundPiece(void)
             d73b 86 03              LDA        #0x3
-            d73d 97 20              STA        <SomeValue_0x20                               = ??
+            d73d 97 20              STA        <CrtArtifactDrawingMaskIndex_0x20             = ??
             d73f 35 40              PULS        U
             d741 8d 1f              BSR        DrawBackgroundPiece                           undefined DrawBackgroundPiece(void)
             d743 ce d7 50           LDU        #DrawData_PostRope_Maybe                      = 01h
             d746 86 01              LDA        #0x1
-            d748 97 20              STA        <SomeValue_0x20                               = ??
+            d748 97 20              STA        <CrtArtifactDrawingMaskIndex_0x20             = ??
             d74a 20 16              BRA        DrawBackgroundPiece                           undefined DrawBackgroundPiece(void)
                              -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
                              DrawData_PreRope_Maybe                          XREF[1]:     d736(*)  
@@ -21670,10 +21668,10 @@
                              DrawPiece_16_HorizontalRopeGoingRight           XREF[1]:     d5e7(*)  
             d754 ce d6 97           LDU        #DrawData_17_BlankAreaGoingRight              = 01h
             d757 86 03              LDA        #0x3
-            d759 97 20              STA        <SomeValue_0x20                               = ??
+            d759 97 20              STA        <CrtArtifactDrawingMaskIndex_0x20             = ??
             d75b 8d 05              BSR        DrawBackgroundPiece                           undefined DrawBackgroundPiece(void)
             d75d 86 01              LDA        #0x1
-            d75f 97 20              STA        <SomeValue_0x20                               = ??
+            d75f 97 20              STA        <CrtArtifactDrawingMaskIndex_0x20             = ??
             d761 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -21688,22 +21686,23 @@
                                                                                           d74a(c), d75b(c)  
             d762 a6 c0              LDA        ,U+                                           get segment count
             d764 97 24              STA        <CurrentSegmentCounter_0x24                   store segment count
-            d766 0f 1e              CLR        <SomeValue_0x1e                               = ??
+            d766 0f 1e              CLR        <DrawSegment_SomeModifierForD_0x1e            = ??
                              Loop_ProcessSegment                             XREF[1]:     d77a(j)  
             d768 a6 c0              LDA        ,U+                                           get first value from segment
-            d76a 97 1f              STA        <Draw_SegmentValue1_0x1f                      = ??
+            d76a 97 1f              STA        <DrawSegment_AngleOrOffset_0x1f               = ??
             d76c a6 c0              LDA        ,U+                                           get second value from segment
-            d76e 97 1d              STA        <Draw_SegmentValue2_0x1d                      = ??
+            d76e 97 1d              STA        <DrawSegment_Counter_0x1d                     = ??
             d770 a6 c0              LDA        ,U+                                           get and compute the drawing function offset
             d772 48                 LSLA
             d773 8e d7 7d           LDX        #LineDrawingFunctions_0xd77d                  = D78Dh
-            d776 ad 96              JSR        [A,X]
+            d776 ad 96              JSR        [A,X]                                         call the draw segment function
             d778 0a 24              DEC        <CurrentSegmentCounter_0x24                   = ??
             d77a 26 ec              BNE        Loop_ProcessSegment
             d77c 39                 RTS
                              LineDrawingFunctions_0xd77d                     XREF[1]:     DrawBackgroundPiece:d773(*)  
             d77d d7 8d              dw         DrawSegment_Orientation0
             d77f d7 94              dw         DrawSegment_Orientation1
+                             WORD_d781                                       XREF[1]:     DrawBackgroundPiece:d776(R)  
             d781 d7 9d              dw         DrawSegment_Orientation2
             d783 d7 a4              dw         DrawSegment_Orientation3
             d785 d7 ab              dw         DrawSegment_Orientation4
@@ -21742,7 +21741,8 @@
              undefined         A:1            <RETURN>
              undefined         A:1            param_1
              undefined         B:1            param_2
-                             DrawSegment_Orientation2                        XREF[1]:     d781(*)  
+                             DrawSegment_Orientation2                        XREF[2]:     DrawBackgroundPiece:d776(c), 
+                                                                                          d781(*)  
             d79d 8e d8 09           LDX        #DrawSegment_SubFunction2
             d7a0 0f 25              CLR        <SomeValue_0x25                               = ??
             d7a2 20 29              BRA        DrawSegmentHelper1                            undefined DrawSegmentHelper1(undefined A, undefined B, unde
@@ -21792,7 +21792,8 @@
              undefined         A:1            <RETURN>
              undefined         A:1            param_1
              undefined         B:1            param_2
-                             DrawSegment_Orientation6                        XREF[1]:     d789(*)  
+                             DrawSegment_Orientation6+2                      XREF[1,1]:   d789(*), 
+                             DrawSegment_Orientation6                                     DrawBackgroundPiece:d776(R)  
             d7bb 8e d8 1d           LDX        #DrawSegment_SubFunction6
             d7be 86 ff              LDA        #0xff
             d7c0 97 25              STA        <SomeValue_0x25                               = ??
@@ -21824,20 +21825,20 @@
                                                                                           DrawSegment_Orientation2:d7a2(c), 
                                                                                           DrawSegment_Orientation5:d7b9(c), 
                                                                                           DrawSegment_Orientation6:d7c2(c)  
-            d7cd 96 21              LDA        <SomeValue_RandomSeedMaybe_0x21               = ??
-            d7cf d6 1d              LDB        <Draw_SegmentValue2_0x1d                      = ??
-            d7d1 27 12              BEQ        Jump_DoneProcessingSegments
+            d7cd 96 21              LDA        <DrawSegment_CurrentY_0x21                    = ??
+            d7cf d6 1d              LDB        <DrawSegment_Counter_0x1d                     = ??
+            d7d1 27 12              BEQ        Jump_DoneDrawingPixels
             d7d3 d6 25              LDB        <SomeValue_0x25                               = ??
-                             Loop_SegmentWork                                XREF[1]:     d7e3(j)  
+                             Loop_DrawPixels                                 XREF[1]:     d7e3(j)  
             d7d5 34 56              PSHS        U X B A
-            d7d7 8d 4e              BSR        CrtArtifactLineDrawingFunction_Maybe          undefined CrtArtifactLineDrawingFunction_Maybe(void)
+            d7d7 8d 4e              BSR        CrtArtifactPixelDrawingFunction               undefined CrtArtifactPixelDrawingFunction(void)
             d7d9 35 56              PULS        A B X U
-            d7db 0a 1d              DEC        <Draw_SegmentValue2_0x1d                      = ??
-            d7dd 27 06              BEQ        Jump_DoneProcessingSegments
-            d7df ad 84              JSR        ,X
-            d7e1 97 21              STA        <SomeValue_RandomSeedMaybe_0x21               = ??
-            d7e3 20 f0              BRA        Loop_SegmentWork
-                             Jump_DoneProcessingSegments                     XREF[2]:     d7d1(j), d7dd(j)  
+            d7db 0a 1d              DEC        <DrawSegment_Counter_0x1d                     = ??
+            d7dd 27 06              BEQ        Jump_DoneDrawingPixels
+            d7df ad 84              JSR        ,X                                            call the DrawSegment_SubFunction
+            d7e1 97 21              STA        <DrawSegment_CurrentY_0x21                    = ??
+            d7e3 20 f0              BRA        Loop_DrawPixels
+                             Jump_DoneDrawingPixels                          XREF[2]:     d7d1(j), d7dd(j)  
             d7e5 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -21852,20 +21853,21 @@
                                                                                           DrawSegment_Orientation3:d7a9(c), 
                                                                                           DrawSegment_Orientation4:d7b2(c), 
                                                                                           DrawSegment_Orientation7:d7cb(c)  
-            d7e6 96 22              LDA        <SomeValue_0x22                               = ??
-            d7e8 d6 1d              LDB        <Draw_SegmentValue2_0x1d                      = ??
-            d7ea 27 12              BEQ        Jump_DoneProcessingSegments2
+            d7e6 96 22              LDA        <DrawSegment_CurrentX_0x22                    = ??
+            d7e8 d6 1d              LDB        <DrawSegment_Counter_0x1d                     = ??
+            d7ea 27 12              BEQ        Jump_DoneDrawingPixels
+                             setup loop
             d7ec d6 25              LDB        <SomeValue_0x25                               = ??
-                             Loop_SegmentWork2                               XREF[1]:     d7fc(j)  
+                             Loop_DrawPixels                                 XREF[1]:     d7fc(j)  
             d7ee 34 56              PSHS        U X B A
-            d7f0 8d 35              BSR        CrtArtifactLineDrawingFunction_Maybe          undefined CrtArtifactLineDrawingFunction_Maybe(void)
+            d7f0 8d 35              BSR        CrtArtifactPixelDrawingFunction               undefined CrtArtifactPixelDrawingFunction(void)
             d7f2 35 56              PULS        A B X U
-            d7f4 0a 1d              DEC        <Draw_SegmentValue2_0x1d                      = ??
-            d7f6 27 06              BEQ        Jump_DoneProcessingSegments2
-            d7f8 ad 84              JSR        ,X
-            d7fa 97 22              STA        <SomeValue_0x22                               = ??
-            d7fc 20 f0              BRA        Loop_SegmentWork2
-                             Jump_DoneProcessingSegments2                    XREF[2]:     d7ea(j), d7f6(j)  
+            d7f4 0a 1d              DEC        <DrawSegment_Counter_0x1d                     = ??
+            d7f6 27 06              BEQ        Jump_DoneDrawingPixels
+            d7f8 ad 84              JSR        ,X                                            call the DrawSegment_SubFunction
+            d7fa 97 22              STA        <DrawSegment_CurrentX_0x22                    = ??
+            d7fc 20 f0              BRA        Loop_DrawPixels
+                             Jump_DoneDrawingPixels                          XREF[2]:     d7ea(j), d7f6(j)  
             d7fe 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -21873,8 +21875,8 @@
                              undefined __stdcall DrawSegment_SubFunction0(void)
              undefined         A:1            <RETURN>
                              DrawSegment_SubFunction0                        XREF[1]:     DrawSegment_Orientation0:d78d(*)  
-            d7ff 0a 21              DEC        <SomeValue_RandomSeedMaybe_0x21               = ??
-            d801 d3 1e              ADDD       <SomeValue_0x1e                               = ??
+            d7ff 0a 21              DEC        <DrawSegment_CurrentY_0x21                    = ??
+            d801 d3 1e              ADDD       <DrawSegment_SomeModifierForD_0x1e            = ??
             d803 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -21882,8 +21884,8 @@
                              undefined __stdcall DrawSegment_SubFunction1(void)
              undefined         A:1            <RETURN>
                              DrawSegment_SubFunction1                        XREF[1]:     DrawSegment_Orientation1:d794(*)  
-            d804 0c 22              INC        <SomeValue_0x22                               = ??
-            d806 93 1e              SUBD       <SomeValue_0x1e                               = ??
+            d804 0c 22              INC        <DrawSegment_CurrentX_0x22                    = ??
+            d806 93 1e              SUBD       <DrawSegment_SomeModifierForD_0x1e            = ??
             d808 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -21891,8 +21893,8 @@
                              undefined __stdcall DrawSegment_SubFunction2(void)
              undefined         A:1            <RETURN>
                              DrawSegment_SubFunction2                        XREF[1]:     DrawSegment_Orientation2:d79d(*)  
-            d809 0c 22              INC        <SomeValue_0x22                               = ??
-            d80b d3 1e              ADDD       <SomeValue_0x1e                               = ??
+            d809 0c 22              INC        <DrawSegment_CurrentX_0x22                    = ??
+            d80b d3 1e              ADDD       <DrawSegment_SomeModifierForD_0x1e            = ??
             d80d 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -21900,8 +21902,8 @@
                              undefined __stdcall DrawSegment_SubFunction3(void)
              undefined         A:1            <RETURN>
                              DrawSegment_SubFunction3                        XREF[1]:     DrawSegment_Orientation3:d7a4(*)  
-            d80e 0c 21              INC        <SomeValue_RandomSeedMaybe_0x21               = ??
-            d810 d3 1e              ADDD       <SomeValue_0x1e                               = ??
+            d80e 0c 21              INC        <DrawSegment_CurrentY_0x21                    = ??
+            d810 d3 1e              ADDD       <DrawSegment_SomeModifierForD_0x1e            = ??
             d812 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -21909,8 +21911,8 @@
                              undefined __stdcall DrawSegment_SubFunction4(void)
              undefined         A:1            <RETURN>
                              DrawSegment_SubFunction4                        XREF[1]:     DrawSegment_Orientation4:d7ab(*)  
-            d813 0c 21              INC        <SomeValue_RandomSeedMaybe_0x21               = ??
-            d815 93 1e              SUBD       <SomeValue_0x1e                               = ??
+            d813 0c 21              INC        <DrawSegment_CurrentY_0x21                    = ??
+            d815 93 1e              SUBD       <DrawSegment_SomeModifierForD_0x1e            = ??
             d817 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -21918,8 +21920,8 @@
                              undefined __stdcall DrawSegment_SubFunction5(void)
              undefined         A:1            <RETURN>
                              DrawSegment_SubFunction5                        XREF[1]:     DrawSegment_Orientation5:d7b4(*)  
-            d818 0a 22              DEC        <SomeValue_0x22                               = ??
-            d81a d3 1e              ADDD       <SomeValue_0x1e                               = ??
+            d818 0a 22              DEC        <DrawSegment_CurrentX_0x22                    = ??
+            d81a d3 1e              ADDD       <DrawSegment_SomeModifierForD_0x1e            = ??
             d81c 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -21927,8 +21929,8 @@
                              undefined __stdcall DrawSegment_SubFunction6(void)
              undefined         A:1            <RETURN>
                              DrawSegment_SubFunction6                        XREF[1]:     DrawSegment_Orientation6:d7bb(*)  
-            d81d 0a 22              DEC        <SomeValue_0x22                               = ??
-            d81f 93 1e              SUBD       <SomeValue_0x1e                               = ??
+            d81d 0a 22              DEC        <DrawSegment_CurrentX_0x22                    = ??
+            d81f 93 1e              SUBD       <DrawSegment_SomeModifierForD_0x1e            = ??
             d821 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -21936,51 +21938,60 @@
                              undefined __stdcall DrawSegment_SubFunction7(void)
              undefined         A:1            <RETURN>
                              DrawSegment_SubFunction7                        XREF[1]:     DrawSegment_Orientation7:d7c4(*)  
-            d822 0a 21              DEC        <SomeValue_RandomSeedMaybe_0x21               = ??
-            d824 93 1e              SUBD       <SomeValue_0x1e                               = ??
+            d822 0a 21              DEC        <DrawSegment_CurrentY_0x21                    = ??
+            d824 93 1e              SUBD       <DrawSegment_SomeModifierForD_0x1e            = ??
             d826 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall CrtArtifactLineDrawingFunction_Maybe
+                             undefined __stdcall CrtArtifactPixelDrawingFunction(void)
              undefined         A:1            <RETURN>
              undefined1        Stack[-0x1]:1  local_1                                 XREF[1]:     d83e(*)  
-                             CrtArtifactLineDrawingFunction_Maybe            XREF[2]:     DrawSegmentHelper1:d7d7(c), 
+                             CrtArtifactPixelDrawingFunction                 XREF[2]:     DrawSegmentHelper1:d7d7(c), 
                                                                                           DrawSegmentHelper2:d7f0(c)  
-            d827 dc 21              LDD        <SomeValue_RandomSeedMaybe_0x21               = ??
+            d827 dc 21              LDD        <DrawSegment_CurrentY_0x21                    = ??
             d829 8d 2b              BSR        ComputeScreenLocationFromAAndB                undefined ComputeScreenLocationFromAAndB(void)
-            d82b 1f 02              TFR        D,Y
-            d82d d6 22              LDB        <SomeValue_0x22                               = ??
-            d82f c4 03              ANDB       #0x3
-            d831 ce d8 4a           LDU        #Drawing_HorizontalAdjustmentValues           = C0h
-            d834 30 44              LEAX       0x4,U                                         choose the second 4 byte table at d84a
-                                                                                             for some reason
-            d836 96 20              LDA        <SomeValue_0x20                               = ??
-            d838 2b 0f              BMI        LAB_d849
-            d83a a6 86              LDA        A,X=>DAT_d84e
-            d83c a4 c5              ANDA       B,U=>Drawing_HorizontalAdjustmentValues       = C0h
-            d83e a7 e2              STA        ,-S=>local_1
-            d840 a6 c5              LDA        B,U=>Drawing_HorizontalAdjustmentValues       = C0h
+            d82b 1f 02              TFR        D,Y                                           move screen position to Y
+            d82d d6 22              LDB        <DrawSegment_CurrentX_0x22                    which pair of bits will it draw on?
+            d82f c4 03              ANDB       #0x3                                          get the last two bits of the x position
+            d831 ce d8 4a           LDU        #Drawing_PixelBits_d84a                       = 11000000b
+            d834 30 44              LEAX       0x4,U                                         load the address of the CRT artfiact mask
+                                                                                             table into X
+            d836 96 20              LDA        <CrtArtifactDrawingMaskIndex_0x20             = ??
+            d838 2b 0f              BMI        Jump_DoneDrawingReturn
+            d83a a6 86              LDA        A,X=>CrtArtifactDrawing_LineDrawingMask       load the mask into A
+            d83c a4 c5              ANDA       B,U=>Drawing_PixelBits_d84a                   blend the pixel we want to draw with the
+                                                                                             CRT artifact mask
+            d83e a7 e2              STA        ,-S=>local_1                                  manipulate the stack to store
+                                                                                             the value temporarily
+            d840 a6 c5              LDA        B,U=>Drawing_PixelBits_d84a                   = 11000000b
             d842 43                 COMA
             d843 a4 a4              ANDA       ,Y
             d845 aa e0              ORA        ,S+
-            d847 a7 a4              STA        ,Y
-                             LAB_d849                                        XREF[1]:     d838(j)  
+            d847 a7 a4              STA        ,Y                                            write the final pixel
+                             Jump_DoneDrawingReturn                          XREF[1]:     d838(j)  
             d849 39                 RTS
-                             Drawing_HorizontalAdjustmentValues              XREF[5]:     UpdateAndDrawDrops:cffe(*), 
+                             there are eight pixels for a given byte.
+                             use this table to set a pair of bits for a
+                             given x screen position. The game treats the
+                             256 wide screen as 128 so it draws two bits
+                             at a time.
+                             Drawing_PixelBits_d84a                          XREF[5]:     UpdateAndDrawDrops:cffe(*), 
                                                                                           UpdateAndDrawDrops:d005(*), 
-                                                                                          CrtArtifactLineDrawingFunction_M
-                                                                                          CrtArtifactLineDrawingFunction_M
-                                                                                          CrtArtifactLineDrawingFunction_M
-            d84a c0                 ??         C0h
-            d84b 30                 ??         30h    0
-            d84c 0c                 ??         0Ch
-            d84d 03                 ??         03h
-                             DAT_d84e                                        XREF[1]:     CrtArtifactLineDrawingFunction_M
-            d84e 00                 ??         00h
-            d84f 55                 ??         55h    U
-            d850 aa                 ??         AAh
-            d851 ff                 ??         FFh
+                                                                                          CrtArtifactPixelDrawingFunction:
+                                                                                          CrtArtifactPixelDrawingFunction:
+                                                                                          CrtArtifactPixelDrawingFunction:
+            d84a c0                 db         11000000b
+            d84b 30                 db         00110000b
+            d84c 0c                 db         00001100b
+            d84d 03                 db         00000011b
+                             objects choose which CRT artifacting mask to use
+                             CrtArtifactDrawing_LineDrawingMask              XREF[1]:     CrtArtifactPixelDrawingFunction:
+            d84e 00                 db         00000000b                                     invisible. doesn't draw any pixels
+            d84f 55                 db         01010101b                                     only draw odd pixels. If used to draw platform, then can wa
+            d850 aa                 db         10101010b                                     only draw even pixels. if used to draw platform, can't walk
+            d851 ff                 db         11111111b                                     draw all pixels. if drawn as horizontal line, 
+                                                                                             treated as horziontal rope
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
@@ -21999,13 +22010,19 @@
                              **************************************************************
                              undefined __stdcall ComputeScreenLocationFromAAndB(void)
              undefined         A:1            <RETURN>
+                             No idea what it does exactly. 
+                             It takes the Y position from A
+                             and the X position from B and
+                             then generates a memory location.
+                             but it's not X + (Y * 0x20) as I'd
+                             expect.
                              ComputeScreenLocationFromAAndB                  XREF[7]:     DrawDoorOrMultipleDoors_Maybe:cd
                                                                                           Init_PlayerLivesIconPositions:cf
                                                                                           UpdateAndDrawDrops:cf90(c), 
                                                                                           UpdateAndDrawDrops:cff5(c), 
                                                                                           UpdateAndDrawDrops:d012(c), 
                                                                                           SetupPickupScreenLocationAndNumL
-                                                                                          CrtArtifactLineDrawingFunction_M
+                                                                                          CrtArtifactPixelDrawingFunction:
             d856 58                 LSLB
             d857 44                 LSRA
             d858 56                 RORB
@@ -22040,12 +22057,13 @@
             d878 e6 26              LDB        0x6,Y=>PlayerX_0x1b0                          = ??
             d87a cb 03              ADDB       #0x3
             d87c a6 24              LDA        0x4,Y=>PlayerY_0x1ae                          = ??
-            d87e dd 21              STD        <SomeValue_RandomSeedMaybe_0x21               = ??
-            d880 0f 20              CLR        <SomeValue_0x20                               = ??
+            d87e dd 21              STD        <DrawSegment_CurrentY_0x21                    = ??
+            d880 0f 20              CLR        <CrtArtifactDrawingMaskIndex_0x20             draw nothing?
             d882 dc 1b              LDD        <ZeroValue                                    = ??
-            d884 dd 1e              STD        <SomeValue_0x1e                               = ??
-            d886 86 0c              LDA        #12
-            d888 97 1d              STA        <Draw_SegmentValue2_0x1d                      = ??
+            d884 dd 1e              STD        <DrawSegment_SomeModifierForD_0x1e            = ??
+            d886 86 0c              LDA        #12                                           a length or a count of some kind
+                                                                                             or the short rope? (draw object 12)
+            d888 97 1d              STA        <DrawSegment_Counter_0x1d                     = ??
             d88a bd d7 a4           JSR        DrawSegment_Orientation3                      undefined DrawSegment_Orientation3(undefined param_1, undef
             d88d 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     = ??
                              Jump_SkipRopeHandling                           XREF[2]:     d872(j), d876(j)  
