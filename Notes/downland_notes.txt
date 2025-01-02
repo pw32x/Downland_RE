@@ -1,0 +1,82 @@
+Misc 
+
+	Memory map
+		0x0000 - ram start
+		0xc000 - where the cartridge lives	
+		0x0400 - first graphics page
+		0x1c00 - second graphics page
+	
+		video page memory size: 0x1800
+	
+	Resolution
+		width: 256
+		height: 192
+		Colors: 2 (1 bit, 32 bytes per horizontal span)
+	
+		 						A/G GM2 GM1 GM0 V2/V1/V0 Desc. 		RAM used 
+		Mode:  Full graphic 6-R 1 	  1   1   1  1  1  0 256x192x2  $1800(6144) 
+	
+
+Fun Notes
+	
+	Room Timers
+	there is a timer for each room
+	leave a room and its timer will increase by the amount decreased in the current room
+	all room timers are updated every frame	
+	
+	The bouncing ball is hard coded to spawn at the same spot, no matter
+	which level.
+	
+	there's an offscreen buffer with a clean version of the level 
+	it's used for terrain collisions for the player?
+	it's used to clean the screen when preparing the next frame?
+	
+	A running memory counter seems part of the memory protection. 
+	In this version just seems to read every byte location.
+
+Background Piece codes
+
+	0: normal stalagtite going right
+	1: single wall piece going down
+	2: left hand corner piece
+	3: top right hand corner piece / bottom left side of floating platforms
+	4: top right hand corner piece
+	5: bottom right side of floating platforms
+	6: floor piece going right
+	7: wall piece going up
+	8: corner piece going down-left
+	9: floor piece going left
+	a: short line going down
+	b: short line going up
+	c: very short rope
+	d: short rope
+	e: mid-length rope
+	f: long rope
+	10: very long rope
+	11: super long rope
+	12: excessively long rope
+	13: rediculously long rope
+	14: horizontal rope start going right
+	15: horizontal rope end going right
+	16: horizontal rope going right
+	17: blank area going right
+	18: blank area going left, maybe
+	19: blank area going down-right
+	
+
+	
+Questions
+
+	are the drop wobble times constant or random?
+	how is drop wobble handled?
+
+	how does the player code flow?
+	what is the mysterious sprite data?	
+	what decides how close a drop is to the rope?
+	how are floor collisions detected?
+	how is detecting vertical ropes done?
+	how is detecting horizontal ropes done?
+	
+
+		
+		

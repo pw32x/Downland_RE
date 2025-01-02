@@ -1,0 +1,31 @@
+Similarly to how a background is made of up a series of pieces strung together, the pieces themselves are made up of a series of line segments also strung together. The line segments are drawn one after the other, like a plotter. Each piece's data starts with a segment count, and each segment is made up of three bytes that define:
+- an orientation type
+- a length along a primary axis
+- a subpixel increment to apply to the secondary axis
+
+The stalactite piece's data looks like this:
+
+DrawData_00_Stalactite                        
+db         03h    ;num segments
+
+db         80h    ;subpixels to move along X
+db         04h    ;number of pixels to move along Y 
+db         00h    ;orientation 0, up and right
+
+db         80h    ;subpixels to move along X
+db         0Ah    ;number of pixels to move along Y 
+db         03h    ;orientation 3, down and right
+
+db         80h    ;subpixels to move along X
+db         07h    ;number of pixels to move along Y 
+db         00h    ;orienation 0, up and right
+
+
+Drawing seems to work like this: a segment specifies an orientation which moves the pixel plotter along a primary axis. In the stalactite example above, the first segment uses orientation 0 which goes up and to the right. The plotter will draw 4 pixels vertically no matter what. The subpixels are used to move along the X axis. There are 256 subpixels per X pixel. In this case, a value of 0x80 (128) will move X by half pixels for every Y pixel. 
+
+The drawing computations are done in a half-resolution horizontal space. Y is 192 pixels high but X is treated as 128 pixels wide. The computations for a pixel are done in this "logical space" and then when actually drawn, scaled to 256. When the "logical" pixel is drawn to the screen in actuality two bits are set at a time. While two "real" pixels are meant to be drawn for each "logical" pixel, a CRT Artifact mask is applied to remove the left or right pixel, giving the spacing necessary to achieve CRT artifact effects
+
+
+Misc observations:
+- Segments starts and ends tend to overlap.
+- Ropes seem to be handled differently, being two vertical segments side-by-side but there's nothing to specify to move along the X axis.
