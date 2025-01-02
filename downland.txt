@@ -74,50 +74,50 @@
                                                                                           ClearVideoMemory_0x0400_to_0x340
                                                                                           InitBouncingBall:ce9b(*), [more]
             001b                    dw         ??
-                             DrawSegment_Counter_0x1d                        XREF[6]:     DrawBackgroundPiece:d76e(*), 
-                                                                                          DrawSegmentHelper1:d7cf(*), 
-                                                                                          DrawSegmentHelper1:d7db(*), 
-                                                                                          DrawSegmentHelper2:d7e8(*), 
-                                                                                          DrawSegmentHelper2:d7f4(*), 
+                             DrawSegmentLine_Counter_0x1d                    XREF[6]:     DrawBackgroundPiece:d76e(*), 
+                                                                                          DrawHorizontalSegment:d7cf(*), 
+                                                                                          DrawHorizontalSegment:d7db(*), 
+                                                                                          DrawVerticalSegment:d7e8(*), 
+                                                                                          DrawVerticalSegment:d7f4(*), 
                                                                                           UpdateObjectPhysics_Maybe:d888(*
             001d                    ??         ??
-                             DrawSegment_SomeModifierForD_0x1e               XREF[10]:    DrawBackgroundPiece:d766(*), 
-                                                                                          DrawSegment_SubFunction0:d801(*), 
-                                                                                          DrawSegment_SubFunction1:d806(*), 
-                                                                                          DrawSegment_SubFunction2:d80b(*), 
-                                                                                          DrawSegment_SubFunction3:d810(*), 
-                                                                                          DrawSegment_SubFunction4:d815(*), 
-                                                                                          DrawSegment_SubFunction5:d81a(*), 
-                                                                                          DrawSegment_SubFunction6:d81f(*), 
-                                                                                          DrawSegment_SubFunction7:d824(*), 
+                             DrawSegment_SecondaryAxisSubpixelInc_0x1e       XREF[10]:    DrawBackgroundPiece:d766(*), 
+                                                                                          DrawSegment_MovePosUpAndRight:d8
+                                                                                          DrawSegment_MovePosRightAndUp:d8
+                                                                                          DrawSegment_MovePosRightAndDown:
+                                                                                          DrawSegment_MovePosDownAndRight:
+                                                                                          DrawSegment_MovePosDownAndLeft:d
+                                                                                          DrawSegment_MovePosLeftAndDown:d
+                                                                                          DrawSegment_MovePosLeftAndUp:d81
+                                                                                          DrawSegment_MovePosUpAndLeft:d82
                                                                                           UpdateObjectPhysics_Maybe:d884(*
             001e                    ??         ??
-                             DrawSegment_AngleOrOffset_0x1f                  XREF[1]:     DrawBackgroundPiece:d76a(*)  
+                             DrawSegmentLine_SubPixelOffset_0x1f             XREF[1]:     DrawBackgroundPiece:d76a(*)  
             001f                    ??         ??
                              CrtArtifactDrawingMaskIndex_0x20                XREF[13]:    DrawBackground:d250(*), d672(*), 
                                                                                           d678(*), d684(*), d68a(*), 
                                                                                           d6bb(*), d6c2(*), d73d(*), 
                                                                                           d748(*), d759(*), d75f(*), 
-                                                                                          CrtArtifactPixelDrawingFunction:
+                                                                                          DrawPixelWithCrtArtifacts:d836(*
                                                                                           UpdateObjectPhysics_Maybe:d880(*
             0020                    ??         ??
                              DrawSegment_CurrentScreenYXPosition_0x21        XREF[9]:     DrawBackground:d255(*), 
-                             DrawSegment_CurrentY_0x21                                    DrawSegmentHelper1:d7cd(*), 
-                                                                                          DrawSegmentHelper1:d7e1(*), 
-                                                                                          DrawSegment_SubFunction0:d7ff(*), 
-                                                                                          DrawSegment_SubFunction3:d80e(*), 
-                                                                                          DrawSegment_SubFunction4:d813(*), 
-                                                                                          DrawSegment_SubFunction7:d822(*), 
-                                                                                          CrtArtifactPixelDrawingFunction:
+                             DrawSegment_CurrentScreenY_0x21                              DrawHorizontalSegment:d7cd(*), 
+                                                                                          DrawHorizontalSegment:d7e1(*), 
+                                                                                          DrawSegment_MovePosUpAndRight:d7
+                                                                                          DrawSegment_MovePosDownAndRight:
+                                                                                          DrawSegment_MovePosDownAndLeft:d
+                                                                                          DrawSegment_MovePosUpAndLeft:d82
+                                                                                          DrawPixelWithCrtArtifacts:d827(*
                                                                                           UpdateObjectPhysics_Maybe:d87e(*
             0021                    ??         ??
-                             DrawSegment_CurrentX_0x22                       XREF[7]:     DrawSegmentHelper2:d7e6(*), 
-                                                                                          DrawSegmentHelper2:d7fa(*), 
-                                                                                          DrawSegment_SubFunction1:d804(*), 
-                                                                                          DrawSegment_SubFunction2:d809(*), 
-                                                                                          DrawSegment_SubFunction5:d818(*), 
-                                                                                          DrawSegment_SubFunction6:d81d(*), 
-                                                                                          CrtArtifactPixelDrawingFunction:
+                             DrawSegment_CurrentScreenX_0x22                 XREF[7]:     DrawVerticalSegment:d7e6(*), 
+                                                                                          DrawVerticalSegment:d7fa(*), 
+                                                                                          DrawSegment_MovePosRightAndUp:d8
+                                                                                          DrawSegment_MovePosRightAndDown:
+                                                                                          DrawSegment_MovePosLeftAndDown:d
+                                                                                          DrawSegment_MovePosLeftAndUp:d81
+                                                                                          DrawPixelWithCrtArtifacts:d82d(*
             0022                    ??         ??
                              PlayerY_Byte_0x23                               XREF[2]:     Jump_IsAlreadyClimbing:c907(*), 
                                                                                           Jump_IsAlreadyClimbing:c91b(*)  
@@ -125,16 +125,16 @@
                              CurrentSegmentCounter_0x24                      XREF[2]:     DrawBackgroundPiece:d764(*), 
                                                                                           DrawBackgroundPiece:d778(*)  
             0024                    ??         ??
-                             SomeValue_0x25                                  XREF[10]:    DrawSegment_Orientation0:d790(*), 
-                                                                                          DrawSegment_Orientation1:d799(*), 
-                                                                                          DrawSegment_Orientation2:d7a0(*), 
-                                                                                          DrawSegment_Orientation3:d7a7(*), 
-                                                                                          DrawSegment_Orientation4:d7b0(*), 
-                                                                                          DrawSegment_Orientation5:d7b7(*), 
-                                                                                          DrawSegment_Orientation6:d7c0(*), 
-                                                                                          DrawSegment_Orientation7:d7c9(*), 
-                                                                                          DrawSegmentHelper1:d7d3(*), 
-                                                                                          DrawSegmentHelper2:d7ec(*)  
+                             DrawSegmentLine_SubPixelStartValue_Maybe_0x25   XREF[10]:    DrawSegment_Orientation0_UpAndRi
+                                                                                          DrawSegment_Orientation1_RightAn
+                                                                                          DrawSegment_Orientation2_RightAn
+                                                                                          DrawSegment_Orientation3_DownAnd
+                                                                                          DrawSegment_Orientation4_DownAnd
+                                                                                          DrawSegment_Orientation5_LeftAnd
+                                                                                          DrawSegment_Orientation6_LeftAnd
+                                                                                          DrawSegment_Orientation7_UpAndLe
+                                                                                          DrawHorizontalSegment:d7d3(*), 
+                                                                                          DrawVerticalSegment:d7ec(*)  
             0025                    ??         ??
                              UtilityCounter_0x26                             XREF[39]:    FUN_c3b3:c0ac(*), 
                                                                                           FUN_c3b3:c0b9(*), 
@@ -20478,7 +20478,7 @@
                              Commands with the highest bit set get repeated 
                              with the next byte in the buffer being the repeat count. 
                              Background Piece codes
-                                     0: normal stalagtite going right
+                                     0: normal stalactite going right
                                      1: single wall piece going down
                                      2: left hand corner piece
                                      3: top right hand corner piece / bottom left side of 
@@ -20505,7 +20505,7 @@
                                      18: blank area going left, maybe
                                      19: blank area going down-right
                                      repeatable pieces (code + count)
-                                     80: stalagtite (80 + 0)
+                                     80: stalactite (80 + 0)
                                      81: wall going down (80 + 1)
                                      82: left hand corner piece going up-right (80 + 2)
                                      83: etc, etc.
@@ -20516,8 +20516,9 @@
             d24e 86 01              LDA        #0x1
             d250 97 20              STA        <CrtArtifactDrawingMaskIndex_0x20             store 1 at 0x20
             d252 cc 10 0f           LDD        #0x100f
-            d255 dd 21              STD        <DrawSegment_CurrentY_0x21                    store 0x100f at 0x21-0x22
-                                                                                             drawing start position?
+            d255 dd 21              STD        <DrawSegment_CurrentScreenYXPosition_0x21     store draw start position 0x100f aka x: 15, y: 16
+                                                                                             X is in half resolution. 128 pixels wide instead of 
+                                                                                             the screen's 256 pixels.
             d257 7e d5 9e           JMP        Jump_ProcessDrawCommands
                              RoomGraphicsAndDoorData_0xd25a                  XREF[1]:     InitVideoAndSetupRoomAndGraphics
             d25a d2 6e              dw         Room0_GraphicsAndDoorData                     = D35Eh
@@ -21319,7 +21320,7 @@
                              these seem to be the function related to drawing
                              each piece. maybe.
                              DrawCommandFunctions_d5bb                       XREF[1]:     DrawBackground:d59e(*)  
-            d5bb d5 f1              dw         DrawPiece_00_Stalagtite
+            d5bb d5 f1              dw         DrawPiece_00_Stalactite
             d5bd d6 06              dw         DrawPiece_01_WallGoingDown
             d5bf d6 20              dw         DrawPiece_02_LeftHandCornerPiece
             d5c1 d6 3f              dw         DrawPiece_03_TopRightHandCornerPiece
@@ -21346,21 +21347,21 @@
             d5eb d6 c5              dw         DrawPiece_18_BlankAreaGoingLeft
             d5ed d6 ca              dw         DrawPiece_19_BlankAreaGoingDownRight
             d5ef d6 cf              dw         DrawPiece_20_UnknownOrBuggy
-                             DrawPiece_00_Stalagtite                         XREF[1]:     d5bb(*)  
-            d5f1 ce d5 f7           LDU        #DrawData_00_Stalagtite                       = 03h
+                             DrawPiece_00_Stalactite                         XREF[1]:     d5bb(*)  
+            d5f1 ce d5 f7           LDU        #DrawData_00_Stalactite                       = 03h
             d5f4 7e d7 62           JMP        DrawBackgroundPiece
                              -- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
-                             DrawData_00_Stalagtite                          XREF[1]:     d5f1(*)  
+                             DrawData_00_Stalactite                          XREF[1]:     d5f1(*)  
             d5f7 03                 db         03h                                           num segments
-            d5f8 80                 db         80h                                           go up three lines?
-            d5f9 04                 db         04h                                           four pixels wide?
-            d5fa 00                 db         00h                                           orientation 0
-            d5fb 80                 db         80h                                           go down three lines
-            d5fc 0a                 db         0Ah                                           10 pixels wide
-            d5fd 03                 db         03h                                           orientation 3
-            d5fe 80                 db         80h                                           go up three lines
-            d5ff 07                 db         07h                                           7 pixels wide?
-            d600 00                 db         00h                                           orienation 0
+            d5f8 80                 db         80h                                           subpixels to move along X
+            d5f9 04                 db         04h                                           number of pixels to move along Y 
+            d5fa 00                 db         00h                                           orientation 0, up and right
+            d5fb 80                 db         80h                                           subpixels to move along X
+            d5fc 0a                 db         0Ah                                           number of pixels to move along Y 
+            d5fd 03                 db         03h                                           orientation 3, down and right
+            d5fe 80                 db         80h                                           subpixels to move along X
+            d5ff 07                 db         07h                                           number of pixels to move along Y 
+            d600 00                 db         00h                                           orienation 0, up and right
                              DrawPiece_07_WallPieceGoingUp                   XREF[1]:     d5c9(*)  
             d601 ce d6 16           LDU        #DrawData_07_WallPieceGoingUp                 = 03h
             d604 20 03              BRA        Jump_JumpToDrawBackgroundPiece
@@ -21686,273 +21687,294 @@
                                                                                           d74a(c), d75b(c)  
             d762 a6 c0              LDA        ,U+                                           get segment count
             d764 97 24              STA        <CurrentSegmentCounter_0x24                   store segment count
-            d766 0f 1e              CLR        <DrawSegment_SomeModifierForD_0x1e            = ??
+            d766 0f 1e              CLR        <DrawSegment_SecondaryAxisSubpixelInc_0x1e    = ??
                              Loop_ProcessSegment                             XREF[1]:     d77a(j)  
             d768 a6 c0              LDA        ,U+                                           get first value from segment
-            d76a 97 1f              STA        <DrawSegment_AngleOrOffset_0x1f               = ??
+            d76a 97 1f              STA        <DrawSegmentLine_SubPixelOffset_0x1f          = ??
             d76c a6 c0              LDA        ,U+                                           get second value from segment
-            d76e 97 1d              STA        <DrawSegment_Counter_0x1d                     = ??
+            d76e 97 1d              STA        <DrawSegmentLine_Counter_0x1d                 = ??
             d770 a6 c0              LDA        ,U+                                           get and compute the drawing function offset
             d772 48                 LSLA
             d773 8e d7 7d           LDX        #LineDrawingFunctions_0xd77d                  = D78Dh
-            d776 ad 96              JSR        [A,X]                                         call the draw segment function
+            d776 ad 96              JSR        [A,X]                                         call the DrawSegment_MovePos function
             d778 0a 24              DEC        <CurrentSegmentCounter_0x24                   = ??
             d77a 26 ec              BNE        Loop_ProcessSegment
             d77c 39                 RTS
                              LineDrawingFunctions_0xd77d                     XREF[1]:     DrawBackgroundPiece:d773(*)  
-            d77d d7 8d              dw         DrawSegment_Orientation0
-            d77f d7 94              dw         DrawSegment_Orientation1
-                             WORD_d781                                       XREF[1]:     DrawBackgroundPiece:d776(R)  
-            d781 d7 9d              dw         DrawSegment_Orientation2
-            d783 d7 a4              dw         DrawSegment_Orientation3
-            d785 d7 ab              dw         DrawSegment_Orientation4
-            d787 d7 b4              dw         DrawSegment_Orientation5
-            d789 d7 bb              dw         DrawSegment_Orientation6
-            d78b d7 c4              dw         DrawSegment_Orientation7
+            d77d d7 8d              dw         DrawSegment_Orientation0_UpAndRight
+            d77f d7 94              dw         DrawSegment_Orientation1_RightAndUp
+            d781 d7 9d              dw         DrawSegment_Orientation2_RightAndDown
+            d783 d7 a4              dw         DrawSegment_Orientation3_DownAndRight
+            d785 d7 ab              dw         DrawSegment_Orientation4_DownAndLeft
+            d787 d7 b4              dw         DrawSegment_Orientation5_LeftAndDown
+            d789 d7 bb              dw         DrawSegment_Orientation6_LeftAndUp
+            d78b d7 c4              dw         DrawSegment_Orientation7_UpAndLeft
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall DrawSegment_Orientation0(undefined p
+                             undefined __stdcall DrawSegment_Orientation0_UpAndRight(
              undefined         A:1            <RETURN>
              undefined         A:1            param_1
              undefined         B:1            param_2
-                             DrawSegment_Orientation0                        XREF[1]:     d77d(*)  
-            d78d 8e d7 ff           LDX        #DrawSegment_SubFunction0
-            d790 0f 25              CLR        <SomeValue_0x25                               = ??
-            d792 20 52              BRA        DrawSegmentHelper2                            undefined DrawSegmentHelper2(undefined A, undefined B, unde
+                             DrawSegment_Orientation0_UpAndRight             XREF[1]:     d77d(*)  
+            d78d 8e d7 ff           LDX        #DrawSegment_MovePosUpAndRight
+            d790 0f 25              CLR        <DrawSegmentLine_SubPixelStartValue_Maybe_0x  = ??
+            d792 20 52              BRA        DrawVerticalSegment                           undefined DrawVerticalSegment(undefined A, undefined B, und
                              -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall DrawSegment_Orientation1(undefined p
+                             undefined __stdcall DrawSegment_Orientation1_RightAndUp(
              undefined         A:1            <RETURN>
              undefined         A:1            param_1
              undefined         B:1            param_2
-                             DrawSegment_Orientation1                        XREF[1]:     d77f(*)  
-            d794 8e d8 04           LDX        #DrawSegment_SubFunction1
+                             DrawSegment_Orientation1_RightAndUp             XREF[1]:     d77f(*)  
+            d794 8e d8 04           LDX        #DrawSegment_MovePosRightAndUp
             d797 86 ff              LDA        #0xff
-            d799 97 25              STA        <SomeValue_0x25                               = ??
-            d79b 20 30              BRA        DrawSegmentHelper1                            undefined DrawSegmentHelper1(undefined A, undefined B, unde
+            d799 97 25              STA        <DrawSegmentLine_SubPixelStartValue_Maybe_0x  = ??
+            d79b 20 30              BRA        DrawHorizontalSegment                         undefined DrawHorizontalSegment(undefined A, undefined B, u
                              -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall DrawSegment_Orientation2(undefined p
+                             undefined __stdcall DrawSegment_Orientation2_RightAndDow
              undefined         A:1            <RETURN>
              undefined         A:1            param_1
              undefined         B:1            param_2
-                             DrawSegment_Orientation2                        XREF[2]:     DrawBackgroundPiece:d776(c), 
+                             DrawSegment_Orientation2_RightAndDown           XREF[2]:     DrawBackgroundPiece:d776(c), 
                                                                                           d781(*)  
-            d79d 8e d8 09           LDX        #DrawSegment_SubFunction2
-            d7a0 0f 25              CLR        <SomeValue_0x25                               = ??
-            d7a2 20 29              BRA        DrawSegmentHelper1                            undefined DrawSegmentHelper1(undefined A, undefined B, unde
+            d79d 8e d8 09           LDX        #DrawSegment_MovePosRightAndDown
+            d7a0 0f 25              CLR        <DrawSegmentLine_SubPixelStartValue_Maybe_0x  = ??
+            d7a2 20 29              BRA        DrawHorizontalSegment                         undefined DrawHorizontalSegment(undefined A, undefined B, u
                              -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall DrawSegment_Orientation3(undefined p
+                             undefined __stdcall DrawSegment_Orientation3_DownAndRigh
              undefined         A:1            <RETURN>
              undefined         A:1            param_1
              undefined         B:1            param_2
-                             DrawSegment_Orientation3                        XREF[2]:     d783(*), 
+                             DrawSegment_Orientation3_DownAndRight           XREF[2]:     d783(*), 
                                                                                           UpdateObjectPhysics_Maybe:d88a(c
-            d7a4 8e d8 0e           LDX        #DrawSegment_SubFunction3
-            d7a7 0f 25              CLR        <SomeValue_0x25                               = ??
-            d7a9 20 3b              BRA        DrawSegmentHelper2                            undefined DrawSegmentHelper2(undefined A, undefined B, unde
+            d7a4 8e d8 0e           LDX        #DrawSegment_MovePosDownAndRight
+            d7a7 0f 25              CLR        <DrawSegmentLine_SubPixelStartValue_Maybe_0x  = ??
+            d7a9 20 3b              BRA        DrawVerticalSegment                           undefined DrawVerticalSegment(undefined A, undefined B, und
                              -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall DrawSegment_Orientation4(undefined p
+                             undefined __stdcall DrawSegment_Orientation4_DownAndLeft
              undefined         A:1            <RETURN>
              undefined         A:1            param_1
              undefined         B:1            param_2
-                             DrawSegment_Orientation4                        XREF[1]:     d785(*)  
-            d7ab 8e d8 13           LDX        #DrawSegment_SubFunction4
+                             DrawSegment_Orientation4_DownAndLeft            XREF[1]:     d785(*)  
+            d7ab 8e d8 13           LDX        #DrawSegment_MovePosDownAndLeft
             d7ae 86 ff              LDA        #0xff
-            d7b0 97 25              STA        <SomeValue_0x25                               = ??
-            d7b2 20 32              BRA        DrawSegmentHelper2                            undefined DrawSegmentHelper2(undefined A, undefined B, unde
+            d7b0 97 25              STA        <DrawSegmentLine_SubPixelStartValue_Maybe_0x  = ??
+            d7b2 20 32              BRA        DrawVerticalSegment                           undefined DrawVerticalSegment(undefined A, undefined B, und
                              -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall DrawSegment_Orientation5(undefined p
+                             undefined __stdcall DrawSegment_Orientation5_LeftAndDown
              undefined         A:1            <RETURN>
              undefined         A:1            param_1
              undefined         B:1            param_2
-                             DrawSegment_Orientation5                        XREF[1]:     d787(*)  
-            d7b4 8e d8 18           LDX        #DrawSegment_SubFunction5
-            d7b7 0f 25              CLR        <SomeValue_0x25                               = ??
-            d7b9 20 12              BRA        DrawSegmentHelper1                            undefined DrawSegmentHelper1(undefined A, undefined B, unde
+                             DrawSegment_Orientation5_LeftAndDown            XREF[1]:     d787(*)  
+            d7b4 8e d8 18           LDX        #DrawSegment_MovePosLeftAndDown
+            d7b7 0f 25              CLR        <DrawSegmentLine_SubPixelStartValue_Maybe_0x  = ??
+            d7b9 20 12              BRA        DrawHorizontalSegment                         undefined DrawHorizontalSegment(undefined A, undefined B, u
                              -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall DrawSegment_Orientation6(undefined p
+                             undefined __stdcall DrawSegment_Orientation6_LeftAndUp(u
              undefined         A:1            <RETURN>
              undefined         A:1            param_1
              undefined         B:1            param_2
-                             DrawSegment_Orientation6+2                      XREF[1,1]:   d789(*), 
-                             DrawSegment_Orientation6                                     DrawBackgroundPiece:d776(R)  
-            d7bb 8e d8 1d           LDX        #DrawSegment_SubFunction6
+                             DrawSegment_Orientation6_LeftAndUp+2            XREF[1,1]:   d789(*), 
+                             DrawSegment_Orientation6_LeftAndUp                           DrawBackgroundPiece:d776(R)  
+            d7bb 8e d8 1d           LDX        #DrawSegment_MovePosLeftAndUp
             d7be 86 ff              LDA        #0xff
-            d7c0 97 25              STA        <SomeValue_0x25                               = ??
-            d7c2 20 09              BRA        DrawSegmentHelper1                            undefined DrawSegmentHelper1(undefined A, undefined B, unde
+            d7c0 97 25              STA        <DrawSegmentLine_SubPixelStartValue_Maybe_0x  = ??
+            d7c2 20 09              BRA        DrawHorizontalSegment                         undefined DrawHorizontalSegment(undefined A, undefined B, u
                              -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall DrawSegment_Orientation7(undefined p
+                             undefined __stdcall DrawSegment_Orientation7_UpAndLeft(u
              undefined         A:1            <RETURN>
              undefined         A:1            param_1
              undefined         B:1            param_2
-                             DrawSegment_Orientation7                        XREF[1]:     d78b(*)  
-            d7c4 8e d8 22           LDX        #DrawSegment_SubFunction7
+                             DrawSegment_Orientation7_UpAndLeft              XREF[1]:     d78b(*)  
+            d7c4 8e d8 22           LDX        #DrawSegment_MovePosUpAndLeft
             d7c7 86 ff              LDA        #0xff
-            d7c9 97 25              STA        <SomeValue_0x25                               = ??
-            d7cb 20 19              BRA        DrawSegmentHelper2                            undefined DrawSegmentHelper2(undefined A, undefined B, unde
+            d7c9 97 25              STA        <DrawSegmentLine_SubPixelStartValue_Maybe_0x  = ??
+            d7cb 20 19              BRA        DrawVerticalSegment                           undefined DrawVerticalSegment(undefined A, undefined B, und
                              -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
                              **************************************************************
-                             *                          FUNCTION                          *
+                             * Draw a segment horizontally pixel by pixel, for            *
+                             * the number specified in DrawSegmentLine_Counter.           *
+                             * Also move along Y using a subpixel offset specified        *
+                             * in 0x1e and 0x1f                                           *
+                             * A DrawSegment_MovePos function determines whether          *
+                             * we're going left or first, then up or down.                *
                              **************************************************************
-                             undefined __stdcall DrawSegmentHelper1(undefined A, unde
+                             undefined __stdcall DrawHorizontalSegment(undefined A, u
              undefined         A:1            <RETURN>
              undefined         A:1            A
              undefined         B:1            B
              undefined *       X:2            X
-                             X contains a DrawSegment_SubFunction
-                             DrawSegmentHelper1                              XREF[4]:     DrawSegment_Orientation1:d79b(c), 
-                                                                                          DrawSegment_Orientation2:d7a2(c), 
-                                                                                          DrawSegment_Orientation5:d7b9(c), 
-                                                                                          DrawSegment_Orientation6:d7c2(c)  
-            d7cd 96 21              LDA        <DrawSegment_CurrentY_0x21                    = ??
-            d7cf d6 1d              LDB        <DrawSegment_Counter_0x1d                     = ??
+                             X contains a DrawSegment_MovePos function
+                             DrawHorizontalSegment                           XREF[4]:     DrawSegment_Orientation1_RightAn
+                                                                                          DrawSegment_Orientation2_RightAn
+                                                                                          DrawSegment_Orientation5_LeftAnd
+                                                                                          DrawSegment_Orientation6_LeftAnd
+            d7cd 96 21              LDA        <DrawSegment_CurrentScreenY_0x21              = ??
+            d7cf d6 1d              LDB        <DrawSegmentLine_Counter_0x1d                 = ??
             d7d1 27 12              BEQ        Jump_DoneDrawingPixels
-            d7d3 d6 25              LDB        <SomeValue_0x25                               = ??
+            d7d3 d6 25              LDB        <DrawSegmentLine_SubPixelStartValue_Maybe_0x  = ??
                              Loop_DrawPixels                                 XREF[1]:     d7e3(j)  
             d7d5 34 56              PSHS        U X B A
-            d7d7 8d 4e              BSR        CrtArtifactPixelDrawingFunction               undefined CrtArtifactPixelDrawingFunction(void)
+            d7d7 8d 4e              BSR        DrawPixelWithCrtArtifacts                     undefined DrawPixelWithCrtArtifacts(void)
             d7d9 35 56              PULS        A B X U
-            d7db 0a 1d              DEC        <DrawSegment_Counter_0x1d                     = ??
+            d7db 0a 1d              DEC        <DrawSegmentLine_Counter_0x1d                 = ??
             d7dd 27 06              BEQ        Jump_DoneDrawingPixels
-            d7df ad 84              JSR        ,X                                            call the DrawSegment_SubFunction
-            d7e1 97 21              STA        <DrawSegment_CurrentY_0x21                    = ??
+            d7df ad 84              JSR        ,X                                            call the DrawSegment_MovePos function
+            d7e1 97 21              STA        <DrawSegment_CurrentScreenY_0x21              = ??
             d7e3 20 f0              BRA        Loop_DrawPixels
                              Jump_DoneDrawingPixels                          XREF[2]:     d7d1(j), d7dd(j)  
             d7e5 39                 RTS
                              **************************************************************
-                             *                          FUNCTION                          *
+                             * Draw a segment vertically pixel by pixel,                  *
+                             * for the number specified in DrawSegmentLine_Counter.       *
+                             * Also move along X using a subpixel offset specified        *
+                             * in 0x1e and 0x1f                                           *
+                             * A DrawSegment_MovePos function determines whether          *
+                             * we're going up or down first, then left or right.          *
                              **************************************************************
-                             undefined __stdcall DrawSegmentHelper2(undefined A, unde
+                             undefined __stdcall DrawVerticalSegment(undefined A, und
              undefined         A:1            <RETURN>
              undefined         A:1            A
              undefined         B:1            B
              undefined *       X:2            X
-                             X contains a DrawSegment_SubFunction
-                             DrawSegmentHelper2                              XREF[4]:     DrawSegment_Orientation0:d792(c), 
-                                                                                          DrawSegment_Orientation3:d7a9(c), 
-                                                                                          DrawSegment_Orientation4:d7b2(c), 
-                                                                                          DrawSegment_Orientation7:d7cb(c)  
-            d7e6 96 22              LDA        <DrawSegment_CurrentX_0x22                    = ??
-            d7e8 d6 1d              LDB        <DrawSegment_Counter_0x1d                     = ??
+                             X contains a DrawSegment_MovePos function
+                             DrawVerticalSegment                             XREF[4]:     DrawSegment_Orientation0_UpAndRi
+                                                                                          DrawSegment_Orientation3_DownAnd
+                                                                                          DrawSegment_Orientation4_DownAnd
+                                                                                          DrawSegment_Orientation7_UpAndLe
+            d7e6 96 22              LDA        <DrawSegment_CurrentScreenX_0x22              = ??
+            d7e8 d6 1d              LDB        <DrawSegmentLine_Counter_0x1d                 = ??
             d7ea 27 12              BEQ        Jump_DoneDrawingPixels
                              setup loop
-            d7ec d6 25              LDB        <SomeValue_0x25                               = ??
+            d7ec d6 25              LDB        <DrawSegmentLine_SubPixelStartValue_Maybe_0x  = ??
                              Loop_DrawPixels                                 XREF[1]:     d7fc(j)  
             d7ee 34 56              PSHS        U X B A
-            d7f0 8d 35              BSR        CrtArtifactPixelDrawingFunction               undefined CrtArtifactPixelDrawingFunction(void)
+            d7f0 8d 35              BSR        DrawPixelWithCrtArtifacts                     undefined DrawPixelWithCrtArtifacts(void)
             d7f2 35 56              PULS        A B X U
-            d7f4 0a 1d              DEC        <DrawSegment_Counter_0x1d                     = ??
+            d7f4 0a 1d              DEC        <DrawSegmentLine_Counter_0x1d                 = ??
             d7f6 27 06              BEQ        Jump_DoneDrawingPixels
-            d7f8 ad 84              JSR        ,X                                            call the DrawSegment_SubFunction
-            d7fa 97 22              STA        <DrawSegment_CurrentX_0x22                    = ??
+            d7f8 ad 84              JSR        ,X                                            call the DrawSegment_MovePos function
+            d7fa 97 22              STA        <DrawSegment_CurrentScreenX_0x22              = ??
             d7fc 20 f0              BRA        Loop_DrawPixels
                              Jump_DoneDrawingPixels                          XREF[2]:     d7ea(j), d7f6(j)  
             d7fe 39                 RTS
                              **************************************************************
-                             *                          FUNCTION                          *
+                             * These DrawSegment_MovePos functions work like this:        *
+                             * Take a primary axis and move along it one pixel at a time. *
+                             * For the secondary axis, subpixels are used.                *
+                             * Subpixel increment is specified in the shape's segment.    *
+                             * Shape:                                                     *
+                             *         Num Segments                                       *
+                             *         For each segment                                   *
+                             *                 subpixel increment along secondary axis    *
+                             *                 pixels along primary axis                  *
+                             *                 orientation (ie which DrawSegment_MoveP... *
+                             *                                                            *
+                             * The mem location used to modify the secondary axis's po... *
+                             * is 0x1e, but only 0x1f can have an actual value.           *
                              **************************************************************
-                             undefined __stdcall DrawSegment_SubFunction0(void)
+                             undefined __stdcall DrawSegment_MovePosUpAndRight(void)
              undefined         A:1            <RETURN>
-                             DrawSegment_SubFunction0                        XREF[1]:     DrawSegment_Orientation0:d78d(*)  
-            d7ff 0a 21              DEC        <DrawSegment_CurrentY_0x21                    = ??
-            d801 d3 1e              ADDD       <DrawSegment_SomeModifierForD_0x1e            = ??
+                             DrawSegment_MovePosUpAndRight                   XREF[1]:     DrawSegment_Orientation0_UpAndRi
+            d7ff 0a 21              DEC        <DrawSegment_CurrentScreenY_0x21              = ??
+            d801 d3 1e              ADDD       <DrawSegment_SecondaryAxisSubpixelInc_0x1e    = ??
             d803 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall DrawSegment_SubFunction1(void)
+                             undefined __stdcall DrawSegment_MovePosRightAndUp(void)
              undefined         A:1            <RETURN>
-                             DrawSegment_SubFunction1                        XREF[1]:     DrawSegment_Orientation1:d794(*)  
-            d804 0c 22              INC        <DrawSegment_CurrentX_0x22                    = ??
-            d806 93 1e              SUBD       <DrawSegment_SomeModifierForD_0x1e            = ??
+                             DrawSegment_MovePosRightAndUp                   XREF[1]:     DrawSegment_Orientation1_RightAn
+            d804 0c 22              INC        <DrawSegment_CurrentScreenX_0x22              = ??
+            d806 93 1e              SUBD       <DrawSegment_SecondaryAxisSubpixelInc_0x1e    = ??
             d808 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall DrawSegment_SubFunction2(void)
+                             undefined __stdcall DrawSegment_MovePosRightAndDown(void)
              undefined         A:1            <RETURN>
-                             DrawSegment_SubFunction2                        XREF[1]:     DrawSegment_Orientation2:d79d(*)  
-            d809 0c 22              INC        <DrawSegment_CurrentX_0x22                    = ??
-            d80b d3 1e              ADDD       <DrawSegment_SomeModifierForD_0x1e            = ??
+                             DrawSegment_MovePosRightAndDown                 XREF[1]:     DrawSegment_Orientation2_RightAn
+            d809 0c 22              INC        <DrawSegment_CurrentScreenX_0x22              = ??
+            d80b d3 1e              ADDD       <DrawSegment_SecondaryAxisSubpixelInc_0x1e    = ??
             d80d 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall DrawSegment_SubFunction3(void)
+                             undefined __stdcall DrawSegment_MovePosDownAndRight(void)
              undefined         A:1            <RETURN>
-                             DrawSegment_SubFunction3                        XREF[1]:     DrawSegment_Orientation3:d7a4(*)  
-            d80e 0c 21              INC        <DrawSegment_CurrentY_0x21                    = ??
-            d810 d3 1e              ADDD       <DrawSegment_SomeModifierForD_0x1e            = ??
+                             DrawSegment_MovePosDownAndRight                 XREF[1]:     DrawSegment_Orientation3_DownAnd
+            d80e 0c 21              INC        <DrawSegment_CurrentScreenY_0x21              = ??
+            d810 d3 1e              ADDD       <DrawSegment_SecondaryAxisSubpixelInc_0x1e    = ??
             d812 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall DrawSegment_SubFunction4(void)
+                             undefined __stdcall DrawSegment_MovePosDownAndLeft(void)
              undefined         A:1            <RETURN>
-                             DrawSegment_SubFunction4                        XREF[1]:     DrawSegment_Orientation4:d7ab(*)  
-            d813 0c 21              INC        <DrawSegment_CurrentY_0x21                    = ??
-            d815 93 1e              SUBD       <DrawSegment_SomeModifierForD_0x1e            = ??
+                             DrawSegment_MovePosDownAndLeft                  XREF[1]:     DrawSegment_Orientation4_DownAnd
+            d813 0c 21              INC        <DrawSegment_CurrentScreenY_0x21              = ??
+            d815 93 1e              SUBD       <DrawSegment_SecondaryAxisSubpixelInc_0x1e    = ??
             d817 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall DrawSegment_SubFunction5(void)
+                             undefined __stdcall DrawSegment_MovePosLeftAndDown(void)
              undefined         A:1            <RETURN>
-                             DrawSegment_SubFunction5                        XREF[1]:     DrawSegment_Orientation5:d7b4(*)  
-            d818 0a 22              DEC        <DrawSegment_CurrentX_0x22                    = ??
-            d81a d3 1e              ADDD       <DrawSegment_SomeModifierForD_0x1e            = ??
+                             DrawSegment_MovePosLeftAndDown                  XREF[1]:     DrawSegment_Orientation5_LeftAnd
+            d818 0a 22              DEC        <DrawSegment_CurrentScreenX_0x22              = ??
+            d81a d3 1e              ADDD       <DrawSegment_SecondaryAxisSubpixelInc_0x1e    = ??
             d81c 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall DrawSegment_SubFunction6(void)
+                             undefined __stdcall DrawSegment_MovePosLeftAndUp(void)
              undefined         A:1            <RETURN>
-                             DrawSegment_SubFunction6                        XREF[1]:     DrawSegment_Orientation6:d7bb(*)  
-            d81d 0a 22              DEC        <DrawSegment_CurrentX_0x22                    = ??
-            d81f 93 1e              SUBD       <DrawSegment_SomeModifierForD_0x1e            = ??
+                             DrawSegment_MovePosLeftAndUp                    XREF[1]:     DrawSegment_Orientation6_LeftAnd
+            d81d 0a 22              DEC        <DrawSegment_CurrentScreenX_0x22              = ??
+            d81f 93 1e              SUBD       <DrawSegment_SecondaryAxisSubpixelInc_0x1e    = ??
             d821 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall DrawSegment_SubFunction7(void)
+                             undefined __stdcall DrawSegment_MovePosUpAndLeft(void)
              undefined         A:1            <RETURN>
-                             DrawSegment_SubFunction7                        XREF[1]:     DrawSegment_Orientation7:d7c4(*)  
-            d822 0a 21              DEC        <DrawSegment_CurrentY_0x21                    = ??
-            d824 93 1e              SUBD       <DrawSegment_SomeModifierForD_0x1e            = ??
+                             DrawSegment_MovePosUpAndLeft                    XREF[1]:     DrawSegment_Orientation7_UpAndLe
+            d822 0a 21              DEC        <DrawSegment_CurrentScreenY_0x21              = ??
+            d824 93 1e              SUBD       <DrawSegment_SecondaryAxisSubpixelInc_0x1e    = ??
             d826 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall CrtArtifactPixelDrawingFunction(void)
+                             undefined __stdcall DrawPixelWithCrtArtifacts(void)
              undefined         A:1            <RETURN>
              undefined1        Stack[-0x1]:1  local_1                                 XREF[1]:     d83e(*)  
-                             CrtArtifactPixelDrawingFunction                 XREF[2]:     DrawSegmentHelper1:d7d7(c), 
-                                                                                          DrawSegmentHelper2:d7f0(c)  
-            d827 dc 21              LDD        <DrawSegment_CurrentY_0x21                    = ??
+                             DrawPixelWithCrtArtifacts                       XREF[2]:     DrawHorizontalSegment:d7d7(c), 
+                                                                                          DrawVerticalSegment:d7f0(c)  
+            d827 dc 21              LDD        <DrawSegment_CurrentScreenYXPosition_0x21     = ??
             d829 8d 2b              BSR        ComputeScreenLocationFromAAndB                undefined ComputeScreenLocationFromAAndB(void)
             d82b 1f 02              TFR        D,Y                                           move screen position to Y
-            d82d d6 22              LDB        <DrawSegment_CurrentX_0x22                    which pair of bits will it draw on?
+            d82d d6 22              LDB        <DrawSegment_CurrentScreenX_0x22              which pair of bits will it draw on?
             d82f c4 03              ANDB       #0x3                                          get the last two bits of the x position
             d831 ce d8 4a           LDU        #Drawing_PixelBits_d84a                       = 11000000b
             d834 30 44              LEAX       0x4,U                                         load the address of the CRT artfiact mask
@@ -21978,15 +22000,15 @@
                              at a time.
                              Drawing_PixelBits_d84a                          XREF[5]:     UpdateAndDrawDrops:cffe(*), 
                                                                                           UpdateAndDrawDrops:d005(*), 
-                                                                                          CrtArtifactPixelDrawingFunction:
-                                                                                          CrtArtifactPixelDrawingFunction:
-                                                                                          CrtArtifactPixelDrawingFunction:
+                                                                                          DrawPixelWithCrtArtifacts:d831(*
+                                                                                          DrawPixelWithCrtArtifacts:d83c(*
+                                                                                          DrawPixelWithCrtArtifacts:d840(*
             d84a c0                 db         11000000b
             d84b 30                 db         00110000b
             d84c 0c                 db         00001100b
             d84d 03                 db         00000011b
                              objects choose which CRT artifacting mask to use
-                             CrtArtifactDrawing_LineDrawingMask              XREF[1]:     CrtArtifactPixelDrawingFunction:
+                             CrtArtifactDrawing_LineDrawingMask              XREF[1]:     DrawPixelWithCrtArtifacts:d83a(*
             d84e 00                 db         00000000b                                     invisible. doesn't draw any pixels
             d84f 55                 db         01010101b                                     only draw odd pixels. If used to draw platform, then can wa
             d850 aa                 db         10101010b                                     only draw even pixels. if used to draw platform, can't walk
@@ -22006,23 +22028,40 @@
             d852 a6 24              LDA        0x4,Y
             d854 e6 26              LDB        0x6,Y
                              **************************************************************
-                             *                          FUNCTION                          *
+                             * Generates a memory location in a video page for            *
+                             * the given X and Y.                                         *
+                             *                                                            *
+                             * A register holds the Y position (0 - 191)                  *
+                             * B register holds the X position (0 - 127)                  *
+                             *                                                            *
+                             * Note that X works in half resolution, not 256              *
+                             * pixels like the current screen mode. The function          *
+                             * scales X up so that it maps to the screen res.             *
+                             *                                                            *
+                             * To find the correct byte along the X axis, it first        *
+                             * doubles X to map its position to 256 pixels. Then it       *
+                             * divides by 8 (bits) to find the corresponding byte in      *
+                             * video memory.                                              *
+                             *                                                            *
+                             * Formula:                                                   *
+                             * offset = (Y * screen_width_in_bytes) + (X * 2 / 8)         *
+                             * final pos = offset + video_memory_location                 *
+                             *                                                            *
+                             * example:                                                   *
+                             * (0x24 * 0x20) + (0x4f * 2 / 8) + 0x400 = 0x893 (893.C)     *
+                             *                                                            *
+                             * background draw origin point: Y:0x10, X:0xF                *
+                             * (0x10 * 0x20) + (0xf * 2 / 8) + 0x400 = 0x603 (603.C)      *
                              **************************************************************
                              undefined __stdcall ComputeScreenLocationFromAAndB(void)
              undefined         A:1            <RETURN>
-                             No idea what it does exactly. 
-                             It takes the Y position from A
-                             and the X position from B and
-                             then generates a memory location.
-                             but it's not X + (Y * 0x20) as I'd
-                             expect.
                              ComputeScreenLocationFromAAndB                  XREF[7]:     DrawDoorOrMultipleDoors_Maybe:cd
                                                                                           Init_PlayerLivesIconPositions:cf
                                                                                           UpdateAndDrawDrops:cf90(c), 
                                                                                           UpdateAndDrawDrops:cff5(c), 
                                                                                           UpdateAndDrawDrops:d012(c), 
                                                                                           SetupPickupScreenLocationAndNumL
-                                                                                          CrtArtifactPixelDrawingFunction:
+                                                                                          DrawPixelWithCrtArtifacts:d829(c
             d856 58                 LSLB
             d857 44                 LSRA
             d858 56                 RORB
@@ -22057,14 +22096,14 @@
             d878 e6 26              LDB        0x6,Y=>PlayerX_0x1b0                          = ??
             d87a cb 03              ADDB       #0x3
             d87c a6 24              LDA        0x4,Y=>PlayerY_0x1ae                          = ??
-            d87e dd 21              STD        <DrawSegment_CurrentY_0x21                    = ??
+            d87e dd 21              STD        <DrawSegment_CurrentScreenYXPosition_0x21     = ??
             d880 0f 20              CLR        <CrtArtifactDrawingMaskIndex_0x20             draw nothing?
             d882 dc 1b              LDD        <ZeroValue                                    = ??
-            d884 dd 1e              STD        <DrawSegment_SomeModifierForD_0x1e            = ??
+            d884 dd 1e              STD        <DrawSegment_SecondaryAxisSubpixelInc_0x1e    = ??
             d886 86 0c              LDA        #12                                           a length or a count of some kind
                                                                                              or the short rope? (draw object 12)
-            d888 97 1d              STA        <DrawSegment_Counter_0x1d                     = ??
-            d88a bd d7 a4           JSR        DrawSegment_Orientation3                      undefined DrawSegment_Orientation3(undefined param_1, undef
+            d888 97 1d              STA        <DrawSegmentLine_Counter_0x1d                 = ??
+            d88a bd d7 a4           JSR        DrawSegment_Orientation3_DownAndRight         undefined DrawSegment_Orientation3_DownAndRight(undefined p
             d88d 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     = ??
                              Jump_SkipRopeHandling                           XREF[2]:     d872(j), d876(j)  
             d891 ee 28              LDU        0x8,Y=>Player_VideoPageDrawDestination_0x1b2  = ??
