@@ -67,16 +67,23 @@ Background Piece codes
 	
 Questions
 
-	are the drop wobble times constant or random?
-	how is drop wobble handled?
+	how do the ball physics work?
+	how do the bird physics work?
+
 
 	how does the player code flow?
 	what is the mysterious sprite data?	
-	what decides how close a drop is to the rope?
+
 	how are floor collisions detected?
 	how is detecting vertical ropes done?
 	how is detecting horizontal ropes done?
 	
+	
+	
+how to limit the number of drops to 1?	
+
+	Change d124 value from A (10) to 1. This will affect the title screen.
+	For game rooms, change the values d12a and d12e to 0.
 
 		
 		

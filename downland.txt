@@ -274,11 +274,11 @@
                                                                                           GetRoomDataForCurrentRoom:cf1a(*
                                                                                           DrawPickups:cf21(*)  
             003d                    dw         ??
-                             NumberOfDropsToProcess                          XREF[3]:     FUN_c3b3:c28a(*), 
+                             NumberOfDropsToProcess_0x3f                     XREF[3]:     FUN_c3b3:c28a(*), 
                                                                                           FUN_c3b3:c670(*), 
                                                                                           InitDrops:d130(*)  
             003f                    ??         ??
-                             Drop_ToggleValue_FFto0andBack_0x40              XREF[2]:     UpdateAndDrawDrops:cf57(*), 
+                             Drop_TickTockBetweenFFto0andBack_0x40           XREF[2]:     UpdateAndDrawDrops:cf57(*), 
                                                                                           UpdateAndDrawDrops:cf5d(*)  
             0040                    ??         ??
                              Object_CollisionY_0x41                          XREF[7]:     FUN_c3b3:c26e(*), 
@@ -1185,26 +1185,36 @@
                                                                                           PlayerSpriteDrawFunction_Maybe:c
             01ed                    dw         ??
                              Each drop data is 13 bytes long.
-                             byte 0: ceiling wiggle countdown (0xA8 - 0x7F)
-                             byte 1-2: some value of 0x200
-                             byte 3-4: y position
-                             byte 5: x position
-                             byte 6-7: location of sprite in ram
-                             byte 8-9: draw location in video page
-                             byte 10-11: draw location in video page (previous frame?)
-                             byte 12: which side of the rope (or other) to appear at.
-                                      0x03 -> right side of the rope
-                                      0x0f -> left side of the rope
+                             byte : description
+                             0: state / ceiling wiggle countdown 
+                                 values:
+                                 0: disabled
+                                 1: initialized but not running
+                                    will be initialized next update
+                                 0xA8 - 0x80: wiggling
+                                 0x7F: falling
+                             1-2: drop speed (0x200 falling, 
+                                              toggles between 0x80 and
+                                              0xff80 when jiggling to
+                                              move up and down)
+                             3-4: y position (pixel + subpixel)
+                             5: x position (0 - 127)
+                             6-7: location of sprite in ram
+                             8-9: draw location in video page
+                             10-11 (a-b): previous frame draw location in video page
+                             12 (c): the collision mask of the bottom of the drop.
+                                     the mask is different depending on which frame
+                                     of the drop sprite it uses.
                              Drop0_Data_0x1ef                                XREF[8]:     FUN_c3b3:c27e(*), 
-                             Drop0_CeilingWiggleTimer_0x1ef                               FUN_c3b3:c28c(R), 
-                             DropDataBlock_0x1ef                                          FUN_c3b3:c29d(R), 
+                             DropDataBlock_0x1ef                                          FUN_c3b3:c28c(R), 
+                             Drop0_CeilingWiggleTimer_0x1ef                               FUN_c3b3:c29d(R), 
                                                                                           UpdateAndDrawDrops:cf53(*), 
                                                                                           UpdateAndDrawDrops:cf5f(R), 
                                                                                           UpdateAndDrawDrops:cfc6(*), 
-                                                                                          InitFirstByteOfEachDrop:d137(*), 
-                                                                                          InitFirstByteOfEachDrop:d13a(W)  
+                                                                                          SetFirstByteOfEachDrop:d137(*), 
+                                                                                          SetFirstByteOfEachDrop:d13a(W)  
             01ef                    db         ??
-                             Drop0_SomeValue_2000_01f0
+                             Drop0_SpeedY_01f0
             01f0                    dw         ??
                              Drop0_Y_0x1f2                                   XREF[1]:     FUN_c3b3:c290(R)  
             01f2                    dw         ??
@@ -1216,16 +1226,17 @@
             01f7                    dw         ??
                              Drop0_PreviousVideoPageDrawLocation_0x1f9
             01f9                    dw         ??
-                             Drop0_WhichSideToSpawn_0x1fb
+                             Drop0_CollisionMask_0x1fb
             01fb                    db         ??
-                             Drop0_WhichSideToSpawn                          XREF[5]:     FUN_c3b3:c28c(R), 
-                                                                                          UpdateAndDrawDrops:cf5f(R), 
+                             Drop1_Data_0x1fc                                XREF[6]:     FUN_c3b3:c28c(R), 
+                             Drop1_CeilingWiggleTimer_0x1fc                               UpdateAndDrawDrops:cf5f(R), 
                                                                                           UpdateAndDrawDrops:cfae(RW), 
                                                                                           UpdateAndDrawDrops:cfb0(R), 
-                                                                                          InitFirstByteOfEachDrop:d13a(W)  
+                                                                                          UpdateAndDrawDrops:cfc6(W), 
+                                                                                          SetFirstByteOfEachDrop:d13a(W)  
             01fc                    db         ??
-                             Drop1_Data_0x1fd                                XREF[3]:     UpdateAndDrawDrops:cf83(R), 
-                             Drop1_CeilingWiggleTimer_0x1fd                               UpdateAndDrawDrops:cf8a(W), 
+                             Drop1_SpeedY_0x1fd                              XREF[3]:     UpdateAndDrawDrops:cf83(R), 
+                                                                                          UpdateAndDrawDrops:cf8a(W), 
                                                                                           UpdateAndDrawDrops:cfbe(W)  
             01fd                    dw         ??
                              Drop1_Y_0x1ff                                   XREF[5]:     UpdateAndDrawDrops:cf81(R), 
@@ -1252,7 +1263,7 @@
                                                                                           UpdateAndDrawDrops:cf9a(W), 
                                                                                           UpdateAndDrawDrops:d017(W)  
             0206                    dw         ??
-                             Drop1_WhichSideToSpawn_0x208                    XREF[3]:     UpdateAndDrawDrops:cf70(R), 
+                             Drop1_CollisionMask_0x208                       XREF[3]:     UpdateAndDrawDrops:cf70(R), 
                                                                                           UpdateAndDrawDrops:cf7a(R), 
                                                                                           UpdateAndDrawDrops:d025(W)  
             0208                    db         ??
@@ -1271,7 +1282,7 @@
             0214                    ??         ??
             0215                    ??         ??
                              Drop3_Data                                      XREF[1]:     UpdateAndDrawDrops:cf5f(R)  
-            0216                    ??         ??
+            0216                    undefined1 ??
             0217                    ??         ??
             0218                    ??         ??
             0219                    ??         ??
@@ -6962,7 +6973,8 @@
             17fd                    ??         ??
             17fe                    ??         ??
             17ff                    ??         ??
-                             DAT_1800                                        XREF[1]:     cadc(*)  
+                             DAT_1800                                        XREF[2]:     cadc(*), 
+                                                                                          UpdateAndDrawDrops:cffa(*)  
             1800                    ??         ??
                              DAT_1801                                        XREF[1]:     cae0(*)  
             1801                    ??         ??
@@ -7167,6 +7179,7 @@
             18bd                    ??         ??
             18be                    ??         ??
             18bf                    ??         ??
+                             DAT_18c0                                        XREF[1]:     UpdateAndDrawDrops:cf6e(*)  
             18c0                    ??         ??
             18c1                    ??         ??
             18c2                    ??         ??
@@ -7199,6 +7212,7 @@
             18dd                    ??         ??
             18de                    ??         ??
             18df                    ??         ??
+                             DAT_18e0                                        XREF[1]:     UpdateAndDrawDrops:cf77(*)  
             18e0                    ??         ??
             18e1                    ??         ??
             18e2                    ??         ??
@@ -17679,30 +17693,30 @@
                              **************************************************************
                              * Test collisions with drops                                 *
                              **************************************************************
-            c27e 10 8e 01 ef        LDY        #DropDataBlock_0x1ef                          = ??
+            c27e 10 8e 01 ef        LDY        #Drop0_CeilingWiggleTimer_0x1ef               = ??
             c282 86 06              LDA        #0x6
             c284 97 43              STA        <Object_CollisionHeight_0x43                  = ??
             c286 86 04              LDA        #0x4
             c288 97 44              STA        <Object_CollisionWidth_0x44                   = ??
-            c28a d6 3f              LDB        <NumberOfDropsToProcess                       = ??
-                             Jump_ProcessDrop                                XREF[1]:     c2a6(j)  
-            c28c a6 a4              LDA        ,Y=>Drop0_Data_0x1ef                          = ??
-            c28e 27 13              BEQ        Jump_DropIsInactive
+            c28a d6 3f              LDB        <NumberOfDropsToProcess_0x3f                  = ??
+                             Jump_ProcessCollisionWithDrop                   XREF[1]:     c2a6(j)  
+            c28c a6 a4              LDA        ,Y=>Drop0_CeilingWiggleTimer_0x1ef            = ??
+            c28e 27 13              BEQ        Jump_NoCollisionOrCollisionIgnored            the drop is inactive with wiggle timer of 0
             c290 a6 23              LDA        0x3,Y=>Drop0_Y_0x1f2                          = ??
             c292 97 41              STA        <Object_CollisionY_0x41                       = ??
             c294 a6 25              LDA        0x5,Y=>Drop0_X_0x1f4                          = ??
             c296 97 42              STA        <Object_CollisionX_0x42                       = ??
             c298 bd c3 7c           JSR        TestPlayerObjectCollision                     undefined TestPlayerObjectCollision(void)
-            c29b 27 06              BEQ        Jump_DropIsInactive
-            c29d a6 a4              LDA        ,Y=>Drop0_CeilingWiggleTimer_0x1ef            = ??
-            c29f 2b 02              BMI        Jump_DropIsInactive                           no collision because the drop is still wiggling
-            c2a1 20 3a              BRA        Jump_CollidesWithObjectThatKills
-                             Jump_DropIsInactive                             XREF[3]:     c28e(j), c29b(j), c29f(j)  
+            c29b 27 06              BEQ        Jump_NoCollisionOrCollisionIgnored            no collision occured
+            c29d a6 a4              LDA        ,Y=>Drop0_CeilingWiggleTimer_0x1ef            don't collide if the drop is still wiggling
+            c29f 2b 02              BMI        Jump_NoCollisionOrCollisionIgnored            no collision because the drop is still wiggling
+            c2a1 20 3a              BRA        Jump_CollidesWithObjectThatKills              the drop collides with the player
+                             Jump_NoCollisionOrCollisionIgnored              XREF[3]:     c28e(j), c29b(j), c29f(j)  
             c2a3 31 2d              LEAY       0xd,Y                                         skip to next drop
             c2a5 5a                 DECB
-            c2a6 26 e4              BNE        Jump_ProcessDrop
+            c2a6 26 e4              BNE        Jump_ProcessCollisionWithDrop
                              **************************************************************
-                             * Test collision with the ball                               *
+                             * Test player collision with the ball                        *
                              **************************************************************
             c2a8 86 08              LDA        #0x8
             c2aa 97 43              STA        <Object_CollisionHeight_0x43                  = ??
@@ -17715,7 +17729,7 @@
             c2ba bd c3 7c           JSR        TestPlayerObjectCollision                     undefined TestPlayerObjectCollision(void)
             c2bd 26 1e              BNE        Jump_CollidesWithObjectThatKills
                              **************************************************************
-                             * Test collision with the bird                               *
+                             * Test player collision with the bird                        *
                              **************************************************************
             c2bf 86 06              LDA        #0x6
             c2c1 97 43              STA        <Object_CollisionHeight_0x43                  = ??
@@ -17853,31 +17867,31 @@
             c385 90 41              SUBA       <Object_CollisionY_0x41                       = ??
             c387 91 43              CMPA       <Object_CollisionHeight_0x43                  = ??
             c389 23 0a              BLS        LAB_c395
-            c38b 20 20              BRA        LAB_c3ad
+            c38b 20 20              BRA        Jump_NoCollision
                              LAB_c38d                                        XREF[1]:     c383(j)  
             c38d 96 41              LDA        <Object_CollisionY_0x41                       = ??
             c38f a0 04              SUBA       0x4,X=>PlayerY_0x1ae                          = ??
             c391 a1 1f              CMPA       -0x1,X=>Player_NumRowsInSprite_0x1a9          = ??
-            c393 22 18              BHI        LAB_c3ad
+            c393 22 18              BHI        Jump_NoCollision
                              LAB_c395                                        XREF[1]:     c389(j)  
             c395 a6 06              LDA        0x6,X=>PlayerX_0x1b0                          = ??
             c397 91 42              CMPA       <Object_CollisionX_0x42                       = ??
             c399 23 08              BLS        LAB_c3a3
             c39b 90 42              SUBA       <Object_CollisionX_0x42                       = ??
             c39d 91 44              CMPA       <Object_CollisionWidth_0x44                   = ??
-            c39f 23 0e              BLS        LAB_c3af
-            c3a1 20 0a              BRA        LAB_c3ad
+            c39f 23 0e              BLS        Jump_HasCollision
+            c3a1 20 0a              BRA        Jump_NoCollision
                              LAB_c3a3                                        XREF[1]:     c399(j)  
             c3a3 96 42              LDA        <Object_CollisionX_0x42                       = ??
             c3a5 a0 06              SUBA       0x6,X=>PlayerX_0x1b0                          = ??
             c3a7 81 08              CMPA       #0x8
-            c3a9 23 04              BLS        LAB_c3af
-            c3ab 20 00              BRA        LAB_c3ad
-                             LAB_c3ad                                        XREF[4]:     c38b(j), c393(j), c3a1(j), 
+            c3a9 23 04              BLS        Jump_HasCollision
+            c3ab 20 00              BRA        Jump_NoCollision
+                             Jump_NoCollision                                XREF[4]:     c38b(j), c393(j), c3a1(j), 
                                                                                           c3ab(j)  
             c3ad 4f                 CLRA
             c3ae 39                 RTS
-                             LAB_c3af                                        XREF[2]:     c39f(j), c3a9(j)  
+                             Jump_HasCollision                               XREF[2]:     c39f(j), c3a9(j)  
             c3af 86 ff              LDA        #0xff
             c3b1 39                 RTS
                              Jump_Return                                     XREF[5]:     FUN_c3b3:c3c3(j), 
@@ -18294,9 +18308,10 @@
             c662 ed 89 17 fe        STD        0x17fe,X=>VideoMemory_Page1_0x1c00            set D to Page 1.
             c666 8c 1c 00           CMPX       #VideoMemory_Page1_0x1c00                     = ??
             c669 26 f5              BNE        LOOP_Copy_Page0_to_Page1
+                             Init drops
             c66b bd d1 1a           JSR        InitDrops                                     undefined InitDrops(void)
             c66e 86 0a              LDA        #10                                           menu screen room number
-            c670 97 3f              STA        <NumberOfDropsToProcess                       set to 10 drops
+            c670 97 3f              STA        <NumberOfDropsToProcess_0x3f                  set to 10 drops
             c672 97 39              STA        <CurrentRoomNumber_0x39                       = ??
                              Loop_ProcessGetReadyScreen                      XREF[3]:     c686(j), c68a(j), c694(j)  
             c674 bd cf 53           JSR        UpdateAndDrawDrops                            undefined UpdateAndDrawDrops(void)
@@ -19824,66 +19839,76 @@
                                                                                           FUN_c3b3:c1d8(c), 
                                                                                           FUN_c3b3:c674(c)  
             cf53 10 8e 01 ef        LDY        #DropDataBlock_0x1ef                          = ??
-            cf57 96 40              LDA        <Drop_ToggleValue_FFto0andBack_0x40           = ??
-            cf59 27 02              BEQ        Jump_IsZero
+            cf57 96 40              LDA        <Drop_TickTockBetweenFFto0andBack_0x40        = ??
+            cf59 27 02              BEQ        Jump_TickTockIsZero
             cf5b 31 2d              LEAY       0xd,Y                                         If the value is not zero, skip to next drop?
-                             Jump_IsZero                                     XREF[1]:     cf59(j)  
-            cf5d 03 40              COM        <Drop_ToggleValue_FFto0andBack_0x40           = ??
-                             LAB_cf5f                                        XREF[1]:     cfab(j)  
-            cf5f a6 a4              LDA        ,Y=>Drop0_WhichSideToSpawn                    = ??
-            cf61 27 4a              BEQ        LAB_cfad
-            cf63 2b 49              BMI        LAB_cfae
-            cf65 4a                 DECA
-            cf66 27 5c              BEQ        LAB_cfc4
+                             Jump_TickTockIsZero                             XREF[1]:     cf59(j)  
+            cf5d 03 40              COM        <Drop_TickTockBetweenFFto0andBack_0x40        = ??
+                             Jump_ProcessDrop                                XREF[1]:     cfab(j)  
+            cf5f a6 a4              LDA        ,Y=>Drop0_CeilingWiggleTimer_0x1ef            = ??
+            cf61 27 4a              BEQ        Jump_DropInactive
+            cf63 2b 49              BMI        Jump_DropIsWiggling
+            cf65 4a                 DECA                                                     If the drop wiggle timer was initialized to 1,
+                                                                                             this decrements to 0. And the branch will make
+                                                                                             it so it'll be initialized for the first time.
+            cf66 27 5c              BEQ        Jump_InitSingleDrop                           Init the drop for the first time
             cf68 ae 2a              LDX        0xa,Y=>Drop1_PreviousVideoPageDrawLocation_0  = ??
-            cf6a 30 89 18 c0        LEAX       0x18c0,X
-            cf6e a6 84              LDA        ,X
-            cf70 a4 2c              ANDA       0xc,Y=>Drop1_WhichSideToSpawn_0x208           = ??
+            cf6a 30 89 18 c0        LEAX       0x18c0,X                                      get the position and move it so that it
+                                                                                             lands on the next page, where terrain collisions
+                                                                                             are tested against. The location is offseted by 
+                                                                                             0xC0 (192) which is 6 lines underneath 
+                                                                                             (192 / 32 bytes pitch)
+            cf6e a6 84              LDA        ,X=>DAT_18c0                                  load the byte from terrain in second video page 
+            cf70 a4 2c              ANDA       0xc,Y=>Drop1_CollisionMask_0x208              = ??
             cf72 bd ca 9b           JSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
-            cf75 26 4b              BNE        Jump_TouchedTerrain_Maybe
-            cf77 a6 88 20           LDA        0x20,X
-            cf7a a4 2c              ANDA       0xc,Y=>Drop1_WhichSideToSpawn_0x208           = ??
+            cf75 26 4b              BNE        Jump_DropTouchedTerrain
+            cf77 a6 88 20           LDA        0x20,X=>DAT_18e0                              load from the pixel underneath
+            cf7a a4 2c              ANDA       0xc,Y=>Drop1_CollisionMask_0x208              = ??
             cf7c bd ca 9b           JSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
-            cf7f 26 41              BNE        Jump_TouchedTerrain_Maybe
-                             LAB_cf81                                        XREF[1]:     cfc0(j)  
+            cf7f 26 41              BNE        Jump_DropTouchedTerrain
+                             Jump_UpdateDropPosition                         XREF[1]:     cfc0(j)  
             cf81 ec 23              LDD        0x3,Y=>Drop1_Y_0x1ff                          = ??
-            cf83 e3 21              ADDD       offset Drop1_CeilingWiggleTimer_0x1fd,Y       = ??
+            cf83 e3 21              ADDD       offset Drop1_SpeedY_0x1fd,Y                   = ??
             cf85 ed 23              STD        0x3,Y=>Drop1_Y_0x1ff                          = ??
-            cf87 cc 02 00           LDD        #0x200
-            cf8a ed 21              STD        offset Drop1_CeilingWiggleTimer_0x1fd,Y       = ??
+            cf87 cc 02 00           LDD        #0x200                                        falling drop speed to this, even if 
+                                                                                             we were wiggling. 
+            cf8a ed 21              STD        offset Drop1_SpeedY_0x1fd,Y                   = ??
+                             erase drop from screen
             cf8c a6 23              LDA        0x3,Y=>Drop1_Y_0x1ff                          = ??
             cf8e e6 25              LDB        0x5,Y=>Drop1_X_0x201                          = ??
             cf90 bd d8 56           JSR        ComputeScreenLocationFromAAndB                undefined ComputeScreenLocationFromAAndB(void)
             cf93 ed 28              STD        0x8,Y=>Drop1_VideoPageDrawLocation_0x204      = ??
-            cf95 17 00 9d           LBSR       ClearDrop                                     byte ClearDrop(void)
+            cf95 17 00 9d           LBSR       EraseDropSpriteFromScreen                     byte EraseDropSpriteFromScreen(void)
+                             store previous video page draw location
             cf98 ae 28              LDX        0x8,Y=>Drop1_VideoPageDrawLocation_0x204      = ??
             cf9a af 2a              STX        0xa,Y=>Drop1_PreviousVideoPageDrawLocation_0  = ??
+                             draw the drop sprite at the new location
             cf9c ee 26              LDU        0x6,Y=>Drop1_SpriteData_0x202                 = ??
             cf9e c6 06              LDB        #0x6                                          number of lines in the sprite
             cfa0 d7 26              STB        <UtilityCounter_0x26                          = ??
             cfa2 8d 9f              BSR        DrawSprite_16PixelsWide                       undefined DrawSprite_16PixelsWide(undefined param_1, undefi
-            cfa4 31 a8 1a           LEAY       0x1a,Y
+            cfa4 31 a8 1a           LEAY       0x1a,Y                                        advance by two drops?
             cfa7 10 8c 02 71        CMPY       #EndOfDropDataBuffer_0x271                    = ??
-            cfab 25 b2              BCS        LAB_cf5f
-                             LAB_cfad                                        XREF[1]:     cf61(j)  
+            cfab 25 b2              BCS        Jump_ProcessDrop                              continue processing drops
+                             Jump_DropInactive                               XREF[1]:     cf61(j)  
             cfad 39                 RTS
-                             LAB_cfae                                        XREF[2]:     cf63(j), d02e(j)  
-            cfae 6a a4              DEC        ,Y=>Drop0_WhichSideToSpawn                    = ??
-            cfb0 a6 a4              LDA        ,Y=>Drop0_WhichSideToSpawn                    = ??
+                             Jump_DropIsWiggling                             XREF[2]:     cf63(j), d02e(j)  
+            cfae 6a a4              DEC        ,Y=>Drop1_CeilingWiggleTimer_0x1fc            = ??
+            cfb0 a6 a4              LDA        ,Y=>Drop1_CeilingWiggleTimer_0x1fc            = ??
             cfb2 84 02              ANDA       #0x2
-            cfb4 27 05              BEQ        LAB_cfbb
-            cfb6 cc 00 80           LDD        #0x80
-            cfb9 20 03              BRA        LAB_cfbe
-                             LAB_cfbb                                        XREF[1]:     cfb4(j)  
+            cfb4 27 05              BEQ        Jump_WiggleUpwards
+            cfb6 cc 00 80           LDD        #0x80                                         wiggle downwards
+            cfb9 20 03              BRA        Jump_StoreDropSpeedY
+                             Jump_WiggleUpwards                              XREF[1]:     cfb4(j)  
             cfbb cc ff 80           LDD        #0xff80                                       drop speed?
-                             LAB_cfbe                                        XREF[1]:     cfb9(j)  
-            cfbe ed 21              STD        offset Drop1_CeilingWiggleTimer_0x1fd,Y       = ??
-            cfc0 20 bf              BRA        LAB_cf81
-                             Jump_TouchedTerrain_Maybe                       XREF[2]:     cf75(j), cf7f(j)  
-            cfc2 8d 71              BSR        ClearDrop                                     byte ClearDrop(void)
-                             LAB_cfc4                                        XREF[1]:     cf66(j)  
+                             Jump_StoreDropSpeedY                            XREF[1]:     cfb9(j)  
+            cfbe ed 21              STD        offset Drop1_SpeedY_0x1fd,Y                   = ??
+            cfc0 20 bf              BRA        Jump_UpdateDropPosition
+                             Jump_DropTouchedTerrain                         XREF[2]:     cf75(j), cf7f(j)  
+            cfc2 8d 71              BSR        EraseDropSpriteFromScreen                     byte EraseDropSpriteFromScreen(void)
+                             Jump_InitSingleDrop                             XREF[1]:     cf66(j)  
             cfc4 c6 a8              LDB        #0xa8                                         pre-drop wiggle countdown
-            cfc6 e7 a4              STB        ,Y=>DropDataBlock_0x1ef                       = ??
+            cfc6 e7 a4              STB        ,Y=>Drop0_CeilingWiggleTimer_0x1ef            = ??
             cfc8 8e d0 5d           LDX        #Drops_SpawnPositionsTable                    = D073h
             cfcb 96 39              LDA        <CurrentRoomNumber_0x39                       figure out which pointer to room data to use
             cfcd 48                 LSLA
@@ -19893,17 +19918,23 @@
                                                                                              move X to first drops area in the data
                                                                                              The number in the data is one less than the actual count
                                                                                              ie having one area means the value is 0, three areas makes 
+                                                                                             the value 2
             cfd4 bd dc 1f           JSR        GenerateRandomNumberFrom0ToB                  undefined GenerateRandomNumberFrom0ToB()
             cfd7 3d                 MUL                                                      multiply A and B to figure out which drops area to use
             cfd8 3a                 ABX                                                      move X to the selected drops area
             cfd9 e6 84              LDB        ,X                                            load the number of drops positions in the area into B
             cfdb bd dc 1f           JSR        GenerateRandomNumberFrom0ToB                  undefined GenerateRandomNumberFrom0ToB()
             cfde 86 08              LDA        #0x8                                          spacing between drops
-            cfe0 3d                 MUL                                                      multiply the selected horizontal drops position by the spac
+            cfe0 3d                 MUL                                                      multiply the selected horizontal drops position by the 
+                                                                                             spacing in A
             cfe1 eb 02              ADDB       0x2,X                                         add the horizontal position of the drop area
             cfe3 96 3a              LDA        <GameCompletionCount_0x3a                     = ??
             cfe5 81 03              CMPA       #0x3
-            cfe7 25 02              BCS        Jump_SkipPositionAdjustment
+            cfe7 25 02              BCS        Jump_SkipPositionAdjustment                   when the player has completed the game less
+                                                                                             than 3 times, it adjusts horizontal positions 
+                                                                                             of drops to be even. Otherwise X positions are
+                                                                                             unaffected, which (I think) means that drops are 
+                                                                                             closer to the sides of vines.
             cfe9 c4 fe              ANDB       #11111110b                                    ensure X position is even when in hard mode?
                              Jump_SkipPositionAdjustment                     XREF[1]:     cfe7(j)  
             cfeb a6 01              LDA        0x1,X                                         get the vertical position of the drops area
@@ -19913,10 +19944,10 @@
             cff3 cb 04              ADDB       #0x4
             cff5 bd d8 56           JSR        ComputeScreenLocationFromAAndB                undefined ComputeScreenLocationFromAAndB(void)
             cff8 1f 01              TFR        D,X
-            cffa a6 89 18 00        LDA        0x1800,X                                      load source pixel
+            cffa a6 89 18 00        LDA        DAT_1800,X                                    load source pixel
             cffe 8e d8 4a           LDX        #Drawing_PixelBits_d84a                       = 11000000b
             d001 e6 25              LDB        0x5,Y=>Drop1_X_0x201                          = ??
-            d003 c4 03              ANDB       #0x3                                          adjust horizontal position
+            d003 c4 03              ANDB       #0x3                                          figure out which bits in the byte to draw
             d005 a4 85              ANDA       B,X=>Drawing_PixelBits_d84a                   = 11000000b
             d007 bd c8 b9           JSR        FUN_c8b9                                      byte FUN_c8b9(byte param_1)
             d00a 27 02              BEQ        LAB_d00e
@@ -19929,27 +19960,27 @@
             d017 ed 2a              STD        0xa,Y=>Drop1_PreviousVideoPageDrawLocation_0  = ??
             d019 ce df 2a           LDU        #Data_DropSprites_0xdf2a
             d01c a6 25              LDA        0x5,Y=>Drop1_X_0x201                          = ??
-            d01e 84 03              ANDA       #0x3
-            d020 8e d0 31           LDX        #DAT_d031                                     = F0h
-            d023 e6 86              LDB        A,X=>DAT_d031                                 = F0h
-            d025 e7 2c              STB        0xc,Y=>Drop1_WhichSideToSpawn_0x208           = ??
-            d027 c6 0c              LDB        #0xc
+            d01e 84 03              ANDA       #0x3                                          figure out which drop sprite frame to  use
+            d020 8e d0 31           LDX        #Drop_CollisionMasks_0xd031                   = 11110000b
+            d023 e6 86              LDB        A,X=>Drop_CollisionMasks_0xd031               = 11110000b
+            d025 e7 2c              STB        0xc,Y=>Drop1_CollisionMask_0x208              store the offset into the drop sprite data
+            d027 c6 0c              LDB        #0xc                                          this is the size of each frame of drop sprites
             d029 3d                 MUL
-            d02a 33 cb              LEAU       D,U
-            d02c ef 26              STU        0x6,Y=>Drop1_SpriteData_0x202                 = ??
-            d02e 16 ff 7d           LBRA       LAB_cfae
-                             DAT_d031                                        XREF[2]:     UpdateAndDrawDrops:d020(*), 
+            d02a 33 cb              LEAU       D,U                                           figure out the address of the drop sprite frame to use
+            d02c ef 26              STU        0x6,Y=>Drop1_SpriteData_0x202                 store the drop sprite frame address
+            d02e 16 ff 7d           LBRA       Jump_DropIsWiggling
+                             Drop_CollisionMasks_0xd031                      XREF[2]:     UpdateAndDrawDrops:d020(*), 
                                                                                           UpdateAndDrawDrops:d023(*)  
-            d031 f0                 ??         F0h
-            d032 3c                 ??         3Ch    <
-            d033 0f                 ??         0Fh
-            d034 03                 ??         03h
+            d031 f0                 db         11110000b
+            d032 3c                 db         00111100b
+            d033 0f                 db         00001111b
+            d034 03                 db         00000011b
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             byte __stdcall ClearDrop(void)
+                             byte __stdcall EraseDropSpriteFromScreen(void)
              byte              A:1            <RETURN>
-                             ClearDrop                                       XREF[2]:     UpdateAndDrawDrops:cf95(c), 
+                             EraseDropSpriteFromScreen                       XREF[2]:     UpdateAndDrawDrops:cf95(c), 
                                                                                           UpdateAndDrawDrops:cfc2(c)  
             d035 ae 2a              LDX        0xa,Y                                         previous position
             d037 ee 26              LDU        0x6,Y                                         sprite data
@@ -20176,50 +20207,47 @@
                              **************************************************************
                              undefined __stdcall InitDrops(void)
              undefined         A:1            <RETURN>
-                             maybe inital drop setup
                              InitDrops                                       XREF[4]:     FUN_c3b3:c07c(c), 
                                                                                           FUN_c3b3:c168(c), 
                                                                                           FUN_c3b3:c66b(c), 
                                                                                           InitRoom_Maybe:ccfc(c)  
-            d11a 4f                 CLRA                                                     set param (0) to function call
-                                                                                             maybe to disable drops
-                             maybe drops initialization
+            d11a 4f                 CLRA                                                     Disable all the drops in memory
             d11b c6 0a              LDB        #10                                           num drops
-            d11d 8d 18              BSR        InitFirstByteOfEachDrop                       undefined InitFirstByteOfEachDrop(byte value, byte numDrops)
+            d11d 8d 18              BSR        SetFirstByteOfEachDrop                        undefined SetFirstByteOfEachDrop(byte value, byte numDrops)
+                             determine how many drops to init
             d11f 96 3a              LDA        <GameCompletionCount_0x3a                     = ??
-            d121 27 04              BEQ        JUMP_GameCompletionCount_is_ZERO              if A is 0 then do work, else 
-                                                                                             set B to 10 and skip
-                                                                                             Maybe on hard mode the game has 10 drops
-                                                                                             while easy mode only has 5
+            d121 27 04              BEQ        Jump_NormalDifficultyMode                     if completed the game at least once, we're 
+                                                                                             in hard mode. Init the full 10 drops 
+                                                                                             instead of 5. 
             d123 c6 0a              LDB        #10                                           if is zero, then do all 10 drops
-            d125 20 09              BRA        JUMP_d130
-                             JUMP_GameCompletionCount_is_ZERO                XREF[1]:     d121(j)  
+            d125 20 09              BRA        Jump_InitDrops
+                             Jump_NormalDifficultyMode                       XREF[1]:     d121(j)  
             d127 d6 39              LDB        <CurrentRoomNumber_0x39                       = ??
-            d129 c1 05              CMPB       #0x5                                          is less than 5? then put back to 5.
-                                                                                             why? don't know!
-            d12b 24 02              BCC        JUMP_d12f
-            d12d c6 05              LDB        #0x5                                          change this to limit the number of drops processed in a 
-                                                                                             room
-                             JUMP_d12f                                       XREF[1]:     d12b(j)  
-            d12f 5c                 INCB                                                     always increment B
-                             JUMP_d130                                       XREF[1]:     d125(j)  
-            d130 d7 3f              STB        <NumberOfDropsToProcess                       Store the current B count
-            d132 86 01              LDA        #0x1                                          maybe it's an enable flag
-            d134 8d 01              BSR        InitFirstByteOfEachDrop                       undefined InitFirstByteOfEachDrop(byte value, byte numDrops)
+            d129 c1 05              CMPB       #0x5
+            d12b 24 02              BCC        Jump_IncrementDropCount                       if our room number is 5 or greater, use that as
+                                                                                             the base number of drops to update. Then jump and 
+                                                                                             increment it.
+            d12d c6 05              LDB        #0x5                                          Rooms 0 to 5 have 5 drops going max
+                             Jump_IncrementDropCount                         XREF[1]:     d12b(j)  
+            d12f 5c                 INCB                                                     always increment drop count by 1
+                             Jump_InitDrops                                  XREF[1]:     d125(j)  
+            d130 d7 3f              STB        <NumberOfDropsToProcess_0x3f                  Store the current B count
+            d132 86 01              LDA        #0x1                                          indicate that the drop needs to be initialized
+            d134 8d 01              BSR        SetFirstByteOfEachDrop                        undefined SetFirstByteOfEachDrop(byte value, byte numDrops)
             d136 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall InitFirstByteOfEachDrop(byte value, 
+                             undefined __stdcall SetFirstByteOfEachDrop(byte value, b
              undefined         A:1            <RETURN>
              byte              A:1            value
              byte              B:1            numDrops
-                             InitFirstByteOfEachDrop                         XREF[2]:     InitDrops:d11d(c), 
+                             SetFirstByteOfEachDrop                          XREF[2]:     InitDrops:d11d(c), 
                                                                                           InitDrops:d134(c)  
-            d137 8e 01 ef           LDX        #DropDataBlock_0x1ef                          point X to this address. 
+            d137 8e 01 ef           LDX        #Drop0_CeilingWiggleTimer_0x1ef               point X to this address. 
                                                                                              Drop data block? 
                              Loop_NextDrop                                   XREF[1]:     d13f(j)  
-            d13a a7 84              STA        ,X=>DropDataBlock_0x1ef                       store A to address in X
+            d13a a7 84              STA        ,X=>Drop0_CeilingWiggleTimer_0x1ef            store A to address in X
             d13c 30 0d              LEAX       0xd,X                                         move x by 13 bytes
             d13e 5a                 DECB                                                     b--
             d13f 26 f9              BNE        Loop_NextDrop                                 loop while B is not zero

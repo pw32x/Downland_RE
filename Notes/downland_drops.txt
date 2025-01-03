@@ -1,0 +1,38 @@
+Each drop data is 13 bytes long.
+byte : description
+0: state / ceiling wiggle countdown 
+    values:
+    0: disabled
+    1: initialized but not running
+       will be initialized next update
+    0xA8 - 0x80: wiggling
+    0x7F: falling
+1-2: drop speed (0x200 falling, 
+		 toggles between 0x80 and
+		 0xff80 when jiggling to
+		 move up and down)
+3-4: y position (pixel + subpixel)
+5: x position (0 - 127)
+6-7: location of sprite in ram
+8-9: draw location in video page
+10-11 (a-b): previous frame draw location in video page
+12 (c): the collision mask of the bottom of the drop.
+        the mask is different depending on which frame
+        of the drop sprite it uses.
+
+Fun Facts:
+
+- when the player has completed the game once, all 10 drops are active.
+
+- when the player hasn't completed the game at least once, the number of
+drops is the room mumber + 1. Unless the room number is five or less,
+where the number of drops is 6.
+
+So, in other words
+room 0 to 5: 6 drops
+room 6 to 9: room number + 1 drops
+completed game at least once: always 10 drops
+
+- Drops wiggle for 40 frames. Wiggle time is constant. 
+
+- When the player has completed the game less than 3 times, it adjusts horizontal positions of drops to be even. Otherwise X positions are unaffected, which (I think) means that drops are closer to the sides of vines.
