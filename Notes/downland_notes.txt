@@ -63,13 +63,31 @@ Background Piece codes
 	18: blank area going left, maybe
 	19: blank area going down-right
 	
+Sprite Data Fun Facts
+
+	some animations are copied to ram, creating four copies
+	drops already have their four copies stored in rom	
+	splat and doors are copied to a dedicated work buffer on demand when needed to be drawn
+
+	
+Room Pickups Fun Facts
+
+	There are exactly five pick ups per room
+	The first two are always keys, the last three are treasures
+	treasures are randomly chosen
+
+		
 
 	
 Questions
 
 	how do the ball physics work?
+	
+	how does the ball restart when reaching the side of the screen?
+	
 	how do the bird physics work?
 
+	how do points work when picking up a treasure?
 
 	how does the player code flow?
 	what is the mysterious sprite data?	
@@ -78,12 +96,29 @@ Questions
 	how is detecting vertical ropes done?
 	how is detecting horizontal ropes done?
 	
+	where is the regen timer set?
 	
+	does the game wait for vsync on game loop?
 	
-how to limit the number of drops to 1?	
+How To	
 
-	Change d124 value from A (10) to 1. This will affect the title screen.
-	For game rooms, change the values d12a and d12e to 0.
+	How to change the game timer on start?
+		change memory location cbac to 0xFFFF
+		
+	how to change the game timer at runtime?
+		player 1 timers are located at 3e89
+	
+	How to limit the number of drops to 1?	
+	
+		For title screen, change d124 value from A (10) to 1. 
+		For game rooms, change the values d12a and d12e to 0.
 
 		
 		
+		
+		
+Ball
+
+	when hitting the ground a counter at 0x32 is set with a negative value
+		every frame the value goes up until it goes positive, then decrements
+		until 0 at which point it starts falling again

@@ -211,7 +211,7 @@
                                                                                           BigInitFunction_Maybe:c76e(*), 
                                                                                           BigInitFunction_Maybe:c7c7(*)  
             0031                    ??         ??
-                             Ball_SomeValueForGravity_Maybe_0x32             XREF[7]:     cabe(*), cb1f(*), cb23(*), 
+                             Ball_FallStateCounter_0x32                      XREF[7]:     cabe(*), cb1f(*), cb23(*), 
                                                                                           cb2e(*), cb39(*), cb90(*), 
                                                                                           InitRoom_Maybe:cd02(*)  
             0032                    ??         ??
@@ -1043,15 +1043,16 @@
                                                                                           UpdateObjectPhysics_Maybe:d897(W
                                                                                           DrawingOrClearingFunction:d8b7(R
             01b8                    dw         ??
-                             Ball_InitState_Maybe_0x1bb (01ba+1)             XREF[6,1]:   caba(R), cb8b(W), 
-                             Ball_InitState_Maybe_0x1ba                                   InitRoom_Maybe:ccff(W), 
+                             Ball_InitState_0x1ba                            XREF[6]:     caba(R), cb8b(W), 
+                                                                                          InitRoom_Maybe:ccff(W), 
                                                                                           InitBouncingBall:ce84(*), 
                                                                                           InitBouncingBall:ce87(W), 
-                                                                                          InitBouncingBall:ce90(W), 
-                                                                                          InitBouncingBall:ce87(W)  
-            01ba                    dw         ??                                            goes from 0, to 1, 2, FF, and 0 again
+                                                                                          InitBouncingBall:ce90(W)  
+            01ba                    db         ??                                            goes from 0, to 1, 2, FF, and 0 again
                                                                                              during lifetime
-                             Ball_Unused_Maybe_0x1bc
+                             Ball_Unused_Maybe_0x1bb                         XREF[1]:     InitBouncingBall:ce87(W)  
+            01bb                    ??         ??
+                             Ball_Unused2_Maybe_0x1bc
             01bc                    db         ??
                              Ball_SomeFallCounter_UsedOnce_0x1bd             XREF[2]:     cb05(R), cb0c(W)  
             01bd                    db         ??
@@ -1069,21 +1070,21 @@
                              12-13: previous video page destination 
                              14-15: previous sprite pointer
                              Ball_Physics_0x1bf                              XREF[12]:    FUN_c3b3:c1a0(*), 
-                             Ball_SpeedY_0x1bf                                            UpdateBall_Maybe:cab6(*), 
-                                                                                          caf5(R), cb03(W), cb1b(W), 
-                                                                                          cb2a(W), cb32(R), cb37(W), 
-                                                                                          cb3f(W), cb43(R), 
+                             Ball_SpeedY_0x1bf                                            UpdateBall:cab6(*), caf5(R), 
+                                                                                          cb03(W), cb1b(W), cb2a(W), 
+                                                                                          cb32(R), cb37(W), cb3f(W), 
+                                                                                          cb43(R), 
                                                                                           InitBouncingBall:ce80(*), 
                                                                                           InitBouncingBall:ce9d(W)  
             01bf                    dw         ??
                              Ball_SpeedX_0x1c1                               XREF[2]:     cb49(R), 
                                                                                           InitBouncingBall:ce99(W)  
             01c1                    dw         ??
-                             Ball_Y                                          XREF[4]:     FUN_c3b3:c2b0(R), cb41(R), 
+                             Ball_Y_0x1c3                                    XREF[4]:     FUN_c3b3:c2b0(R), cb41(R), 
                                                                                           cb45(W), 
                                                                                           InitBouncingBall:cea2(W)  
             01c3                    dw         ??
-                             Ball_X                                          XREF[7]:     FUN_c3b3:c2b5(R), cac7(R), 
+                             Ball_X_0x1c5                                    XREF[7]:     FUN_c3b3:c2b5(R), cac7(R), 
                                                                                           cb47(R), cb4b(W), cb50(R), 
                                                                                           cb97(R), 
                                                                                           InitBouncingBall:cea4(W)  
@@ -17552,8 +17553,8 @@
                                                                                              undefined UpdateAndDrawDrops(void)
             c1db 86 02              LDA        #00000010b
             c1dd b7 ff 20           STA        PIA1_A_DATA_REG__FF20
-            c1e0 bd ca b6           JSR        UpdateBall_Maybe                              = ??
-                                                                                             undefined UpdateBall_Maybe(void)
+            c1e0 bd ca b6           JSR        UpdateBall                                    = ??
+                                                                                             undefined UpdateBall(void)
             c1e3 bd cb c3           JSR        UpdateRoomTimers                              = ??
                                                                                              undefined UpdateRoomTimers(void)
                              Loop_WaitForInterrupt                           XREF[1]:     c1f4(j)  
@@ -17722,9 +17723,9 @@
             c2aa 97 43              STA        <Object_CollisionHeight_0x43                  = ??
             c2ac 86 08              LDA        #0x8
             c2ae 97 44              STA        <Object_CollisionWidth_0x44                   = ??
-            c2b0 b6 01 c3           LDA        Ball_Y                                        = ??
+            c2b0 b6 01 c3           LDA        Ball_Y_0x1c3                                  = ??
             c2b3 97 41              STA        <Object_CollisionY_0x41                       = ??
-            c2b5 b6 01 c5           LDA        Ball_X                                        = ??
+            c2b5 b6 01 c5           LDA        Ball_X_0x1c5                                  = ??
             c2b8 97 42              STA        <Object_CollisionX_0x42                       = ??
             c2ba bd c3 7c           JSR        TestPlayerObjectCollision                     undefined TestPlayerObjectCollision(void)
             c2bd 26 1e              BNE        Jump_CollidesWithObjectThatKills
@@ -18096,7 +18097,7 @@
             c50f 00 f0              dw         0000000011110000b
             c511 00 3c              dw         0000000000111100b
             c513 0f 00              dw         0000111100000000b
-                             SomeTenBitPatternTable                          XREF[2]:     cb69(*), cb6c(*)  
+                             Ball_WideCollisionMask                          XREF[2]:     cb69(*), cb6c(*)  
             c515 3f f0              dw         0011111111110000b
             c517 0f fc              dw         0000111111111100b
             c519 03 ff              dw         0000001111111111b
@@ -18967,37 +18968,44 @@
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall UpdateBall_Maybe(void)
+                             undefined __stdcall UpdateBall(void)
              undefined         A:1            <RETURN>
-                             UpdateBall_Maybe                                XREF[1]:     FUN_c3b3:c1e0(c)  
+                             UpdateBall                                      XREF[1]:     FUN_c3b3:c1e0(c)  
             cab6 10 8e 01 bf        LDY        #Ball_Physics_0x1bf                           = ??
-            caba a6 3b              LDA        -0x5,Y=>Ball_InitState_Maybe_0x1ba            needs to be initialized?
+            caba a6 3b              LDA        -0x5,Y=>Ball_InitState_0x1ba                  needs to be initialized?
             cabc 27 f4              BEQ        Jump_ToBallInit                               it does
-            cabe 96 32              LDA        <Ball_SomeValueForGravity_Maybe_0x32          = ??
+            cabe 96 32              LDA        <Ball_FallStateCounter_0x32                   = ??
             cac0 2e 70              BGT        LAB_cb32
-            cac2 2b 5f              BMI        LAB_cb23
+            cac2 2b 5f              BMI        Jump_HandleBallOnGround
+                             ball is falling
             cac4 8e c5 09           LDX        #SomeKindOfHorizontalBitOffsetTable
-            cac7 e6 26              LDB        0x6,Y=>Ball_X                                 = ??
-            cac9 c4 03              ANDB       #0x3
+            cac7 e6 26              LDB        0x6,Y=>Ball_X_0x1c5                           = ??
+            cac9 c4 03              ANDB       #0x3                                          figure out which two bits on the byte it affects.
             cacb 1f 98              TFR        B,A
             cacd e6 85              LDB        B,X=>SomeKindOfHorizontalBitOffsetTable
             cacf ae 28              LDX        0x8,Y=>Ball_VideoPageDrawPosition_0x1c7       = ??
-            cad1 30 89 01 00        LEAX       0x100,X
-            cad5 3a                 ABX
-            cad6 48                 LSLA
-            cad7 ce cb 10           LDU        #SomeBallData                                 = 03h
-            cada ec c6              LDD        A,U=>SomeBallData                             = 03h
+            cad1 30 89 01 00        LEAX       0x100,X                                       move X so that it's 8 pixels underneath
+                                                                                             the ball. This is the ground sensor
+            cad5 3a                 ABX                                                      add the offset thingie to X. Sometimes 1,
+                                                                                             mostly 0.
+            cad6 48                 LSLA                                                     use A to find the right ball collsion mask in the table
+                                                                                             the table is two bytes per item
+            cad7 ce cb 10           LDU        #Ball_GroundCollisionMaskData                 = 0000001100000000b
+            cada ec c6              LDD        A,U=>Ball_GroundCollisionMaskData             = 0000001100000000b
+                             Binary and A & B with the terrain underneath
+                             the ball. If it's zero, then we haven't hit
+                             anything.
             cadc a4 89 18 00        ANDA       DAT_1800,X                                    = ??
             cae0 e4 89 18 01        ANDB       DAT_1801,X                                    = ??
             cae4 10 93 1b           CMPD       <ZeroValue                                    = ??
-            cae7 27 0c              BEQ        LAB_caf5
+            cae7 27 0c              BEQ        Jump_NoBallGroundHit
             cae9 34 04              PSHS        B
             caeb 8d ae              BSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
             caed 35 02              PULS        A
-            caef 26 27              BNE        LAB_cb18
-            caf1 8d a8              BSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
-            caf3 26 23              BNE        LAB_cb18
-                             LAB_caf5                                        XREF[1]:     cae7(j)  
+            caef 26 27              BNE        Jump_TheBallHasHitTheGround
+            caf1 8d a8              BSR        TerrainCollisionTest_Maybe                    unsure why we're testing twice here
+            caf3 26 23              BNE        Jump_TheBallHasHitTheGround
+                             Jump_NoBallGroundHit                            XREF[1]:     cae7(j)  
             caf5 ec a4              LDD        ,Y=>Ball_SpeedY_0x1bf                         = ??
             caf7 c3 00 12           ADDD       #0x12
             cafa 10 83 01 00        CMPD       #0x100                                        0x100 (256) maximum speed?
@@ -19014,47 +19022,51 @@
             cb0b 4c                 INCA
             cb0c a7 3e              STA        -0x2,Y=>Ball_SomeFallCounter_UsedOnce_0x1bd   = ??
                              Jump_SkipIncrement_0x1db                        XREF[1]:     cb09(j)  
-            cb0e 20 31              BRA        LAB_cb41
-                             SomeBallData                                    XREF[2]:     cad7(*), cada(*)  
-            cb10 03                 ??         03h
-            cb11 00                 ??         00h
-            cb12 00                 ??         00h
-            cb13 c0                 ??         C0h
-            cb14 00                 ??         00h
-            cb15 30                 ??         30h    0
-            cb16 0c                 ??         0Ch
-            cb17 00                 ??         00h
-                             LAB_cb18                                        XREF[2]:     caef(j), caf3(j)  
+            cb0e 20 31              BRA        Jump_UpdateBallPosition
+                             Ball_GroundCollisionMaskData                    XREF[2]:     cad7(*), cada(*)  
+            cb10 03 00              dw         0000001100000000b
+            cb12 00 c0              dw         0000000011000000b
+            cb14 00 30              dw         0000000000110000b
+            cb16 0c 00              dw         0000110000000000b
+                             Jump_TheBallHasHitTheGround                     XREF[2]:     caef(j), caf3(j)  
             cb18 cc ff 00           LDD        #0xff00
             cb1b ed a4              STD        ,Y=>Ball_SpeedY_0x1bf                         = ??
-            cb1d 86 fb              LDA        #0xfb
-            cb1f 97 32              STA        <Ball_SomeValueForGravity_Maybe_0x32          = ??
-            cb21 20 6a              BRA        LAB_cb8d
-                             LAB_cb23                                        XREF[1]:     cac2(j)  
-            cb23 0c 32              INC        <Ball_SomeValueForGravity_Maybe_0x32          = ??
-            cb25 2b 66              BMI        LAB_cb8d
+            cb1d 86 fb              LDA        #0xfb                                         set this value so that the ball sticks
+                                                                                             to the ground a little, while looking 
+                                                                                             squished
+            cb1f 97 32              STA        <Ball_FallStateCounter_0x32                   = ??
+            cb21 20 6a              BRA        Jump_SetupBallSprite
+                             Jump_HandleBallOnGround                         XREF[1]:     cac2(j)  
+            cb23 0c 32              INC        <Ball_FallStateCounter_0x32                   the value will roll up to 0 and then will
+                                                                                             setup the ball to jump up
+            cb25 2b 66              BMI        Jump_SetupBallSprite                          the counter is negative, so stay at this 
+                                                                                             position for now. don't update physics
+                             the fall state counter is now positive. 
+                             setup the ball to jump up
             cb27 cc ff 00           LDD        #0xff00
             cb2a ed a4              STD        ,Y=>Ball_SpeedY_0x1bf                         = ??
             cb2c 86 0a              LDA        #0xa
-            cb2e 97 32              STA        <Ball_SomeValueForGravity_Maybe_0x32          = ??
-            cb30 20 0f              BRA        LAB_cb41
+            cb2e 97 32              STA        <Ball_FallStateCounter_0x32                   setup so we move up at least 0xA number of times
+            cb30 20 0f              BRA        Jump_UpdateBallPosition
                              LAB_cb32                                        XREF[1]:     cac0(j)  
             cb32 ec a4              LDD        ,Y=>Ball_SpeedY_0x1bf                         = ??
             cb34 c3 00 0a           ADDD       #0xa                                          add gravity?
             cb37 ed a4              STD        ,Y=>Ball_SpeedY_0x1bf                         = ??
-            cb39 0a 32              DEC        <Ball_SomeValueForGravity_Maybe_0x32          = ??
-            cb3b 26 04              BNE        LAB_cb41
+            cb39 0a 32              DEC        <Ball_FallStateCounter_0x32                   = ??
+            cb3b 26 04              BNE        Jump_UpdateBallPosition
             cb3d dc 1b              LDD        <ZeroValue                                    = ??
             cb3f ed a4              STD        ,Y=>Ball_SpeedY_0x1bf                         set speed y to 0
-                             LAB_cb41                                        XREF[3]:     cb0e(j), cb30(j), cb3b(j)  
-            cb41 ec 24              LDD        0x4,Y=>Ball_Y                                 = ??
+                             Jump_UpdateBallPosition                         XREF[3]:     cb0e(j), cb30(j), cb3b(j)  
+            cb41 ec 24              LDD        0x4,Y=>Ball_Y_0x1c3                           = ??
             cb43 e3 a4              ADDD       ,Y=>Ball_SpeedY_0x1bf                         = ??
-            cb45 ed 24              STD        0x4,Y=>Ball_Y                                 = ??
-            cb47 ec 26              LDD        0x6,Y=>Ball_X                                 = ??
+            cb45 ed 24              STD        0x4,Y=>Ball_Y_0x1c3                           = ??
+            cb47 ec 26              LDD        0x6,Y=>Ball_X_0x1c5                           = ??
             cb49 e3 22              ADDD       0x2,Y=>Ball_SpeedX_0x1c1                      = ??
-            cb4b ed 26              STD        0x6,Y=>Ball_X                                 = ??
+            cb4b ed 26              STD        0x6,Y=>Ball_X_0x1c5                           = ??
+                             terrain collision checking
+                             possibly for when running into a wall
             cb4d 8e c5 09           LDX        #SomeKindOfHorizontalBitOffsetTable
-            cb50 e6 26              LDB        0x6,Y=>Ball_X                                 = ??
+            cb50 e6 26              LDB        0x6,Y=>Ball_X_0x1c5                           = ??
             cb52 c4 03              ANDB       #0x3
             cb54 1f 98              TFR        B,A
             cb56 e6 85              LDB        B,X=>SomeKindOfHorizontalBitOffsetTable
@@ -19063,38 +19075,43 @@
             cb5d ed 28              STD        0x8,Y=>Ball_VideoPageDrawPosition_0x1c7       = ??
             cb5f 1f 01              TFR        D,X
             cb61 35 06              PULS        A B
-            cb63 30 89 00 a0        LEAX       0xa0,X
+            cb63 30 89 00 a0        LEAX       0xa0,X                                        sensor 5 pixels underneath
             cb67 3a                 ABX
             cb68 48                 LSLA
-            cb69 ce c5 15           LDU        #SomeTenBitPatternTable                       = 0011111111110000b
-            cb6c ec c6              LDD        A,U=>SomeTenBitPatternTable                   = 0011111111110000b
+            cb69 ce c5 15           LDU        #Ball_WideCollisionMask                       = 0011111111110000b
+            cb6c ec c6              LDD        A,U=>Ball_WideCollisionMask                   = 0011111111110000b
             cb6e a4 89 18 00        ANDA       0x1800,X
             cb72 e4 89 18 01        ANDB       0x1801,X
             cb76 10 93 1b           CMPD       <ZeroValue                                    = ??
-            cb79 27 12              BEQ        LAB_cb8d
+            cb79 27 12              BEQ        Jump_SetupBallSprite                          no collision, so just draw the sprite
             cb7b 34 04              PSHS        B
             cb7d bd ca 9b           JSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
             cb80 35 02              PULS        A
-            cb82 26 05              BNE        Jump_SetBallStateToFF
+            cb82 26 05              BNE        Jump_ResetBallStateToFF
             cb84 bd ca 9b           JSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
-            cb87 27 04              BEQ        LAB_cb8d
-                             Jump_SetBallStateToFF                           XREF[1]:     cb82(j)  
+            cb87 27 04              BEQ        Jump_SetupBallSprite
+                             Jump_ResetBallStateToFF                         XREF[1]:     cb82(j)  
             cb89 86 ff              LDA        #0xff
-            cb8b a7 3b              STA        -0x5,Y=>Ball_InitState_Maybe_0x1ba            = ??
-                             LAB_cb8d                                        XREF[4]:     cb21(j), cb25(j), cb79(j), 
+            cb8b a7 3b              STA        -0x5,Y=>Ball_InitState_0x1ba                  The ball will be reinitialized
+                             Jump_SetupBallSprite                            XREF[4]:     cb21(j), cb25(j), cb79(j), 
                                                                                           cb87(j)  
-            cb8d ce 3d d8           LDU        #0x3dd8
-            cb90 96 32              LDA        <Ball_SomeValueForGravity_Maybe_0x32          = ??
-            cb92 2a 03              BPL        LAB_cb97
-            cb94 33 c8 60           LEAU       0x60,U                                        change sprite?
-                             LAB_cb97                                        XREF[1]:     cb92(j)  
-            cb97 a6 26              LDA        0x6,Y=>Ball_X                                 = ??
+            cb8d ce 3d d8           LDU        #0x3dd8                                       the address of the ball sprites in memory
+            cb90 96 32              LDA        <Ball_FallStateCounter_0x32                   = ??
+            cb92 2a 03              BPL        Jump_SkipSetSquishedBallSprite
+            cb94 33 c8 60           LEAU       0x60,U                                        change to the squished ball sprite
+                             Jump_SkipSetSquishedBallSprite                  XREF[1]:     cb92(j)  
+            cb97 a6 26              LDA        0x6,Y=>Ball_X_0x1c5                           = ??
+                             figure out which ball sprite to use
+                             depending on x position
             cb99 84 03              ANDA       #0x3
-            cb9b c6 18              LDB        #0x18
+                             clamp X value from 0 to 3
+            cb9b c6 18              LDB        #0x18                                         size of a ball sprite in ram (3 bytes for 8 lines)
             cb9d 3d                 MUL
-            cb9e 33 cb              LEAU       D,U
-            cba0 ef 2a              STU        0xa,Y=>Ball_SpriteData_0xc1c9                 = ??
-            cba2 0c 49              INC        <Ball_IsActive_0x49                           = ??
+            cb9e 33 cb              LEAU       D,U                                           Move U to the correct sprite for 
+                                                                                             the X position with the offset
+                                                                                             computed in D
+            cba0 ef 2a              STU        0xa,Y=>Ball_SpriteData_0xc1c9                 store the sprite address to the ball data
+            cba2 0c 49              INC        <Ball_IsActive_0x49                           we are definitely active
             cba4 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -19339,8 +19356,8 @@
             ccf7 a7 3b              STA        -0x5,Y
             ccf9 bd c5 25           JSR        ClearSpeedToZero                              undefined ClearSpeedToZero(void)
             ccfc bd d1 1a           JSR        InitDrops                                     undefined InitDrops(void)
-            ccff 7f 01 ba           CLR        Ball_InitState_Maybe_0x1ba                    = ??
-            cd02 0f 32              CLR        <Ball_SomeValueForGravity_Maybe_0x32          = ??
+            ccff 7f 01 ba           CLR        Ball_InitState_0x1ba                          = ??
+            cd02 0f 32              CLR        <Ball_FallStateCounter_0x32                   = ??
             cd04 7f 01 cf           CLR        TimerHasHitZero_Maybe                         = ??
             cd07 9e 3b              LDX        <RoomGraphicsAndDoorDataAddress_0x3b          = ??
             cd09 96 39              LDA        <CurrentRoomNumber_0x39                       = ??
@@ -19639,21 +19656,24 @@
                              Check whether we need to init the ball for the level.
                              InitBouncingBall                                XREF[1]:     cab2(j)  
             ce75 8e ce ac           LDX        #RoomsWithBouncingBall
-                             Loop_WhileNotMatchingCurrentRoomNumber          XREF[1]:     ce7e(j)  
+                             Loop_SearchForRoomNumber                        XREF[1]:     ce7e(j)  
             ce78 a6 80              LDA        ,X+=>RoomsWithBouncingBall                    = 02h
-            ce7a 2b 2f              BMI        Jump_WeHitFFSoWereDone
+            ce7a 2b 2f              BMI        Jump_NoBallForThisRoom
             ce7c 91 39              CMPA       <CurrentRoomNumber_0x39                       = ??
-            ce7e 26 f8              BNE        Loop_WhileNotMatchingCurrentRoomNumber
+            ce7e 26 f8              BNE        Loop_SearchForRoomNumber
+                             we found that the current room number 
+                             uses the bouncing ball. 
+                             start initializing it
             ce80 10 8e 01 bf        LDY        #Ball_Physics_0x1bf                           = ??
                              Clear the ball data
-            ce84 8e 01 ba           LDX        #Ball_InitState_Maybe_0x1ba                   = ??
+            ce84 8e 01 ba           LDX        #Ball_InitState_0x1ba                         = ??
                              Loop_ClearBallData                              XREF[1]:     ce8c(j)  
-            ce87 6f 80              CLR        ,X+=>Ball_InitState_Maybe_0x1ba               = ??
+            ce87 6f 80              CLR        ,X+=>Ball_InitState_0x1ba                     = ??
             ce89 8c 01 cf           CMPX       #EndOfBallData                                end of ball data
             ce8c 26 f9              BNE        Loop_ClearBallData
                              Init the ball data
             ce8e 86 01              LDA        #0x1
-            ce90 a7 3b              STA        -0x5,Y=>Ball_InitState_Maybe_0x1ba            init ball state to 1
+            ce90 a7 3b              STA        -0x5,Y=>Ball_InitState_0x1ba                  init ball state to 1
             ce92 86 08              LDA        #0x8
             ce94 a7 3f              STA        -0x1,Y=>Ball_NumRowsInSpriteSetTo8_0x1be      = ??
             ce96 cc ff a8           LDD        #0xffa8                                       horizontal speed, always go the left
@@ -19662,11 +19682,11 @@
             ce9d ed a4              STD        ,Y=>Ball_SpeedY_0x1bf                         = ??
             ce9f cc 74 65           LDD        #0x7465                                       hardcoded init position -  Y: 116, X: 101
                                                                                              same start position for every level
-            cea2 a7 24              STA        0x4,Y=>Ball_Y                                 = ??
-            cea4 e7 26              STB        0x6,Y=>Ball_X                                 = ??
+            cea2 a7 24              STA        0x4,Y=>Ball_Y_0x1c3                           = ??
+            cea4 e7 26              STB        0x6,Y=>Ball_X_0x1c5                           = ??
             cea6 bd d8 52           JSR        LoadPosInYAndComputeScreenPos                 undefined LoadPosInYAndComputeScreenPos(void)
             cea9 ed 28              STD        0x8,Y=>Ball_VideoPageDrawPosition_0x1c7       = ??
-                             Jump_WeHitFFSoWereDone                          XREF[1]:     ce7a(j)  
+                             Jump_NoBallForThisRoom                          XREF[1]:     ce7a(j)  
             ceab 39                 RTS
                              RoomsWithBouncingBall                           XREF[2]:     InitBouncingBall:ce75(*), 
                                                                                           InitBouncingBall:ce78(R)  
