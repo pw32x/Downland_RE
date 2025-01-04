@@ -79,7 +79,7 @@
                                                                                           DrawHorizontalSegment:d7db(*), 
                                                                                           DrawVerticalSegment:d7e8(*), 
                                                                                           DrawVerticalSegment:d7f4(*), 
-                                                                                          UpdateObjectPhysics_Maybe:d888(*
+                                                                                          UpdateObjectPhysics:d888(*)  
             001d                    ??         ??
                              DrawSegment_SecondaryAxisSubpixelInc_0x1e       XREF[10]:    DrawBackgroundPiece:d766(*), 
                                                                                           DrawSegment_MovePosUpAndRight:d8
@@ -90,7 +90,7 @@
                                                                                           DrawSegment_MovePosLeftAndDown:d
                                                                                           DrawSegment_MovePosLeftAndUp:d81
                                                                                           DrawSegment_MovePosUpAndLeft:d82
-                                                                                          UpdateObjectPhysics_Maybe:d884(*
+                                                                                          UpdateObjectPhysics:d884(*)  
             001e                    ??         ??
                              DrawSegmentLine_SubPixelOffset_0x1f             XREF[1]:     DrawBackgroundPiece:d76a(*)  
             001f                    ??         ??
@@ -99,7 +99,7 @@
                                                                                           d6bb(*), d6c2(*), d73d(*), 
                                                                                           d748(*), d759(*), d75f(*), 
                                                                                           DrawPixelWithCrtArtifacts:d836(*
-                                                                                          UpdateObjectPhysics_Maybe:d880(*
+                                                                                          UpdateObjectPhysics:d880(*)  
             0020                    ??         ??
                              DrawSegment_CurrentScreenYXPosition_0x21        XREF[9]:     DrawBackground:d255(*), 
                              DrawSegment_CurrentScreenY_0x21                              DrawHorizontalSegment:d7cd(*), 
@@ -109,7 +109,7 @@
                                                                                           DrawSegment_MovePosDownAndLeft:d
                                                                                           DrawSegment_MovePosUpAndLeft:d82
                                                                                           DrawPixelWithCrtArtifacts:d827(*
-                                                                                          UpdateObjectPhysics_Maybe:d87e(*
+                                                                                          UpdateObjectPhysics:d87e(*)  
             0021                    ??         ??
                              DrawSegment_CurrentScreenX_0x22                 XREF[7]:     DrawVerticalSegment:d7e6(*), 
                                                                                           DrawVerticalSegment:d7fa(*), 
@@ -897,9 +897,9 @@
                              Player_SomeGameState_0x1a5                      XREF[6]:     FUN_c3b3:c3c1(R), 
                                                                                           FUN_c3b3:c6a7(RW), 
                                                                                           InitPlayerSomething:ce6e(W), 
-                                                                                          UpdateObjectPhysics_Maybe:d860(R
-                                                                                          UpdateObjectPhysics_Maybe:d86c(R
-                                                                                          UpdateObjectPhysics_Maybe:d8b3(W
+                                                                                          UpdateObjectPhysics:d860(R), 
+                                                                                          UpdateObjectPhysics:d86c(RW), 
+                                                                                          UpdateObjectPhysics:d8b3(W)  
             01a5                    db         ??                                            0: entering room
                                                                                              1: playing in room
                                                                                              then increments every time the player dies.
@@ -950,7 +950,7 @@
                                                                                           BigInitFunction_Maybe:c701(R), 
                                                                                           PlayerSpriteDrawFunction_Maybe:c
                                                                                           InitPlayerSomething:ce72(W), 
-                                                                                          UpdateObjectPhysics_Maybe:d899(R
+                                                                                          UpdateObjectPhysics:d899(R), 
                                                                                           DrawingOrClearingFunction:d8b9(R
             01a9                    db         ??
                              Player Physics Data
@@ -981,7 +981,7 @@
                                                                                           Jump_IsAlreadyClimbing:c8f5(W), 
                                                                                           Jump_IsAlreadyClimbing:c8f9(R), 
                                                                                           InitPlayerSomething:ce68(*), 
-                                                                                          UpdateObjectPhysics_Maybe:d86e(*
+                                                                                          UpdateObjectPhysics:d86e(*), 
                                                                                           [more]
             01aa                    dw         ??
                              Player_SpeedX_0x1ac                             XREF[10]:    FUN_c3b3:c4dc(R), 
@@ -1002,7 +1002,7 @@
                                                                                           Jump_IsAlreadyClimbing:c8fb(W), 
                                                                                           Jump_IsAlreadyClimbing:c909(R), 
                                                                                           Jump_IsAlreadyClimbing:c919(R), 
-                                                                                          UpdateObjectPhysics_Maybe:d87c(R
+                                                                                          UpdateObjectPhysics:d87c(R)  
             01ae                    dw         ??
                              PlayerX_0x1b0                                   XREF[16]:    TestPlayerObjectCollision:c395(R
                                                                                           TestPlayerObjectCollision:c3a5(R
@@ -1019,28 +1019,28 @@
                                                                                           Jump_IsAlreadyClimbing:c961(W), 
                                                                                           Jump_IsAlreadyClimbing:c999(R), 
                                                                                           PlayerSpriteDrawFunction_Maybe:c
-                                                                                          UpdateObjectPhysics_Maybe:d878(R
+                                                                                          UpdateObjectPhysics:d878(R)  
             01b0                    dw         ??
                              Player_VideoPageDrawDestination_0x1b2           XREF[6]:     BigInitFunction_Maybe:c6ff(R), 
                                                                                           Jump_IsAlreadyClimbing:c931(W), 
                                                                                           Jump_IsAlreadyClimbing:c97d(W), 
                                                                                           PlayerSpriteDrawFunction_Maybe:c
                                                                                           PlayerSpriteDrawFunction_Maybe:c
-                                                                                          UpdateObjectPhysics_Maybe:d891(R
+                                                                                          UpdateObjectPhysics:d891(R)  
             01b2                    dw         ??
                              Player_SpritePointer_0x1b4                      XREF[2]:     PlayerSpriteDrawFunction_Maybe:c
-                                                                                          UpdateObjectPhysics_Maybe:d895(R
+                                                                                          UpdateObjectPhysics:d895(R)  
             01b4                    dw         ??
                              PlayerY_PreviousVideoPageDrawPosition_0x1b6     XREF[6]:     FUN_c3b3:c3fe(R), 
                                                                                           FUN_c3b3:c455(R), 
                                                                                           PlayerSpriteDrawFunction_Maybe:c
                                                                                           PlayerSpriteDrawFunction_Maybe:c
-                                                                                          UpdateObjectPhysics_Maybe:d893(W
+                                                                                          UpdateObjectPhysics:d893(W), 
                                                                                           DrawingOrClearingFunction:d8b5(R
             01b6                    dw         ??
                              Player_PreviousSpritePointer_0x1b8              XREF[4]:     PlayerSpriteDrawFunction_Maybe:c
                                                                                           PlayerSpriteDrawFunction_Maybe:c
-                                                                                          UpdateObjectPhysics_Maybe:d897(W
+                                                                                          UpdateObjectPhysics:d897(W), 
                                                                                           DrawingOrClearingFunction:d8b7(R
             01b8                    dw         ??
                              Ball_InitState_0x1ba                            XREF[6]:     caba(R), cb8b(W), 
@@ -1054,7 +1054,7 @@
             01bb                    ??         ??
                              Ball_Unused2_Maybe_0x1bc
             01bc                    db         ??
-                             Ball_SomeFallCounter_UsedOnce_0x1bd             XREF[2]:     cb05(R), cb0c(W)  
+                             Ball_FallCounter_UselessMaybe_0x1bd             XREF[2]:     cb05(R), cb0c(W)  
             01bd                    db         ??
                              Ball_NumRowsInSpriteSetTo8_0x1be                XREF[1]:     InitBouncingBall:ce94(W)  
             01be                    db         ??
@@ -17509,8 +17509,8 @@
             c189 27 09              BEQ        Jump_SkipPlayerUpdate
             c18b 0f 48              CLR        <Player_IsMoving_Maybe_0x48                   = ??
             c18d 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     = ??
-            c191 bd d8 60           JSR        UpdateObjectPhysics_Maybe                     = ??
-                                                                                             undefined UpdateObjectPhysics_Maybe(void)
+            c191 bd d8 60           JSR        UpdateObjectPhysics                           = ??
+                                                                                             undefined UpdateObjectPhysics(void)
                              Jump_SkipPlayerUpdate                           XREF[1]:     c189(j)  
             c194 bd cc b1           JSR        FUN_ccb1                                      = ??
                                                                                              undefined FUN_ccb1()
@@ -17520,8 +17520,8 @@
             c19c 27 09              BEQ        Jump_SkipBallUpdate
             c19e 0f 49              CLR        <Ball_IsActive_0x49                           = ??
             c1a0 10 8e 01 bf        LDY        #Ball_Physics_0x1bf                           = ??
-            c1a4 bd d8 60           JSR        UpdateObjectPhysics_Maybe                     = ??
-                                                                                             undefined UpdateObjectPhysics_Maybe(void)
+            c1a4 bd d8 60           JSR        UpdateObjectPhysics                           = ??
+                                                                                             undefined UpdateObjectPhysics(void)
                              Jump_SkipBallUpdate                             XREF[1]:     c19c(j)  
             c1a7 8e ff 00           LDX        #PIA0_A_DATA_REG__FF00
             c1aa 86 fb              LDA        #0xfb
@@ -17800,7 +17800,7 @@
             c345 cc 12 80           LDD        #0x1280                                       setup A and B parameters for pickup sound
             c348 8d 15              BSR        PlaySound                                     undefined PlaySound(undefined A, undefined B)
             c34a 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     = ??
-            c34e 7e d8 60           JMP        UpdateObjectPhysics_Maybe
+            c34e 7e d8 60           JMP        UpdateObjectPhysics
                              -- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
                              **************************************************************
                              * Clears the sprite graphics from page 0                     *
@@ -18975,7 +18975,7 @@
             caba a6 3b              LDA        -0x5,Y=>Ball_InitState_0x1ba                  needs to be initialized?
             cabc 27 f4              BEQ        Jump_ToBallInit                               it does
             cabe 96 32              LDA        <Ball_FallStateCounter_0x32                   = ??
-            cac0 2e 70              BGT        LAB_cb32
+            cac0 2e 70              BGT        Jump_BallJumpingUp
             cac2 2b 5f              BMI        Jump_HandleBallOnGround
                              ball is falling
             cac4 8e c5 09           LDX        #SomeKindOfHorizontalBitOffsetTable
@@ -19016,12 +19016,14 @@
                              **************************************************************
                              Jump_SkipFallSpeedClamp                         XREF[1]:     cafe(j)  
             cb03 ed a4              STD        ,Y=>Ball_SpeedY_0x1bf                         = ??
-            cb05 a6 3e              LDA        -0x2,Y=>Ball_SomeFallCounter_UsedOnce_0x1bd   = ??
+                             Increment a value up to A, but I don't know what
+                             this is for.
+            cb05 a6 3e              LDA        -0x2,Y=>Ball_FallCounter_UselessMaybe_0x1bd   = ??
             cb07 81 0a              CMPA       #0xa
-            cb09 24 03              BCC        Jump_SkipIncrement_0x1db
+            cb09 24 03              BCC        Jump_SkipFallCounterIncrement
             cb0b 4c                 INCA
-            cb0c a7 3e              STA        -0x2,Y=>Ball_SomeFallCounter_UsedOnce_0x1bd   = ??
-                             Jump_SkipIncrement_0x1db                        XREF[1]:     cb09(j)  
+            cb0c a7 3e              STA        -0x2,Y=>Ball_FallCounter_UselessMaybe_0x1bd   = ??
+                             Jump_SkipFallCounterIncrement                   XREF[1]:     cb09(j)  
             cb0e 20 31              BRA        Jump_UpdateBallPosition
                              Ball_GroundCollisionMaskData                    XREF[2]:     cad7(*), cada(*)  
             cb10 03 00              dw         0000001100000000b
@@ -19048,11 +19050,12 @@
             cb2c 86 0a              LDA        #0xa
             cb2e 97 32              STA        <Ball_FallStateCounter_0x32                   setup so we move up at least 0xA number of times
             cb30 20 0f              BRA        Jump_UpdateBallPosition
-                             LAB_cb32                                        XREF[1]:     cac0(j)  
+                             Jump_BallJumpingUp                              XREF[1]:     cac0(j)  
             cb32 ec a4              LDD        ,Y=>Ball_SpeedY_0x1bf                         = ??
-            cb34 c3 00 0a           ADDD       #0xa                                          add gravity?
+            cb34 c3 00 0a           ADDD       #0xa                                          add a bit of gravity
             cb37 ed a4              STD        ,Y=>Ball_SpeedY_0x1bf                         = ??
-            cb39 0a 32              DEC        <Ball_FallStateCounter_0x32                   = ??
+            cb39 0a 32              DEC        <Ball_FallStateCounter_0x32                   we're only falling for a limited number of steps
+                             if the fall state counter is 0, then stop going upwards.
             cb3b 26 04              BNE        Jump_UpdateBallPosition
             cb3d dc 1b              LDD        <ZeroValue                                    = ??
             cb3f ed a4              STD        ,Y=>Ball_SpeedY_0x1bf                         set speed y to 0
@@ -19091,7 +19094,8 @@
             cb84 bd ca 9b           JSR        TerrainCollisionTest_Maybe                    byte TerrainCollisionTest_Maybe(byte A)
             cb87 27 04              BEQ        Jump_SetupBallSprite
                              Jump_ResetBallStateToFF                         XREF[1]:     cb82(j)  
-            cb89 86 ff              LDA        #0xff
+            cb89 86 ff              LDA        #0xff                                         Set to FF. This will be reset by the next call
+                                                                                             to UpdateObjectPhysics for the ball.
             cb8b a7 3b              STA        -0x5,Y=>Ball_InitState_0x1ba                  The ball will be reinitialized
                              Jump_SetupBallSprite                            XREF[4]:     cb21(j), cb25(j), cb79(j), 
                                                                                           cb87(j)  
@@ -19111,7 +19115,7 @@
                                                                                              the X position with the offset
                                                                                              computed in D
             cba0 ef 2a              STU        0xa,Y=>Ball_SpriteData_0xc1c9                 store the sprite address to the ball data
-            cba2 0c 49              INC        <Ball_IsActive_0x49                           we are definitely active
+            cba2 0c 49              INC        <Ball_IsActive_0x49                           indicate that we are definitely active
             cba4 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -19282,7 +19286,7 @@
             cc9b 3d                 MUL
             cc9c 33 cb              LEAU       D,U
             cc9e ef 2a              STU        0xa,Y=>Bird_SpriteData_0x1de                  = ??
-            cca0 7e d8 60           JMP        UpdateObjectPhysics_Maybe
+            cca0 7e d8 60           JMP        UpdateObjectPhysics
                              -- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
                              **************************************************************
                              *                          FUNCTION                          *
@@ -19657,7 +19661,7 @@
                              InitBouncingBall                                XREF[1]:     cab2(j)  
             ce75 8e ce ac           LDX        #RoomsWithBouncingBall
                              Loop_SearchForRoomNumber                        XREF[1]:     ce7e(j)  
-            ce78 a6 80              LDA        ,X+=>RoomsWithBouncingBall                    = 02h
+            ce78 a6 80              LDA        ,X+=>RoomsWithBouncingBall                    = 2h
             ce7a 2b 2f              BMI        Jump_NoBallForThisRoom
             ce7c 91 39              CMPA       <CurrentRoomNumber_0x39                       = ??
             ce7e 26 f8              BNE        Loop_SearchForRoomNumber
@@ -19690,18 +19694,18 @@
             ceab 39                 RTS
                              RoomsWithBouncingBall                           XREF[2]:     InitBouncingBall:ce75(*), 
                                                                                           InitBouncingBall:ce78(R)  
-            ceac 00                 undefined1 00h
-                             DAT_cead                                        XREF[1]:     InitBouncingBall:ce78(R)  
-            cead 02                 undefined1 02h
-            ceae 05                 ??         05h
-            ceaf 06                 ??         06h
-            ceb0 0a                 ??         0Ah                                           this suggests the ball existing in rooms
+            ceac 00                 db         0h
+                             BYTE_cead                                       XREF[1]:     InitBouncingBall:ce78(R)  
+            cead 02                 db         2h
+            ceae 05                 db         5h
+            ceaf 06                 db         6h
+            ceb0 0a                 db         Ah                                            this suggests the ball existing in rooms
                                                                                              past the tenth. 
-            ceb1 0b                 ??         0Bh
-            ceb2 0c                 ??         0Ch
-            ceb3 0d                 ??         0Dh
-            ceb4 0e                 ??         0Eh
-            ceb5 ff                 ??         FFh
+            ceb1 0b                 db         Bh
+            ceb2 0c                 db         Ch
+            ceb3 0d                 db         Dh
+            ceb4 0e                 db         Eh
+            ceb5 ff                 db         FFh
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
@@ -21803,7 +21807,7 @@
              undefined         A:1            param_1
              undefined         B:1            param_2
                              DrawSegment_Orientation3_DownAndRight           XREF[2]:     d783(*), 
-                                                                                          UpdateObjectPhysics_Maybe:d88a(c
+                                                                                          UpdateObjectPhysics:d88a(c)  
             d7a4 8e d8 0e           LDX        #DrawSegment_MovePosDownAndRight
             d7a7 0f 25              CLR        <DrawSegmentLine_SubPixelStartValue_Maybe_0x  = ??
             d7a9 20 3b              BRA        DrawVerticalSegment                           undefined DrawVerticalSegment(undefined A, undefined B, und
@@ -22122,15 +22126,15 @@
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall UpdateObjectPhysics_Maybe(void)
+                             undefined __stdcall UpdateObjectPhysics(void)
              undefined         A:1            <RETURN>
-                             UpdateObjectPhysics_Maybe                       XREF[4]:     FUN_c3b3:c191(c), 
+                             UpdateObjectPhysics                             XREF[4]:     FUN_c3b3:c191(c), 
                                                                                           FUN_c3b3:c1a4(c), 
                                                                                           FUN_c3b3:c34e(j), 
                                                                                           UpdateRoomTimers:cca0(j)  
             d860 a6 3b              LDA        -0x5,Y=>Player_SomeGameState_0x1a5            = ??
             d862 27 4e              BEQ        DrawingFunctionFor3ByteWideSprites::Jump_Ski
-            d864 2b 4d              BMI        Jump_StateIsFF
+            d864 2b 4d              BMI        Jump_StateIsFFAndUninitialized
             d866 4a                 DECA
             d867 27 03              BEQ        Jump_StateIsNowZero
             d869 8d 4a              BSR        DrawingOrClearingFunction                     undefined DrawingOrClearingFunction(void)
@@ -22177,9 +22181,9 @@
             d8ab 33 c8 20           LEAU       0x20,U                                        move to next line in page
             d8ae 0a 26              DEC        <UtilityCounter_0x26                          = ??
             d8b0 26 eb              BNE        Loop_NextLine                                 Lo
-                             Jump_SkipUpdate                                 XREF[1]:     UpdateObjectPhysics_Maybe:d862(j
+                             Jump_SkipUpdate                                 XREF[1]:     UpdateObjectPhysics:d862(j)  
             d8b2 39                 RTS
-                             Jump_StateIsFF                                  XREF[1]:     d864(j)  
+                             Jump_StateIsFFAndUninitialized                  XREF[1]:     d864(j)  
             d8b3 6f 3b              CLR        -0x5,Y=>Player_SomeGameState_0x1a5            = ??
                              **************************************************************
                              *                          FUNCTION                          *
@@ -22187,7 +22191,7 @@
                              undefined __stdcall DrawingOrClearingFunction(void)
              undefined         A:1            <RETURN>
                              DrawingOrClearingFunction                       XREF[2]:     FUN_c3b3:c5ba(c), 
-                                                                                          UpdateObjectPhysics_Maybe:d869(c
+                                                                                          UpdateObjectPhysics:d869(c)  
             d8b5 ee 2c              LDU        0xc,Y=>PlayerY_PreviousVideoPageDrawPosition  = ??
             d8b7 ae 2e              LDX        0xe,Y=>Player_PreviousSpritePointer_0x1b8     = ??
             d8b9 a6 3f              LDA        -0x1,Y=>Player_NumRowsInSprite_0x1a9          = ??

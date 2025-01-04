@@ -17,7 +17,7 @@ Misc
 		Mode:  Full graphic 6-R 1 	  1   1   1  1  1  0 256x192x2  $1800(6144) 
 	
 
-Fun Notes
+Fun Facts
 	
 	Room Timers
 	there is a timer for each room
@@ -81,10 +81,7 @@ Room Pickups Fun Facts
 	
 Questions
 
-	how do the ball physics work?
-	
-	how does the ball restart when reaching the side of the screen?
-	
+
 	how do the bird physics work?
 
 	how do points work when picking up a treasure?
@@ -99,6 +96,8 @@ Questions
 	where is the regen timer set?
 	
 	does the game wait for vsync on game loop?
+	
+	when and how are sounds handled?
 	
 How To	
 
@@ -122,3 +121,10 @@ Ball
 	when hitting the ground a counter at 0x32 is set with a negative value
 		every frame the value goes up until it goes positive, then decrements
 		until 0 at which point it starts falling again
+		
+	Fun Facts
+	
+		There's a table in the code that specifies which room has the bouncing ball. 
+		The table has entries past room 10 (index 9), which might suggest there were 
+		more rooms at one point. The extra rooms specified in the table are 
+		10, 11, 12, 13, and 14. 
