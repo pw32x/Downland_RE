@@ -932,7 +932,7 @@
                              Alive: 0
                              Dead: 1
                              Regenerating: FF
-                             Player_State_AliveDeadRegen_0x1a8               XREF[11]:    FUN_c3b3:c3d1(R), 
+                             Player_State_AliveDeadRegenState_0x1a8          XREF[11]:    FUN_c3b3:c3d1(R), 
                                                                                           FUN_c3b3:c502(R), 
                                                                                           FUN_c3b3:c52e(R), 
                                                                                           FUN_c3b3:c56a(W), 
@@ -1099,14 +1099,14 @@
                              Ball_PreviousSpritePointer_0x1cd
             01cd                    dw         ??
                              EndOfBallData                                   XREF[6]:     FUN_c3b3:c5de(R), 
-                             TimerHasHitZero_Maybe                                        FUN_c3b3:c5f1(W), 
+                             Bird_InitState_0x1cf                                         FUN_c3b3:c5f1(W), 
                                                                                           UpdateRoomTimers:cbf8(R), 
                                                                                           UpdateRoomTimers:cc23(W), 
                                                                                           InitRoom_Maybe:cd04(W), 
                                                                                           InitBouncingBall:ce89(*)  
-            01cf                    undefined1 ??
+            01cf                    db         ??
             01d0                    ??         ??
-                             DAT_01d1                                        XREF[2]:     UpdateRoomTimers:cc35(RW), 
+                             Bird_AnimationCounter_0x1d1                     XREF[2]:     UpdateRoomTimers:cc35(RW), 
                                                                                           UpdateRoomTimers:cc37(R)  
             01d1                    ??         ??
                              Bird_AnimationFrame0or1_0x1d2                   XREF[2]:     UpdateRoomTimers:cc3e(W), 
@@ -1114,8 +1114,9 @@
             01d2                    ??         ??
                              Bird_NumRowsInSpriteSetTo6_0x1d3                XREF[1]:     UpdateRoomTimers:cc27(W)  
             01d3                    ??         ??
-                             Bird_PhysicsData                                XREF[6]:     UpdateRoomTimers:cc2e(W), 
-                             Bird_SpeedY_0x1d4                                            UpdateRoomTimers:cc42(R), 
+                             Bird_PhysicsData                                XREF[7]:     UpdateRoomTimers:cbf4(*), 
+                             Bird_SpeedY_0x1d4                                            UpdateRoomTimers:cc2e(W), 
+                                                                                          UpdateRoomTimers:cc42(R), 
                                                                                           UpdateRoomTimers:cc4c(R), 
                                                                                           UpdateRoomTimers:cc52(R), 
                                                                                           UpdateRoomTimers:cc5b(W), 
@@ -7779,11 +7780,8 @@
             1b11                    ??         ??
             1b12                    ??         ??
             1b13                    ??         ??
-                             DAT_1b14                                        XREF[5]:     UpdateRoomTimers:cbde(R), 
-                                                                                          UpdateRoomTimers:cbec(W), 
-                                                                                          UpdateRoomTimers:cc07(*), 
-                                                                                          UpdateRoomTimers:cc10(*), 
-                                                                                          UpdateRoomTimers:cc13(*)  
+                             DAT_1b14                                        XREF[2]:     UpdateRoomTimers:cbde(R), 
+                                                                                          UpdateRoomTimers:cbec(W)  
             1b14                    ??         ??
             1b15                    ??         ??
             1b16                    ??         ??
@@ -17743,7 +17741,7 @@
             c2d1 bd c3 7c           JSR        TestPlayerObjectCollision                     undefined TestPlayerObjectCollision(void)
             c2d4 26 07              BNE        Jump_CollidesWithObjectThatKills
             c2d6 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     = ??
-            c2da 7e c4 8c           JMP        LAB_c48c
+            c2da 7e c4 8c           JMP        Jump_HandlePlayerJumpAndRope
                              Jump_CollidesWithObjectThatKills                XREF[3]:     c2a1(j), c2bd(j), c2d4(j)  
             c2dd 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     = ??
             c2e1 7e c5 3c           JMP        Jump_PerformPlayerDeath
@@ -17921,10 +17919,10 @@
             c3c1 a6 3b              LDA        -0x5,Y=>Player_SomeGameState_0x1a5            = ??
             c3c3 27 ed              BEQ        Jump_IsAlreadyClimbing::Jump_Return           inactive, so just return
             c3c5 81 01              CMPA       #0x1
-            c3c7 10 27 00 c1        LBEQ       LAB_c48c
+            c3c7 10 27 00 c1        LBEQ       Jump_HandlePlayerJumpAndRope
             c3cb 96 30              LDA        <Player_DeathPauseInTheAirTimer               = ??
             c3cd 10 26 01 7b        LBNE       LAB_c54c
-            c3d1 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegen_0x1a8     = ??
+            c3d1 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
             c3d3 10 2b 02 e1        LBMI       LAB_c6b8
             c3d7 10 26 00 bd        LBNE       LAB_c498
             c3db 6c 36              INC        -0xa,Y=>ConstantZeroToFFCounter               = ??
@@ -18008,7 +18006,7 @@
             c486 0a 26              DEC        <UtilityCounter_0x26                          = ??
             c488 26 db              BNE        LAB_c465
             c48a 35 20              PULS        Y
-                             LAB_c48c                                        XREF[2]:     c2da(j), c3c7(j)  
+                             Jump_HandlePlayerJumpAndRope                    XREF[2]:     c2da(j), c3c7(j)  
             c48c 96 2c              LDA        <Player_JumpUpInTheAirCounter_0x2c            = ??
             c48e 10 26 03 17        LBNE       Jump_IsJumpingUp_Maybe
             c492 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
@@ -18075,7 +18073,7 @@
                              Jump_SetPlayerYSpeed                            XREF[3]:     c4e1(j), c4e5(j), c4fc(j)  
             c500 ed 22              STD        0x2,Y=>Player_SpeedX_0x1ac                    = ??
                              LAB_c502                                        XREF[1]:     c4d6(j)  
-            c502 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegen_0x1a8     = ??
+            c502 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
             c504 26 69              BNE        Jump_PlayerIsAlive
                              Jump_NotTouchingGround                          XREF[1]:     c571(j)  
             c506 7e c7 83           JMP        LAB_c783
@@ -18130,7 +18128,7 @@
             c52b 39                 RTS
                              Jump_IsClimbing                                 XREF[3]:     c494(j), c4b7(j), c4bc(j)  
             c52c 0f 2d              CLR        <Player_IsTouchingGround_Maybe_0x2d           = ??
-            c52e a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegen_0x1a8     = ??
+            c52e a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
             c530 26 3d              BNE        Jump_PlayerIsAlive
             c532 ec a4              LDD        ,Y=>Player_SpeedY_0x1aa                       = ??
             c534 10 83 01 00        CMPD       #0x100
@@ -18166,13 +18164,13 @@
             c564 86 0a              LDA        #0xa
             c566 a7 3d              STA        -0x3,Y=>Player_DeathAndRegenMiniCounter_0x1a7 = ??
             c568 86 02              LDA        #0x2                                          set to the mid-air jump frame
-            c56a a7 3e              STA        -0x2,Y=>Player_State_AliveDeadRegen_0x1a8     = ??
+            c56a a7 3e              STA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
             c56c 7e c3 b2           JMP        Jump_IsAlreadyClimbing::Jump_Return
                              Jump_PlayerIsAlive                              XREF[2]:     c504(j), c530(j)  
             c56f 96 2d              LDA        <Player_IsTouchingGround_Maybe_0x2d           = ??
             c571 26 93              BNE        Jump_NotTouchingGround
             c573 8d b0              BSR        ClearSpeedToZero                              undefined ClearSpeedToZero(void)
-            c575 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegen_0x1a8     = ??
+            c575 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
             c577 4a                 DECA
             c578 27 32              BEQ        LAB_c5ac
                              clear from 0x83 to 0xb3 for the
@@ -18209,7 +18207,7 @@
                              LAB_c5ac                                        XREF[1]:     c578(j)  
             c5ac 6a 3d              DEC        -0x3,Y=>Player_DeathAndRegenMiniCounter_0x1a7 = ??
             c5ae 10 26 fe 00        LBNE       Jump_IsAlreadyClimbing::Jump_Return
-            c5b2 6a 3e              DEC        -0x2,Y=>Player_State_AliveDeadRegen_0x1a8     = ??
+            c5b2 6a 3e              DEC        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
             c5b4 27 28              BEQ        ResetTimerTo2048IfAtZeroWhenDied_Maybe
             c5b6 86 0c              LDA        #0xc
             c5b8 a7 3f              STA        -0x1,Y=>Player_NumRowsInSprite_0x1a9          = ??
@@ -18245,7 +18243,7 @@
             c5da da da              addr       String_GetReadyPlayerOne                      = 16
             c5dc da ef              addr       String_GetReadyPlayerTwo                      = 16
                              ResetTimerTo2048IfAtZeroWhenDied_Maybe          XREF[1]:     c5b4(j)  
-            c5de b6 01 cf           LDA        TimerHasHitZero_Maybe                         = ??
+            c5de b6 01 cf           LDA        Bird_InitState_0x1cf                          = ??
             c5e1 27 11              BEQ        LAB_c5f4
             c5e3 bd cb b9           JSR        GetPlayerRoomTimerBuffer                      undefined GetPlayerRoomTimerBuffer(void)
             c5e6 d6 39              LDB        <CurrentRoomNumber_0x39                       = ??
@@ -18254,7 +18252,7 @@
             c5ea cc 08 00           LDD        #0x800                                        set timer to 2048
             c5ed ed 84              STD        ,X
             c5ef 86 ff              LDA        #0xff
-            c5f1 b7 01 cf           STA        TimerHasHitZero_Maybe                         = ??
+            c5f1 b7 01 cf           STA        Bird_InitState_0x1cf                          = ??
                              LAB_c5f4                                        XREF[1]:     c5e1(j)  
             c5f4 8d d2              BSR        GetPlayerLivesAddress                         undefined GetPlayerLivesAddress(void)
             c5f6 a6 84              LDA        ,X
@@ -18356,7 +18354,7 @@
             c6ad cc 01 90           LDD        #0x190                                        400
             c6b0 dd 4b              STD        <Player_RegenerationTimer_0x4b                = ??
             c6b2 86 ff              LDA        #0xff
-            c6b4 a7 3e              STA        -0x2,Y=>Player_State_AliveDeadRegen_0x1a8     = ??
+            c6b4 a7 3e              STA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
             c6b6 6f 38              CLR        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    set back to standing
                              **************************************************************
                              * if the player has moved, then set the regen timer to 0     *
@@ -18403,7 +18401,7 @@
             c6f7 0a 26              DEC        <UtilityCounter_0x26                          = ??
             c6f9 26 f7              BNE        LAB_c6f2
             c6fb 35 20              PULS        Y
-            c6fd 6f 3e              CLR        -0x2,Y=>Player_State_AliveDeadRegen_0x1a8     = ??
+            c6fd 6f 3e              CLR        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
             c6ff ae 28              LDX        0x8,Y=>Player_VideoPageDrawDestination_0x1b2  = ??
             c701 e6 3f              LDB        -0x1,Y=>Player_NumRowsInSprite_0x1a9          = ??
             c703 d7 26              STB        <UtilityCounter_0x26                          = ??
@@ -18737,7 +18735,7 @@
             c928 1f 98              TFR        B,A
             c92a e6 85              LDB        B,X=>SomeKindOfHorizontalBitOffsetTable
             c92c 34 06              PSHS        B A
-            c92e bd d8 52           JSR        LoadPosInYAndComputeScreenPos                 undefined LoadPosInYAndComputeScreenPos(void)
+            c92e bd d8 52           JSR        LoadPosRelativeToYAndComputeScreenPos         undefined LoadPosRelativeToYAndComputeScreenPos(void)
             c931 ed 28              STD        0x8,Y=>Player_VideoPageDrawDestination_0x1b2  = ??
             c933 1f 01              TFR        B,X
             c935 35 06              PULS        A B
@@ -18774,7 +18772,7 @@
             c976 ed 22              STD        0x2,Y=>Player_SpeedX_0x1ac                    = ??
             c978 63 3c              COM        -0x4,Y=>Player_FacingDirection_0x1a6          = ??
                              Jump_ClimbingRope                               XREF[2]:     c91f(j), c969(j)  
-            c97a bd d8 52           JSR        LoadPosInYAndComputeScreenPos                 undefined LoadPosInYAndComputeScreenPos(void)
+            c97a bd d8 52           JSR        LoadPosRelativeToYAndComputeScreenPos         undefined LoadPosRelativeToYAndComputeScreenPos(void)
             c97d ed 28              STD        0x8,Y=>Player_VideoPageDrawDestination_0x1b2  = ??
                              LAB_c97f                                        XREF[3]:     FUN_c3b3:c561(j), c94d(j), 
                                                                                           c95b(j)  
@@ -18810,7 +18808,7 @@
             c9a2 ef 2a              STU        0xa,Y=>Player_SpritePointer_0x1b4             = ??
             c9a4 11 a3 2e           CMPU       0xe,Y=>Player_PreviousSpritePointer_0x1b8     = ??
             c9a7 26 10              BNE        LAB_c9b9
-            c9a9 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegen_0x1a8     = ??
+            c9a9 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
             c9ab 2b 0c              BMI        LAB_c9b9
             c9ad ee 28              LDU        0x8,Y=>Player_VideoPageDrawDestination_0x1b2  = ??
             c9af 11 a3 2c           CMPU       0xc,Y=>PlayerY_PreviousVideoPageDrawPosition  = ??
@@ -18818,7 +18816,7 @@
             c9b6 0c 48              INC        <Player_IsMoving_Maybe_0x48                   = ??
             c9b8 39                 RTS
                              LAB_c9b9                                        XREF[2]:     c9a7(j), c9ab(j)  
-            c9b9 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegen_0x1a8     = ??
+            c9b9 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
             c9bb 10 2e 00 d9        LBGT       LAB_ca98
             c9bf e6 3c              LDB        -0x4,Y=>Player_FacingDirection_0x1a6          = ??
             c9c1 34 20              PSHS        Y
@@ -19074,7 +19072,7 @@
             cb54 1f 98              TFR        B,A
             cb56 e6 85              LDB        B,X=>SomeKindOfHorizontalBitOffsetTable
             cb58 34 06              PSHS        B A
-            cb5a bd d8 52           JSR        LoadPosInYAndComputeScreenPos                 undefined LoadPosInYAndComputeScreenPos(void)
+            cb5a bd d8 52           JSR        LoadPosRelativeToYAndComputeScreenPos         undefined LoadPosRelativeToYAndComputeScreenPos(void)
             cb5d ed 28              STD        0x8,Y=>Ball_VideoPageDrawPosition_0x1c7       = ??
             cb5f 1f 01              TFR        D,X
             cb61 35 06              PULS        A B
@@ -19172,7 +19170,7 @@
                              Loop_NextRoomTimer                              XREF[1]:     cbf2(j)  
             cbd4 d6 26              LDB        <UtilityCounter_0x26                          current room timer counter
             cbd6 c1 0a              CMPB       #0xa                                          num room timers
-            cbd8 27 1a              BEQ        Jump_DoneUpdatingRoomTimers
+            cbd8 27 1a              BEQ        Jump_DoneIncrementingOtherRoomTimers
             cbda d1 39              CMPB       <CurrentRoomNumber_0x39                       = ??
             cbdc 27 10              BEQ        Jump_IsCurrentRoomTimer
             cbde ec 84              LDD        ,X=>DAT_1b14                                  = ??
@@ -19186,43 +19184,53 @@
             cbee 30 02              LEAX       0x2,X                                         go to next room timer
             cbf0 0c 26              INC        <UtilityCounter_0x26                          we're done with this room timer
             cbf2 20 e0              BRA        Loop_NextRoomTimer
-                             Jump_DoneUpdatingRoomTimers                     XREF[1]:     cbd8(j)  
-            cbf4 10 8e 01 d4        LDY        #0x1d4
-            cbf8 a6 3b              LDA        -0x5,Y=>TimerHasHitZero_Maybe                 = ??
-            cbfa 26 39              BNE        LAB_cc35
-            cbfc b6 01 a8           LDA        Player_State_AliveDeadRegen_0x1a8             = ??
-            cbff 2b 11              BMI        LAB_cc12
+                             update current room timer and activate bird
+                             if it hits zero.
+                             Jump_DoneIncrementingOtherRoomTimers            XREF[1]:     cbd8(j)  
+            cbf4 10 8e 01 d4        LDY        #Bird_PhysicsData                             = ??
+            cbf8 a6 3b              LDA        -0x5,Y=>Bird_InitState_0x1cf                  = ??
+            cbfa 26 39              BNE        Jump_BirdIsActive                             bird is already active, so skip the init check
+                                                                                             don't update the room timer, either
+            cbfc b6 01 a8           LDA        Player_State_AliveDeadRegenState_0x1a8        = ??
+            cbff 2b 11              BMI        Jump_PlayerIsRegenerating                     don't update the timer if the player is in the
+                                                                                             regeneration state
             cc01 8d b6              BSR        GetPlayerRoomTimerBuffer                      undefined GetPlayerRoomTimerBuffer(void)
             cc03 d6 39              LDB        <CurrentRoomNumber_0x39                       = ??
             cc05 58                 LSLB
             cc06 3a                 ABX
-            cc07 ec 84              LDD        ,X=>DAT_1b14                                  = ??
-            cc09 27 0a              BEQ        LAB_cc15
-            cc0b 83 00 01           SUBD       #0x1
-            cc0e 27 03              BEQ        LAB_cc13
-            cc10 ed 84              STD        ,X=>DAT_1b14                                  = ??
-                             LAB_cc12                                        XREF[1]:     cbff(j)  
+            cc07 ec 84              LDD        ,X                                            load timer value for current room
+            cc09 27 0a              BEQ        Jump_TimerOverInitTheBird                     if 0, then init the bird
+            cc0b 83 00 01           SUBD       #0x1                                          count down the timer
+            cc0e 27 03              BEQ        Jump_StoreZeroTimerAndInitTheBird
+            cc10 ed 84              STD        ,X
+                             Jump_PlayerIsRegenerating                       XREF[1]:     cbff(j)  
             cc12 39                 RTS
-                             LAB_cc13                                        XREF[1]:     cc0e(j)  
-            cc13 ed 84              STD        ,X=>DAT_1b14                                  = ??
-                             LAB_cc15                                        XREF[1]:     cc09(j)  
-            cc15 cc 1a 23           LDD        #0x1a23                                       initial screen Y and X position, maybe
+                             Jump_StoreZeroTimerAndInitTheBird               XREF[1]:     cc0e(j)  
+            cc13 ed 84              STD        ,X
+                             Jump_TimerOverInitTheBird                       XREF[1]:     cc09(j)  
+            cc15 cc 1a 23           LDD        #0x1a23                                       initial screen Y and X position
+                                                                                             y: 23 (0-191) x: 35 (0-127, maybe)
             cc18 a7 24              STA        0x4,Y=>Bird_Y_0x1d8                           = ??
             cc1a e7 26              STB        0x6,Y=>Bird_X_0x1da                           = ??
-            cc1c bd d8 52           JSR        LoadPosInYAndComputeScreenPos                 undefined LoadPosInYAndComputeScreenPos(void)
+            cc1c bd d8 52           JSR        LoadPosRelativeToYAndComputeScreenPos         undefined LoadPosRelativeToYAndComputeScreenPos(void)
             cc1f ed 28              STD        0x8,Y=>Bird_VideoPageDrawPosition_0x1dc       = ??
             cc21 86 01              LDA        #0x1
-            cc23 a7 3b              STA        -0x5,Y=>TimerHasHitZero_Maybe                 = ??
+            cc23 a7 3b              STA        -0x5,Y=>Bird_InitState_0x1cf                  bird in active state
             cc25 86 06              LDA        #0x6
             cc27 a7 3f              STA        -0x1,Y=>Bird_NumRowsInSpriteSetTo6_0x1d3      = ??
             cc29 86 01              LDA        #0x1
-            cc2b bd dc 39           JSR        IncrementRomAddressCounter                    undefined IncrementRomAddressCounter(undefined A, undefined
-            cc2e ed a4              STD        ,Y=>Bird_SpeedY_0x1d4                         = ??
+            cc2b bd dc 39           JSR        IncrementRomAddressCounter                    use this to fill B with a random-ish value
+                                                                                             coming from the counter interating through the
+                                                                                             cart rom addresses
+            cc2e ed a4              STD        ,Y=>Bird_SpeedY_0x1d4                         set Y speed to 0x1XX where XX comes from
+                                                                                             the value computed from IncrementRomAddressCounter
             cc30 bd dc 39           JSR        IncrementRomAddressCounter                    undefined IncrementRomAddressCounter(undefined A, undefined
             cc33 ed 22              STD        0x2,Y=>Bird_SpeedX_0x1d6                      = ??
-                             LAB_cc35                                        XREF[1]:     cbfa(j)  
-            cc35 6c 3d              INC        -0x3,Y=>DAT_01d1                              = ??
-            cc37 a6 3d              LDA        -0x3,Y=>DAT_01d1                              = ??
+                             Jump_BirdIsActive                               XREF[1]:     cbfa(j)  
+            cc35 6c 3d              INC        -0x3,Y=>Bird_AnimationCounter_0x1d1           increment and then shift three times to figure
+                                                                                             out the correct frame to display. Then store
+                                                                                             the frame.
+            cc37 a6 3d              LDA        -0x3,Y=>Bird_AnimationCounter_0x1d1           = ??
             cc39 44                 LSRA
             cc3a 44                 LSRA
             cc3b 44                 LSRA
@@ -19230,55 +19238,69 @@
             cc3e a7 3e              STA        -0x2,Y=>Bird_AnimationFrame0or1_0x1d2         = ??
             cc40 ec 24              LDD        0x4,Y=>Bird_Y_0x1d8                           = ??
             cc42 e3 a4              ADDD       ,Y=>Bird_SpeedY_0x1d4                         = ??
-            cc44 81 10              CMPA       #0x10
-            cc46 23 0a              BLS        LAB_cc52
-            cc48 81 b1              CMPA       #0xb1
-            cc4a 25 15              BCS        LAB_cc61
+            cc44 81 10              CMPA       #0x10                                         upper screen bound
+            cc46 23 0a              BLS        Jump_BirdYHitUpperScreenBound
+            cc48 81 b1              CMPA       #0xb1                                         lower screen bound
+            cc4a 25 15              BCS        Jump_BirdYHasntHitScreenBounds
+                             the bird hit the bottom of the screen
             cc4c ec a4              LDD        ,Y=>Bird_SpeedY_0x1d4                         = ??
-            cc4e 2b 0d              BMI        LAB_cc5d
-            cc50 20 04              BRA        LAB_cc56
-                             LAB_cc52                                        XREF[1]:     cc46(j)  
-            cc52 ec a4              LDD        ,Y=>Bird_SpeedY_0x1d4                         = ??
-            cc54 2a 07              BPL        LAB_cc5d
-                             LAB_cc56                                        XREF[1]:     cc50(j)  
-            cc56 43                 COMA
+            cc4e 2b 0d              BMI        Jump_UpdateBirdYPosition                      if we were already going up, then skip
+            cc50 20 04              BRA        Jump_FlipBirdYSpeed                           the bird is currently going down, we'll need 
+                                                                                             to change that
+                             Jump_BirdYHitUpperScreenBound                   XREF[1]:     cc46(j)  
+            cc52 ec a4              LDD        ,Y=>Bird_SpeedY_0x1d4                         get the current Y speed
+            cc54 2a 07              BPL        Jump_UpdateBirdYPosition                      if we were already going downwards, then just
+                                                                                             skip the next part
+                             we reach here if
+                             the bird hit the upper screen bound going up
+                             the bird hit the lower screen bound going down
+                             in that case, we invert the speed
+                             Jump_FlipBirdYSpeed                             XREF[1]:     cc50(j)  
+            cc56 43                 COMA                                                     invert the Y speed
             cc57 53                 COMB
             cc58 c3 00 01           ADDD       #0x1
             cc5b ed a4              STD        ,Y=>Bird_SpeedY_0x1d4                         = ??
-                             LAB_cc5d                                        XREF[2]:     cc4e(j), cc54(j)  
+                             Jump_UpdateBirdYPosition                        XREF[2]:     cc4e(j), cc54(j)  
             cc5d ec 24              LDD        0x4,Y=>Bird_Y_0x1d8                           = ??
             cc5f e3 a4              ADDD       ,Y=>Bird_SpeedY_0x1d4                         = ??
-                             LAB_cc61                                        XREF[1]:     cc4a(j)  
+                             Jump_BirdYHasntHitScreenBounds                  XREF[1]:     cc4a(j)  
             cc61 ed 24              STD        0x4,Y=>Bird_Y_0x1d8                           = ??
+                             update X position and check bounds
             cc63 ec 26              LDD        0x6,Y=>Bird_X_0x1da                           = ??
             cc65 e3 22              ADDD       0x2,Y=>Bird_SpeedX_0x1d6                      = ??
             cc67 81 07              CMPA       #0x7
-            cc69 23 0a              BLS        LAB_cc75
+            cc69 23 0a              BLS        Jump_BirdHitLeftScreenBound
             cc6b 81 73              CMPA       #0x73
-            cc6d 25 15              BCS        LAB_cc84
+            cc6d 25 15              BCS        Jump_BirdUpdateAnimation                      jump if it hasn't hit the right screen bound
             cc6f ec 22              LDD        0x2,Y=>Bird_SpeedX_0x1d6                      = ??
-            cc71 2b 0d              BMI        LAB_cc80
-            cc73 20 04              BRA        LAB_cc79
-                             LAB_cc75                                        XREF[1]:     cc69(j)  
+            cc71 2b 0d              BMI        Jump_UpdateBirdXPosition
+            cc73 20 04              BRA        Jump_FlipBirdXSpeed
+                             Jump_BirdHitLeftScreenBound                     XREF[1]:     cc69(j)  
             cc75 ec 22              LDD        0x2,Y=>Bird_SpeedX_0x1d6                      = ??
-            cc77 2a 07              BPL        LAB_cc80
-                             LAB_cc79                                        XREF[1]:     cc73(j)  
+            cc77 2a 07              BPL        Jump_UpdateBirdXPosition
+                             we reach here if
+                             the bird hit the left screen bound going left
+                             the bird hit the right screen bound going right
+                             in that case, we invert the speed
+                             Jump_FlipBirdXSpeed                             XREF[1]:     cc73(j)  
             cc79 43                 COMA
             cc7a 53                 COMB
             cc7b c3 00 01           ADDD       #0x1
             cc7e ed 22              STD        0x2,Y=>Bird_SpeedX_0x1d6                      = ??
-                             LAB_cc80                                        XREF[2]:     cc71(j), cc77(j)  
+                             Jump_UpdateBirdXPosition                        XREF[2]:     cc71(j), cc77(j)  
             cc80 ec 26              LDD        0x6,Y=>Bird_X_0x1da                           = ??
             cc82 e3 22              ADDD       0x2,Y=>Bird_SpeedX_0x1d6                      = ??
-                             LAB_cc84                                        XREF[1]:     cc6d(j)  
+                             Jump_BirdUpdateAnimation                        XREF[1]:     cc6d(j)  
             cc84 ed 26              STD        0x6,Y=>Bird_X_0x1da                           = ??
-            cc86 bd d8 52           JSR        LoadPosInYAndComputeScreenPos                 undefined LoadPosInYAndComputeScreenPos(void)
+            cc86 bd d8 52           JSR        LoadPosRelativeToYAndComputeScreenPos         undefined LoadPosRelativeToYAndComputeScreenPos(void)
             cc89 ed 28              STD        0x8,Y=>Bird_VideoPageDrawPosition_0x1dc       = ??
             cc8b ce 3e e2           LDU        #BirdSpritesInRamAddr_0x3ee2                  = ??
             cc8e a6 3e              LDA        -0x2,Y=>Bird_AnimationFrame0or1_0x1d2         = ??
             cc90 27 03              BEQ        Jump_DontGoToFrame1OfAnimation                if LDA is 1, move the sprite pointer to the
                                                                                              next frame of the bird animation
             cc92 33 c8 48           LEAU       0x48,U
+                             figure out which frame of the sprite
+                             to display depending on X position
                              Jump_DontGoToFrame1OfAnimation                  XREF[1]:     cc90(j)  
             cc95 a6 26              LDA        0x6,Y=>Bird_X_0x1da                           = ??
             cc97 84 03              ANDA       #0x3
@@ -19362,7 +19384,7 @@
             ccfc bd d1 1a           JSR        InitDrops                                     undefined InitDrops(void)
             ccff 7f 01 ba           CLR        Ball_InitState_0x1ba                          = ??
             cd02 0f 32              CLR        <Ball_FallStateCounter_0x32                   = ??
-            cd04 7f 01 cf           CLR        TimerHasHitZero_Maybe                         = ??
+            cd04 7f 01 cf           CLR        Bird_InitState_0x1cf                          = ??
             cd07 9e 3b              LDX        <RoomGraphicsAndDoorDataAddress_0x3b          = ??
             cd09 96 39              LDA        <CurrentRoomNumber_0x39                       = ??
             cd0b 48                 LSLA
@@ -19688,7 +19710,7 @@
                                                                                              same start position for every level
             cea2 a7 24              STA        0x4,Y=>Ball_Y_0x1c3                           = ??
             cea4 e7 26              STB        0x6,Y=>Ball_X_0x1c5                           = ??
-            cea6 bd d8 52           JSR        LoadPosInYAndComputeScreenPos                 undefined LoadPosInYAndComputeScreenPos(void)
+            cea6 bd d8 52           JSR        LoadPosRelativeToYAndComputeScreenPos         undefined LoadPosRelativeToYAndComputeScreenPos(void)
             cea9 ed 28              STD        0x8,Y=>Ball_VideoPageDrawPosition_0x1c7       = ??
                              Jump_NoBallForThisRoom                          XREF[1]:     ce7a(j)  
             ceab 39                 RTS
@@ -22069,9 +22091,9 @@
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall LoadPosInYAndComputeScreenPos(void)
+                             undefined __stdcall LoadPosRelativeToYAndComputeScreenPo
              undefined         A:1            <RETURN>
-                             LoadPosInYAndComputeScreenPos                   XREF[6]:     Jump_IsAlreadyClimbing:c92e(c), 
+                             LoadPosRelativeToYAndComputeScreenPos           XREF[6]:     Jump_IsAlreadyClimbing:c92e(c), 
                                                                                           Jump_IsAlreadyClimbing:c97a(c), 
                                                                                           cb5a(c), 
                                                                                           UpdateRoomTimers:cc1c(c), 
@@ -22124,7 +22146,7 @@
             d85d d3 4e              ADDD       <CurrentVideoMemLocation_0x4e                 = ??
             d85f 39                 RTS
                              **************************************************************
-                             *                          FUNCTION                          *
+                             * Used by the player, the ball, and the bird                 *
                              **************************************************************
                              undefined __stdcall UpdateObjectPhysics(void)
              undefined         A:1            <RETURN>

@@ -81,25 +81,37 @@ Room Pickups Fun Facts
 	
 Questions
 
-
-	how do the bird physics work?
-
+	how do the lives icons work?
+	
+	how does the regeneration work?
+		where is the regen timer set?
+		
 	how do points work when picking up a treasure?
 
-	how does the player code flow?
 	what is the mysterious sprite data?	
 
-	how are floor collisions detected?
-	how is detecting vertical ropes done?
-	how is detecting horizontal ropes done?
-	
-	where is the regen timer set?
+
+	how does the player code flow?
+
+		how are floor collisions detected?
+		how is detecting vertical ropes done?
+		how is detecting horizontal ropes done?
+		how is the death fall sequence done?
 	
 	does the game wait for vsync on game loop?
 	
 	when and how are sounds handled?
 	
+		what sounds are there?
+		
+			player walk
+			player treasure pick up
+			screen transition
+			splat sound
+	
 How To	
+
+	how to change first room when starting game?
 
 	How to change the game timer on start?
 		change memory location cbac to 0xFFFF
@@ -121,6 +133,11 @@ Ball
 	when hitting the ground a counter at 0x32 is set with a negative value
 		every frame the value goes up until it goes positive, then decrements
 		until 0 at which point it starts falling again
+		
+	There's a state for falling, one for jumping, and one for sticking to the ground looking squashed for a few frames. 
+	There's a bit of gravity physics but jumping up has a fixed count of frames before it goes back down again.
+	It has a fixed spawn position so the variation in bounce locations is probably related to some of the physics variables 
+	not all being reset when getting respawned. I haven't really looked into it. It's just a guess.		
 		
 	Fun Facts
 	
