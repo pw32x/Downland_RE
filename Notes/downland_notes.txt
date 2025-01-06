@@ -81,12 +81,12 @@ Room Pickups Fun Facts
 	
 Questions
 
-	how do the lives icons work?
-	
 	how does the regeneration work?
 		where is the regen timer set?
 		
 	how do points work when picking up a treasure?
+
+	does the game give lives at any point?
 
 	what is the mysterious sprite data?	
 
@@ -108,6 +108,11 @@ Questions
 			player treasure pick up
 			screen transition
 			splat sound
+	
+Todo
+
+	name all the LAB_ labels
+	name all the functions	
 	
 How To	
 

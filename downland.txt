@@ -151,9 +151,9 @@
                                                                                           BigInitFunction_Maybe:c6f7(*), 
                                                                                           BigInitFunction_Maybe:c703(*), 
                                                                                           BigInitFunction_Maybe:c714(*), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
                                                                                           DrawPickups:cf38(*), 
                                                                                           DrawSprite_16PixelsWide:cf4e(*), 
                                                                                           [more]
@@ -236,10 +236,9 @@
                                                                                           BigInitFunction_Maybe:c846(*), 
                                                                                           BigInitFunction_Maybe:c848(*)  
             0036                    ??         ??
-                             SomeValue_0x37                                  XREF[2]:     Jump_IsAlreadyClimbing:c997(*), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-            0037                    ??         ??
-            0038                    ??         ??
+                             Player_CurrentSpriteFrame_Maybe_0x37            XREF[2]:     Jump_IsAlreadyClimbing:c997(*), 
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+            0037                    dw         ??
                              CurrentRoomNumber_0x39                          XREF[18]:    FUN_c3b3:c081(*), 
                                                                                           FUN_c3b3:c5e6(*), 
                                                                                           FUN_c3b3:c630(*), 
@@ -309,15 +308,14 @@
                                                                                           FUN_c3b3:c2c5(*), 
                                                                                           TestPlayerObjectCollision:c39d(*
             0044                    ??         ??
-                             SomeValue_0x45                                  XREF[2]:     PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-            0045                    ??         ??
-            0046                    ??         ??
+                             Player_SpriteFrameAddress_Temp_0x45             XREF[2]:     DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+            0045                    dw         ??
             0047                    ??         ??
-                             Player_IsMoving_Maybe_0x48                      XREF[4]:     FUN_c3b3:c187(*), 
+                             Player_NeedsUpdate_Maybe_0x48                   XREF[4]:     FUN_c3b3:c187(*), 
                                                                                           FUN_c3b3:c18b(*), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
             0048                    ??         ??
                              Ball_IsActive_0x49                              XREF[3]:     FUN_c3b3:c19a(*), 
                                                                                           FUN_c3b3:c19e(*), cba2(*)  
@@ -920,7 +918,7 @@
                                                                                           BigInitFunction_Maybe:c83d(W), 
                                                                                           Jump_IsAlreadyClimbing:c978(R), 
                                                                                           Jump_IsAlreadyClimbing:c988(R), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                                                                                          DrawLifeIconsAndPlayerRegenerati
             01a6                    undefined1 ??
                              Player_DeathAndRegenMiniCounter_0x1a7           XREF[6]:     FUN_c3b3:c566(W), 
                                                                                           FUN_c3b3:c5ac(RW), 
@@ -931,6 +929,7 @@
             01a7                    undefined1 ??                                            used for pausing between deaths and regen
                              Alive: 0
                              Dead: 1
+                             Dead-ish: 2 or more
                              Regenerating: FF
                              Player_State_AliveDeadRegenState_0x1a8          XREF[11]:    FUN_c3b3:c3d1(R), 
                                                                                           FUN_c3b3:c502(R), 
@@ -940,15 +939,15 @@
                                                                                           FUN_c3b3:c5b2(RW), 
                                                                                           BigInitFunction_Maybe:c6b4(W), 
                                                                                           BigInitFunction_Maybe:c6fd(W), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
                                                                                           UpdateRoomTimers:cbfc(R)  
             01a8                    db         ??
                              Player_NumRowsInSprite_0x1a9                    XREF[8]:     TestPlayerObjectCollision:c391(R
                                                                                           FUN_c3b3:c5b8(W), 
                                                                                           FUN_c3b3:c5bf(W), 
                                                                                           BigInitFunction_Maybe:c701(R), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                                                                                          DrawLifeIconsAndPlayerRegenerati
                                                                                           InitPlayerSomething:ce72(W), 
                                                                                           UpdateObjectPhysics:d899(R), 
                                                                                           DrawingOrClearingFunction:d8b9(R
@@ -1018,28 +1017,28 @@
                                                                                           Jump_IsAlreadyClimbing:c95d(R), 
                                                                                           Jump_IsAlreadyClimbing:c961(W), 
                                                                                           Jump_IsAlreadyClimbing:c999(R), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                                                                                          DrawLifeIconsAndPlayerRegenerati
                                                                                           UpdateObjectPhysics:d878(R)  
             01b0                    dw         ??
                              Player_VideoPageDrawDestination_0x1b2           XREF[6]:     BigInitFunction_Maybe:c6ff(R), 
                                                                                           Jump_IsAlreadyClimbing:c931(W), 
                                                                                           Jump_IsAlreadyClimbing:c97d(W), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
                                                                                           UpdateObjectPhysics:d891(R)  
             01b2                    dw         ??
-                             Player_SpritePointer_0x1b4                      XREF[2]:     PlayerSpriteDrawFunction_Maybe:c
+                             Player_SpritePointer_0x1b4                      XREF[2]:     DrawLifeIconsAndPlayerRegenerati
                                                                                           UpdateObjectPhysics:d895(R)  
             01b4                    dw         ??
                              PlayerY_PreviousVideoPageDrawPosition_0x1b6     XREF[6]:     FUN_c3b3:c3fe(R), 
                                                                                           FUN_c3b3:c455(R), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
                                                                                           UpdateObjectPhysics:d893(W), 
                                                                                           DrawingOrClearingFunction:d8b5(R
             01b6                    dw         ??
-                             Player_PreviousSpritePointer_0x1b8              XREF[4]:     PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                             Player_PreviousSpritePointer_0x1b8              XREF[4]:     DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
                                                                                           UpdateObjectPhysics:d897(W), 
                                                                                           DrawingOrClearingFunction:d8b7(R
             01b8                    dw         ??
@@ -1152,39 +1151,39 @@
                              Bird_PreviousSpriteData_0x1e2
             01e2                    dw         ??
                              PlayerLives_HeadIcons_Spacing_0x1e4             XREF[3]:     BigInitFunction_Maybe:c6e5(R), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-                                                                                          Init_PlayerLivesIconPositions:cf
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+                                                                                          Init_PlayerLivesIconParameters:c
             01e4                    ??         ??
-                             DAT_01e5                                        XREF[2]:     PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                             Player_FacingDirection_Copy_0x1e5               XREF[2]:     DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
             01e5                    ??         ??
-                             DAT_01e6                                        XREF[3]:     PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                             Player_LivesCount_Counter_0x1e6                 XREF[3]:     DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
             01e6                    ??         ??
-                             DAT_01e7                                        XREF[3]:     PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                             Player_State_Copy_0x1e7                         XREF[3]:     DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
             01e7                    ??         ??
                              PlayerLives_HeadIcon_LinesToDraw_0x1e7          XREF[3]:     BigInitFunction_Maybe:c6ec(R), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-                                                                                          Init_PlayerLivesIconPositions:cf
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+                                                                                          Init_PlayerLivesIconParameters:c
             01e8                    ??         ??
                              CurrentPlayerSpritePointer_0x1e9                XREF[5]:     BigInitFunction_Maybe:c6dc(*), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-                                                                                          Init_PlayerLivesIconPositions:ce
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+                                                                                          Init_PlayerLivesIconParameters:c
             01e9                    dw         ??
-                             PlayerLives_DrawLocationInPage                  XREF[4]:     BigInitFunction_Maybe:c6e8(R), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                             PlayerLives_DrawLocationInPage_0x1eb            XREF[4]:     BigInitFunction_Maybe:c6e8(R), 
+                                                                                          DrawLifeIconsAndPlayerRegenerati
                                                                                           InitRoom_Maybe:cd38(R), 
-                                                                                          Init_PlayerLivesIconPositions:cf
+                                                                                          Init_PlayerLivesIconParameters:c
             01eb                    dw         ??
-                             PlayerLives_SomeOtherDrawLocation_Maybe_0x1ed   XREF[4]:     PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                             PlayerLives_DrawLocationInPage_Copy_0x1ed       XREF[4]:     DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
             01ed                    dw         ??
                              Each drop data is 13 bytes long.
                              byte : description
@@ -14181,7 +14180,7 @@
             33ff                    ??         ??
                              SpriteData_ClonedDestination_0x3400             XREF[4]:     FUN_c3b3:c432(*), 
                                                                                           Jump_IsAlreadyClimbing:c97f(*), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                                                                                          DrawLifeIconsAndPlayerRegenerati
                                                                                           dbc5(*)  
             3400                    ??         ??                                            This is where sprites are copied over four times, offset on
                                                                                              To make it easier to draw sprites when moving along bits.
@@ -15336,21 +15335,21 @@
             387d                    ??         ??
             387e                    ??         ??
             387f                    ??         ??
-                             PlayerSprite_Left_Stand_InRam_0x3880            XREF[2]:     PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                             PlayerSprite_Left_Stand_InRam_0x3880            XREF[2]:     DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
             3880                    ??         ??
-                             DAT_3881                                        XREF[1]:     PlayerSpriteDrawFunction_Maybe:c
+                             DAT_3881                                        XREF[1]:     DrawLifeIconsAndPlayerRegenerati
             3881                    ??         ??
-                             DAT_3882                                        XREF[2]:     PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                             DAT_3882                                        XREF[2]:     DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
             3882                    ??         ??
-                             DAT_3883                                        XREF[2]:     PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                             DAT_3883                                        XREF[2]:     DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
             3883                    ??         ??
-                             DAT_3884                                        XREF[1]:     PlayerSpriteDrawFunction_Maybe:c
+                             DAT_3884                                        XREF[1]:     DrawLifeIconsAndPlayerRegenerati
             3884                    ??         ??
-                             DAT_3885                                        XREF[2]:     PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                             DAT_3885                                        XREF[2]:     DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
             3885                    ??         ??
             3886                    ??         ??
             3887                    ??         ??
@@ -17491,8 +17490,8 @@
                                                                                              undefined InitVideoAndSetupRoomAndGraphics(void)
             c171 bd ce cf           JSR        InitKeyState_Maybe                            = ??
                                                                                              undefined InitKeyState_Maybe(void)
-            c174 bd ce fa           JSR        Init_PlayerLivesIconPositions                 = ??
-                                                                                             undefined Init_PlayerLivesIconPositions(void)
+            c174 bd ce fa           JSR        Init_PlayerLivesIconParameters                = ??
+                                                                                             undefined Init_PlayerLivesIconParameters(void)
             c177 bd cc a3           JSR        LoadPlayerPhysicsToYAndGetRoomGraphicsAndDat  = ??
                                                                                              undefined LoadPlayerPhysicsToYAndGetRoomGraphicsAndDataAddr
             c17a bd cc d3           JSR        InitRoom_Maybe                                = ??
@@ -17503,9 +17502,9 @@
             c184 bd c6 a9           JSR        BigInitFunction_Maybe                         = ??
                                                                                              undefined BigInitFunction_Maybe(undefined A, undefined B, b
                              Loop_MainGameLoop_Maybe                         XREF[1]:     c1ec(j)  
-            c187 96 48              LDA        <Player_IsMoving_Maybe_0x48                   = ??
+            c187 96 48              LDA        <Player_NeedsUpdate_Maybe_0x48                = ??
             c189 27 09              BEQ        Jump_SkipPlayerUpdate
-            c18b 0f 48              CLR        <Player_IsMoving_Maybe_0x48                   = ??
+            c18b 0f 48              CLR        <Player_NeedsUpdate_Maybe_0x48                = ??
             c18d 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     = ??
             c191 bd d8 60           JSR        UpdateObjectPhysics                           = ??
                                                                                              undefined UpdateObjectPhysics(void)
@@ -17897,7 +17896,7 @@
                                                                                           FUN_c3b3:c56c(j), 
                                                                                           FUN_c3b3:c5ae(j), 
                                                                                           FUN_c3b3:c5c5(j), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                                                                                          DrawLifeIconsAndPlayerRegenerati
             c3b2 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -18203,7 +18202,7 @@
             c5a3 bd c3 5f           JSR        PlaySound                                     play splat sound
                              perform actual drawing of sprite
             c5a6 ce 00 83           LDU        #SpriteDrawingBuffer_0x83                     = ??
-            c5a9 bd c9 a2           JSR        PlayerSpriteDrawFunction_Maybe                undefined PlayerSpriteDrawFunction_Maybe(undefined A, undef
+            c5a9 bd c9 a2           JSR        DrawLifeIconsAndPlayerRegeneration            undefined DrawLifeIconsAndPlayerRegeneration(undefined A, u
                              LAB_c5ac                                        XREF[1]:     c578(j)  
             c5ac 6a 3d              DEC        -0x3,Y=>Player_DeathAndRegenMiniCounter_0x1a7 = ??
             c5ae 10 26 fe 00        LBNE       Jump_IsAlreadyClimbing::Jump_Return
@@ -18224,7 +18223,7 @@
              undefined         A:1            <RETURN>
                              GetPlayerLivesAddress                           XREF[3]:     FUN_c3b3:c5f4(c), 
                                                                                           BigInitFunction_Maybe:c6e0(c), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                                                                                          DrawLifeIconsAndPlayerRegenerati
             c5c8 8e c5 d2           LDX        #PlayerLivesAddresses                         = 0055
             c5cb 96 52              LDA        <CurrentPlayer_0x52                           = ??
             c5cd 84 02              ANDA       #0x2
@@ -18244,7 +18243,7 @@
             c5dc da ef              addr       String_GetReadyPlayerTwo                      = 16
                              ResetTimerTo2048IfAtZeroWhenDied_Maybe          XREF[1]:     c5b4(j)  
             c5de b6 01 cf           LDA        Bird_InitState_0x1cf                          = ??
-            c5e1 27 11              BEQ        LAB_c5f4
+            c5e1 27 11              BEQ        Jump_SkipResettingTimerAndBird
             c5e3 bd cb b9           JSR        GetPlayerRoomTimerBuffer                      undefined GetPlayerRoomTimerBuffer(void)
             c5e6 d6 39              LDB        <CurrentRoomNumber_0x39                       = ??
             c5e8 58                 LSLB                                                     double B to get relative address in buffer
@@ -18253,14 +18252,14 @@
             c5ed ed 84              STD        ,X
             c5ef 86 ff              LDA        #0xff
             c5f1 b7 01 cf           STA        Bird_InitState_0x1cf                          = ??
-                             LAB_c5f4                                        XREF[1]:     c5e1(j)  
+                             Jump_SkipResettingTimerAndBird                  XREF[1]:     c5e1(j)  
             c5f4 8d d2              BSR        GetPlayerLivesAddress                         undefined GetPlayerLivesAddress(void)
             c5f6 a6 84              LDA        ,X
             c5f8 81 05              CMPA       #0x5
-            c5fa 23 04              BLS        LAB_c600
+            c5fa 23 04              BLS        Jump_SkipClampingLivesCount
             c5fc 86 05              LDA        #0x5
             c5fe a7 84              STA        ,X
-                             LAB_c600                                        XREF[1]:     c5fa(j)  
+                             Jump_SkipClampingLivesCount                     XREF[1]:     c5fa(j)  
             c600 6a 84              DEC        ,X
             c602 10 2b 16 06        LBMI       LAB_dc0c
             c606 34 20              PSHS        Y
@@ -18385,34 +18384,39 @@
             c6d6 dc 4b              LDD        <Player_RegenerationTimer_0x4b                = ??
             c6d8 26 56              BNE        Jump_TimersNotDone
             c6da 34 20              PSHS        Y
+                             The player stopped regenerating, so erase the
+                             regenerating head icon for the current life.
             c6dc 10 8e 01 e9        LDY        #CurrentPlayerSpritePointer_0x1e9             = ??
             c6e0 bd c5 c8           JSR        GetPlayerLivesAddress                         undefined GetPlayerLivesAddress(void)
             c6e3 a6 84              LDA        ,X
             c6e5 e6 3b              LDB        -0x5,Y=>PlayerLives_HeadIcons_Spacing_0x1e4   = ??
             c6e7 3d                 MUL
-            c6e8 ae 22              LDX        0x2,Y=>PlayerLives_DrawLocationInPage         = ??
-            c6ea 30 8b              LEAX       B,X
+            c6e8 ae 22              LDX        0x2,Y=>PlayerLives_DrawLocationInPage_0x1eb   = ??
+            c6ea 30 8b              LEAX       B,X                                           X will contain the location on screen of the
+                                                                                             current life head icon
             c6ec a6 3f              LDA        -0x1,Y=>PlayerLives_HeadIcon_LinesToDraw_0x1  = ??
             c6ee 97 26              STA        <UtilityCounter_0x26                          = ??
-            c6f0 dc 1b              LDD        <ZeroValue                                    = ??
-                             LAB_c6f2                                        XREF[1]:     c6f9(j)  
-            c6f2 ed 84              STD        ,X
+            c6f0 dc 1b              LDD        <ZeroValue                                    The value to draw, which will blank out the pixels
+                             Loop_ClearHeadIcon                              XREF[1]:     c6f9(j)  
+            c6f2 ed 84              STD        ,X                                            clear line of the head icon
             c6f4 30 88 20           LEAX       0x20,X                                        move to next line
             c6f7 0a 26              DEC        <UtilityCounter_0x26                          = ??
-            c6f9 26 f7              BNE        LAB_c6f2
+            c6f9 26 f7              BNE        Loop_ClearHeadIcon
+                             clear the screen for the area covered by the
+                             regenerating player 
             c6fb 35 20              PULS        Y
             c6fd 6f 3e              CLR        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
             c6ff ae 28              LDX        0x8,Y=>Player_VideoPageDrawDestination_0x1b2  = ??
             c701 e6 3f              LDB        -0x1,Y=>Player_NumRowsInSprite_0x1a9          = ??
             c703 d7 26              STB        <UtilityCounter_0x26                          = ??
-                             LAB_c705                                        XREF[1]:     c716(j)  
+                             Loop_ClearPlayerArea                            XREF[1]:     c716(j)  
             c705 ec 89 18 00        LDD        0x1800,X                                      copy two bytes from second page
             c709 ed 84              STD        ,X                                            paste two bytes to first page
             c70b a6 89 18 02        LDA        0x1802,X                                      copy byte 3 from second page
             c70f a7 02              STA        0x2,X                                         paste byte 3 of first page
             c711 30 88 20           LEAX       0x20,X                                        move to next line
             c714 0a 26              DEC        <UtilityCounter_0x26                          = ??
-            c716 26 ed              BNE        LAB_c705
+            c716 26 ed              BNE        Loop_ClearPlayerArea
                              Jump_PlayerLanding_Maybe                        XREF[1]:     FUN_c3b3:c538(j)  
             c718 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
             c71a 2b 18              BMI        Jump_ProcessPlayerControls_Maybe
@@ -18788,7 +18792,7 @@
             c992 c6 c0              LDB        #0xc0
             c994 3d                 MUL
             c995 33 cb              LEAU       B,U
-            c997 df 37              STU        <SomeValue_0x37                               = ??
+            c997 df 37              STU        <Player_CurrentSpriteFrame_Maybe_0x37         = ??
             c999 a6 26              LDA        0x6,Y=>PlayerX_0x1b0                          = ??
             c99b 84 03              ANDA       #0x3
             c99d c6 30              LDB        #0x30
@@ -18797,75 +18801,90 @@
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall PlayerSpriteDrawFunction_Maybe(undef
+                             undefined __stdcall DrawLifeIconsAndPlayerRegeneration(u
              undefined         A:1            <RETURN>
              undefined         A:1            A
              undefined         B:1            B
              char *            X:2            X
              short             Y:2            Y
              ushort            U:2            U
-                             PlayerSpriteDrawFunction_Maybe                  XREF[1]:     FUN_c3b3:c5a9(c)  
+                             Check whether we need to draw the player
+                             DrawLifeIconsAndPlayerRegeneration              XREF[1]:     FUN_c3b3:c5a9(c)  
             c9a2 ef 2a              STU        0xa,Y=>Player_SpritePointer_0x1b4             = ??
             c9a4 11 a3 2e           CMPU       0xe,Y=>Player_PreviousSpritePointer_0x1b8     = ??
-            c9a7 26 10              BNE        LAB_c9b9
+            c9a7 26 10              BNE        Jump_ContinueDrawing                          Are the sprite pointer and previous sprite pointer the same?
+                                                                                             If not, then skip to draw
             c9a9 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
-            c9ab 2b 0c              BMI        LAB_c9b9
+            c9ab 2b 0c              BMI        Jump_ContinueDrawing                          Is the player regenerating? 
+                                                                                             If so, then skip to draw
             c9ad ee 28              LDU        0x8,Y=>Player_VideoPageDrawDestination_0x1b2  = ??
             c9af 11 a3 2c           CMPU       0xc,Y=>PlayerY_PreviousVideoPageDrawPosition  = ??
-            c9b2 10 27 f9 fc        LBEQ       Jump_IsAlreadyClimbing::Jump_Return
-            c9b6 0c 48              INC        <Player_IsMoving_Maybe_0x48                   = ??
+            c9b2 10 27 f9 fc        LBEQ       Jump_IsAlreadyClimbing::Jump_Return           Is the current draw position and the previous draw position
+                                                                                             the same?
+                                                                                             If so, then jump to return
+            c9b6 0c 48              INC        <Player_NeedsUpdate_Maybe_0x48                = ??
             c9b8 39                 RTS
-                             LAB_c9b9                                        XREF[2]:     c9a7(j), c9ab(j)  
+                             Jump_ContinueDrawing                            XREF[2]:     c9a7(j), c9ab(j)  
             c9b9 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
-            c9bb 10 2e 00 d9        LBGT       LAB_ca98
+            c9bb 10 2e 00 d9        LBGT       Jump_PlayerIsDead
+                             Reinits the player animations for regeneration
             c9bf e6 3c              LDB        -0x4,Y=>Player_FacingDirection_0x1a6          = ??
             c9c1 34 20              PSHS        Y
             c9c3 10 8e 01 e9        LDY        #CurrentPlayerSpritePointer_0x1e9             = ??
-            c9c7 a7 3e              STA        -0x2,Y=>DAT_01e7                              = ??
-            c9c9 e7 3c              STB        -0x4,Y=>DAT_01e5                              = ??
-            c9cb de 37              LDU        <SomeValue_0x37                               = ??
+            c9c7 a7 3e              STA        -0x2,Y=>Player_State_Copy_0x1e7               = ??
+            c9c9 e7 3c              STB        -0x4,Y=>Player_FacingDirection_Copy_0x1e5     = ??
+            c9cb de 37              LDU        <Player_CurrentSpriteFrame_Maybe_0x37         = ??
             c9cd ef a4              STU        ,Y=>CurrentPlayerSpritePointer_0x1e9          = ??
-            c9cf ee 22              LDU        0x2,Y=>PlayerLives_DrawLocationInPage         = ??
-            c9d1 ef 24              STU        0x4,Y=>PlayerLives_SomeOtherDrawLocation_May  = ??
+            c9cf ee 22              LDU        0x2,Y=>PlayerLives_DrawLocationInPage_0x1eb   = ??
+            c9d1 ef 24              STU        0x4,Y=>PlayerLives_DrawLocationInPage_Copy_0  = ??
             c9d3 bd c5 c8           JSR        GetPlayerLivesAddress                         undefined GetPlayerLivesAddress(void)
-            c9d6 a6 84              LDA        ,X
-            c9d8 e6 3e              LDB        -0x2,Y=>DAT_01e7                              = ??
-            c9da 2a 01              BPL        LAB_c9dd
-            c9dc 4c                 INCA
-                             LAB_c9dd                                        XREF[1]:     c9da(j)  
-            c9dd a7 3d              STA        -0x3,Y=>DAT_01e6                              = ??
-            c9df 20 02              BRA        LAB_c9e3
-                             LAB_c9e1                                        XREF[1]:     ca93(j)  
-            c9e1 6a 3d              DEC        -0x3,Y=>DAT_01e6                              = ??
-                             LAB_c9e3                                        XREF[1]:     c9df(j)  
-            c9e3 10 27 00 af        LBEQ       LAB_ca96
-            c9e7 ae 24              LDX        0x4,Y=>PlayerLives_SomeOtherDrawLocation_May  = ??
+            c9d6 a6 84              LDA        ,X                                            contains player lives
+            c9d8 e6 3e              LDB        -0x2,Y=>Player_State_Copy_0x1e7               = ??
+            c9da 2a 01              BPL        Jump_SkipIncrementLives                       we're not alive or dead, so 
+                                                                                             regenerating
+            c9dc 4c                 INCA                                                     increment lives temporarily for displaying
+                                                                                             head icons?
+                             Jump_SkipIncrementLives                         XREF[1]:     c9da(j)  
+            c9dd a7 3d              STA        -0x3,Y=>Player_LivesCount_Counter_0x1e6       = ??
+            c9df 20 02              BRA        Jump_SkipDecrementLives
+                             Loop_DrawHeadIcons                              XREF[1]:     ca93(j)  
+            c9e1 6a 3d              DEC        -0x3,Y=>Player_LivesCount_Counter_0x1e6       = ??
+                             Jump_SkipDecrementLives                         XREF[1]:     c9df(j)  
+            c9e3 10 27 00 af        LBEQ       Jump_FinishedDrawingHeadIcons
+            c9e7 ae 24              LDX        0x4,Y=>PlayerLives_DrawLocationInPage_Copy_0  = ??
             c9e9 ee a4              LDU        ,Y=>CurrentPlayerSpritePointer_0x1e9          = ??
             c9eb a6 3f              LDA        -0x1,Y=>PlayerLives_HeadIcon_LinesToDraw_0x1  = ??
             c9ed 97 26              STA        <UtilityCounter_0x26                          = ??
-            c9ef a6 3e              LDA        -0x2,Y=>DAT_01e7                              = ??
-            c9f1 10 2a 00 87        LBPL       Loop_DrawHeadLifeIcon_maybe
-            c9f5 a6 3d              LDA        -0x3,Y=>DAT_01e6                              = ??
+            c9ef a6 3e              LDA        -0x2,Y=>Player_State_Copy_0x1e7               = ??
+            c9f1 10 2a 00 87        LBPL       Loop_DrawHeadLifeIcon                         if the player is alive or dead (not regen)
+                                                                                             draw the head life icon
+            c9f5 a6 3d              LDA        -0x3,Y=>Player_LivesCount_Counter_0x1e6       = ??
             c9f7 81 01              CMPA       #0x1
-            c9f9 10 26 00 7f        LBNE       Loop_DrawHeadLifeIcon_maybe
-            c9fd ce 34 00           LDU        #SpriteData_ClonedDestination_0x3400          = ??
-            ca00 a6 3c              LDA        -0x4,Y=>DAT_01e5                              = ??
-            ca02 26 04              BNE        LAB_ca08
-            ca04 33 c9 04 80        LEAU       0x480,U
-                             LAB_ca08                                        XREF[1]:     ca02(j)  
-            ca08 df 45              STU        <SomeValue_0x45                               = ??
+            c9f9 10 26 00 7f        LBNE       Loop_DrawHeadLifeIcon                         if we're not at the last life icon, just draw it normally
+                             At this point I think it's the regenerating
+                             head life icon
+            c9fd ce 34 00           LDU        #SpriteData_ClonedDestination_0x3400          address to the facing right player sprites
+            ca00 a6 3c              LDA        -0x4,Y=>Player_FacingDirection_Copy_0x1e5     = ??
+            ca02 26 04              BNE        Jump_SkipGettingLeftFacingSprites
+            ca04 33 c9 04 80        LEAU       0x480,U                                       move to the facing left player sprites
+                             Jump_SkipGettingLeftFacingSprites               XREF[1]:     ca02(j)  
+            ca08 df 45              STU        <Player_SpriteFrameAddress_Temp_0x45          = ??
             ca0a bd dc 39           JSR        IncrementRomAddressCounter                    undefined IncrementRomAddressCounter(undefined A, undefined
-            ca0d 1f 52              TFR        PC,Y
+            ca0d 1f 52              TFR        PC,Y                                          setup Y to become a random data generator
             ca0f 31 a5              LEAY       B,Y
-                             LAB_ca11                                        XREF[1]:     ca2d(j)  
-            ca11 ec c4              LDD        ,U=>PlayerSprite_Left_Stand_InRam_0x3880      = ??
+                             Loop_DrawRegenHeadLifeIcon                      XREF[1]:     ca2d(j)  
+            ca11 ec c4              LDD        ,U=>PlayerSprite_Left_Stand_InRam_0x3880      get the first two bytes of the sprite
+                             mess around the two bytes of the sprite
             ca13 48                 LSLA
             ca14 58                 LSLB
             ca15 aa c0              ORA        ,U+=>PlayerSprite_Left_Stand_InRam_0x3880     = ??
             ca17 ea c0              ORB        ,U+=>DAT_3881                                 = ??
             ca19 a4 a0              ANDA       ,Y+
             ca1b e4 a0              ANDB       ,Y+
-            ca1d ed 84              STD        ,X
+            ca1d ed 84              STD        ,X                                            draw the messed up bytes to the address in the
+                                                                                             first page of video memory stored in X
+                             do the same to the third byte of the sprite's three
+                             bytes per line
             ca1f a6 c4              LDA        ,U=>DAT_3882                                  = ??
             ca21 48                 LSLA
             ca22 aa c0              ORA        ,U+=>DAT_3882                                 = ??
@@ -18873,27 +18892,30 @@
             ca26 a7 02              STA        0x2,X                                         store two bytes to X
             ca28 30 88 20           LEAX       0x20,X                                        move to next line
             ca2b 0a 26              DEC        <UtilityCounter_0x26                          = ??
-            ca2d 26 e2              BNE        LAB_ca11
-            ca2f 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     load from this data. 
+            ca2d 26 e2              BNE        Loop_DrawRegenHeadLifeIcon
+                             draw player sprite in regeneration mode
+            ca2f 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     = ??
             ca33 ae 28              LDX        0x8,Y=>Player_VideoPageDrawDestination_0x1b2  = ??
             ca35 af 2c              STX        0xc,Y=>PlayerY_PreviousVideoPageDrawPosition  = ??
             ca37 a6 3f              LDA        -0x1,Y=>Player_NumRowsInSprite_0x1a9          = ??
             ca39 97 26              STA        <UtilityCounter_0x26                          = ??
-            ca3b de 45              LDU        <SomeValue_0x45                               = ??
+            ca3b de 45              LDU        <Player_SpriteFrameAddress_Temp_0x45          = ??
             ca3d a6 26              LDA        0x6,Y=>PlayerX_0x1b0                          = ??
             ca3f 84 03              ANDA       #0x3                                          which bit offset to draw on
             ca41 c6 30              LDB        #0x30                                         converted player sprite size 
                                                                                              (2 bytes * 16 lines) + 1 byte extra 
                                                                                              per line: 0x30
             ca43 3d                 MUL                                                      find which sprite to use
-            ca44 33 cb              LEAU       B,U
+            ca44 33 cb              LEAU       B,U                                           move U to the sprite frame that depends on the X position
             ca46 6f 2e              CLR        0xe,Y=>Player_PreviousSpritePointer_0x1b8     = ??
             ca48 bd dc 39           JSR        IncrementRomAddressCounter                    undefined IncrementRomAddressCounter(undefined A, undefined
-            ca4b 1f 52              TFR        PC,Y
+            ca4b 1f 52              TFR        PC,Y                                          setup Y to become a random data generator
             ca4d 31 a5              LEAY       B,Y
-                             copy three bytes?
-                             LAB_ca4f                                        XREF[1]:     ca77(j)  
-            ca4f ec c4              LDD        ,U
+                             draw the player sprite but use random data and
+                             bit manipulation to generate the static effect
+                             Loop_DrawRegenPlayerSprite                      XREF[1]:     ca77(j)  
+            ca4f ec c4              LDD        ,U                                            load the first two bytes of the player sprite
+                             mess around the pixel bytes 
             ca51 48                 LSLA
             ca52 58                 LSLB
             ca53 aa c0              ORA        ,U+
@@ -18902,7 +18924,8 @@
             ca59 aa 89 18 00        ORA        0x1800,X                                      Binary Or with value at second page, store in A
             ca5d e4 a0              ANDB       ,Y+
             ca5f ea 89 18 01        ORB        0x1801,X
-            ca63 ed 84              STD        ,X
+            ca63 ed 84              STD        ,X                                            draw the pixels to the first page of video memory
+                             do the same for the third byte
             ca65 a6 c4              LDA        ,U
             ca67 48                 LSLA
             ca68 aa c0              ORA        ,U+
@@ -18911,26 +18934,27 @@
             ca70 a7 02              STA        0x2,X                                         store to same location in page 0
             ca72 30 88 20           LEAX       0x20,X                                        move to next line
             ca75 0a 26              DEC        <UtilityCounter_0x26                          = ??
-            ca77 26 d6              BNE        LAB_ca4f
+            ca77 26 d6              BNE        Loop_DrawRegenPlayerSprite
+                             we're done, so return
             ca79 35 20              PULS        Y
             ca7b 39                 RTS
-                             Loop_DrawHeadLifeIcon_maybe                     XREF[3]:     c9f1(j), c9f9(j), ca89(j)  
+                             Loop_DrawHeadLifeIcon                           XREF[3]:     c9f1(j), c9f9(j), ca89(j)  
             ca7c 37 06              PULU        A B
             ca7e ed 84              STD        ,X                                            write two bytes to X
             ca80 37 02              PULU        A
             ca82 a7 02              STA        0x2,X                                         store A two bytes later in X
             ca84 30 88 20           LEAX       0x20,X                                        move to next line
             ca87 0a 26              DEC        <UtilityCounter_0x26                          next sprite line
-            ca89 26 f1              BNE        Loop_DrawHeadLifeIcon_maybe
-            ca8b ae 24              LDX        0x4,Y=>PlayerLives_SomeOtherDrawLocation_May  = ??
+            ca89 26 f1              BNE        Loop_DrawHeadLifeIcon
+            ca8b ae 24              LDX        0x4,Y=>PlayerLives_DrawLocationInPage_Copy_0  = ??
             ca8d a6 3b              LDA        -0x5,Y=>PlayerLives_HeadIcons_Spacing_0x1e4   = ??
             ca8f 30 86              LEAX       A,X
-            ca91 af 24              STX        0x4,Y=>PlayerLives_SomeOtherDrawLocation_May  = ??
-            ca93 7e c9 e1           JMP        LAB_c9e1
-                             LAB_ca96                                        XREF[1]:     c9e3(j)  
+            ca91 af 24              STX        0x4,Y=>PlayerLives_DrawLocationInPage_Copy_0  = ??
+            ca93 7e c9 e1           JMP        Loop_DrawHeadIcons
+                             Jump_FinishedDrawingHeadIcons                   XREF[1]:     c9e3(j)  
             ca96 35 20              PULS        Y
-                             LAB_ca98                                        XREF[1]:     c9bb(j)  
-            ca98 0c 48              INC        <Player_IsMoving_Maybe_0x48                   = ??
+                             Jump_PlayerIsDead                               XREF[1]:     c9bb(j)  
+            ca98 0c 48              INC        <Player_NeedsUpdate_Maybe_0x48                = ??
             ca9a 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -19408,7 +19432,7 @@
             cd30 8e 04 00           LDX        #0x400
             cd33 9f 4e              STX        <CurrentVideoMemLocation_0x4e                 = ??
             cd35 17 00 e5           LBSR       ScreenTransitionWipe                          char ScreenTransitionWipe(void)
-            cd38 be 01 eb           LDX        PlayerLives_DrawLocationInPage                = ??
+            cd38 be 01 eb           LDX        PlayerLives_DrawLocationInPage_0x1eb          = ??
             cd3b 30 1c              LEAX       -0x4,X
             cd3d de 53              LDU        <CurrentInGamePlayerStringPointer             = ??
             cd3f bd d8 e2           JSR        PrintString                                   undefined PrintString(undefined param_1, undefined param_2,
@@ -19799,16 +19823,16 @@
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall Init_PlayerLivesIconPositions(void)
+                             undefined __stdcall Init_PlayerLivesIconParameters(void)
              undefined         A:1            <RETURN>
-                             Init_PlayerLivesIconPositions                   XREF[1]:     FUN_c3b3:c174(c)  
+                             Init_PlayerLivesIconParameters                  XREF[1]:     FUN_c3b3:c174(c)  
             cefa 10 8e 01 e9        LDY        #CurrentPlayerSpritePointer_0x1e9             = ??
             cefe cc 02 14           LDD        #0x214
             cf01 bd d8 56           JSR        ComputeScreenLocationFromAAndB                undefined ComputeScreenLocationFromAAndB(void)
-            cf04 ed 22              STD        0x2,Y=>PlayerLives_DrawLocationInPage         = ??
+            cf04 ed 22              STD        0x2,Y=>PlayerLives_DrawLocationInPage_0x1eb   = ??
             cf06 86 07              LDA        #0x7
             cf08 a7 3f              STA        -0x1,Y=>PlayerLives_HeadIcon_LinesToDraw_0x1  = ??
-            cf0a 86 03              LDA        #0x3
+            cf0a 86 03              LDA        #0x3                                          3 bytes meaning 24 pixels (3 bytes * 8 pixels)
             cf0c a7 3b              STA        -0x5,Y=>PlayerLives_HeadIcons_Spacing_0x1e4   = ??
             cf0e 39                 RTS
                              **************************************************************
@@ -22130,7 +22154,7 @@
                              undefined __stdcall ComputeScreenLocationFromAAndB(void)
              undefined         A:1            <RETURN>
                              ComputeScreenLocationFromAAndB                  XREF[7]:     DrawDoorOrMultipleDoors_Maybe:cd
-                                                                                          Init_PlayerLivesIconPositions:cf
+                                                                                          Init_PlayerLivesIconParameters:c
                                                                                           UpdateAndDrawDrops:cf90(c), 
                                                                                           UpdateAndDrawDrops:cff5(c), 
                                                                                           UpdateAndDrawDrops:d012(c), 
@@ -23136,8 +23160,8 @@
                              IncrementRomAddressCounter                      XREF[9]:     FUN_c3b3:c10d(c), 
                                                                                           FUN_c3b3:c1f1(c), 
                                                                                           FUN_c3b3:c31d(c), 
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
-                                                                                          PlayerSpriteDrawFunction_Maybe:c
+                                                                                          DrawLifeIconsAndPlayerRegenerati
+                                                                                          DrawLifeIconsAndPlayerRegenerati
                                                                                           UpdateRoomTimers:cc2b(c), 
                                                                                           UpdateRoomTimers:cc30(c), 
                                                                                           InitRoomKeysAndPickups:d1ab(c), 
