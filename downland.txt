@@ -920,17 +920,18 @@
                                                                                           Jump_IsAlreadyClimbing:c988(R), 
                                                                                           DrawLifeIconsAndPlayerRegenerati
             01a6                    undefined1 ??
-                             Player_DeathAndRegenMiniCounter_0x1a7           XREF[6]:     FUN_c3b3:c566(W), 
+                             Player_CantMoveCounter_Maybe_0x1a7              XREF[6]:     FUN_c3b3:c566(W), 
                                                                                           FUN_c3b3:c5ac(RW), 
                                                                                           FUN_c3b3:c5c3(W), 
                                                                                           BigInitFunction_Maybe:c6ab(W), 
                                                                                           BigInitFunction_Maybe:c6cd(R), 
                                                                                           BigInitFunction_Maybe:c6d2(W)  
             01a7                    undefined1 ??                                            used for pausing between deaths and regen
-                             Alive: 0
-                             Dead: 1
-                             Dead-ish: 2 or more
-                             Regenerating: FF
+                             State:
+                             0: alive
+                             1: dead
+                             2: dead and falling, or dead and checking the ground
+                             FF: regenerating
                              Player_State_AliveDeadRegenState_0x1a8          XREF[11]:    FUN_c3b3:c3d1(R), 
                                                                                           FUN_c3b3:c502(R), 
                                                                                           FUN_c3b3:c52e(R), 
@@ -1392,9 +1393,11 @@
                              3: x pos
                              4: if key, then which door it unlocks
                              In the buffer, the two keys are always first.
-                             EndOfDropDataBuffer_0x271                       XREF[7]:     GetRoomDataForCurrentRoom:cf0f(*
-                             Room0_Data                                                   UpdateAndDrawDrops:cfa7(*), 
-                             PerRoomPickupData_0x271                                      InitRoomKeysAndPickups:d14e(*), 
+                             EndOfDropDataBuffer_0x271                       XREF[9]:     FUN_c3b3:c2e7(*), 
+                             Room0_Data                                                   FUN_c3b3:c2e9(*), 
+                             PickUp_VisibleState_0x271                                    GetRoomDataForCurrentRoom:cf0f(*
+                             PerRoomPickupData_0x271                                      UpdateAndDrawDrops:cfa7(*), 
+                                                                                          InitRoomKeysAndPickups:d14e(*), 
                                                                                           InitRoomKeysAndPickups:d153(W), 
                                                                                           InitRoomKeysAndPickups:d15e(*), 
                                                                                           InitRoomKeysAndPickups:d188(*), 
@@ -1409,7 +1412,8 @@
             0273                    db         ??
                              PickUp_Y
             0274                    db         ??
-                             PickUp_DoorUnlockIndex                          XREF[2]:     InitRoomKeysAndPickups:d157(W), 
+                             PickUp_DoorUnlockIndex                          XREF[3]:     FUN_c3b3:c2eb(*), 
+                                                                                          InitRoomKeysAndPickups:d157(W), 
                                                                                           InitRoomKeysAndPickups:d175(W)  
             0275                    db         ??
                              PickUp_Key2_VisibleState                        XREF[1]:     InitRoomKeysAndPickups:d153(W)  
@@ -16113,6 +16117,7 @@
             3b7d                    ??         ??
             3b7e                    ??         ??
             3b7f                    ??         ??
+                             Player_Cloned_CollisionMask_Maybe_0x3b80        XREF[1]:     FUN_c3b3:c3dd(*)  
             3b80                    ??         ??
             3b81                    ??         ??
             3b82                    ??         ??
@@ -16927,14 +16932,19 @@
             3eba                    dw         ??
             3ebc                    dw         ??
             3ebe                    dw         ??
-                             DAT_3ec0                                        XREF[6]:     FUN_c3b3:c2f4(*), 
+                             Player_KeyStateData_0x3ec0                      XREF[11]:    FUN_c3b3:c2ef(*), 
+                                                                                          FUN_c3b3:c2f4(*), 
                                                                                           FUN_c3b3:c2f8(*), 
+                                                                                          FUN_ccb1:ccc8(*), 
                                                                                           FUN_ccb1:cccd(*), 
+                                                                                          InitRoom_Maybe:cd1b(*), 
                                                                                           InitRoom_Maybe:cd21(*), 
-                                                                                          InitKeyState_Maybe:ced4(W), 
-                                                                                          InitKeyState_Maybe:cee5(*)  
+                                                                                          InitKeyStateData:ced1(*), 
+                                                                                          InitKeyStateData:ced4(W), 
+                                                                                          InitKeyStateData:ced9(*), 
+                                                                                          InitKeyStateData:cee5(*)  
             3ec0                    ??         ??
-                             DAT_3ec1                                        XREF[1]:     InitKeyState_Maybe:ced4(W)  
+                             DAT_3ec1                                        XREF[1]:     InitKeyStateData:ced4(W)  
             3ec1                    ??         ??
             3ec2                    ??         ??
             3ec3                    ??         ??
@@ -17488,8 +17498,8 @@
                                                                                              undefined InitRoomKeysAndPickups(void)
             c16e bd ce b6           JSR        InitVideoAndSetupRoomAndGraphics              = ??
                                                                                              undefined InitVideoAndSetupRoomAndGraphics(void)
-            c171 bd ce cf           JSR        InitKeyState_Maybe                            = ??
-                                                                                             undefined InitKeyState_Maybe(void)
+            c171 bd ce cf           JSR        InitKeyStateData                              = ??
+                                                                                             undefined InitKeyStateData(void)
             c174 bd ce fa           JSR        Init_PlayerLivesIconParameters                = ??
                                                                                              undefined Init_PlayerLivesIconParameters(void)
             c177 bd cc a3           JSR        LoadPlayerPhysicsToYAndGetRoomGraphicsAndDat  = ??
@@ -17746,16 +17756,18 @@
             c2e1 7e c5 3c           JMP        Jump_PerformPlayerDeath
                              Jump_CollidesWithPickup                         XREF[1]:     c277(j)  
             c2e4 96 52              LDA        <CurrentPlayer_0x52                           = ??
+                             figure out which bit to turn off for the picked up treature
             c2e6 43                 COMA
-            c2e7 a4 a4              ANDA       ,Y
-            c2e9 a7 a4              STA        ,Y
-            c2eb e6 24              LDB        0x4,Y
-            c2ed 2b 2c              BMI        LAB_c31b
-            c2ef 8e 3e c0           LDX        #0x3ec0
+            c2e7 a4 a4              ANDA       ,Y=>PickUp_VisibleState_0x271                 = ??
+            c2e9 a7 a4              STA        ,Y=>PickUp_VisibleState_0x271                 = ??
+            c2eb e6 24              LDB        0x4,Y=>PickUp_DoorUnlockIndex                 = ??
+            c2ed 2b 2c              BMI        Jump_SkipDoorActivation
+                             activate the door for the picked up key
+            c2ef 8e 3e c0           LDX        #Player_KeyStateData_0x3ec0                   = ??
             c2f2 30 85              LEAX       B,X
-            c2f4 a6 84              LDA        ,X=>DAT_3ec0                                  = ??
+            c2f4 a6 84              LDA        ,X=>Player_KeyStateData_0x3ec0                = ??
             c2f6 9a 52              ORA        <CurrentPlayer_0x52                           = ??
-            c2f8 a7 84              STA        ,X=>DAT_3ec0                                  = ??
+            c2f8 a7 84              STA        ,X=>Player_KeyStateData_0x3ec0                set the picked up state of the key for this player
             c2fa bd cc a7           JSR        GetRoomGraphicsAndDoorAddrIntoX               undefined GetRoomGraphicsAndDoorAddrIntoX(void)
                              LAB_c2fd                                        XREF[1]:     c307(j)  
             c2fd e1 05              CMPB       0x5,X=>DAT_3ec5                               = ??
@@ -17763,7 +17775,7 @@
             c301 30 89 00 06        LEAX       0x6,X
             c305 a6 84              LDA        ,X=>DAT_3ec6                                  = ??
             c307 26 f4              BNE        LAB_c2fd
-            c309 20 10              BRA        LAB_c31b
+            c309 20 10              BRA        Jump_SkipDoorActivation
                              LAB_c30b                                        XREF[1]:     c2ff(j)  
             c30b ce 1c 00           LDU        #VideoMemory_Page1_0x1c00                     = ??
             c30e df 4e              STU        <CurrentVideoMemLocation_0x4e                 = ??
@@ -17771,7 +17783,7 @@
             c313 ce 04 00           LDU        #VideoMemory_Page0_0x0400                     = ??
             c316 df 4e              STU        <CurrentVideoMemLocation_0x4e                 = ??
             c318 bd cd 81           JSR        DrawDoorOrMultipleDoors_Maybe                 undefined DrawDoorOrMultipleDoors_Maybe(undefined A, undefi
-                             LAB_c31b                                        XREF[2]:     c2ed(j), c309(j)  
+                             Jump_SkipDoorActivation                         XREF[2]:     c2ed(j), c309(j)  
             c31b dc 1b              LDD        <ZeroValue                                    = ??
             c31d bd dc 39           JSR        IncrementRomAddressCounter                    undefined IncrementRomAddressCounter(undefined A, undefined
             c320 c4 7f              ANDB       #0x7f
@@ -17920,12 +17932,12 @@
             c3c5 81 01              CMPA       #0x1
             c3c7 10 27 00 c1        LBEQ       Jump_HandlePlayerJumpAndRope
             c3cb 96 30              LDA        <Player_DeathPauseInTheAirTimer               = ??
-            c3cd 10 26 01 7b        LBNE       LAB_c54c
+            c3cd 10 26 01 7b        LBNE       Jump_PlayerStillDyingInTheAir
             c3d1 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
-            c3d3 10 2b 02 e1        LBMI       LAB_c6b8
-            c3d7 10 26 00 bd        LBNE       LAB_c498
+            c3d3 10 2b 02 e1        LBMI       BigInitFunction_Maybe::Jump_JoystickCheck
+            c3d7 10 26 00 bd        LBNE       Jump_PlayerIsDead
             c3db 6c 36              INC        -0xa,Y=>ConstantZeroToFFCounter               = ??
-            c3dd ce 3b 80           LDU        #0x3b80
+            c3dd ce 3b 80           LDU        #Player_Cloned_CollisionMask_Maybe_0x3b80     location of mysterious sprites?
             c3e0 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
             c3e2 c6 3c              LDB        #0x3c
             c3e4 3d                 MUL
@@ -18010,7 +18022,7 @@
             c48e 10 26 03 17        LBNE       Jump_IsJumpingUp_Maybe
             c492 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
             c494 10 26 00 94        LBNE       Jump_IsClimbing
-                             LAB_c498                                        XREF[1]:     c3d7(j)  
+                             Jump_PlayerIsDead                               XREF[1]:     c3d7(j)  
             c498 8d 4d              BSR        ComputeVideoPageDestination_Maybe             char ComputeVideoPageDestination_Maybe(void)
             c49a 30 89 02 00        LEAX       0x200,X                                       sixteen lines underneath X, maybe
             c49e ce c5 0d           LDU        #BitPatternTableForRopeOrFloor_Maybe          = 0000001111000000b
@@ -18073,9 +18085,9 @@
             c500 ed 22              STD        0x2,Y=>Player_SpeedX_0x1ac                    = ??
                              LAB_c502                                        XREF[1]:     c4d6(j)  
             c502 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
-            c504 26 69              BNE        Jump_PlayerIsAlive
+            c504 26 69              BNE        Jump_PlayerIsDead_Maybe
                              Jump_NotTouchingGround                          XREF[1]:     c571(j)  
-            c506 7e c7 83           JMP        LAB_c783
+            c506 7e c7 83           JMP        BigInitFunction_Maybe::Jump_JumpToClimbingRo
                              SomeKindOfHorizontalBitOffsetTable              XREF[8]:     ComputeVideoPageDestination_Mayb
                                                                                           ComputeVideoPageDestination_Mayb
                                                                                           Jump_IsAlreadyClimbing:c921(*), 
@@ -18128,7 +18140,7 @@
                              Jump_IsClimbing                                 XREF[3]:     c494(j), c4b7(j), c4bc(j)  
             c52c 0f 2d              CLR        <Player_IsTouchingGround_Maybe_0x2d           = ??
             c52e a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
-            c530 26 3d              BNE        Jump_PlayerIsAlive
+            c530 26 3d              BNE        Jump_PlayerIsDead_Maybe
             c532 ec a4              LDD        ,Y=>Player_SpeedY_0x1aa                       = ??
             c534 10 83 01 00        CMPD       #0x100
             c538 10 26 01 dc        LBNE       BigInitFunction_Maybe::Jump_PlayerLanding_Ma
@@ -18138,12 +18150,12 @@
             c540 0f 2c              CLR        <Player_JumpUpInTheAirCounter_0x2c            = ??
             c542 0f 2f              CLR        <Player_CantJumpAfterLandingCounter_Maybe_0x  = ??
             c544 96 2d              LDA        <Player_IsTouchingGround_Maybe_0x2d           = ??
-            c546 27 1c              BEQ        Jump_PlayerTouchingGround
+            c546 27 1c              BEQ        Jump_PlayerStartDeathFallling
             c548 86 32              LDA        #0x32
             c54a 97 30              STA        <Player_DeathPauseInTheAirTimer               = ??
-                             LAB_c54c                                        XREF[1]:     c3cd(j)  
+                             Jump_PlayerStillDyingInTheAir                   XREF[1]:     c3cd(j)  
             c54c 0a 30              DEC        <Player_DeathPauseInTheAirTimer               = ??
-            c54e 27 14              BEQ        Jump_PlayerTouchingGround
+            c54e 27 14              BEQ        Jump_PlayerStartDeathFallling
             c550 96 30              LDA        <Player_DeathPauseInTheAirTimer               = ??
             c552 84 04              ANDA       #0x4                                          use the timer to swap the player direction while
                                                                                              hanging in the air, maybe
@@ -18159,13 +18171,13 @@
             c55d 86 02              LDA        #0x2
             c55f a7 38              STA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
             c561 7e c9 7f           JMP        LAB_c97f
-                             Jump_PlayerTouchingGround                       XREF[2]:     c546(j), c54e(j)  
+                             Jump_PlayerStartDeathFallling                   XREF[2]:     c546(j), c54e(j)  
             c564 86 0a              LDA        #0xa
-            c566 a7 3d              STA        -0x3,Y=>Player_DeathAndRegenMiniCounter_0x1a7 = ??
+            c566 a7 3d              STA        -0x3,Y=>Player_CantMoveCounter_Maybe_0x1a7    = ??
             c568 86 02              LDA        #0x2                                          set to the mid-air jump frame
             c56a a7 3e              STA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
             c56c 7e c3 b2           JMP        Jump_IsAlreadyClimbing::Jump_Return
-                             Jump_PlayerIsAlive                              XREF[2]:     c504(j), c530(j)  
+                             Jump_PlayerIsDead_Maybe                         XREF[2]:     c504(j), c530(j)  
             c56f 96 2d              LDA        <Player_IsTouchingGround_Maybe_0x2d           = ??
             c571 26 93              BNE        Jump_NotTouchingGround
             c573 8d b0              BSR        ClearSpeedToZero                              undefined ClearSpeedToZero(void)
@@ -18204,7 +18216,7 @@
             c5a6 ce 00 83           LDU        #SpriteDrawingBuffer_0x83                     = ??
             c5a9 bd c9 a2           JSR        DrawLifeIconsAndPlayerRegeneration            undefined DrawLifeIconsAndPlayerRegeneration(undefined A, u
                              LAB_c5ac                                        XREF[1]:     c578(j)  
-            c5ac 6a 3d              DEC        -0x3,Y=>Player_DeathAndRegenMiniCounter_0x1a7 = ??
+            c5ac 6a 3d              DEC        -0x3,Y=>Player_CantMoveCounter_Maybe_0x1a7    = ??
             c5ae 10 26 fe 00        LBNE       Jump_IsAlreadyClimbing::Jump_Return
             c5b2 6a 3e              DEC        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
             c5b4 27 28              BEQ        ResetTimerTo2048IfAtZeroWhenDied_Maybe
@@ -18214,7 +18226,7 @@
             c5bd 86 10              LDA        #0x10
             c5bf a7 3f              STA        -0x1,Y=>Player_NumRowsInSprite_0x1a9          = ??
             c5c1 86 46              LDA        #0x46
-            c5c3 a7 3d              STA        -0x3,Y=>Player_DeathAndRegenMiniCounter_0x1a7 = ??
+            c5c3 a7 3d              STA        -0x3,Y=>Player_CantMoveCounter_Maybe_0x1a7    = ??
             c5c5 16 fd ea           LBRA       Jump_IsAlreadyClimbing::Jump_Return
                              **************************************************************
                              *                          FUNCTION                          *
@@ -18348,8 +18360,8 @@
              byte *            X:2            X
              short *           Y:2            Y
                              BigInitFunction_Maybe                           XREF[1]:     FUN_c3b3:c184(c)  
-            c6a9 86 28              LDA        #0x28                                         40
-            c6ab a7 3d              STA        -0x3,Y=>Player_DeathAndRegenMiniCounter_0x1a7 = ??
+            c6a9 86 28              LDA        #0x28                                         40 frames for initial pause when the game starts
+            c6ab a7 3d              STA        -0x3,Y=>Player_CantMoveCounter_Maybe_0x1a7    = ??
             c6ad cc 01 90           LDD        #0x190                                        400
             c6b0 dd 4b              STD        <Player_RegenerationTimer_0x4b                = ??
             c6b2 86 ff              LDA        #0xff
@@ -18358,14 +18370,14 @@
                              **************************************************************
                              * if the player has moved, then set the regen timer to 0     *
                              **************************************************************
-                             LAB_c6b8                                        XREF[1]:     FUN_c3b3:c3d3(j)  
+                             Jump_JoystickCheck                              XREF[1]:     FUN_c3b3:c3d3(j)  
             c6b8 bd dc 66           JSR        UpdateJoystick_Maybe                          undefined UpdateJoystick_Maybe(void)
             c6bb 96 15              LDA        <Player_JoystickDirection_0x15                = ??
-            c6bd 27 04              BEQ        Jump_DontZeroRegenTimer                       if player is moving, then set the
+            c6bd 27 04              BEQ        Jump_DecrementRegenTimer                      if player is moving, then set the
                                                                                              regeneration timer to zero
             c6bf dc 1b              LDD        <ZeroValue                                    = ??
             c6c1 dd 4b              STD        <Player_RegenerationTimer_0x4b                = ??
-                             Jump_DontZeroRegenTimer                         XREF[1]:     c6bd(j)  
+                             Jump_DecrementRegenTimer                        XREF[1]:     c6bd(j)  
             c6c3 4f                 CLRA
             c6c4 dc 4b              LDD        <Player_RegenerationTimer_0x4b                = ??
             c6c6 27 05              BEQ        Jump_RegenTimerIsZero
@@ -18375,14 +18387,14 @@
                              * decrement the regen mini timer if it's not zero            *
                              **************************************************************
                              Jump_RegenTimerIsZero                           XREF[1]:     c6c6(j)  
-            c6cd a6 3d              LDA        -0x3,Y=>Player_DeathAndRegenMiniCounter_0x1a7 = ??
-            c6cf 27 03              BEQ        Jump_DontDecrementRegenMiniTimer
+            c6cd a6 3d              LDA        -0x3,Y=>Player_CantMoveCounter_Maybe_0x1a7    = ??
+            c6cf 27 03              BEQ        Jump_CheckActiveRegenTimers
             c6d1 4a                 DECA
-            c6d2 a7 3d              STA        -0x3,Y=>Player_DeathAndRegenMiniCounter_0x1a7 = ??
-                             Jump_DontDecrementRegenMiniTimer                XREF[1]:     c6cf(j)  
-            c6d4 26 5a              BNE        Jump_TimersNotDone
+            c6d2 a7 3d              STA        -0x3,Y=>Player_CantMoveCounter_Maybe_0x1a7    = ??
+                             Jump_CheckActiveRegenTimers                     XREF[1]:     c6cf(j)  
+            c6d4 26 5a              BNE        Jump_RegenTimersNotDone
             c6d6 dc 4b              LDD        <Player_RegenerationTimer_0x4b                = ??
-            c6d8 26 56              BNE        Jump_TimersNotDone
+            c6d8 26 56              BNE        Jump_RegenTimersNotDone
             c6da 34 20              PSHS        Y
                              The player stopped regenerating, so erase the
                              regenerating head icon for the current life.
@@ -18405,7 +18417,7 @@
                              clear the screen for the area covered by the
                              regenerating player 
             c6fb 35 20              PULS        Y
-            c6fd 6f 3e              CLR        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
+            c6fd 6f 3e              CLR        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  set to alive state
             c6ff ae 28              LDX        0x8,Y=>Player_VideoPageDrawDestination_0x1b2  = ??
             c701 e6 3f              LDB        -0x1,Y=>Player_NumRowsInSprite_0x1a9          = ??
             c703 d7 26              STB        <UtilityCounter_0x26                          = ??
@@ -18429,7 +18441,7 @@
             c728 86 7f              LDA        #01111111b
             c72a b7 ff 20           STA        PIA1_A_DATA_REG__FF20
             c72d 7e c7 be           JMP        LAB_c7be
-                             Jump_TimersNotDone                              XREF[2]:     c6d4(j), c6d8(j)  
+                             Jump_RegenTimersNotDone                         XREF[2]:     c6d4(j), c6d8(j)  
             c730 4f                 CLRA
             c731 7e c8 5f           JMP        LAB_c85f
                              Jump_ProcessPlayerControls_Maybe                XREF[2]:     c71a(j), c71e(j)  
@@ -18473,7 +18485,7 @@
             c77d 86 ff              LDA        #0xff
             c77f 97 2e              STA        <Player_WontDieWhenLanding_Maybe_0x2e         = ??
             c781 97 2d              STA        <Player_IsTouchingGround_Maybe_0x2d           = ??
-                             LAB_c783                                        XREF[1]:     FUN_c3b3:c506(j)  
+                             Jump_JumpToClimbingRopeSubroutine               XREF[1]:     FUN_c3b3:c506(j)  
             c783 7e c8 6f           JMP        Jump_Player_IsClimbingRope_IsPositive
                              Jump_HandleGoingToOneHandedRope                 XREF[2]:     c7f0(j), c84c(j)  
             c786 e6 26              LDB        0x6,Y=>PlayerX_0x1b0                          = ??
@@ -19373,9 +19385,9 @@
             ccbe 10 26 00 b8        LBNE       LAB_cd7a
             ccc2 e1 26              CMPB       0x6,Y
             ccc4 10 26 00 b2        LBNE       LAB_cd7a
-            ccc8 ce 3e c0           LDU        #0x3ec0
+            ccc8 ce 3e c0           LDU        #Player_KeyStateData_0x3ec0                   = ??
             cccb a6 05              LDA        0x5,X
-            cccd a6 c6              LDA        A,U=>DAT_3ec0                                 = ??
+            cccd a6 c6              LDA        A,U=>Player_KeyStateData_0x3ec0               = ??
             cccf 94 52              ANDA       <CurrentPlayer_0x52                           = ??
             ccd1 27 dd              BEQ        LAB_ccb0
                              **************************************************************
@@ -19392,7 +19404,7 @@
             ccdb 0c 3a              INC        <GameCompletionCount_0x3a                     we've completed a run of the game
                                                                                              increase the difficulty
             ccdd bd d1 4c           JSR        InitRoomKeysAndPickups                        reinit the rooms and keys for hard difficulty
-            cce0 bd ce cf           JSR        InitKeyState_Maybe                            undefined InitKeyState_Maybe(void)
+            cce0 bd ce cf           JSR        InitKeyStateData                              undefined InitKeyStateData(void)
             cce3 cc 27 10           LDD        #0x2710
             cce6 bd db 0c           JSR        UpdateAndPrintPlayerScore                     undefined UpdateAndPrintPlayerScore(undefined A, undefined 
             cce9 35 30              PULS        X Y
@@ -19418,10 +19430,10 @@
             cd13 17 00 f5           LBSR       LoadPage1AddressToX                           undefined LoadPage1AddressToX(void)
             cd16 bd d2 4e           JSR        DrawBackground                                undefined DrawBackground(void)
             cd19 8d 8c              BSR        GetRoomGraphicsAndDoorAddrIntoX               undefined GetRoomGraphicsAndDoorAddrIntoX(void)
-            cd1b 10 8e 3e c0        LDY        #0x3ec0                                       address to room or door graphics?
+            cd1b 10 8e 3e c0        LDY        #Player_KeyStateData_0x3ec0                   address to room or door graphics?
                              LAB_cd1f                                        XREF[1]:     cd2e(j)  
             cd1f a6 05              LDA        0x5,X=>DAT_1c05                               Y of spawn point?
-            cd21 a6 a6              LDA        A,Y=>DAT_3ec0                                 = ??
+            cd21 a6 a6              LDA        A,Y=>Player_KeyStateData_0x3ec0               = ??
             cd23 94 52              ANDA       <CurrentPlayer_0x52                           = ??
             cd25 27 02              BEQ        LAB_cd29
             cd27 8d 58              BSR        DrawDoorOrMultipleDoors_Maybe                 undefined DrawDoorOrMultipleDoors_Maybe(undefined A, undefi
@@ -19780,31 +19792,32 @@
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall InitKeyState_Maybe(void)
+                             undefined __stdcall InitKeyStateData(void)
              undefined         A:1            <RETURN>
-                             InitKeyState_Maybe                              XREF[2]:     FUN_c3b3:c171(c), 
+                             InitKeyStateData                                XREF[2]:     FUN_c3b3:c171(c), 
                                                                                           InitRoom_Maybe:cce0(c)  
-            cecf c6 22              LDB        #0x22                                         size of data to clear
-            ced1 8e 3e c0           LDX        #0x3ec0                                       clear start address
-                             Loop_ClearData                                  XREF[1]:     ced7(j)  
-            ced4 6f 80              CLR        ,X+=>DAT_3ec0                                 = ??
+            cecf c6 22              LDB        #0x22                                         34 bytes to clear
+            ced1 8e 3e c0           LDX        #Player_KeyStateData_0x3ec0                   clear start address
+                             Loop_ClearKeyStateData                          XREF[1]:     ced7(j)  
+            ced4 6f 80              CLR        ,X+=>Player_KeyStateData_0x3ec0               = ??
             ced6 5a                 DECB
-            ced7 26 fb              BNE        Loop_ClearData
-            ced9 8e 3e c0           LDX        #0x3ec0
-            cedc ce ce ea           LDU        #OffsetsToKeysWithStateOf3
-            cedf c6 03              LDB        #0x3
-                             Loop_ContinueCopy3ToAplusX                      XREF[1]:     cee7(j)  
-            cee1 a6 c0              LDA        ,U+=>OffsetsToKeysWithStateOf3                load value into A 
+            ced7 26 fb              BNE        Loop_ClearKeyStateData
+            ced9 8e 3e c0           LDX        #Player_KeyStateData_0x3ec0                   = ??
+            cedc ce ce ea           LDU        #OffsetsToKeysAlreadyActivated_0xceea
+            cedf c6 03              LDB        #0x3                                          value to set, 0b00000011 to set the key as
+                                                                                             already enabled
+                             Loop_ContinueSetActiveKeyStates                 XREF[1]:     cee7(j)  
+            cee1 a6 c0              LDA        ,U+=>OffsetsToKeysAlreadyActivated_0xceea     load value into A 
                                                                                              0, 2, 4, 5, 7, etc.
-            cee3 2b 04              BMI        Jump_AllDone                                  loop until we hit FF
-            cee5 e7 86              STB        A,X=>DAT_3ec0                                 store 3 to A + X
-            cee7 20 f8              BRA        Loop_ContinueCopy3ToAplusX
-                             Jump_AllDone                                    XREF[1]:     cee3(j)  
+            cee3 2b 04              BMI        Jump_HitEndOfActiveKeyOffsets                 loop until we hit FF
+            cee5 e7 86              STB        A,X=>Player_KeyStateData_0x3ec0               store 3 to A + X
+            cee7 20 f8              BRA        Loop_ContinueSetActiveKeyStates
+                             Jump_HitEndOfActiveKeyOffsets                   XREF[1]:     cee3(j)  
             cee9 39                 RTS
-                             OffsetsToKeysWithStateOf3                       XREF[2]:     InitKeyState_Maybe:cedc(*), 
-                                                                                          InitKeyState_Maybe:cee1(R)  
+                             OffsetsToKeysAlreadyActivated_0xceea            XREF[2]:     InitKeyStateData:cedc(*), 
+                                                                                          InitKeyStateData:cee1(R)  
             ceea 00                 db         0h
-                             BYTE_ceeb                                       XREF[1]:     InitKeyState_Maybe:cee1(R)  
+                             BYTE_ceeb                                       XREF[1]:     InitKeyStateData:cee1(R)  
             ceeb 02                 db         2h
             ceec 04                 db         4h
             ceed 05                 db         5h

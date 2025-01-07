@@ -76,20 +76,19 @@ Room Pickups Fun Facts
 	The first two are always keys, the last three are treasures
 	treasures are randomly chosen
 
-		
+	completing the game once changes the pick up positions and keys
 
 	
 Questions
 
-	how does the regeneration work?
-		where is the regen timer set?
-		
 	how do points work when picking up a treasure?
 
 	does the game give lives at any point?
 
 	what is the mysterious sprite data?	
 
+
+	how do room transitions work?
 
 	how does the player code flow?
 
