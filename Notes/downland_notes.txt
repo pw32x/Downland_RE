@@ -81,8 +81,6 @@ Room Pickups Fun Facts
 	
 Questions
 
-	how do points work when picking up a treasure?
-
 	does the game give lives at any point?
 
 	what is the mysterious sprite data?	
@@ -128,7 +126,11 @@ How To
 		For title screen, change d124 value from A (10) to 1. 
 		For game rooms, change the values d12a and d12e to 0.
 
-		
+Keys
+
+	there's a buffer of key states, one byte per key. Bit 0 is for player 1,
+	bit 1 for player two. The bit is set when the corresponding player 
+	actives the key.
 		
 		
 		

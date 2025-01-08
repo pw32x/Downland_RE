@@ -246,7 +246,7 @@
                                                                                           UpdateRoomTimers:cbc3(*), 
                                                                                           UpdateRoomTimers:cbda(*), 
                                                                                           UpdateRoomTimers:cc03(*), 
-                                                                                          GetRoomGraphicsAndDoorAddrIntoX:
+                                                                                          LoadRoomDoorDataAddrIntoX:cca9(*
                                                                                           InitRoom_Maybe:ccf3(*), 
                                                                                           InitRoom_Maybe:cd09(*), 
                                                                                           InitRoom_Maybe:cd42(*), 
@@ -265,7 +265,7 @@
                                                                                           InitDrops:d11f(*), 
                                                                                           InitRoomKeysAndPickups:d164(*)  
             003a                    ??         ??
-                             RoomGraphicsAndDoorDataAddress_0x3b             XREF[3]:     GetRoomGraphicsAndDoorAddrIntoX:
+                             RoomGraphicsAndDoorDataAddress_0x3b             XREF[3]:     LoadRoomDoorDataAddrIntoX:cca7(*
                                                                                           InitRoom_Maybe:cd07(*), 
                                                                                           InitVideoAndSetupRoomAndGraphics
             003b                    dw         ??
@@ -439,11 +439,11 @@
                                                                                           ConvertNumberAtPlaceToCharacter:
             006c                    ??         ??
             006d                    ??         ??
-                             GameTimerLastDigit_0x6e                         XREF[3]:     ConvertTimerToString_Maybe:db55(
+                             GameTimerLastDigit_0x6e                         XREF[3]:     ConvertDRegisterToString:db55(*), 
                                                                                           ConvertNumberAtPlaceToCharacter:
                                                                                           ConvertNumberAtPlaceToCharacter:
             006e                    ??         ??
-                             SomeStringConversionValue_0x6f                  XREF[1]:     ConvertTimerToString_Maybe:db78(
+                             SomeStringConversionValue_0x6f                  XREF[1]:     ConvertDRegisterToString:db78(*)  
             006f                    ??         ??
             0070                    ??         ??
                              UnusedMask_Maybe_0x71                           XREF[1]:     c064(*)  
@@ -591,14 +591,14 @@
             00c9                    ??         ??
             00ca                    ??         ??
                              GameTimerString_0xcb                            XREF[4]:     PrintTimerStringToScreen:db3c(*), 
-                                                                                          ConvertTimerToString_Maybe:db59(
-                                                                                          ConvertTimerToString_Maybe:db5c(
+                                                                                          ConvertDRegisterToString:db59(*), 
+                                                                                          ConvertDRegisterToString:db5c(W), 
                                                                                           AddPickupPointsToScore:dba5(*)  
             00cb                    ??         ??
-                             DAT_00cc                                        XREF[1]:     ConvertTimerToString_Maybe:db5c(
+                             DAT_00cc                                        XREF[1]:     ConvertDRegisterToString:db5c(W)  
             00cc                    ??         ??
-                             DAT_0xcd                                        XREF[2]:     ConvertTimerToString_Maybe:db61(
-                                                                                          ConvertTimerToString_Maybe:db7a(
+                             DAT_0xcd                                        XREF[2]:     ConvertDRegisterToString:db61(*), 
+                                                                                          ConvertDRegisterToString:db7a(W)  
             00cd                    ??         ??
                              TimerNumbers_34_0xce
             00ce                    db         ??
@@ -16932,7 +16932,7 @@
             3eba                    dw         ??
             3ebc                    dw         ??
             3ebe                    dw         ??
-                             Player_KeyStateData_0x3ec0                      XREF[11]:    FUN_c3b3:c2ef(*), 
+                             Player_DoorStateData_0x3ec0                     XREF[11]:    FUN_c3b3:c2ef(*), 
                                                                                           FUN_c3b3:c2f4(*), 
                                                                                           FUN_c3b3:c2f8(*), 
                                                                                           FUN_ccb1:ccc8(*), 
@@ -16949,15 +16949,12 @@
             3ec2                    ??         ??
             3ec3                    ??         ??
             3ec4                    ??         ??
-                             DAT_3ec5                                        XREF[1]:     FUN_c3b3:c2fd(*)  
             3ec5                    ??         ??
-                             DAT_3ec6                                        XREF[1]:     FUN_c3b3:c305(*)  
             3ec6                    ??         ??
             3ec7                    ??         ??
             3ec8                    ??         ??
             3ec9                    ??         ??
             3eca                    ??         ??
-                             DAT_3ecb                                        XREF[1]:     FUN_c3b3:c2fd(*)  
             3ecb                    ??         ??
             3ecc                    ??         ??
             3ecd                    ??         ??
@@ -17756,28 +17753,28 @@
             c2e1 7e c5 3c           JMP        Jump_PerformPlayerDeath
                              Jump_CollidesWithPickup                         XREF[1]:     c277(j)  
             c2e4 96 52              LDA        <CurrentPlayer_0x52                           = ??
-                             figure out which bit to turn off for the picked up treature
+                             figure out which player bit to turn off for the picked up tre
             c2e6 43                 COMA
             c2e7 a4 a4              ANDA       ,Y=>PickUp_VisibleState_0x271                 = ??
             c2e9 a7 a4              STA        ,Y=>PickUp_VisibleState_0x271                 = ??
             c2eb e6 24              LDB        0x4,Y=>PickUp_DoorUnlockIndex                 = ??
             c2ed 2b 2c              BMI        Jump_SkipDoorActivation
                              activate the door for the picked up key
-            c2ef 8e 3e c0           LDX        #Player_KeyStateData_0x3ec0                   = ??
+            c2ef 8e 3e c0           LDX        #Player_DoorStateData_0x3ec0                  = ??
             c2f2 30 85              LEAX       B,X
-            c2f4 a6 84              LDA        ,X=>Player_KeyStateData_0x3ec0                = ??
+            c2f4 a6 84              LDA        ,X=>Player_DoorStateData_0x3ec0               = ??
             c2f6 9a 52              ORA        <CurrentPlayer_0x52                           = ??
-            c2f8 a7 84              STA        ,X=>Player_KeyStateData_0x3ec0                set the picked up state of the key for this player
-            c2fa bd cc a7           JSR        GetRoomGraphicsAndDoorAddrIntoX               undefined GetRoomGraphicsAndDoorAddrIntoX(void)
-                             LAB_c2fd                                        XREF[1]:     c307(j)  
-            c2fd e1 05              CMPB       0x5,X=>DAT_3ec5                               = ??
-            c2ff 27 0a              BEQ        LAB_c30b
-            c301 30 89 00 06        LEAX       0x6,X
-            c305 a6 84              LDA        ,X=>DAT_3ec6                                  = ??
-            c307 26 f4              BNE        LAB_c2fd
+            c2f8 a7 84              STA        ,X=>Player_DoorStateData_0x3ec0               activate the door for the selected key for this player
+            c2fa bd cc a7           JSR        LoadRoomDoorDataAddrIntoX                     undefined LoadRoomDoorDataAddrIntoX(void)
+                             Loop_Doors                                      XREF[1]:     c307(j)  
+            c2fd e1 05              CMPB       0x5,X                                         compare B with the room number of the door
+            c2ff 27 0a              BEQ        Jump_DoneDoorSearch                           if door index is the same as in B, we're done
+            c301 30 89 00 06        LEAX       0x6,X                                         jump to next door
+            c305 a6 84              LDA        ,X                                            get the first value of the door data block
+            c307 26 f4              BNE        Loop_Doors                                    if the value isn't the zero sentinel value, loop
             c309 20 10              BRA        Jump_SkipDoorActivation
-                             LAB_c30b                                        XREF[1]:     c2ff(j)  
-            c30b ce 1c 00           LDU        #VideoMemory_Page1_0x1c00                     = ??
+                             Jump_DoneDoorSearch                             XREF[1]:     c2ff(j)  
+            c30b ce 1c 00           LDU        #VideoMemory_Page1_0x1c00                     draw the unlocked door on both video memory pages
             c30e df 4e              STU        <CurrentVideoMemLocation_0x4e                 = ??
             c310 bd cd 81           JSR        DrawDoorOrMultipleDoors_Maybe                 undefined DrawDoorOrMultipleDoors_Maybe(undefined A, undefi
             c313 ce 04 00           LDU        #VideoMemory_Page0_0x0400                     = ??
@@ -17785,21 +17782,25 @@
             c318 bd cd 81           JSR        DrawDoorOrMultipleDoors_Maybe                 undefined DrawDoorOrMultipleDoors_Maybe(undefined A, undefi
                              Jump_SkipDoorActivation                         XREF[2]:     c2ed(j), c309(j)  
             c31b dc 1b              LDD        <ZeroValue                                    = ??
-            c31d bd dc 39           JSR        IncrementRomAddressCounter                    undefined IncrementRomAddressCounter(undefined A, undefined
-            c320 c4 7f              ANDB       #0x7f
-            c322 a6 21              LDA        0x1,Y
-            c324 27 0e              BEQ        LAB_c334
+            c31d bd dc 39           JSR        IncrementRomAddressCounter                    call this to get a "random" value in B
+            c320 c4 7f              ANDB       #0x7f                                         keep only the first 7 bits
+            c322 a6 21              LDA        0x1,Y                                         get the pickup type 
+                                                                                             0: diamond
+                                                                                             1: money bag
+                                                                                             2: key)
+            c324 27 0e              BEQ        Jump_IsDiamond
             c326 4a                 DECA
-            c327 27 06              BEQ        LAB_c32f
+            c327 27 06              BEQ        Jump_IsMoneyBag
+                             at this point, it's a key
             c329 4f                 CLRA
-            c32a c3 00 c8           ADDD       #0xc8
-            c32d 20 08              BRA        LAB_c337
-                             LAB_c32f                                        XREF[1]:     c327(j)  
-            c32f c3 01 2c           ADDD       #0x12c
-            c332 20 03              BRA        LAB_c337
-                             LAB_c334                                        XREF[1]:     c324(j)  
-            c334 c3 01 90           ADDD       #0x190
-                             LAB_c337                                        XREF[2]:     c32d(j), c332(j)  
+            c32a c3 00 c8           ADDD       #0xc8                                         pick up points
+            c32d 20 08              BRA        Jump_AddToScore
+                             Jump_IsMoneyBag                                 XREF[1]:     c327(j)  
+            c32f c3 01 2c           ADDD       #0x12c                                        pick up points
+            c332 20 03              BRA        Jump_AddToScore
+                             Jump_IsDiamond                                  XREF[1]:     c324(j)  
+            c334 c3 01 90           ADDD       #0x190                                        pick up points
+                             Jump_AddToScore                                 XREF[2]:     c32d(j), c332(j)  
             c337 34 20              PSHS        Y
             c339 bd db 0c           JSR        UpdateAndPrintPlayerScore                     undefined UpdateAndPrintPlayerScore(undefined A, undefined 
             c33c 35 20              PULS        Y
@@ -19357,9 +19358,9 @@
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall GetRoomGraphicsAndDoorAddrIntoX(void)
+                             undefined __stdcall LoadRoomDoorDataAddrIntoX(void)
              undefined         A:1            <RETURN>
-                             GetRoomGraphicsAndDoorAddrIntoX                 XREF[2]:     FUN_c3b3:c2fa(c), 
+                             LoadRoomDoorDataAddrIntoX                       XREF[2]:     FUN_c3b3:c2fa(c), 
                                                                                           InitRoom_Maybe:cd19(c)  
             cca7 9e 3b              LDX        <RoomGraphicsAndDoorDataAddress_0x3b          = ??
             cca9 96 39              LDA        <CurrentRoomNumber_0x39                       = ??
@@ -19385,9 +19386,9 @@
             ccbe 10 26 00 b8        LBNE       LAB_cd7a
             ccc2 e1 26              CMPB       0x6,Y
             ccc4 10 26 00 b2        LBNE       LAB_cd7a
-            ccc8 ce 3e c0           LDU        #Player_KeyStateData_0x3ec0                   = ??
+            ccc8 ce 3e c0           LDU        #Player_DoorStateData_0x3ec0                  = ??
             cccb a6 05              LDA        0x5,X
-            cccd a6 c6              LDA        A,U=>Player_KeyStateData_0x3ec0               = ??
+            cccd a6 c6              LDA        A,U=>Player_DoorStateData_0x3ec0              = ??
             cccf 94 52              ANDA       <CurrentPlayer_0x52                           = ??
             ccd1 27 dd              BEQ        LAB_ccb0
                              **************************************************************
@@ -19429,11 +19430,11 @@
             cd11 9f 4e              STX        <CurrentVideoMemLocation_0x4e                 = ??
             cd13 17 00 f5           LBSR       LoadPage1AddressToX                           undefined LoadPage1AddressToX(void)
             cd16 bd d2 4e           JSR        DrawBackground                                undefined DrawBackground(void)
-            cd19 8d 8c              BSR        GetRoomGraphicsAndDoorAddrIntoX               undefined GetRoomGraphicsAndDoorAddrIntoX(void)
-            cd1b 10 8e 3e c0        LDY        #Player_KeyStateData_0x3ec0                   address to room or door graphics?
+            cd19 8d 8c              BSR        LoadRoomDoorDataAddrIntoX                     undefined LoadRoomDoorDataAddrIntoX(void)
+            cd1b 10 8e 3e c0        LDY        #Player_DoorStateData_0x3ec0                  address to room or door graphics?
                              LAB_cd1f                                        XREF[1]:     cd2e(j)  
             cd1f a6 05              LDA        0x5,X=>DAT_1c05                               Y of spawn point?
-            cd21 a6 a6              LDA        A,Y=>Player_KeyStateData_0x3ec0               = ??
+            cd21 a6 a6              LDA        A,Y=>Player_DoorStateData_0x3ec0              = ??
             cd23 94 52              ANDA       <CurrentPlayer_0x52                           = ??
             cd25 27 02              BEQ        LAB_cd29
             cd27 8d 58              BSR        DrawDoorOrMultipleDoors_Maybe                 undefined DrawDoorOrMultipleDoors_Maybe(undefined A, undefi
@@ -19495,23 +19496,24 @@
                                                                                           FUN_c3b3:c318(c), 
                                                                                           InitRoom_Maybe:cd27(c)  
             cd81 34 50              PSHS        U X
-            cd83 ec 84              LDD        ,X
-            cd85 81 ff              CMPA       #0xff
+            cd83 ec 84              LDD        ,X                                            load the drawing address of the door
+            cd85 81 ff              CMPA       #0xff                                         check if the address is for the start up door? (0xffff)
             cd87 27 3e              BEQ        LOOP_AlreadyDone
-            cd89 c1 40              CMPB       #0x40
-            cd8b 25 03              BCS        LAB_cd90
-            cd8d cb 07              ADDB       #0x7
+            cd89 c1 40              CMPB       #0x40                                         check against the door index?
+            cd8b 25 03              BCS        Jump_OffsetLeft
+            cd8d cb 07              ADDB       #0x7                                          otherwise offset to the right.
+                                                                                             for some reason
             cd8f 8c c0 04           CMPX       #LAB_c003+1
                              -- Length Override: 1 (actual length is 3)
                              -- Fallthrough: cd92
-                             LAB_cd90                                        XREF[1]:     cd8b(j)  
+                             Jump_OffsetLeft                                 XREF[1]:     cd8b(j)  
             cd90 c0 04              SUBB       #0x4
                              LAB_cd92                                        XREF[1]:     cd8f  
-            cd92 34 04              PSHS        B
+            cd92 34 04              PSHS        B                                            save the X screen position
             cd94 bd d8 56           JSR        ComputeScreenLocationFromAAndB                undefined ComputeScreenLocationFromAAndB(void)
                              save the drawing location into U
             cd97 1f 03              TFR        B,U
-            cd99 35 02              PULS        A
+            cd99 35 02              PULS        A                                            retrieve the X screen position
             cd9b 84 03              ANDA       #0x3
             cd9d 97 26              STA        <UtilityCounter_0x26                          pixel offset to draw door with?
             cd9f 34 40              PSHS        U
@@ -19797,20 +19799,20 @@
                              InitKeyStateData                                XREF[2]:     FUN_c3b3:c171(c), 
                                                                                           InitRoom_Maybe:cce0(c)  
             cecf c6 22              LDB        #0x22                                         34 bytes to clear
-            ced1 8e 3e c0           LDX        #Player_KeyStateData_0x3ec0                   clear start address
+            ced1 8e 3e c0           LDX        #Player_DoorStateData_0x3ec0                  clear start address
                              Loop_ClearKeyStateData                          XREF[1]:     ced7(j)  
-            ced4 6f 80              CLR        ,X+=>Player_KeyStateData_0x3ec0               = ??
+            ced4 6f 80              CLR        ,X+=>Player_DoorStateData_0x3ec0              = ??
             ced6 5a                 DECB
             ced7 26 fb              BNE        Loop_ClearKeyStateData
-            ced9 8e 3e c0           LDX        #Player_KeyStateData_0x3ec0                   = ??
+            ced9 8e 3e c0           LDX        #Player_DoorStateData_0x3ec0                  = ??
             cedc ce ce ea           LDU        #OffsetsToKeysAlreadyActivated_0xceea
             cedf c6 03              LDB        #0x3                                          value to set, 0b00000011 to set the key as
-                                                                                             already enabled
+                                                                                             already enabled for both players
                              Loop_ContinueSetActiveKeyStates                 XREF[1]:     cee7(j)  
             cee1 a6 c0              LDA        ,U+=>OffsetsToKeysAlreadyActivated_0xceea     load value into A 
                                                                                              0, 2, 4, 5, 7, etc.
             cee3 2b 04              BMI        Jump_HitEndOfActiveKeyOffsets                 loop until we hit FF
-            cee5 e7 86              STB        A,X=>Player_KeyStateData_0x3ec0               store 3 to A + X
+            cee5 e7 86              STB        A,X=>Player_DoorStateData_0x3ec0              store 3 to A + X
             cee7 20 f8              BRA        Loop_ContinueSetActiveKeyStates
                              Jump_HitEndOfActiveKeyOffsets                   XREF[1]:     cee3(j)  
             cee9 39                 RTS
@@ -20632,7 +20634,7 @@
                                                                                              the screen's 256 pixels.
             d257 7e d5 9e           JMP        Jump_ProcessDrawCommands
                              RoomGraphicsAndDoorData_0xd25a                  XREF[1]:     InitVideoAndSetupRoomAndGraphics
-            d25a d2 6e              dw         Room0_GraphicsAndDoorData                     = D35Eh
+            d25a d2 6e              dw         Room0_GraphicsAndDoorData_0xd26e              = D35Eh
             d25c d2 7d              dw         Room1_GraphicsAndDoorData                     = D3A0h
             d25e d2 98              dw         Room2_GraphicsAndDoorData                     = D3E4h
             d260 d2 bf              dw         Room3_GraphicsAndDoorData                     = D426h
@@ -20642,7 +20644,7 @@
             d268 d3 2b              dw         Room7_GraphicsAndDoorData                     = D4F6h
             d26a d3 3a              dw         Room8_GraphicsAndDoorData                     = D52Fh
             d26c d3 49              dw         Room9_GraphicsAndDoorData                     = D561h
-                             Room0_GraphicsAndDoorData                       XREF[1]:     d25a(*)  
+                             Room0_GraphicsAndDoorData_0xd26e                XREF[1]:     d25a(*)  
             d26e d3 5e              dw         Room0_DrawCommands                            first level exit door?
             d270 ff ff              dw         FFFFh                                         initial start up "door", maybe
                              InitialPlayerPosition_0xd272                    XREF[1]:     FUN_c3b3:c15e(R)  
@@ -22901,7 +22903,7 @@
                              UpdateAndPrintPlayerScore                       XREF[3]:     FUN_c3b3:c339(c), 
                                                                                           InitRoom_Maybe:cce6(c), 
                                                                                           InitRoom_Maybe:cd5f(c)  
-            db0c 8d 47              BSR        ConvertTimerToString_Maybe                    undefined ConvertTimerToString_Maybe(void)
+            db0c 8d 47              BSR        ConvertDRegisterToString                      undefined ConvertDRegisterToString(void)
             db0e ce db 32           LDU        #PlayerScoreStringLocationPointers            = 00bb
                              LAB_db11                                        XREF[1]:     UpdateJoystick_Maybe:dc8c(*)  
             db11 96 52              LDA        <CurrentPlayer_0x52                           = ??
@@ -22944,7 +22946,7 @@
              undefined         A:1            <RETURN>
                              PrintTimerStringToScreen                        XREF[1]:     UpdateRoomTimers:cbcd(c)  
             db36 34 10              PSHS        X
-            db38 8d 1b              BSR        ConvertTimerToString_Maybe                    undefined ConvertTimerToString_Maybe(void)
+            db38 8d 1b              BSR        ConvertDRegisterToString                      undefined ConvertDRegisterToString(void)
             db3a 35 10              PULS        X
             db3c ce 00 cb           LDU        #GameTimerString_0xcb                         = ??
             db3f 8d 03              BSR        ReplaceZerosToSpaces_Maybe                    undefined ReplaceZerosToSpaces_Maybe(void)
@@ -22971,9 +22973,9 @@
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall ConvertTimerToString_Maybe(void)
+                             undefined __stdcall ConvertDRegisterToString(void)
              undefined         A:1            <RETURN>
-                             ConvertTimerToString_Maybe                      XREF[2]:     UpdateAndPrintPlayerScore:db0c(c
+                             ConvertDRegisterToString                        XREF[2]:     UpdateAndPrintPlayerScore:db0c(c
                                                                                           PrintTimerStringToScreen:db38(c)  
             db55 dd 6e              STD        <GameTimerLastDigit_0x6e                      store the timer here
                              clear game timer string
@@ -23000,10 +23002,10 @@
                              **************************************************************
                              undefined ConvertNumberAtPlaceToCharacter()
              undefined         A:1            <RETURN>
-                             ConvertNumberAtPlaceToCharacter                 XREF[4]:     ConvertTimerToString_Maybe:db67(
-                                                                                          ConvertTimerToString_Maybe:db6c(
-                                                                                          ConvertTimerToString_Maybe:db71(
-                                                                                          ConvertTimerToString_Maybe:db76(
+                             ConvertNumberAtPlaceToCharacter                 XREF[4]:     ConvertDRegisterToString:db67(c), 
+                                                                                          ConvertDRegisterToString:db6c(c), 
+                                                                                          ConvertDRegisterToString:db71(c), 
+                                                                                          ConvertDRegisterToString:db76(c)  
             db7d 0f 6b              CLR        <GameTimerSecondDigit_0x6b                    = ??
             db7f dd 6c              STD        <DividerForNumberToStringConversion_0x6c      store the divider here
             db81 dc 6e              LDD        <GameTimerLastDigit_0x6e                      = ??
