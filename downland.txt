@@ -451,7 +451,9 @@
                              RomStartAddress_0xc000                          XREF[1]:     c060(*)  
             0072                    ??         ??
             0073                    ??         ??
-                             DAT_0074                                        XREF[2]:     FUN_c3b3:c415(W), 
+                             PlayerSprite_UtilityBuffer_0x74                 XREF[4]:     FUN_c3b3:c405(*), 
+                                                                                          FUN_c3b3:c415(W), 
+                                                                                          FUN_c3b3:c45d(*), 
                                                                                           FUN_c3b3:c469(R)  
             0074                    undefined1 ??
                              DAT_0075                                        XREF[2]:     FUN_c3b3:c41d(W), 
@@ -1158,7 +1160,7 @@
                              Player_FacingDirection_Copy_0x1e5               XREF[2]:     DrawLifeIconsAndPlayerRegenerati
                                                                                           DrawLifeIconsAndPlayerRegenerati
             01e5                    ??         ??
-                             Player_LivesCount_Counter_0x1e6                 XREF[3]:     DrawLifeIconsAndPlayerRegenerati
+                             Player_NumLifeIcons_Counter_0x1e6               XREF[3]:     DrawLifeIconsAndPlayerRegenerati
                                                                                           DrawLifeIconsAndPlayerRegenerati
                                                                                           DrawLifeIconsAndPlayerRegenerati
             01e6                    ??         ??
@@ -16117,7 +16119,7 @@
             3b7d                    ??         ??
             3b7e                    ??         ??
             3b7f                    ??         ??
-                             Player_Cloned_CollisionMask_Maybe_0x3b80        XREF[1]:     FUN_c3b3:c3dd(*)  
+                             Player_Cloned_CollisionMask_Maybe_0x3b80        XREF[2]:     FUN_c3b3:c3dd(*), dbcb(*)  
             3b80                    ??         ??
             3b81                    ??         ??
             3b82                    ??         ??
@@ -16718,6 +16720,7 @@
             3dd5                    ??         ??
             3dd6                    ??         ??
             3dd7                    ??         ??
+                             BouncyBall_ClonedInRam_0x3dd8                   XREF[1]:     dbd1(*)  
             3dd8                    ??         ??
             3dd9                    ??         ??
             3dda                    ??         ??
@@ -16978,7 +16981,8 @@
             3edf                    ??         ??
             3ee0                    ??         ??
             3ee1                    ??         ??
-                             BirdSpritesInRamAddr_0x3ee2                     XREF[1]:     UpdateRoomTimers:cc8b(*)  
+                             BirdSprite_ClonedInRam_0x3ee2                   XREF[2]:     UpdateRoomTimers:cc8b(*), 
+                                                                                          dbd7(*)  
             3ee2                    ??         ??
             3ee3                    ??         ??
             3ee4                    ??         ??
@@ -17940,42 +17944,47 @@
             c3db 6c 36              INC        -0xa,Y=>ConstantZeroToFFCounter               = ??
             c3dd ce 3b 80           LDU        #Player_Cloned_CollisionMask_Maybe_0x3b80     location of mysterious sprites?
             c3e0 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
-            c3e2 c6 3c              LDB        #0x3c
+            c3e2 c6 3c              LDB        #0x3c                                         size of the four sprites for a frame along 4 pixels
+                                                                                             (5 lines * 3 bytes * 4 frames)
             c3e4 3d                 MUL
-            c3e5 33 cb              LEAU       B,U
+            c3e5 33 cb              LEAU       B,U                                           compute the address of the sprite we want
             c3e7 a6 26              LDA        0x6,Y=>PlayerX_0x1b0                          = ??
-            c3e9 84 03              ANDA       #0x3
-            c3eb c6 0f              LDB        #0xf
+            c3e9 84 03              ANDA       #0x3                                          get the last two bits. this gets 
+                                                                                             us which frame to look for (0 - 3)
+            c3eb c6 0f              LDB        #0xf                                          the size of one sprite (5 lines * 3 bytes)
             c3ed 3d                 MUL
-            c3ee 33 cb              LEAU       B,U
+            c3ee 33 cb              LEAU       B,U                                           compute the address of the sprite to use for this
+                                                                                             particular X position
             c3f0 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
-            c3f2 81 03              CMPA       #0x3
-            c3f4 22 08              BHI        LAB_c3fe
+            c3f2 81 03              CMPA       #0x3                                          compare the animation frame with 3. The run animation
+                                                                                             goes from 0 to 3.
+            c3f4 22 08              BHI        Jump_DontAdjustU                              Jump if we're not running towards the right
             c3f6 a6 3c              LDA        -0x4,Y=>Player_FacingDirection_0x1a6          = ??
-            c3f8 26 04              BNE        LAB_c3fe
-            c3fa 33 c9 01 68        LEAU       0x168,U
-                             LAB_c3fe                                        XREF[2]:     c3f4(j), c3f8(j)  
+            c3f8 26 04              BNE        Jump_DontAdjustU                              Jump if we're still facing right, ie not facing left
+            c3fa 33 c9 01 68        LEAU       0x168,U                                       otherwise, skip the right facing run frames and the
+                                                                                             two climbing frames to get to the left facing frames
+                             Jump_DontAdjustU                                XREF[2]:     c3f4(j), c3f8(j)  
             c3fe ae 2c              LDX        0xc,Y=>PlayerY_PreviousVideoPageDrawPosition  = ??
             c400 30 88 20           LEAX       0x20,X                                        one pixel under
             c403 34 20              PSHS        Y
-            c405 10 8e 00 74        LDY        #0x74
-            c409 86 05              LDA        #0x5                                          five lines? 
+            c405 10 8e 00 74        LDY        #PlayerSprite_UtilityBuffer_0x74              = ??
+            c409 86 05              LDA        #0x5                                          five lines of the sprite
             c40b 97 26              STA        <UtilityCounter_0x26                          = ??
-                             LAB_c40d                                        XREF[1]:     c42e(j)  
-            c40d 37 06              PULU        A B=>DAT_0168                                = ??
-            c40f a4 84              ANDA       ,X
-            c411 aa 89 18 00        ORA        0x1800,X=>DAT_1820                            = ??
-            c415 a7 a0              STA        ,Y+=>DAT_0074                                 = ??
-            c417 e4 01              ANDB       0x1,X
+                             Loop_FillPlayerUtilityBuffer                    XREF[1]:     c42e(j)  
+            c40d 37 06              PULU        A B=>DAT_0168                                get A and B, move U up two bytes
+            c40f a4 84              ANDA       ,X                                            and with the current location on screen
+            c411 aa 89 18 00        ORA        0x1800,X=>DAT_1820                            OR with the clean background area
+            c415 a7 a0              STA        ,Y+=>PlayerSprite_UtilityBuffer_0x74          store in the the player utility buffer
+            c417 e4 01              ANDB       0x1,X                                         do all the same for B
             c419 ea 89 18 01        ORB        0x1801,X=>DAT_1821                            = ??
             c41d e7 a0              STB        ,Y+=>DAT_0075                                 = ??
-            c41f 37 02              PULU        A=>DAT_016a                                  = ??
+            c41f 37 02              PULU        A=>DAT_016a                                  do the same for the third byte of the current line
             c421 a4 02              ANDA       0x2,X
             c423 aa 89 18 02        ORA        0x1802,X=>DAT_1822                            = ??
             c427 a7 a0              STA        ,Y+=>DAT_0076                                 = ??
-            c429 30 88 60           LEAX       0x60,X                                        three pixels below
+            c429 30 88 60           LEAX       0x60,X                                        move three pixels down
             c42c 0a 26              DEC        <UtilityCounter_0x26                          = ??
-            c42e 26 dd              BNE        LAB_c40d
+            c42e 26 dd              BNE        Loop_FillPlayerUtilityBuffer
             c430 35 20              PULS        Y
             c432 ce 34 00           LDU        #SpriteData_ClonedDestination_0x3400          = ??
             c435 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
@@ -17998,13 +18007,13 @@
             c455 ae 2c              LDX        0xc,Y=>PlayerY_PreviousVideoPageDrawPosition  = ??
             c457 30 89 18 20        LEAX       0x1820,X
             c45b 34 20              PSHS        Y
-            c45d 10 8e 00 74        LDY        #0x74
+            c45d 10 8e 00 74        LDY        #PlayerSprite_UtilityBuffer_0x74              = ??
             c461 86 05              LDA        #0x5
             c463 97 26              STA        <UtilityCounter_0x26                          = ??
                              LAB_c465                                        XREF[1]:     c488(j)  
             c465 37 06              PULU        A B=>DAT_0483                                = ??
             c467 aa 84              ORA        ,X=>DAT_1820                                  = ??
-            c469 a1 a0              CMPA       ,Y+=>DAT_0074                                 = ??
+            c469 a1 a0              CMPA       ,Y+=>PlayerSprite_UtilityBuffer_0x74          = ??
             c46b 10 26 fd e8        LBNE       Jump_TestAllCollisions
             c46f ea 01              ORB        0x1,X=>DAT_1821                               = ??
             c471 e1 a0              CMPB       ,Y+=>DAT_0075                                 = ??
@@ -18274,7 +18283,7 @@
             c5fe a7 84              STA        ,X
                              Jump_SkipClampingLivesCount                     XREF[1]:     c5fa(j)  
             c600 6a 84              DEC        ,X
-            c602 10 2b 16 06        LBMI       LAB_dc0c
+            c602 10 2b 16 06        LBMI       Jump_PlayerOutOfLives                         lives is 0xff, less than 0, so gave over
             c606 34 20              PSHS        Y
             c608 96 50              LDA        <CurrentNumberOfPlayers_0x50                  = ??
             c60a 84 02              ANDA       #00000010b
@@ -18853,15 +18862,14 @@
             c9d3 bd c5 c8           JSR        GetPlayerLivesAddress                         undefined GetPlayerLivesAddress(void)
             c9d6 a6 84              LDA        ,X                                            contains player lives
             c9d8 e6 3e              LDB        -0x2,Y=>Player_State_Copy_0x1e7               = ??
-            c9da 2a 01              BPL        Jump_SkipIncrementLives                       we're not alive or dead, so 
-                                                                                             regenerating
+            c9da 2a 01              BPL        Jump_PlayerIsAlive                            if plus, then player state is not generating
             c9dc 4c                 INCA                                                     increment lives temporarily for displaying
-                                                                                             head icons?
-                             Jump_SkipIncrementLives                         XREF[1]:     c9da(j)  
-            c9dd a7 3d              STA        -0x3,Y=>Player_LivesCount_Counter_0x1e6       = ??
+                                                                                             regenerating head icon
+                             Jump_PlayerIsAlive                              XREF[1]:     c9da(j)  
+            c9dd a7 3d              STA        -0x3,Y=>Player_NumLifeIcons_Counter_0x1e6     = ??
             c9df 20 02              BRA        Jump_SkipDecrementLives
                              Loop_DrawHeadIcons                              XREF[1]:     ca93(j)  
-            c9e1 6a 3d              DEC        -0x3,Y=>Player_LivesCount_Counter_0x1e6       = ??
+            c9e1 6a 3d              DEC        -0x3,Y=>Player_NumLifeIcons_Counter_0x1e6     = ??
                              Jump_SkipDecrementLives                         XREF[1]:     c9df(j)  
             c9e3 10 27 00 af        LBEQ       Jump_FinishedDrawingHeadIcons
             c9e7 ae 24              LDX        0x4,Y=>PlayerLives_DrawLocationInPage_Copy_0  = ??
@@ -18871,7 +18879,7 @@
             c9ef a6 3e              LDA        -0x2,Y=>Player_State_Copy_0x1e7               = ??
             c9f1 10 2a 00 87        LBPL       Loop_DrawHeadLifeIcon                         if the player is alive or dead (not regen)
                                                                                              draw the head life icon
-            c9f5 a6 3d              LDA        -0x3,Y=>Player_LivesCount_Counter_0x1e6       = ??
+            c9f5 a6 3d              LDA        -0x3,Y=>Player_NumLifeIcons_Counter_0x1e6     = ??
             c9f7 81 01              CMPA       #0x1
             c9f9 10 26 00 7f        LBNE       Loop_DrawHeadLifeIcon                         if we're not at the last life icon, just draw it normally
                              At this point I think it's the regenerating
@@ -19331,7 +19339,7 @@
             cc84 ed 26              STD        0x6,Y=>Bird_X_0x1da                           = ??
             cc86 bd d8 52           JSR        LoadPosRelativeToYAndComputeScreenPos         undefined LoadPosRelativeToYAndComputeScreenPos(void)
             cc89 ed 28              STD        0x8,Y=>Bird_VideoPageDrawPosition_0x1dc       = ??
-            cc8b ce 3e e2           LDU        #BirdSpritesInRamAddr_0x3ee2                  = ??
+            cc8b ce 3e e2           LDU        #BirdSprite_ClonedInRam_0x3ee2                = ??
             cc8e a6 3e              LDA        -0x2,Y=>Bird_AnimationFrame0or1_0x1d2         = ??
             cc90 27 03              BEQ        Jump_DontGoToFrame1OfAnimation                if LDA is 1, move the sprite pointer to the
                                                                                              next frame of the bird animation
@@ -23053,60 +23061,62 @@
              undefined         A:1            <RETURN>
                              CopySpritesFromRomToRam                         XREF[1]:     c066(c)  
             dbad ce db c1           LDU        #SpriteCopyInfo                               set U to start of data block
-                             LOOP_dbb0                                       XREF[1]:     dbbe(j)  
+                             Jump_CopyNextAnimation                          XREF[1]:     dbbe(j)  
             dbb0 ec c1              LDD        ,U++=>SpriteCopyInfo                          a size counter?
-            dbb2 2b 0c              BMI        Loop_Finished
-            dbb4 ae c1              LDX        ,U++=>->PlayerSprite_Right_Stand_0xdcd6       set next value to X
-            dbb6 10 ae c1           LDY        ,U++=>->SpriteData_ClonedDestination_0x3400   set next next value to Y
-                             LOOP_dbb9                                       XREF[1]:     dbbc(j)  
-            dbb9 8d 1f              BSR        CopyAndTransformSpriteToDestination           undefined CopyAndTransformSpriteToDestination()
+            dbb2 2b 0c              BMI        Loop_FinishedCopyingSpritesToRam
+            dbb4 ae c1              LDX        ,U++=>->PlayerSprite_Right_Stand_0xdcd6       source address
+            dbb6 10 ae c1           LDY        ,U++=>->SpriteData_ClonedDestination_0x3400   destination address
+                             Jump_CopySpriteToRam                            XREF[1]:     dbbc(j)  
+            dbb9 8d 1f              BSR        CopySpritesFromRomToRam                       undefined CopySpritesFromRomToRam()
             dbbb 4a                 DECA
-            dbbc 26 fb              BNE        LOOP_dbb9
-            dbbe 20 f0              BRA        LOOP_dbb0
-                             Loop_Finished                                   XREF[1]:     dbb2(j)  
+            dbbc 26 fb              BNE        Jump_CopySpriteToRam
+            dbbe 20 f0              BRA        Jump_CopyNextAnimation
+                             Loop_FinishedCopyingSpritesToRam                XREF[1]:     dbb2(j)  
             dbc0 39                 RTS
                              SpriteCopyInfo                                  XREF[2]:     CopySpritesFromRomToRam:dbad(*), 
                                                                                           CopySpritesFromRomToRam:dbb0(R)  
-            dbc1 0a 10              dw         A10h                                          the size of all the sprite data multiplied by 4.
-                                                                                             Because we're making 4 copies per sprite along
-                                                                                             4 bits.
+            dbc1 0a                 db         Ah                                            The number of sprites to copy
+            dbc2 10                 db         10h                                           the number of lines per sprite
                              PTR_PlayerSprite_Right_Stand_0xdcd6_dbc3        XREF[1]:     CopySpritesFromRomToRam:dbb4(R)  
             dbc3 dc d7              addr       PlayerSprite_Right_Stand_0xdcd6               address to player sprite data
                              PTR_SpriteData_ClonedDestination_0x3400_dbc5    XREF[1]:     CopySpritesFromRomToRam:dbb6(R)  
             dbc5 34 00              addr       SpriteData_ClonedDestination_0x3400           copies of sprites along 4 bits
                              NextSpriteToCopy_Size                           XREF[1]:     CopySpritesFromRomToRam:dbb0(R)  
-            dbc7 0a 05              dw         A05h                                          size of data to copy
-            dbc9 de 17              dw         SomeUnidentifiedSprites                       unidentified sprite location
-            dbcb 3b 80              dw         3B80h                                         copy destination
-            dbcd 02 08              dw         208h                                          size of data to copy
-            dbcf de 7b              dw         BouncyBallSprite1                             = 0000000100000000b
-            dbd1 3d d8              dw         3DD8h                                         copy destination
-            dbd3 02 06              dw         206h                                          size of data to copy
-            dbd5 de 9b              dw         BirdSprite1                                   = 1100000110000011b
-            dbd7 3e e2              dw         3EE2h                                         copy destination
+            dbc7 0a                 db         Ah                                            the number of sprites to copy
+            dbc8 05                 db         5h                                            the number of lines per sprite
+            dbc9 de 17              dw         SomeUnidentifiedSprites_0xde17                unidentified sprite location
+            dbcb 3b 80              dw         Player_Cloned_CollisionMask_Maybe_0x3b80      copy destination
+            dbcd 02                 db         2h                                            the number of sprites to copy
+            dbce 08                 db         8h                                            the number of lines per sprite
+            dbcf de 7b              dw         BouncyBallSprite1_0xde7b                      = 0000000100000000b
+            dbd1 3d d8              dw         BouncyBall_ClonedInRam_0x3dd8                 copy destination
+            dbd3 02                 db         2h                                            the number of sprites to copy
+            dbd4 06                 db         6h                                            the number of lines per sprite
+            dbd5 de 9b              dw         BirdSprite1_0xde9b                            = 1100000110000011b
+            dbd7 3e e2              dw         BirdSprite_ClonedInRam_0x3ee2                 copy destination
             dbd9 ff                 db         FFh                                           end marker
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined CopyAndTransformSpriteToDestination()
+                             undefined CopySpritesFromRomToRam()
              undefined         A:1            <RETURN>
-             undefined2        Stack[-0x6]:2  local_6                                 XREF[4,1]:   dbdd(*), dbe5(*), 
+             undefined2        Stack[-0x6]:2  StackValue1_0x6                         XREF[4,1]:   dbdd(*), dbe5(*), 
                                                                                                    dbf1(*), dbfb(*), 
                                                                                                    dbfd(*)  
-             undefined1        Stack[-0xa]:1  local_a                                 XREF[1]:     dbf9(*)  
-                             CopyAndTransformSpriteToDestination             XREF[1]:     CopySpritesFromRomToRam:dbb9(c)  
+             undefined1        Stack[-0xa]:1  StackValue2_0xa                         XREF[1]:     dbf9(*)  
+                             CopySpritesFromRomToRam                         XREF[1]:     CopySpritesFromRomToRam:dbb9(c)  
             dbda 34 46              PSHS        U B A                                        D -> 0x0a10
                                                                                              X -> 0xdcd7
                                                                                              Y -> 0x3400
             dbdc 4f                 CLRA
                              LAB_dbdd                                        XREF[1]:     dc06(j)  
-            dbdd ed e3              STD        ,--S=>local_6
+            dbdd ed e3              STD        ,--S=>StackValue1_0x6
             dbdf 34 16              PSHS        X B A
                              LAB_dbe1                                        XREF[1]:     dbff(j)  
             dbe1 6f 22              CLR        0x2,Y
             dbe3 ec 81              LDD        ,X++
                              LAB_dbe5                                        XREF[1]:     dbf3(j)  
-            dbe5 6d 64              TST        0x4,S=>local_6
+            dbe5 6d 64              TST        0x4,S=>StackValue1_0x6
             dbe7 27 0c              BEQ        LAB_dbf5
             dbe9 44                 LSRA
             dbea 56                 RORB
@@ -23114,14 +23124,14 @@
             dbed 44                 LSRA
             dbee 56                 RORB
             dbef 66 22              ROR        0x2,Y
-            dbf1 6a 64              DEC        0x4,S=>local_6
+            dbf1 6a 64              DEC        0x4,S=>StackValue1_0x6
             dbf3 20 f0              BRA        LAB_dbe5
                              LAB_dbf5                                        XREF[1]:     dbe7(j)  
             dbf5 ed a4              STD        ,Y
             dbf7 31 23              LEAY       0x3,Y
-            dbf9 a6 e4              LDA        ,S=>local_a
-            dbfb a7 64              STA        0x4,S=>local_6
-            dbfd 6a 65              DEC        0x5,S=>local_6+0x1
+            dbf9 a6 e4              LDA        ,S=>StackValue2_0xa
+            dbfb a7 64              STA        0x4,S=>StackValue1_0x6
+            dbfd 6a 65              DEC        0x5,S=>StackValue1_0x6+0x1
             dbff 26 e0              BNE        LAB_dbe1
             dc01 35 56              PULS        A B X U
             dc03 4c                 INCA
@@ -23130,7 +23140,7 @@
             dc08 58                 LSLB
             dc09 3a                 ABX
             dc0a 35 c6              PULS        A B U PC
-                             LAB_dc0c                                        XREF[1]:     c602(j)  
+                             Jump_PlayerOutOfLives                           XREF[1]:     c602(j)  
             dc0c 35 10              PULS        X
             dc0e 96 50              LDA        <CurrentNumberOfPlayers_0x50                  = ??
             dc10 84 02              ANDA       #0x2
@@ -23499,58 +23509,59 @@
             de11 08 ae              dw         0000100010101110b
             de13 1c 06              dw         0001110000000110b
             de15 1c 00              dw         0001110000000000b
-                             SomeUnidentifiedSprites                         XREF[1]:     dbc9(*)  
-            de17 3f f0              dw         3FF0h
-            de19 3f f0              dw         3FF0h
-            de1b 3f c0              dw         3FC0h
-            de1d 3f c0              dw         3FC0h
-            de1f 0f c0              dw         0FC0h
-            de21 3f f0              dw         3FF0h
-            de23 3f f0              dw         3FF0h
-            de25 0f c0              dw         0FC0h
-            de27 6f f8              dw         6FF8h
-            de29 3f 38              dw         3F38h
-            de2b 0f c0              dw         0FC0h
-            de2d 3f f0              dw         3FF0h
-            de2f 0f f6              dw         0FF6h
-            de31 0f f0              dw         0FF0h
-            de33 7f 0e              dw         7F0Eh
-            de35 3f f0              dw         3FF0h
-            de37 3f f0              dw         3FF0h
-            de39 0f c0              dw         0FC0h
-            de3b 6f f0              dw         6FF0h
-            de3d 6c 70              dw         6C70h
-            de3f 3f f0              dw         3FF0h
-            de41 3f fc              dw         3FFCh
-            de43 ff f0              dw         FFF0h
-            de45 3f f0              dw         3FF0h
-            de47 3c f0              dw         3CF0h
-            de49 ff c0              dw         FFC0h
-            de4b ff f0              dw         FFF0h
-            de4d ff f0              dw         FFF0h
-            de4f 3f f0              dw         3FF0h
-            de51 3f c0              dw         3FC0h
-            de53 0f fc              dw         0FFCh
-            de55 1f f8              dw         1FF8h
-            de57 03 f0              dw         03F0h
-            de59 03 f0              dw         03F0h
-            de5b 03 f0              dw         03F0h
-            de5d 0f f8              dw         0FF8h
-            de5f 1f f8              dw         1FF8h
-            de61 03 f0              dw         03F0h
-            de63 1f f6              dw         1FF6h
-            de65 1c fe              dw         1CFEh
-            de67 03 f0              dw         03F0h
-            de69 0f f8              dw         0FF8h
-            de6b 6f f0              dw         6FF0h
-            de6d 0f f0              dw         0FF0h
-            de6f 7c fe              dw         7CFEh
-            de71 0f f8              dw         0FF8h
-            de73 1f f8              dw         1FF8h
-            de75 03 f0              dw         03F0h
-            de77 1f f6              dw         1FF6h
-            de79 0c fe              dw         0CFEh
-                             BouncyBallSprite1                               XREF[1]:     dbcf(*)  
+                             This seems to be 10 sprites, 5 of one side, 5 of the other.
+                             SomeUnidentifiedSprites_0xde17                  XREF[1]:     dbc9(*)  
+            de17 3f f0              dw         0011111111110000b
+            de19 3f f0              dw         0011111111110000b
+            de1b 3f c0              dw         0011111111000000b
+            de1d 3f c0              dw         0011111111000000b
+            de1f 0f c0              dw         0000111111000000b
+            de21 3f f0              dw         0011111111110000b
+            de23 3f f0              dw         0011111111110000b
+            de25 0f c0              dw         0000111111000000b
+            de27 6f f8              dw         0110111111111000b
+            de29 3f 38              dw         0011111100111000b
+            de2b 0f c0              dw         0000111111000000b
+            de2d 3f f0              dw         0011111111110000b
+            de2f 0f f6              dw         0000111111110110b
+            de31 0f f0              dw         0000111111110000b
+            de33 7f 0e              dw         0111111100001110b
+            de35 3f f0              dw         0011111111110000b
+            de37 3f f0              dw         0011111111110000b
+            de39 0f c0              dw         0000111111000000b
+            de3b 6f f0              dw         0110111111110000b
+            de3d 6c 70              dw         0110110001110000b
+            de3f 3f f0              dw         0011111111110000b
+            de41 3f fc              dw         0011111111111100b
+            de43 ff f0              dw         1111111111110000b
+            de45 3f f0              dw         0011111111110000b
+            de47 3c f0              dw         0011110011110000b
+            de49 ff c0              dw         1111111111000000b
+            de4b ff f0              dw         1111111111110000b
+            de4d ff f0              dw         1111111111110000b
+            de4f 3f f0              dw         0011111111110000b
+            de51 3f c0              dw         0011111111000000b
+            de53 0f fc              dw         0000111111111100b
+            de55 1f f8              dw         0001111111111000b
+            de57 03 f0              dw         0000001111110000b
+            de59 03 f0              dw         0000001111110000b
+            de5b 03 f0              dw         0000001111110000b
+            de5d 0f f8              dw         0000111111111000b
+            de5f 1f f8              dw         0001111111111000b
+            de61 03 f0              dw         0000001111110000b
+            de63 1f f6              dw         0001111111110110b
+            de65 1c fe              dw         0001110011111110b
+            de67 03 f0              dw         0000001111110000b
+            de69 0f f8              dw         0000111111111000b
+            de6b 6f f0              dw         0110111111110000b
+            de6d 0f f0              dw         0000111111110000b
+            de6f 7c fe              dw         0111110011111110b
+            de71 0f f8              dw         0000111111111000b
+            de73 1f f8              dw         0001111111111000b
+            de75 03 f0              dw         0000001111110000b
+            de77 1f f6              dw         0001111111110110b
+            de79 0c fe              dw         0000110011111110b
+                             BouncyBallSprite1_0xde7b                        XREF[1]:     dbcf(*)  
             de7b 01 00              dw         0000000100000000b
             de7d 05 40              dw         0000010101000000b
             de7f 0d 60              dw         0000110101100000b
@@ -23559,7 +23570,7 @@
             de85 0d 60              dw         0000110101100000b
             de87 05 40              dw         0000010101000000b
             de89 01 00              dw         0000000100000000b
-                             BouncyBallSprite2
+                             BouncyBallSprite2_0xde8b
             de8b 00 00              dw         0000000000000000b
             de8d 00 00              dw         0000000000000000b
             de8f 05 40              dw         0000010101000000b
@@ -23568,7 +23579,7 @@
             de95 55 54              dw         0101010101010100b
             de97 35 58              dw         0011010101011000b
             de99 05 40              dw         0000010101000000b
-                             BirdSprite1                                     XREF[1]:     dbd5(*)  
+                             BirdSprite1_0xde9b                              XREF[1]:     dbd5(*)  
             de9b c1 83              dw         1100000110000011b
             de9d f3 cf              dw         1111001111001111b
             de9f 3f fc              dw         0011111111111100b
