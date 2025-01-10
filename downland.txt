@@ -79,7 +79,7 @@
                                                                                           DrawHorizontalSegment:d7db(*), 
                                                                                           DrawVerticalSegment:d7e8(*), 
                                                                                           DrawVerticalSegment:d7f4(*), 
-                                                                                          UpdateObjectPhysics:d888(*)  
+                                                                                          EraseAndUpdateAndDrawObject:d888
             001d                    ??         ??
                              DrawSegment_SecondaryAxisSubpixelInc_0x1e       XREF[10]:    DrawBackgroundPiece:d766(*), 
                                                                                           DrawSegment_MovePosUpAndRight:d8
@@ -90,7 +90,7 @@
                                                                                           DrawSegment_MovePosLeftAndDown:d
                                                                                           DrawSegment_MovePosLeftAndUp:d81
                                                                                           DrawSegment_MovePosUpAndLeft:d82
-                                                                                          UpdateObjectPhysics:d884(*)  
+                                                                                          EraseAndUpdateAndDrawObject:d884
             001e                    ??         ??
                              DrawSegmentLine_SubPixelOffset_0x1f             XREF[1]:     DrawBackgroundPiece:d76a(*)  
             001f                    ??         ??
@@ -99,7 +99,7 @@
                                                                                           d6bb(*), d6c2(*), d73d(*), 
                                                                                           d748(*), d759(*), d75f(*), 
                                                                                           DrawPixelWithCrtArtifacts:d836(*
-                                                                                          UpdateObjectPhysics:d880(*)  
+                                                                                          EraseAndUpdateAndDrawObject:d880
             0020                    ??         ??
                              DrawSegment_CurrentScreenYXPosition_0x21        XREF[9]:     DrawBackground:d255(*), 
                              DrawSegment_CurrentScreenY_0x21                              DrawHorizontalSegment:d7cd(*), 
@@ -109,7 +109,7 @@
                                                                                           DrawSegment_MovePosDownAndLeft:d
                                                                                           DrawSegment_MovePosUpAndLeft:d82
                                                                                           DrawPixelWithCrtArtifacts:d827(*
-                                                                                          UpdateObjectPhysics:d87e(*)  
+                                                                                          EraseAndUpdateAndDrawObject:d87e
             0021                    ??         ??
                              DrawSegment_CurrentScreenX_0x22                 XREF[7]:     DrawVerticalSegment:d7e6(*), 
                                                                                           DrawVerticalSegment:d7fa(*), 
@@ -897,9 +897,9 @@
                              Player_SomeGameState_0x1a5                      XREF[6]:     FUN_c3b3:c3c1(R), 
                                                                                           FUN_c3b3:c6a7(RW), 
                                                                                           InitPlayerSomething:ce6e(W), 
-                                                                                          UpdateObjectPhysics:d860(R), 
-                                                                                          UpdateObjectPhysics:d86c(RW), 
-                                                                                          UpdateObjectPhysics:d8b3(W)  
+                                                                                          EraseAndUpdateAndDrawObject:d860
+                                                                                          EraseAndUpdateAndDrawObject:d86c
+                                                                                          EraseAndUpdateAndDrawObject:d8b3
             01a5                    db         ??                                            0: entering room
                                                                                              1: playing in room
                                                                                              then increments every time the player dies.
@@ -952,8 +952,8 @@
                                                                                           BigInitFunction_Maybe:c701(R), 
                                                                                           DrawLifeIconsAndPlayerRegenerati
                                                                                           InitPlayerSomething:ce72(W), 
-                                                                                          UpdateObjectPhysics:d899(R), 
-                                                                                          DrawingOrClearingFunction:d8b9(R
+                                                                                          EraseAndUpdateAndDrawObject:d899
+                                                                                          EraseSpriteFromScreen:d8b9(R)  
             01a9                    db         ??
                              Player Physics Data
                              0-1: speed y
@@ -983,7 +983,7 @@
                                                                                           Jump_IsAlreadyClimbing:c8f5(W), 
                                                                                           Jump_IsAlreadyClimbing:c8f9(R), 
                                                                                           InitPlayerSomething:ce68(*), 
-                                                                                          UpdateObjectPhysics:d86e(*), 
+                                                                                          EraseAndUpdateAndDrawObject:d86e
                                                                                           [more]
             01aa                    dw         ??
                              Player_SpeedX_0x1ac                             XREF[10]:    FUN_c3b3:c4dc(R), 
@@ -1004,7 +1004,7 @@
                                                                                           Jump_IsAlreadyClimbing:c8fb(W), 
                                                                                           Jump_IsAlreadyClimbing:c909(R), 
                                                                                           Jump_IsAlreadyClimbing:c919(R), 
-                                                                                          UpdateObjectPhysics:d87c(R)  
+                                                                                          EraseAndUpdateAndDrawObject:d87c
             01ae                    dw         ??
                              PlayerX_0x1b0                                   XREF[16]:    TestPlayerObjectCollision:c395(R
                                                                                           TestPlayerObjectCollision:c3a5(R
@@ -1021,29 +1021,29 @@
                                                                                           Jump_IsAlreadyClimbing:c961(W), 
                                                                                           Jump_IsAlreadyClimbing:c999(R), 
                                                                                           DrawLifeIconsAndPlayerRegenerati
-                                                                                          UpdateObjectPhysics:d878(R)  
+                                                                                          EraseAndUpdateAndDrawObject:d878
             01b0                    dw         ??
                              Player_VideoPageDrawDestination_0x1b2           XREF[6]:     BigInitFunction_Maybe:c6ff(R), 
                                                                                           Jump_IsAlreadyClimbing:c931(W), 
                                                                                           Jump_IsAlreadyClimbing:c97d(W), 
                                                                                           DrawLifeIconsAndPlayerRegenerati
                                                                                           DrawLifeIconsAndPlayerRegenerati
-                                                                                          UpdateObjectPhysics:d891(R)  
+                                                                                          EraseAndUpdateAndDrawObject:d891
             01b2                    dw         ??
                              Player_SpritePointer_0x1b4                      XREF[2]:     DrawLifeIconsAndPlayerRegenerati
-                                                                                          UpdateObjectPhysics:d895(R)  
+                                                                                          EraseAndUpdateAndDrawObject:d895
             01b4                    dw         ??
                              PlayerY_PreviousVideoPageDrawPosition_0x1b6     XREF[6]:     FUN_c3b3:c3fe(R), 
                                                                                           FUN_c3b3:c455(R), 
                                                                                           DrawLifeIconsAndPlayerRegenerati
                                                                                           DrawLifeIconsAndPlayerRegenerati
-                                                                                          UpdateObjectPhysics:d893(W), 
-                                                                                          DrawingOrClearingFunction:d8b5(R
+                                                                                          EraseAndUpdateAndDrawObject:d893
+                                                                                          EraseSpriteFromScreen:d8b5(R)  
             01b6                    dw         ??
                              Player_PreviousSpritePointer_0x1b8              XREF[4]:     DrawLifeIconsAndPlayerRegenerati
                                                                                           DrawLifeIconsAndPlayerRegenerati
-                                                                                          UpdateObjectPhysics:d897(W), 
-                                                                                          DrawingOrClearingFunction:d8b7(R
+                                                                                          EraseAndUpdateAndDrawObject:d897
+                                                                                          EraseSpriteFromScreen:d8b7(R)  
             01b8                    dw         ??
                              Ball_InitState_0x1ba                            XREF[6]:     caba(R), cb8b(W), 
                                                                                           InitRoom_Maybe:ccff(W), 
@@ -17517,8 +17517,8 @@
             c189 27 09              BEQ        Jump_SkipPlayerUpdate
             c18b 0f 48              CLR        <Player_NeedsUpdate_Maybe_0x48                = ??
             c18d 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     = ??
-            c191 bd d8 60           JSR        UpdateObjectPhysics                           = ??
-                                                                                             undefined UpdateObjectPhysics(void)
+            c191 bd d8 60           JSR        EraseAndUpdateAndDrawObject                   = ??
+                                                                                             undefined EraseAndUpdateAndDrawObject(void)
                              Jump_SkipPlayerUpdate                           XREF[1]:     c189(j)  
             c194 bd cc b1           JSR        FUN_ccb1                                      = ??
                                                                                              undefined FUN_ccb1()
@@ -17528,8 +17528,8 @@
             c19c 27 09              BEQ        Jump_SkipBallUpdate
             c19e 0f 49              CLR        <Ball_IsActive_0x49                           = ??
             c1a0 10 8e 01 bf        LDY        #Ball_Physics_0x1bf                           = ??
-            c1a4 bd d8 60           JSR        UpdateObjectPhysics                           = ??
-                                                                                             undefined UpdateObjectPhysics(void)
+            c1a4 bd d8 60           JSR        EraseAndUpdateAndDrawObject                   = ??
+                                                                                             undefined EraseAndUpdateAndDrawObject(void)
                              Jump_SkipBallUpdate                             XREF[1]:     c19c(j)  
             c1a7 8e ff 00           LDX        #PIA0_A_DATA_REG__FF00
             c1aa 86 fb              LDA        #0xfb
@@ -17814,7 +17814,7 @@
             c345 cc 12 80           LDD        #0x1280                                       setup A and B parameters for pickup sound
             c348 8d 15              BSR        PlaySound                                     undefined PlaySound(undefined A, undefined B)
             c34a 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     = ??
-            c34e 7e d8 60           JMP        UpdateObjectPhysics
+            c34e 7e d8 60           JMP        EraseAndUpdateAndDrawObject
                              -- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
                              **************************************************************
                              * Clears the sprite graphics from page 0                     *
@@ -17970,14 +17970,20 @@
             c405 10 8e 00 74        LDY        #PlayerSprite_UtilityBuffer_0x74              = ??
             c409 86 05              LDA        #0x5                                          five lines of the sprite
             c40b 97 26              STA        <UtilityCounter_0x26                          = ??
+                             I think the idea is to fill the buffer
+                             with the player pixels and some of the
+                             background.
                              Loop_FillPlayerUtilityBuffer                    XREF[1]:     c42e(j)  
             c40d 37 06              PULU        A B=>DAT_0168                                get A and B, move U up two bytes
-            c40f a4 84              ANDA       ,X                                            and with the current location on screen
-            c411 aa 89 18 00        ORA        0x1800,X=>DAT_1820                            OR with the clean background area
+                             first byte of line
+            c40f a4 84              ANDA       ,X                                            keep only the bits on screen
+            c411 aa 89 18 00        ORA        0x1800,X=>DAT_1820                            blend with the clean background area
             c415 a7 a0              STA        ,Y+=>PlayerSprite_UtilityBuffer_0x74          store in the the player utility buffer
+                             second byte of line
             c417 e4 01              ANDB       0x1,X                                         do all the same for B
             c419 ea 89 18 01        ORB        0x1801,X=>DAT_1821                            = ??
             c41d e7 a0              STB        ,Y+=>DAT_0075                                 = ??
+                             third byte of line
             c41f 37 02              PULU        A=>DAT_016a                                  do the same for the third byte of the current line
             c421 a4 02              ANDA       0x2,X
             c423 aa 89 18 02        ORA        0x1802,X=>DAT_1822                            = ??
@@ -17988,29 +17994,29 @@
             c430 35 20              PULS        Y
             c432 ce 34 00           LDU        #SpriteData_ClonedDestination_0x3400          = ??
             c435 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
-            c437 c6 c0              LDB        #0xc0
+            c437 c6 c0              LDB        #0xc0                                         16 lines * 3 bytes * 4 sprites
             c439 3d                 MUL
-            c43a 33 cb              LEAU       B,U
+            c43a 33 cb              LEAU       B,U                                           set U to the current animation sprite
             c43c a6 26              LDA        0x6,Y=>PlayerX_0x1b0                          = ??
             c43e 84 03              ANDA       #0x3
             c440 c6 30              LDB        #0x30
             c442 3d                 MUL
-            c443 33 cb              LEAU       B,U
-            c445 33 43              LEAU       0x3,U
+            c443 33 cb              LEAU       B,U                                           set U to the current animation sprite along X
+            c445 33 43              LEAU       0x3,U                                         move to the next line in the sprite
             c447 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
-            c449 81 03              CMPA       #0x3
-            c44b 22 08              BHI        LAB_c455
+            c449 81 03              CMPA       #0x3                                          check if we're running or standing
+            c44b 22 08              BHI        Jump_DontAdjustUAgain                         we're climbing
             c44d a6 3c              LDA        -0x4,Y=>Player_FacingDirection_0x1a6          = ??
-            c44f 26 04              BNE        LAB_c455
-            c451 33 c9 04 80        LEAU       0x480,U
-                             LAB_c455                                        XREF[2]:     c44b(j), c44f(j)  
+            c44f 26 04              BNE        Jump_DontAdjustUAgain
+            c451 33 c9 04 80        LEAU       0x480,U                                       move to the left facing sprites
+                             Jump_DontAdjustUAgain                           XREF[2]:     c44b(j), c44f(j)  
             c455 ae 2c              LDX        0xc,Y=>PlayerY_PreviousVideoPageDrawPosition  = ??
-            c457 30 89 18 20        LEAX       0x1820,X
+            c457 30 89 18 20        LEAX       0x1820,X                                      set X to the clean video page, one pixel down
             c45b 34 20              PSHS        Y
             c45d 10 8e 00 74        LDY        #PlayerSprite_UtilityBuffer_0x74              = ??
-            c461 86 05              LDA        #0x5
+            c461 86 05              LDA        #0x5                                          num sprite collision mask rows
             c463 97 26              STA        <UtilityCounter_0x26                          = ??
-                             LAB_c465                                        XREF[1]:     c488(j)  
+                             Loop_CheckCollisionMaskLine                     XREF[1]:     c488(j)  
             c465 37 06              PULU        A B=>DAT_0483                                = ??
             c467 aa 84              ORA        ,X=>DAT_1820                                  = ??
             c469 a1 a0              CMPA       ,Y+=>PlayerSprite_UtilityBuffer_0x74          = ??
@@ -18025,7 +18031,7 @@
             c481 30 88 60           LEAX       0x60,X
             c484 33 46              LEAU       0x6,U
             c486 0a 26              DEC        <UtilityCounter_0x26                          = ??
-            c488 26 db              BNE        LAB_c465
+            c488 26 db              BNE        Loop_CheckCollisionMaskLine
             c48a 35 20              PULS        Y
                              Jump_HandlePlayerJumpAndRope                    XREF[2]:     c2da(j), c3c7(j)  
             c48c 96 2c              LDA        <Player_JumpUpInTheAirCounter_0x2c            = ??
@@ -18232,7 +18238,7 @@
             c5b4 27 28              BEQ        ResetTimerTo2048IfAtZeroWhenDied_Maybe
             c5b6 86 0c              LDA        #0xc
             c5b8 a7 3f              STA        -0x1,Y=>Player_NumRowsInSprite_0x1a9          = ??
-            c5ba 17 12 f8           LBSR       DrawingOrClearingFunction                     undefined DrawingOrClearingFunction(void)
+            c5ba 17 12 f8           LBSR       EraseSpriteFromScreen                         undefined EraseSpriteFromScreen(void)
             c5bd 86 10              LDA        #0x10
             c5bf a7 3f              STA        -0x1,Y=>Player_NumRowsInSprite_0x1a9          = ??
             c5c1 86 46              LDA        #0x46
@@ -19353,7 +19359,7 @@
             cc9b 3d                 MUL
             cc9c 33 cb              LEAU       D,U
             cc9e ef 2a              STU        0xa,Y=>Bird_SpriteData_0x1de                  = ??
-            cca0 7e d8 60           JMP        UpdateObjectPhysics
+            cca0 7e d8 60           JMP        EraseAndUpdateAndDrawObject
                              -- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
                              **************************************************************
                              *                          FUNCTION                          *
@@ -21876,7 +21882,7 @@
              undefined         A:1            param_1
              undefined         B:1            param_2
                              DrawSegment_Orientation3_DownAndRight           XREF[2]:     d783(*), 
-                                                                                          UpdateObjectPhysics:d88a(c)  
+                                                                                          EraseAndUpdateAndDrawObject:d88a
             d7a4 8e d8 0e           LDX        #DrawSegment_MovePosDownAndRight
             d7a7 0f 25              CLR        <DrawSegmentLine_SubPixelStartValue_Maybe_0x  = ??
             d7a9 20 3b              BRA        DrawVerticalSegment                           undefined DrawVerticalSegment(undefined A, undefined B, und
@@ -22195,9 +22201,9 @@
                              **************************************************************
                              * Used by the player, the ball, and the bird                 *
                              **************************************************************
-                             undefined __stdcall UpdateObjectPhysics(void)
+                             undefined __stdcall EraseAndUpdateAndDrawObject(void)
              undefined         A:1            <RETURN>
-                             UpdateObjectPhysics                             XREF[4]:     FUN_c3b3:c191(c), 
+                             EraseAndUpdateAndDrawObject                     XREF[4]:     FUN_c3b3:c191(c), 
                                                                                           FUN_c3b3:c1a4(c), 
                                                                                           FUN_c3b3:c34e(j), 
                                                                                           UpdateRoomTimers:cca0(j)  
@@ -22206,7 +22212,7 @@
             d864 2b 4d              BMI        Jump_StateIsFFAndUninitialized
             d866 4a                 DECA
             d867 27 03              BEQ        Jump_StateIsNowZero
-            d869 8d 4a              BSR        DrawingOrClearingFunction                     undefined DrawingOrClearingFunction(void)
+            d869 8d 4a              BSR        EraseSpriteFromScreen                         undefined EraseSpriteFromScreen(void)
             d86b 8c                 ??         8Ch
                              Jump_StateIsNowZero                             XREF[1]:     d867(j)  
             d86c 6c 3b              INC        -0x5,Y=>Player_SomeGameState_0x1a5            = ??
@@ -22250,38 +22256,45 @@
             d8ab 33 c8 20           LEAU       0x20,U                                        move to next line in page
             d8ae 0a 26              DEC        <UtilityCounter_0x26                          = ??
             d8b0 26 eb              BNE        Loop_NextLine                                 Lo
-                             Jump_SkipUpdate                                 XREF[1]:     UpdateObjectPhysics:d862(j)  
+                             Jump_SkipUpdate                                 XREF[1]:     EraseAndUpdateAndDrawObject:d862
             d8b2 39                 RTS
                              Jump_StateIsFFAndUninitialized                  XREF[1]:     d864(j)  
             d8b3 6f 3b              CLR        -0x5,Y=>Player_SomeGameState_0x1a5            = ??
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall DrawingOrClearingFunction(void)
+                             undefined __stdcall EraseSpriteFromScreen(void)
              undefined         A:1            <RETURN>
-                             DrawingOrClearingFunction                       XREF[2]:     FUN_c3b3:c5ba(c), 
-                                                                                          UpdateObjectPhysics:d869(c)  
+                             EraseSpriteFromScreen                           XREF[2]:     FUN_c3b3:c5ba(c), 
+                                                                                          EraseAndUpdateAndDrawObject:d869
             d8b5 ee 2c              LDU        0xc,Y=>PlayerY_PreviousVideoPageDrawPosition  = ??
             d8b7 ae 2e              LDX        0xe,Y=>Player_PreviousSpritePointer_0x1b8     = ??
             d8b9 a6 3f              LDA        -0x1,Y=>Player_NumRowsInSprite_0x1a9          = ??
             d8bb 97 26              STA        <UtilityCounter_0x26                          = ??
-                             LAB_d8bd                                        XREF[1]:     d8df(j)  
-            d8bd ec 81              LDD        ,X++
-            d8bf 43                 COMA
-            d8c0 a4 c4              ANDA       ,U
-            d8c2 aa c9 18 00        ORA        0x1800,U
+                             Loop_ClearNextRow                               XREF[1]:     d8df(j)  
+            d8bd ec 81              LDD        ,X++                                          get the first byte of the sprite
+            d8bf 43                 COMA                                                     inverse it
+            d8c0 a4 c4              ANDA       ,U                                            and with the byte in the first video page. 
+                                                                                             this should remove the sprite pixels from
+                                                                                             the screen
+            d8c2 aa c9 18 00        ORA        0x1800,U                                      in case we've taken too many bytes from the
+                                                                                             background, bitwise or with the clean background
+                             second byte of the line
             d8c6 53                 COMB
             d8c7 e4 41              ANDB       0x1,U
             d8c9 ea c9 18 01        ORB        0x1801,U
+                             store to the screen
             d8cd ed c4              STD        ,U
+                             third byte of the line
             d8cf a6 80              LDA        ,X+
             d8d1 43                 COMA
             d8d2 a4 42              ANDA       0x2,U
             d8d4 aa c9 18 02        ORA        0x1802,U
+                             store third byte to the screen
             d8d8 a7 42              STA        0x2,U
             d8da 33 c8 20           LEAU       0x20,U                                        go to next line
             d8dd 0a 26              DEC        <UtilityCounter_0x26                          = ??
-            d8df 26 dc              BNE        LAB_d8bd
+            d8df 26 dc              BNE        Loop_ClearNextRow
             d8e1 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -23084,7 +23097,7 @@
                              NextSpriteToCopy_Size                           XREF[1]:     CopySpritesFromRomToRam:dbb0(R)  
             dbc7 0a                 db         Ah                                            the number of sprites to copy
             dbc8 05                 db         5h                                            the number of lines per sprite
-            dbc9 de 17              dw         SomeUnidentifiedSprites_0xde17                unidentified sprite location
+            dbc9 de 17              dw         Player_CollisionMasks_0xde17                  unidentified sprite location
             dbcb 3b 80              dw         Player_Cloned_CollisionMask_Maybe_0x3b80      copy destination
             dbcd 02                 db         2h                                            the number of sprites to copy
             dbce 08                 db         8h                                            the number of lines per sprite
@@ -23509,8 +23522,10 @@
             de11 08 ae              dw         0000100010101110b
             de13 1c 06              dw         0001110000000110b
             de15 1c 00              dw         0001110000000000b
-                             This seems to be 10 sprites, 5 of one side, 5 of the other.
-                             SomeUnidentifiedSprites_0xde17                  XREF[1]:     dbc9(*)  
+                             There is one collision mask per player sprite
+                             each collision mask sprite is 5 pixels tall
+                             player facing right
+                             Player_CollisionMasks_0xde17                    XREF[1]:     dbc9(*)  
             de17 3f f0              dw         0011111111110000b
             de19 3f f0              dw         0011111111110000b
             de1b 3f c0              dw         0011111111000000b
@@ -23531,6 +23546,7 @@
             de39 0f c0              dw         0000111111000000b
             de3b 6f f0              dw         0110111111110000b
             de3d 6c 70              dw         0110110001110000b
+                             player climbing
             de3f 3f f0              dw         0011111111110000b
             de41 3f fc              dw         0011111111111100b
             de43 ff f0              dw         1111111111110000b
@@ -23541,6 +23557,7 @@
             de4d ff f0              dw         1111111111110000b
             de4f 3f f0              dw         0011111111110000b
             de51 3f c0              dw         0011111111000000b
+                             player facing left
             de53 0f fc              dw         0000111111111100b
             de55 1f f8              dw         0001111111111000b
             de57 03 f0              dw         0000001111110000b
