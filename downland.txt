@@ -188,7 +188,7 @@
             002d                    ??         ??
                              0: will die when landing
                              ff: will not die when landing
-                             Player_WontDieWhenLanding_Maybe_0x2e            XREF[6]:     UpdatePlayerSoundAndCollisionsAn
+                             Player_SafeLandingFromFalling_0x2e              XREF[6]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c726(*), 
                                                                                           BigInitFunction_Maybe:c74f(*), 
@@ -853,7 +853,7 @@
                              0: Not climbing
                              FF: is climbing
                              StackStart_0x019f                               XREF[22]:    UpdatePlayerSoundAndCollisionsAn
-                             Player_IsClimbingRope                                        UpdatePlayerSoundAndCollisionsAn
+                             Player_IsClimbingRope_0x19f                                  UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c718(R), 
                                                                                           BigInitFunction_Maybe:c737(R), 
                                                                                           BigInitFunction_Maybe:c799(R), 
@@ -17952,7 +17952,7 @@
             c3cd 10 26 01 7b        LBNE       Jump_PlayerStillDyingInTheAir
             c3d1 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
             c3d3 10 2b 02 e1        LBMI       BigInitFunction_Maybe::Jump_JoystickCheck     jump if player state is FF
-            c3d7 10 26 00 bd        LBNE       Jump_PlayerIsDead                             jump if the state is 1 or more
+            c3d7 10 26 00 bd        LBNE       Jump_PlayerIsDeadSoSkipStuff                  jump if the state is 1 or more
             c3db 6c 36              INC        -0xa,Y=>ConstantZeroToFFCounter               = ??
                              The "mysterious sprites" are masks used to extract five 
                              lines across the player sprite on the screen. The extracted 
@@ -18084,10 +18084,11 @@
                              At this point, the player isn't colliding with any objects
                              Jump_HandlePlayerJumpAndRope                    XREF[2]:     c2da(j), c3c7(j)  
             c48c 96 2c              LDA        <Player_JumpUpInTheAirCounter_0x2c            = ??
-            c48e 10 26 03 17        LBNE       Jump_IsJumpingUp_Maybe
-            c492 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
-            c494 10 26 00 94        LBNE       Jump_IsClimbing
-                             Jump_PlayerIsDead                               XREF[1]:     c3d7(j)  
+            c48e 10 26 03 17        LBNE       Jump_PlayerIsJumpingUpwards
+            c492 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
+            c494 10 26 00 94        LBNE       Jump_IsClimbing                               0 means not on rope
+                                                                                             FF means on rope
+                             Jump_PlayerIsDeadSoSkipStuff                    XREF[1]:     c3d7(j)  
             c498 8d 4d              BSR        ComputeVideoPageDestination_Maybe             char ComputeVideoPageDestination_Maybe(void)
             c49a 30 89 02 00        LEAX       0x200,X                                       sixteen lines underneath X, maybe
             c49e ce c5 0d           LDU        #BitPatternTableForRopeOrFloor_Maybe          = 0000001111000000b
@@ -18110,14 +18111,14 @@
             c4c4 c3 00 06           ADDD       #0x6                                          add falling speed
             c4c7 10 83 01 00        CMPD       #0x100                                        max falling speed, likely
             c4cb 23 05              BLS        Jump_NotHitTerminalVelocity
-            c4cd 0f 2e              CLR        <Player_WontDieWhenLanding_Maybe_0x2e         set to 0, will die when landing. maybe.
+            c4cd 0f 2e              CLR        <Player_SafeLandingFromFalling_0x2e           set to 0, will die when landing. maybe.
             c4cf cc 01 00           LDD        #0x100                                        clamp the falling speed
                              Jump_NotHitTerminalVelocity                     XREF[1]:     c4cb(j)  
             c4d2 ed a4              STD        ,Y=>Player_SpeedY_0x1aa                       = ??
-            c4d4 96 2e              LDA        <Player_WontDieWhenLanding_Maybe_0x2e         = ??
-            c4d6 2b 2a              BMI        LAB_c502
+            c4d4 96 2e              LDA        <Player_SafeLandingFromFalling_0x2e           = ??
+            c4d6 2b 2a              BMI        Jump_PlayerLandingIsSafe
             c4d8 a6 3c              LDA        -0x4,Y=>Player_FacingDirection_0x1a6          = ??
-            c4da 2b 1b              BMI        LAB_c4f7
+            c4da 2b 1b              BMI        Jump_UpdateXGoingLeft
             c4dc ec 22              LDD        0x2,Y=>Player_SpeedX_0x1ac                    = ??
             c4de c3 00 01           ADDD       #0x1
             c4e1 2b 1d              BMI        Jump_SetPlayerYSpeed
@@ -18141,14 +18142,14 @@
             c4f4 3a                 ABX                                                      add the offset in B to X
             c4f5 48                 LSLA                                                     double A
             c4f6 39                 RTS
-                             LAB_c4f7                                        XREF[1]:     c4da(j)  
+                             Jump_UpdateXGoingLeft                           XREF[1]:     c4da(j)  
             c4f7 ec 22              LDD        0x2,Y=>Player_SpeedX_0x1ac                    = ??
             c4f9 c3 ff ff           ADDD       #0xffff
             c4fc 2a 02              BPL        Jump_SetPlayerYSpeed
             c4fe dc 1b              LDD        <ZeroValue                                    = ??
                              Jump_SetPlayerYSpeed                            XREF[3]:     c4e1(j), c4e5(j), c4fc(j)  
             c500 ed 22              STD        0x2,Y=>Player_SpeedX_0x1ac                    = ??
-                             LAB_c502                                        XREF[1]:     c4d6(j)  
+                             Jump_PlayerLandingIsSafe                        XREF[1]:     c4d6(j)  
             c502 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
             c504 26 69              BNE        Jump_PlayerIsDead_Maybe
                              Jump_NotTouchingGround                          XREF[1]:     c571(j)  
@@ -18211,7 +18212,7 @@
             c538 10 26 01 dc        LBNE       BigInitFunction_Maybe::Jump_PlayerLanding_Ma
                              Jump_PerformPlayerDeath                         XREF[1]:     c2e1(j)  
             c53c 8d e7              BSR        ClearSpeedToZero                              undefined ClearSpeedToZero(void)
-            c53e 6f 35              CLR        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c53e 6f 35              CLR        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c540 0f 2c              CLR        <Player_JumpUpInTheAirCounter_0x2c            = ??
             c542 0f 2f              CLR        <Player_CantJumpAfterLandingCounter_Maybe_0x  = ??
             c544 96 2d              LDA        <Player_IsTouchingGround_Maybe_0x2d           = ??
@@ -18495,14 +18496,14 @@
             c714 0a 26              DEC        <UtilityCounter_0x26                          = ??
             c716 26 ed              BNE        Loop_ClearPlayerArea
                              Jump_PlayerLanding_Maybe                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
-            c718 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c718 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c71a 2b 18              BMI        Jump_ProcessPlayerControls_Maybe
             c71c ec a4              LDD        ,Y=>Player_SpeedY_0x1aa                       = ??
             c71e 27 14              BEQ        Jump_ProcessPlayerControls_Maybe
             c720 86 04              LDA        #0x4
             c722 97 2f              STA        <Player_CantJumpAfterLandingCounter_Maybe_0x  = ??
             c724 6f 38              CLR        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
-            c726 0f 2e              CLR        <Player_WontDieWhenLanding_Maybe_0x2e         = ??
+            c726 0f 2e              CLR        <Player_SafeLandingFromFalling_0x2e           = ??
             c728 86 7f              LDA        #01111111b
             c72a b7 ff 20           STA        PIA1_A_DATA_REG__FF20
             c72d 7e c7 be           JMP        LAB_c7be
@@ -18511,7 +18512,7 @@
             c731 7e c8 5f           JMP        LAB_c85f
                              Jump_ProcessPlayerControls_Maybe                XREF[2]:     c71a(j), c71e(j)  
             c734 bd dc 66           JSR        UpdateJoystick_Maybe                          undefined UpdateJoystick_Maybe(void)
-            c737 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c737 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c739 27 28              BEQ        LAB_c763
             c73b 81 01              CMPA       #0x1                                          compare to going up?
             c73d 10 27 00 86        LBEQ       Jump_HandleRun
@@ -18522,7 +18523,7 @@
             c749 27 08              BEQ        Jump_GoingLeft                                Jump_GoingLeft
             c74b 0f 2c              CLR        <Player_JumpUpInTheAirCounter_0x2c            = ??
             c74d 0f 2f              CLR        <Player_CantJumpAfterLandingCounter_Maybe_0x  = ??
-            c74f 0f 2e              CLR        <Player_WontDieWhenLanding_Maybe_0x2e         = ??
+            c74f 0f 2e              CLR        <Player_SafeLandingFromFalling_0x2e           = ??
             c751 20 74              BRA        Jump_HandleRun
                              Jump_GoingLeft                                  XREF[1]:     c749(j)  
             c753 6f 3c              CLR        -0x4,Y=>Player_FacingDirection_0x1a6          set the facing direction to 0
@@ -18548,7 +18549,7 @@
             c779 86 28              LDA        #0x28
             c77b 97 2c              STA        <Player_JumpUpInTheAirCounter_0x2c            = ??
             c77d 86 ff              LDA        #0xff
-            c77f 97 2e              STA        <Player_WontDieWhenLanding_Maybe_0x2e         = ??
+            c77f 97 2e              STA        <Player_SafeLandingFromFalling_0x2e           = ??
             c781 97 2d              STA        <Player_IsTouchingGround_Maybe_0x2d           = ??
                              Jump_JumpToClimbingRopeSubroutine               XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             c783 7e c8 6f           JMP        Jump_Player_IsClimbingRope_IsPositive
@@ -18566,15 +18567,15 @@
             c792 e7 26              STB        0x6,Y=>PlayerX_0x1b0                          = ??
             c794 bd c5 25           JSR        ClearSpeedToZero                              undefined ClearSpeedToZero(void)
             c797 97 36              STA        <Player_MoveLeftRightHoldingRopeCounter_0x36  = ??
-            c799 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c799 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c79b 2b 05              BMI        Jump_IsClimbingRope
-            c79d 6f 35              CLR        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c79d 6f 35              CLR        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c79f 7e c8 79           JMP        LAB_c879
                              Jump_IsClimbingRope                             XREF[1]:     c79b(j)  
             c7a2 86 01              LDA        #0x1
-            c7a4 a7 35              STA        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c7a4 a7 35              STA        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c7a6 7e c8 79           JMP        LAB_c879
-                             Jump_IsJumpingUp_Maybe                          XREF[1]:     c48e(j)  
+                             Jump_PlayerIsJumpingUpwards                     XREF[1]:     c48e(j)  
             c7a9 96 2c              LDA        <Player_JumpUpInTheAirCounter_0x2c            = ??
             c7ab 48                 LSLA
             c7ac 8a 02              ORA        #00000010b
@@ -18587,7 +18588,7 @@
                              LAB_c7be                                        XREF[1]:     c72d(j)  
             c7be dc 1b              LDD        <ZeroValue                                    = ??
             c7c0 ed a4              STD        ,Y=>Player_SpeedY_0x1aa                       = ??
-            c7c2 a7 35              STA        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c7c2 a7 35              STA        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c7c4 7e c8 79           JMP        LAB_c879
                              Jump_HandleRun                                  XREF[4]:     c73d(j), c751(j), c768(j), 
                                                                                           c772(j)  
@@ -18607,7 +18608,7 @@
             c7df 0f 36              CLR        <Player_MoveLeftRightHoldingRopeCounter_0x36  = ??
             c7e1 6f 3c              CLR        -0x4,Y=>Player_FacingDirection_0x1a6          = ??
                              Jump_FacingLeft_Already                         XREF[1]:     c7dd(j)  
-            c7e3 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c7e3 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c7e5 27 0f              BEQ        Jump_UpdateLeftSpeed
                              Pressing left while holding on to the rope to go one handed
             c7e7 bd c5 25           JSR        ClearSpeedToZero                              undefined ClearSpeedToZero(void)
@@ -18624,7 +18625,7 @@
             c7fb 20 5c              BRA        Jump_SetRunRightAnimationFrame
                              Jump_ClimbingUp_Maybe                           XREF[1]:     c7d3(j)  
             c7fd 0f 36              CLR        <Player_MoveLeftRightHoldingRopeCounter_0x36  = ??
-            c7ff a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c7ff a6 35              LDA        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c801 2a 07              BPL        Jump_NotMovingJoystick_Maybe
             c803 cc ff c0           LDD        #0xffc0                                       climb up speed
             c806 ed a4              STD        ,Y=>Player_SpeedY_0x1aa                       = ??
@@ -18632,7 +18633,7 @@
                              Jump_NotMovingJoystick_Maybe                    XREF[3]:     c7cf(j), c801(j), c821(j)  
             c80a 0f 36              CLR        <Player_MoveLeftRightHoldingRopeCounter_0x36  = ??
             c80c bd c5 25           JSR        ClearSpeedToZero                              undefined ClearSpeedToZero(void)
-            c80f e6 35              LDB        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c80f e6 35              LDB        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c811 2a 4c              BPL        LAB_c85f
             c813 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
             c815 81 03              CMPA       #0x3
@@ -18642,7 +18643,7 @@
             c81b 20 14              BRA        Jump_SetCurrentAnimationFrame
                              Jump_MovingDown_Maybe                           XREF[1]:     c7d9(j)  
             c81d 0f 36              CLR        <Player_MoveLeftRightHoldingRopeCounter_0x36  = ??
-            c81f a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c81f a6 35              LDA        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c821 2a e7              BPL        Jump_NotMovingJoystick_Maybe
             c823 cc 00 70           LDD        #0x70                                         climb down speed, maybe
             c826 ed a4              STD        ,Y=>Player_SpeedY_0x1aa                       = ??
@@ -18663,7 +18664,7 @@
             c83b 86 ff              LDA        #0xff
             c83d a7 3c              STA        -0x4,Y=>Player_FacingDirection_0x1a6          = ??
                              LAB_c83f                                        XREF[1]:     c837(j)  
-            c83f a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c83f a6 35              LDA        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c841 27 11              BEQ        Jump_SetRightSpeed
                              Handle pressing right to go one handed while holding rope
             c843 bd c5 25           JSR        ClearSpeedToZero                              undefined ClearSpeedToZero(void)
@@ -18683,7 +18684,7 @@
             c85c 44                 LSRA
             c85d 84 03              ANDA       #0x3
                              LAB_c85f                                        XREF[2]:     c731(j), c811(j)  
-            c85f e6 35              LDB        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c85f e6 35              LDB        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c861 27 0e              BEQ        Jump_AnimationFrameIsSet
             c863 2a 0a              BPL        Jump_Player_IsClimbingRope_IsPositive         Player_IsClimbingRope is positive. How?
             c865 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
@@ -18701,7 +18702,7 @@
                              LAB_c879                                        XREF[6]:     c79f(j), c7a6(j), 
                                                                                           UpdatePlayerSoundAndCollisionsAn
                                                                                           c7c4(j), c833(j), c875(j)  
-            c879 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c879 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c87b 81 01              CMPA       #0x1
             c87d 27 78              BEQ        LAB_c8f7
                              Check whether the player is touching a vine/rope
@@ -18720,18 +18721,18 @@
             c8a0 8d 17              BSR        FUN_c8b9                                      byte FUN_c8b9(byte param_1)
             c8a2 27 11              BEQ        Jump_NotTouchingRope_Maybe
                              LAB_c8a4                                        XREF[1]:     c89e(j)  
-            c8a4 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c8a4 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c8a6 2b 1a              BMI        Jump_IsAlreadyClimbing
                              Set player as climbing
             c8a8 86 ff              LDA        #0xff
-            c8aa a7 35              STA        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c8aa a7 35              STA        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c8ac bd c5 25           JSR        ClearSpeedToZero                              undefined ClearSpeedToZero(void)
             c8af 0f 2c              CLR        <Player_JumpUpInTheAirCounter_0x2c            = ??
-            c8b1 0f 2e              CLR        <Player_WontDieWhenLanding_Maybe_0x2e         = ??
+            c8b1 0f 2e              CLR        <Player_SafeLandingFromFalling_0x2e           = ??
             c8b3 20 0d              BRA        Jump_IsAlreadyClimbing                        undefined Jump_IsAlreadyClimbing(undefined A, undefined B, 
                              -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
                              Jump_NotTouchingRope_Maybe                      XREF[2]:     c896(j), c8a2(j)  
-            c8b5 6f 35              CLR        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c8b5 6f 35              CLR        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c8b7 20 3e              BRA        LAB_c8f7
                              **************************************************************
                              *                          FUNCTION                          *
@@ -18793,7 +18794,7 @@
             c8fd ec 26              LDD        0x6,Y=>PlayerX_0x1b0                          = ??
             c8ff e3 22              ADDD       0x2,Y=>Player_SpeedX_0x1ac                    = ??
             c901 ed 26              STD        0x6,Y=>PlayerX_0x1b0                          = ??
-            c903 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c903 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c905 27 12              BEQ        Jump_NoClimbingRope
             c907 96 23              LDA        <PlayerY_Byte_0x23                            = ??
             c909 a1 24              CMPA       0x4,Y=>PlayerY_0x1ae                          = ??
@@ -18808,7 +18809,7 @@
                              Jump_NoClimbingRope                             XREF[2]:     c905(j), c90b(j)  
             c919 a6 24              LDA        0x4,Y=>PlayerY_0x1ae                          = ??
             c91b 97 23              STA        <PlayerY_Byte_0x23                            = ??
-            c91d a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
+            c91d a6 35              LDA        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             c91f 26 59              BNE        Jump_ClimbingRope
             c921 8e c5 09           LDX        #SomeKindOfHorizontalBitOffsetTable
             c924 e6 26              LDB        0x6,Y=>PlayerX_0x1b0                          = ??
@@ -22269,7 +22270,7 @@
             d86c 6c 3b              INC        -0x5,Y=>Player_SomeGameState_0x1a5            = ??
             d86e 10 8c 01 aa        CMPY       #Player_SpeedY_0x1aa                          check if we're updating the player physics
             d872 26 1d              BNE        Jump_SkipRopeHandling
-            d874 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
+            d874 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope_0x19f           = ??
             d876 27 19              BEQ        Jump_SkipRopeHandling
             d878 e6 26              LDB        0x6,Y=>PlayerX_0x1b0                          = ??
             d87a cb 03              ADDB       #0x3
