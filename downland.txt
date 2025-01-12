@@ -1981,7 +1981,6 @@
             0480                    ??         ??
             0481                    ??         ??
             0482                    ??         ??
-                             DAT_0483                                        XREF[1]:     FUN_c3b3:c465(*)  
             0483                    ??         ??
                              DAT_0484                                        XREF[1]:     FUN_c3b3:c465(*)  
             0484                    ??         ??
@@ -16119,7 +16118,7 @@
             3b7d                    ??         ??
             3b7e                    ??         ??
             3b7f                    ??         ??
-                             Player_Cloned_CollisionMask_Maybe_0x3b80        XREF[2]:     FUN_c3b3:c3dd(*), dbcb(*)  
+                             Player_CollisionMasks_InRam_0x3b80              XREF[2]:     FUN_c3b3:c3dd(*), dbcb(*)  
             3b80                    ??         ??
             3b81                    ??         ??
             3b82                    ??         ??
@@ -17935,25 +17934,27 @@
             c3c1 a6 3b              LDA        -0x5,Y=>Player_SomeGameState_0x1a5            = ??
             c3c3 27 ed              BEQ        Jump_IsAlreadyClimbing::Jump_Return           inactive, so just return
             c3c5 81 01              CMPA       #0x1
-            c3c7 10 27 00 c1        LBEQ       Jump_HandlePlayerJumpAndRope
-            c3cb 96 30              LDA        <Player_DeathPauseInTheAirTimer               = ??
+            c3c7 10 27 00 c1        LBEQ       Jump_HandlePlayerJumpAndRope                  state is 1 which I think means it's during
+                                                                                             the screen transition
+            c3cb 96 30              LDA        <Player_DeathPauseInTheAirTimer               are we in a death animation?
             c3cd 10 26 01 7b        LBNE       Jump_PlayerStillDyingInTheAir
             c3d1 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1  = ??
-            c3d3 10 2b 02 e1        LBMI       BigInitFunction_Maybe::Jump_JoystickCheck
-            c3d7 10 26 00 bd        LBNE       Jump_PlayerIsDead
+            c3d3 10 2b 02 e1        LBMI       BigInitFunction_Maybe::Jump_JoystickCheck     jump if player state is FF
+            c3d7 10 26 00 bd        LBNE       Jump_PlayerIsDead                             jump if the state is 1 or more
             c3db 6c 36              INC        -0xa,Y=>ConstantZeroToFFCounter               = ??
-            c3dd ce 3b 80           LDU        #Player_Cloned_CollisionMask_Maybe_0x3b80     location of mysterious sprites?
+            c3dd ce 3b 80           LDU        #Player_CollisionMasks_InRam_0x3b80           location of the collision masks in RAM
             c3e0 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
-            c3e2 c6 3c              LDB        #0x3c                                         size of the four sprites for a frame along 4 pixels
+            c3e2 c6 3c              LDB        #0x3c                                         size of the four collision masks for a frame along 4 pixels
                                                                                              (5 lines * 3 bytes * 4 frames)
             c3e4 3d                 MUL
-            c3e5 33 cb              LEAU       B,U                                           compute the address of the sprite we want
+            c3e5 33 cb              LEAU       B,U                                           compute the address of the set of collision masks we want
             c3e7 a6 26              LDA        0x6,Y=>PlayerX_0x1b0                          = ??
-            c3e9 84 03              ANDA       #0x3                                          get the last two bits. this gets 
-                                                                                             us which frame to look for (0 - 3)
-            c3eb c6 0f              LDB        #0xf                                          the size of one sprite (5 lines * 3 bytes)
+            c3e9 84 03              ANDA       #0x3                                          get the last two bits if player X. this gets 
+                                                                                             us which collision mask for the X position 
+                                                                                             to look for (0 - 3)
+            c3eb c6 0f              LDB        #0xf                                          the size of one collision mask (5 lines * 3 bytes)
             c3ed 3d                 MUL
-            c3ee 33 cb              LEAU       B,U                                           compute the address of the sprite to use for this
+            c3ee 33 cb              LEAU       B,U                                           compute the address of the collision mask to use for this
                                                                                              particular X position
             c3f0 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
             c3f2 81 03              CMPA       #0x3                                          compare the animation frame with 3. The run animation
@@ -17965,11 +17966,16 @@
                                                                                              two climbing frames to get to the left facing frames
                              Jump_DontAdjustU                                XREF[2]:     c3f4(j), c3f8(j)  
             c3fe ae 2c              LDX        0xc,Y=>PlayerY_PreviousVideoPageDrawPosition  = ??
-            c400 30 88 20           LEAX       0x20,X                                        one pixel under
+            c400 30 88 20           LEAX       0x20,X                                        get the position one pixel under the player location
+                                                                                             on screen
             c403 34 20              PSHS        Y
             c405 10 8e 00 74        LDY        #PlayerSprite_UtilityBuffer_0x74              = ??
             c409 86 05              LDA        #0x5                                          five lines of the sprite
             c40b 97 26              STA        <UtilityCounter_0x26                          = ??
+                             X - video page location of player sprite on screen (1 pixel d
+                             Y - player sprite utility buffer
+                             U - player collision mask for current frame and
+                                 x position
                              I think the idea is to fill the buffer
                              with the player pixels and some of the
                              background.
@@ -18016,20 +18022,31 @@
             c45d 10 8e 00 74        LDY        #PlayerSprite_UtilityBuffer_0x74              = ??
             c461 86 05              LDA        #0x5                                          num sprite collision mask rows
             c463 97 26              STA        <UtilityCounter_0x26                          = ??
+                             U - player sprite
+                             X - second video memory page
+                             Y - sprite utility buffer
+                             I think the utility buffer contains the player and background
+                             five lines. And then it tries to compare those lines with the
+                             from the clean background. The theory is that any differences
+                             pixels means that the player is overlapping an object and so 
+                             jumps to the collision functions.
                              Loop_CheckCollisionMaskLine                     XREF[1]:     c488(j)  
-            c465 37 06              PULU        A B=>DAT_0483                                = ??
+            c465 37 06              PULU        A B                                          = ??
+                             test first byte
             c467 aa 84              ORA        ,X=>DAT_1820                                  = ??
             c469 a1 a0              CMPA       ,Y+=>PlayerSprite_UtilityBuffer_0x74          = ??
             c46b 10 26 fd e8        LBNE       Jump_TestAllCollisions
+                             test second byte
             c46f ea 01              ORB        0x1,X=>DAT_1821                               = ??
             c471 e1 a0              CMPB       ,Y+=>DAT_0075                                 = ??
             c473 10 26 fd e0        LBNE       Jump_TestAllCollisions
+                             test third byte
             c477 37 02              PULU        A=>DAT_0485                                  = ??
             c479 aa 02              ORA        0x2,X=>DAT_1822                               = ??
             c47b a1 a0              CMPA       ,Y+=>DAT_0076                                 = ??
             c47d 10 26 fd d6        LBNE       Jump_TestAllCollisions
-            c481 30 88 60           LEAX       0x60,X
-            c484 33 46              LEAU       0x6,U
+            c481 30 88 60           LEAX       0x60,X                                        go down three pixels
+            c484 33 46              LEAU       0x6,U                                         skip two lines in the sprite frame
             c486 0a 26              DEC        <UtilityCounter_0x26                          = ??
             c488 26 db              BNE        Loop_CheckCollisionMaskLine
             c48a 35 20              PULS        Y
@@ -23098,7 +23115,7 @@
             dbc7 0a                 db         Ah                                            the number of sprites to copy
             dbc8 05                 db         5h                                            the number of lines per sprite
             dbc9 de 17              dw         Player_CollisionMasks_0xde17                  unidentified sprite location
-            dbcb 3b 80              dw         Player_Cloned_CollisionMask_Maybe_0x3b80      copy destination
+            dbcb 3b 80              dw         Player_CollisionMasks_InRam_0x3b80            copy destination
             dbcd 02                 db         2h                                            the number of sprites to copy
             dbce 08                 db         8h                                            the number of lines per sprite
             dbcf de 7b              dw         BouncyBallSprite1_0xde7b                      = 0000000100000000b
