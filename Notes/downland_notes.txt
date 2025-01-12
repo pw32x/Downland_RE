@@ -78,6 +78,13 @@ Room Pickups Fun Facts
 
 	completing the game once changes the pick up positions and keys
 
+Clean Background
+
+	the game holds a separate buffer of the background without any objects
+	this is used for terrain collision detection and for clearing the screen
+	around sprites when erasing and redrawing them. 
+	
+	located at 0x1c00
 	
 Questions
 

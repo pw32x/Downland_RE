@@ -29,8 +29,8 @@
             0012                    ??         ??
                              InterruptHasBeenHitCounter_0x14 (0013+1)        XREF[2,8]:   UpdateJoystick_Maybe:dc96(W), 
                              Joystick_UpDown_Value_0x13                                   UpdateJoystick_Maybe:dc9d(R), 
-                                                                                          FUN_c3b3:c1e6(*), 
-                                                                                          FUN_c3b3:c1ea(*), 
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           WaitForVSync_Maybe:c203(*), 
                                                                                           WaitForVSync_Maybe:c207(*), 
                                                                                           BigInitFunction_Maybe:c7ee(*), 
@@ -38,7 +38,7 @@
                                                                                           InterruptHandler:dc50(*), 
                                                                                           UpdateJoystick_Maybe:dc68(*)  
             0013                    undefined2 ??
-                             Player_JoystickDirection_0x15                   XREF[7]:     FUN_c3b3:c113(*), 
+                             Player_JoystickDirection_0x15                   XREF[7]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c6bb(*), 
                                                                                           BigInitFunction_Maybe:c741(*), 
                                                                                           BigInitFunction_Maybe:c7c9(*), 
@@ -55,10 +55,10 @@
             0018                    ??         ??
             0019                    ??         ??
             001a                    ??         ??
-                             ZeroValue                                       XREF[21]:    FUN_c3b3:c31b(*), 
-                                                                                          FUN_c3b3:c4ab(*), 
-                                                                                          FUN_c3b3:c4e3(*), 
-                                                                                          FUN_c3b3:c4fe(*), 
+                             ZeroValue                                       XREF[21]:    UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           ClearSpeedToZero:c525(*), 
                                                                                           BigInitFunction_Maybe:c6bf(*), 
                                                                                           BigInitFunction_Maybe:c6f0(*), 
@@ -136,17 +136,17 @@
                                                                                           DrawHorizontalSegment:d7d3(*), 
                                                                                           DrawVerticalSegment:d7ec(*)  
             0025                    ??         ??
-                             UtilityCounter_0x26                             XREF[39]:    FUN_c3b3:c0ac(*), 
-                                                                                          FUN_c3b3:c0b9(*), 
-                                                                                          FUN_c3b3:c341(*), 
+                             UtilityCounter_0x26                             XREF[39]:    UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           ClearPickupFromScreen:c35a(*), 
                                                                                           PlaySound:c361(*), 
                                                                                           PlaySound:c371(*), 
-                                                                                          FUN_c3b3:c40b(*), 
-                                                                                          FUN_c3b3:c42c(*), 
-                                                                                          FUN_c3b3:c463(*), 
-                                                                                          FUN_c3b3:c486(*), 
-                                                                                          FUN_c3b3:c599(*), 
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c6ee(*), 
                                                                                           BigInitFunction_Maybe:c6f7(*), 
                                                                                           BigInitFunction_Maybe:c703(*), 
@@ -167,12 +167,12 @@
                              looks like the value that controls how
                              far up the jump goes. Can change to make
                              jump higher or lower
-                             Player_JumpUpInTheAirCounter_0x2c               XREF[10]:    FUN_c3b3:c48c(*), 
-                                                                                          FUN_c3b3:c540(*), 
+                             Player_JumpUpInTheAirCounter_0x2c               XREF[10]:    UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c74b(*), 
                                                                                           BigInitFunction_Maybe:c77b(*), 
-                                                                                          FUN_c3b3:c7a9(*), 
-                                                                                          FUN_c3b3:c7b8(*), 
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c8af(*), 
                                                                                           Jump_IsAlreadyClimbing:c8c2(*), 
                                                                                           Jump_IsAlreadyClimbing:c963(*), 
@@ -180,32 +180,32 @@
             002c                    ??         ??
                              0: is touching ground
                              ff: is not touching ground
-                             Player_IsTouchingGround_Maybe_0x2d              XREF[5]:     FUN_c3b3:c4c0(*), 
-                                                                                          FUN_c3b3:c52c(*), 
-                                                                                          FUN_c3b3:c544(*), 
-                                                                                          FUN_c3b3:c56f(*), 
+                             Player_IsTouchingGround_Maybe_0x2d              XREF[5]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c781(*)  
             002d                    ??         ??
                              0: will die when landing
                              ff: will not die when landing
-                             Player_WontDieWhenLanding_Maybe_0x2e            XREF[6]:     FUN_c3b3:c4cd(*), 
-                                                                                          FUN_c3b3:c4d4(*), 
+                             Player_WontDieWhenLanding_Maybe_0x2e            XREF[6]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c726(*), 
                                                                                           BigInitFunction_Maybe:c74f(*), 
                                                                                           BigInitFunction_Maybe:c77f(*), 
                                                                                           BigInitFunction_Maybe:c8b1(*)  
             002e                    ??         ??
-                             Player_CantJumpAfterLandingCounter_Maybe_0x2f   XREF[6]:     FUN_c3b3:c542(*), 
+                             Player_CantJumpAfterLandingCounter_Maybe_0x2f   XREF[6]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c722(*), 
                                                                                           BigInitFunction_Maybe:c74d(*), 
                                                                                           BigInitFunction_Maybe:c770(*), 
                                                                                           BigInitFunction_Maybe:c873(*), 
                                                                                           BigInitFunction_Maybe:c877(*)  
             002f                    ??         ??
-                             Player_DeathPauseInTheAirTimer                  XREF[4]:     FUN_c3b3:c3cb(*), 
-                                                                                          FUN_c3b3:c54a(*), 
-                                                                                          FUN_c3b3:c54c(*), 
-                                                                                          FUN_c3b3:c550(*)  
+                             Player_DeathPauseInTheAirTimer                  XREF[4]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             0030                    ??         ??
                              Player_IsJumping_0x31                           XREF[3]:     BigInitFunction_Maybe:c76a(*), 
                                                                                           BigInitFunction_Maybe:c76e(*), 
@@ -239,10 +239,10 @@
                              Player_CurrentSpriteFrame_Maybe_0x37            XREF[2]:     Jump_IsAlreadyClimbing:c997(*), 
                                                                                           DrawLifeIconsAndPlayerRegenerati
             0037                    dw         ??
-                             CurrentRoomNumber_0x39                          XREF[18]:    FUN_c3b3:c081(*), 
-                                                                                          FUN_c3b3:c5e6(*), 
-                                                                                          FUN_c3b3:c630(*), 
-                                                                                          FUN_c3b3:c672(*), 
+                             CurrentRoomNumber_0x39                          XREF[18]:    UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           UpdateRoomTimers:cbc3(*), 
                                                                                           UpdateRoomTimers:cbda(*), 
                                                                                           UpdateRoomTimers:cc03(*), 
@@ -258,8 +258,8 @@
                                                                                           UpdateAndDrawDrops:cfcb(*), 
                                                                                           InitDrops:d127(*)  
             0039                    ??         ??
-                             GameCompletionCount_0x3a                        XREF[6]:     FUN_c3b3:c07a(*), 
-                                                                                          FUN_c3b3:c153(*), 
+                             GameCompletionCount_0x3a                        XREF[6]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           InitRoom_Maybe:ccdb(*), 
                                                                                           UpdateAndDrawDrops:cfe3(*), 
                                                                                           InitDrops:d11f(*), 
@@ -269,56 +269,57 @@
                                                                                           InitRoom_Maybe:cd07(*), 
                                                                                           InitVideoAndSetupRoomAndGraphics
             003b                    dw         ??
-                             PerRoomPickupDataAddress_0x3d                   XREF[3]:     FUN_c3b3:c259(*), 
+                             PerRoomPickupDataAddress_0x3d                   XREF[3]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           GetRoomDataForCurrentRoom:cf1a(*
                                                                                           DrawPickups:cf21(*)  
             003d                    dw         ??
-                             NumberOfDropsToProcess_0x3f                     XREF[3]:     FUN_c3b3:c28a(*), 
-                                                                                          FUN_c3b3:c670(*), 
+                             NumberOfDropsToProcess_0x3f                     XREF[3]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           InitDrops:d130(*)  
             003f                    ??         ??
                              Drop_TickTockBetweenFFto0andBack_0x40           XREF[2]:     UpdateAndDrawDrops:cf57(*), 
                                                                                           UpdateAndDrawDrops:cf5d(*)  
             0040                    ??         ??
-                             Object_CollisionY_0x41                          XREF[7]:     FUN_c3b3:c26e(*), 
-                                                                                          FUN_c3b3:c292(*), 
-                                                                                          FUN_c3b3:c2b3(*), 
-                                                                                          FUN_c3b3:c2ca(*), 
+                             Object_CollisionY_0x41                          XREF[7]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           TestPlayerObjectCollision:c381(*
                                                                                           TestPlayerObjectCollision:c385(*
                                                                                           TestPlayerObjectCollision:c38d(*
             0041                    db         ??
-                             Object_CollisionX_0x42                          XREF[7]:     FUN_c3b3:c272(*), 
-                                                                                          FUN_c3b3:c296(*), 
-                                                                                          FUN_c3b3:c2b8(*), 
-                                                                                          FUN_c3b3:c2cf(*), 
+                             Object_CollisionX_0x42                          XREF[7]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           TestPlayerObjectCollision:c397(*
                                                                                           TestPlayerObjectCollision:c39b(*
                                                                                           TestPlayerObjectCollision:c3a3(*
             0042                    db         ??
-                             Object_CollisionHeight_0x43                     XREF[5]:     FUN_c3b3:c25e(*), 
-                                                                                          FUN_c3b3:c284(*), 
-                                                                                          FUN_c3b3:c2aa(*), 
-                                                                                          FUN_c3b3:c2c1(*), 
+                             Object_CollisionHeight_0x43                     XREF[5]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           TestPlayerObjectCollision:c387(*
             0043                    ??         ??
-                             Object_CollisionWidth_0x44                      XREF[5]:     FUN_c3b3:c262(*), 
-                                                                                          FUN_c3b3:c288(*), 
-                                                                                          FUN_c3b3:c2ae(*), 
-                                                                                          FUN_c3b3:c2c5(*), 
+                             Object_CollisionWidth_0x44                      XREF[5]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           TestPlayerObjectCollision:c39d(*
             0044                    ??         ??
                              Player_SpriteFrameAddress_Temp_0x45             XREF[2]:     DrawLifeIconsAndPlayerRegenerati
                                                                                           DrawLifeIconsAndPlayerRegenerati
             0045                    dw         ??
             0047                    ??         ??
-                             Player_NeedsUpdate_Maybe_0x48                   XREF[4]:     FUN_c3b3:c187(*), 
-                                                                                          FUN_c3b3:c18b(*), 
+                             Player_NeedsUpdate_Maybe_0x48                   XREF[4]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           DrawLifeIconsAndPlayerRegenerati
                                                                                           DrawLifeIconsAndPlayerRegenerati
             0048                    ??         ??
-                             Ball_IsActive_0x49                              XREF[3]:     FUN_c3b3:c19a(*), 
-                                                                                          FUN_c3b3:c19e(*), cba2(*)  
+                             Ball_IsActive_0x49                              XREF[3]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          cba2(*)  
             0049                    ??         ??
             004a                    ??         ??
                              Player_RegenerationTimer_0x4b                   XREF[5]:     BigInitFunction_Maybe:c6b0(*), 
@@ -341,38 +342,39 @@
                                                                                           InitRoomKeysAndPickups:d19d(*), 
                                                                                           InitRoomKeysAndPickups:d1b4(*)  
             004d                    ??         ??
-                             CurrentVideoMemLocation_0x4e                    XREF[6]:     FUN_c3b3:c09c(*), 
-                                                                                          FUN_c3b3:c30e(*), 
-                                                                                          FUN_c3b3:c316(*), 
+                             CurrentVideoMemLocation_0x4e                    XREF[6]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           InitRoom_Maybe:cd11(*), 
                                                                                           InitRoom_Maybe:cd33(*), 
                                                                                           ComputeScreenLocationFromAAndB:d
             004e                    ??         ??
             004f                    ??         ??
-                             CurrentNumberOfPlayers_0x50                     XREF[7]:     FUN_c3b3:c107(*), 
-                                                                                          FUN_c3b3:c11b(*), 
-                                                                                          FUN_c3b3:c127(*), 
-                                                                                          FUN_c3b3:c12b(*), 
-                                                                                          FUN_c3b3:c608(*), 
-                                                                                          FUN_c3b3:dc0e(*), 
-                                                                                          FUN_c3b3:dc16(*)  
+                             CurrentNumberOfPlayers_0x50                     XREF[7]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             0050                    ??         ??
-                             SelectedNumberOfPlayers_0x51                    XREF[4]:     c069(*), FUN_c3b3:c105(*), 
-                                                                                          FUN_c3b3:c11d(*), 
-                                                                                          FUN_c3b3:c129(*)  
+                             SelectedNumberOfPlayers_0x51                    XREF[4]:     c069(*), 
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             0051                    ??         ??
-                             CurrentPlayer_0x52                              XREF[21]:    FUN_c3b3:c10b(*), 
-                                                                                          FUN_c3b3:c157(*), 
-                                                                                          FUN_c3b3:c268(*), 
-                                                                                          FUN_c3b3:c2e4(*), 
-                                                                                          FUN_c3b3:c2f6(*), 
+                             CurrentPlayer_0x52                              XREF[21]:    UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           GetPlayerLivesAddress:c5cb(*), 
-                                                                                          FUN_c3b3:c610(*), 
-                                                                                          FUN_c3b3:c616(*), 
-                                                                                          FUN_c3b3:c620(*), 
-                                                                                          FUN_c3b3:c643(*), 
-                                                                                          FUN_c3b3:c680(*), 
-                                                                                          FUN_c3b3:c699(*), 
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c763(*), 
                                                                                           GetPlayerRoomTimerBuffer:cbbc(*), 
                                                                                           FUN_ccb1:cccf(*), 
@@ -383,29 +385,33 @@
                                                                                           UpdateAndPrintPlayerScore:db11(*
                                                                                           [more]
             0052                    ??         ??
-                             CurrentInGamePlayerStringPointer                XREF[3]:     FUN_c3b3:c15c(*), 
-                                                                                          FUN_c3b3:c628(*), 
+                             CurrentInGamePlayerStringPointer                XREF[3]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           InitRoom_Maybe:cd3d(*)  
             0053                    dw         ??
-                             PlayerOne_Lives                                 XREF[2]:     FUN_c3b3:c14c(*), c5d2(*)  
+                             PlayerOne_Lives                                 XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          c5d2(*)  
             0055                    db         ??
-                             PlayerTwo_Lives                                 XREF[2]:     FUN_c3b3:c14e(*), c5d4(*)  
+                             PlayerTwo_Lives                                 XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          c5d4(*)  
             0056                    db         ??
-                             Player1_SomeDataAddress_Always0Maybe            XREF[2]:     c5d6(*), FUN_c3b3:c61b(*)  
+                             Player1_SomeDataAddress_Always0Maybe            XREF[2]:     c5d6(*), 
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             0057                    ??         ??
             0058                    ??         ??
-                             DAT_0059                                        XREF[1]:     FUN_c3b3:c62e(W)  
+                             DAT_0059                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             0059                    undefined2 ??
-                             DAT_005b                                        XREF[1]:     FUN_c3b3:c632(W)  
+                             DAT_005b                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             005b                    undefined1 ??
-                             Player2_SomeDataAddress_Always0Maybe            XREF[2]:     c5d8(*), FUN_c3b3:c625(*)  
+                             Player2_SomeDataAddress_Always0Maybe            XREF[2]:     c5d8(*), 
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             005c                    ??         ??
             005d                    ??         ??
-                             StoredPlayerPosition_0x5e                       XREF[2]:     FUN_c3b3:c161(*), 
-                                                                                          FUN_c3b3:c62e(W)  
+                             StoredPlayerPosition_0x5e                       XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             005e                    undefined2 ??
-                             TempRoomNumberHolder_0x60                       XREF[2]:     FUN_c3b3:c163(*), 
-                                                                                          FUN_c3b3:c632(W)  
+                             TempRoomNumberHolder_0x60                       XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             0060                    undefined1 ??
                              RomAddressCounter_0xc000to0xdf5a_0x61           XREF[3]:     c05e(*), 
                                                                                           IncrementRomAddressCounter:dc3b(
@@ -424,7 +430,7 @@
             0066                    ??         ??
             0067                    ??         ??
             0068                    ??         ??
-                             CharacterDrawingMask_0x69_Nice                  XREF[2]:     FUN_c3b3:c085(*), 
+                             CharacterDrawingMask_0x69_Nice                  XREF[2]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           PrintString:d8f3(*)  
             0069                    ??         ??                                            ensures that characters are drawn taking into account
                                                                                              CRT artifact effects
@@ -451,23 +457,23 @@
                              RomStartAddress_0xc000                          XREF[1]:     c060(*)  
             0072                    ??         ??
             0073                    ??         ??
-                             PlayerSprite_UtilityBuffer_0x74                 XREF[4]:     FUN_c3b3:c405(*), 
-                                                                                          FUN_c3b3:c415(W), 
-                                                                                          FUN_c3b3:c45d(*), 
-                                                                                          FUN_c3b3:c469(R)  
+                             Player_CollisionMaskBuffer_0x74                 XREF[4]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             0074                    undefined1 ??
-                             DAT_0075                                        XREF[2]:     FUN_c3b3:c41d(W), 
-                                                                                          FUN_c3b3:c471(R)  
+                             DAT_0075                                        XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             0075                    undefined1 ??
-                             DAT_0076                                        XREF[2]:     FUN_c3b3:c427(W), 
-                                                                                          FUN_c3b3:c47b(R)  
+                             DAT_0076                                        XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             0076                    undefined1 ??
-                             DAT_0077                                        XREF[2]:     FUN_c3b3:c415(W), 
-                                                                                          FUN_c3b3:c469(R)  
+                             DAT_0077                                        XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             0077                    undefined1 ??
-                             DAT_0078                                        XREF[1]:     FUN_c3b3:c41d(W)  
+                             DAT_0078                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             0078                    undefined1 ??
-                             DAT_0079                                        XREF[1]:     FUN_c3b3:c427(W)  
+                             DAT_0079                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             0079                    undefined1 ??
             007a                    ??         ??
             007b                    ??         ??
@@ -483,9 +489,9 @@
                              The splat sprite is 3 bytes for 9 lines, but this space
                              is 3 bytes for 16 lines.
                              The door is 2 bytes for 16 lines.
-                             SpriteDrawingBuffer_0x83                        XREF[9]:     FUN_c3b3:c57a(*), 
-                                                                                          FUN_c3b3:c57f(W), 
-                                                                                          FUN_c3b3:c5a6(*), 
+                             SpriteDrawingBuffer_0x83                        XREF[9]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           DrawDoorOrMultipleDoors_Maybe:cd
                                                                                           DrawDoorOrMultipleDoors_Maybe:cd
                                                                                           DrawDoorOrMultipleDoors_Maybe:cd
@@ -493,7 +499,7 @@
                                                                                           ShiftBitsInSpriteDrawingBuffer:c
                                                                                           ShiftBitsInSpriteDrawingBuffer:c
             0083                    undefined1 ??
-                             DAT_0084                                        XREF[3]:     FUN_c3b3:c57f(W), 
+                             DAT_0084                                        XREF[3]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           ShiftBitsInSpriteDrawingBuffer:c
                                                                                           ShiftBitsInSpriteDrawingBuffer:c
             0084                    undefined1 ??
@@ -526,10 +532,10 @@
             0095                    ??         ??
             0096                    ??         ??
             0097                    ??         ??
-                             PlayerSplatSpriteInRam_0x98                     XREF[2]:     FUN_c3b3:c584(*), 
-                                                                                          FUN_c3b3:c58e(W)  
+                             PlayerSplatSpriteInRam_0x98                     XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             0098                    undefined1 ??
-                             DAT_0099                                        XREF[1]:     FUN_c3b3:c58e(W)  
+                             DAT_0099                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             0099                    undefined1 ??
             009a                    ??         ??
             009b                    ??         ??
@@ -556,7 +562,7 @@
             00b0                    ??         ??
             00b1                    ??         ??
             00b2                    ??         ??
-                             SpriteDrawingBufferEnd_0xb3                     XREF[4]:     FUN_c3b3:c0e1(*), 
+                             SpriteDrawingBufferEnd_0xb3                     XREF[4]:     UpdatePlayerSoundAndCollisionsAn
                              HighScoreString_0xb3                                         CheckScoreStringAgainstHighScore
                                                                                           CheckScoreStringAgainstHighScore
                                                                                           CheckScoreStringAgainstHighScore
@@ -568,8 +574,8 @@
             00b8                    ??         ??
             00b9                    ??         ??
             00ba                    ??         ??
-                             PlayerOneScoreString_0xbb                       XREF[5]:     FUN_c3b3:c0bd(*), 
-                                                                                          FUN_c3b3:c0c3(*), 
+                             PlayerOneScoreString_0xbb                       XREF[5]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           ClearTimerAndScoreStrings:c20d(*
                                                                                           ClearTimerAndScoreStrings:c210(W
                                                                                           db32(*)  
@@ -582,8 +588,9 @@
             00c0                    ??         ??
             00c1                    ??         ??
             00c2                    ??         ??
-                             PlayerTwoScoreString_0xc3                       XREF[3]:     FUN_c3b3:c0cf(*), 
-                                                                                          FUN_c3b3:c0d5(*), db34(*)  
+                             PlayerTwoScoreString_0xc3                       XREF[3]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          db34(*)  
             00c3                    ??         ??
             00c4                    ??         ??
             00c5                    ??         ??
@@ -762,17 +769,17 @@
             0165                    ??         ??
             0166                    ??         ??
             0167                    ??         ??
-                             DAT_0168                                        XREF[1]:     FUN_c3b3:c40d(*)  
+                             DAT_0168                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             0168                    ??         ??
-                             DAT_0169                                        XREF[1]:     FUN_c3b3:c40d(*)  
+                             DAT_0169                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             0169                    ??         ??
-                             DAT_016a                                        XREF[1]:     FUN_c3b3:c41f(*)  
+                             DAT_016a                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             016a                    ??         ??
-                             DAT_016b                                        XREF[1]:     FUN_c3b3:c40d(*)  
+                             DAT_016b                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             016b                    ??         ??
-                             DAT_016c                                        XREF[1]:     FUN_c3b3:c40d(*)  
+                             DAT_016c                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             016c                    ??         ??
-                             DAT_016d                                        XREF[1]:     FUN_c3b3:c41f(*)  
+                             DAT_016d                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             016d                    ??         ??
             016e                    ??         ??
             016f                    ??         ??
@@ -819,33 +826,34 @@
             0198                    ??         ??
             0199                    ??         ??
             019a                    ??         ??
-                             DAT_019b                                        XREF[1]:     FUN_c3b3:c0b2(W)  
+                             DAT_019b                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             019b                    ??         ??
             019c                    ??         ??
                              DAT_019d                                        XREF[45]:    c045(W), c04b(W), c04e(W), 
                                                                                           c052(W), c055(W), c066(W), 
-                                                                                          FUN_c3b3:c075(W), 
-                                                                                          FUN_c3b3:c07c(W), 
-                                                                                          FUN_c3b3:c087(W), 
-                                                                                          FUN_c3b3:c08a(W), 
-                                                                                          FUN_c3b3:c090(W), 
-                                                                                          FUN_c3b3:c093(W), 
-                                                                                          FUN_c3b3:c096(W), 
-                                                                                          FUN_c3b3:c0a1(W), 
-                                                                                          FUN_c3b3:c0c0(W), 
-                                                                                          FUN_c3b3:c0c9(W), 
-                                                                                          FUN_c3b3:c0cc(W), 
-                                                                                          FUN_c3b3:c0d2(W), 
-                                                                                          FUN_c3b3:c0db(W), 
-                                                                                          FUN_c3b3:c0de(W), [more]
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          [more]
             019d                    ??         ??
-                             DAT_019e                                        XREF[2]:     FUN_c3b3:c1b4(W), 
-                                                                                          FUN_c3b3:c1c2(R)  
+                             DAT_019e                                        XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             019e                    ??         ??
                              0: Not climbing
                              FF: is climbing
-                             StackStart_0x019f                               XREF[22]:    FUN_c3b3:c492(R), 
-                             Player_IsClimbingRope                                        FUN_c3b3:c53e(W), 
+                             StackStart_0x019f                               XREF[22]:    UpdatePlayerSoundAndCollisionsAn
+                             Player_IsClimbingRope                                        UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c718(R), 
                                                                                           BigInitFunction_Maybe:c737(R), 
                                                                                           BigInitFunction_Maybe:c799(R), 
@@ -867,20 +875,20 @@
                                                                                           [more]
             019f                    undefined1 ??
                              used for various things, including animation timing for runni
-                             ConstantZeroToFFCounter                         XREF[5]:     FUN_c3b3:c1ca(R), 
-                                                                                          FUN_c3b3:c3db(RW), 
+                             ConstantZeroToFFCounter                         XREF[5]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c828(R), 
                                                                                           BigInitFunction_Maybe:c859(R), 
                                                                                           Jump_IsAlreadyClimbing:c90d(R)  
             01a0                    db         ??
             01a1                    ??         ??
-                             Player_CurrentAnimationFrame_0x1a2              XREF[17]:    FUN_c3b3:c1c4(R), 
-                                                                                          FUN_c3b3:c3b7(R), 
-                                                                                          FUN_c3b3:c3e0(R), 
-                                                                                          FUN_c3b3:c3f0(R), 
-                                                                                          FUN_c3b3:c435(R), 
-                                                                                          FUN_c3b3:c447(R), 
-                                                                                          FUN_c3b3:c55f(W), 
+                             Player_CurrentAnimationFrame_0x1a2              XREF[17]:    UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c6b6(W), 
                                                                                           BigInitFunction_Maybe:c724(W), 
                                                                                           BigInitFunction_Maybe:c813(R), 
@@ -894,8 +902,8 @@
             01a2                    undefined1 ??
             01a3                    ??         ??
             01a4                    ??         ??
-                             Player_SomeGameState_0x1a5                      XREF[6]:     FUN_c3b3:c3c1(R), 
-                                                                                          FUN_c3b3:c6a7(RW), 
+                             Player_SomeGameState_0x1a5                      XREF[6]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           InitPlayerSomething:ce6e(W), 
                                                                                           EraseAndUpdateAndDrawObject:d860
                                                                                           EraseAndUpdateAndDrawObject:d86c
@@ -906,11 +914,11 @@
                                                                                              resets when changing rooms
                              facing left: 0
                              facing right: ff
-                             Player_FacingDirection_0x1a6                    XREF[15]:    FUN_c3b3:c3f6(R), 
-                                                                                          FUN_c3b3:c44d(R), 
-                                                                                          FUN_c3b3:c4d8(R), 
-                                                                                          FUN_c3b3:c558(W), 
-                                                                                          FUN_c3b3:c55b(W), 
+                             Player_FacingDirection_0x1a6                    XREF[15]:    UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c753(W), 
                                                                                           BigInitFunction_Maybe:c75c(W), 
                                                                                           BigInitFunction_Maybe:c788(R), 
@@ -922,9 +930,9 @@
                                                                                           Jump_IsAlreadyClimbing:c988(R), 
                                                                                           DrawLifeIconsAndPlayerRegenerati
             01a6                    undefined1 ??
-                             Player_CantMoveCounter_Maybe_0x1a7              XREF[6]:     FUN_c3b3:c566(W), 
-                                                                                          FUN_c3b3:c5ac(RW), 
-                                                                                          FUN_c3b3:c5c3(W), 
+                             Player_CantMoveCounter_Maybe_0x1a7              XREF[6]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c6ab(W), 
                                                                                           BigInitFunction_Maybe:c6cd(R), 
                                                                                           BigInitFunction_Maybe:c6d2(W)  
@@ -934,12 +942,12 @@
                              1: dead
                              2: dead and falling, or dead and checking the ground
                              FF: regenerating
-                             Player_State_AliveDeadRegenState_0x1a8          XREF[11]:    FUN_c3b3:c3d1(R), 
-                                                                                          FUN_c3b3:c502(R), 
-                                                                                          FUN_c3b3:c52e(R), 
-                                                                                          FUN_c3b3:c56a(W), 
-                                                                                          FUN_c3b3:c575(R), 
-                                                                                          FUN_c3b3:c5b2(RW), 
+                             Player_State_AliveDeadRegenState_0x1a8          XREF[11]:    UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c6b4(W), 
                                                                                           BigInitFunction_Maybe:c6fd(W), 
                                                                                           DrawLifeIconsAndPlayerRegenerati
@@ -947,8 +955,8 @@
                                                                                           UpdateRoomTimers:cbfc(R)  
             01a8                    db         ??
                              Player_NumRowsInSprite_0x1a9                    XREF[8]:     TestPlayerObjectCollision:c391(R
-                                                                                          FUN_c3b3:c5b8(W), 
-                                                                                          FUN_c3b3:c5bf(W), 
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c701(R), 
                                                                                           DrawLifeIconsAndPlayerRegenerati
                                                                                           InitPlayerSomething:ce72(W), 
@@ -964,18 +972,18 @@
                              10-11: sprite pointer
                              12-13: previous video page destination
                              14-15: previous sprite pointer
-                             Player_PhysicsData_0x1aa                        XREF[25]:    FUN_c3b3:c180(*), 
-                             Player_SpeedY_0x1aa                                          FUN_c3b3:c18d(*), 
-                                                                                          FUN_c3b3:c2d6(*), 
-                                                                                          FUN_c3b3:c34a(*), 
+                             Player_PhysicsData_0x1aa                        XREF[25]:    UpdatePlayerSoundAndCollisionsAn
+                             Player_SpeedY_0x1aa                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           TestPlayerObjectCollision:c37c(*
-                                                                                          FUN_c3b3:c4c2(R), 
-                                                                                          FUN_c3b3:c4d2(W), 
-                                                                                          FUN_c3b3:c532(R), 
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c71c(R), 
                                                                                           BigInitFunction_Maybe:c777(W), 
-                                                                                          FUN_c3b3:c7b1(R), 
-                                                                                          FUN_c3b3:c7b6(W), 
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c7c0(W), 
                                                                                           BigInitFunction_Maybe:c806(W), 
                                                                                           BigInitFunction_Maybe:c826(W), 
@@ -986,9 +994,9 @@
                                                                                           EraseAndUpdateAndDrawObject:d86e
                                                                                           [more]
             01aa                    dw         ??
-                             Player_SpeedX_0x1ac                             XREF[10]:    FUN_c3b3:c4dc(R), 
-                                                                                          FUN_c3b3:c4f7(R), 
-                                                                                          FUN_c3b3:c500(W), 
+                             Player_SpeedX_0x1ac                             XREF[10]:    UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c761(W), 
                                                                                           BigInitFunction_Maybe:c7f9(W), 
                                                                                           BigInitFunction_Maybe:c857(W), 
@@ -999,7 +1007,7 @@
             01ac                    dw         ??
                              PlayerY_0x1ae                                   XREF[8]:     TestPlayerObjectCollision:c37f(R
                                                                                           TestPlayerObjectCollision:c38f(R
-                                                                                          FUN_c3b3:c62a(R), 
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           Jump_IsAlreadyClimbing:c8f7(R), 
                                                                                           Jump_IsAlreadyClimbing:c8fb(W), 
                                                                                           Jump_IsAlreadyClimbing:c909(R), 
@@ -1008,10 +1016,10 @@
             01ae                    dw         ??
                              PlayerX_0x1b0                                   XREF[16]:    TestPlayerObjectCollision:c395(R
                                                                                           TestPlayerObjectCollision:c3a5(R
-                                                                                          FUN_c3b3:c3e7(R), 
-                                                                                          FUN_c3b3:c43c(R), 
-                                                                                          FUN_c3b3:c593(R), 
-                                                                                          FUN_c3b3:c62c(R), 
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c786(R), 
                                                                                           BigInitFunction_Maybe:c792(W), 
                                                                                           Jump_IsAlreadyClimbing:c8fd(R), 
@@ -1033,8 +1041,8 @@
                              Player_SpritePointer_0x1b4                      XREF[2]:     DrawLifeIconsAndPlayerRegenerati
                                                                                           EraseAndUpdateAndDrawObject:d895
             01b4                    dw         ??
-                             PlayerY_PreviousVideoPageDrawPosition_0x1b6     XREF[6]:     FUN_c3b3:c3fe(R), 
-                                                                                          FUN_c3b3:c455(R), 
+                             PlayerY_PreviousVideoPageDrawPosition_0x1b6     XREF[6]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           DrawLifeIconsAndPlayerRegenerati
                                                                                           DrawLifeIconsAndPlayerRegenerati
                                                                                           EraseAndUpdateAndDrawObject:d893
@@ -1071,7 +1079,7 @@
                              10-11: sprite pointer 
                              12-13: previous video page destination 
                              14-15: previous sprite pointer
-                             Ball_Physics_0x1bf                              XREF[12]:    FUN_c3b3:c1a0(*), 
+                             Ball_Physics_0x1bf                              XREF[12]:    UpdatePlayerSoundAndCollisionsAn
                              Ball_SpeedY_0x1bf                                            UpdateBall:cab6(*), caf5(R), 
                                                                                           cb03(W), cb1b(W), cb2a(W), 
                                                                                           cb32(R), cb37(W), cb3f(W), 
@@ -1082,13 +1090,13 @@
                              Ball_SpeedX_0x1c1                               XREF[2]:     cb49(R), 
                                                                                           InitBouncingBall:ce99(W)  
             01c1                    dw         ??
-                             Ball_Y_0x1c3                                    XREF[4]:     FUN_c3b3:c2b0(R), cb41(R), 
-                                                                                          cb45(W), 
+                             Ball_Y_0x1c3                                    XREF[4]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          cb41(R), cb45(W), 
                                                                                           InitBouncingBall:cea2(W)  
             01c3                    dw         ??
-                             Ball_X_0x1c5                                    XREF[7]:     FUN_c3b3:c2b5(R), cac7(R), 
-                                                                                          cb47(R), cb4b(W), cb50(R), 
-                                                                                          cb97(R), 
+                             Ball_X_0x1c5                                    XREF[7]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          cac7(R), cb47(R), cb4b(W), 
+                                                                                          cb50(R), cb97(R), 
                                                                                           InitBouncingBall:cea4(W)  
             01c5                    dw         ??
                              Ball_VideoPageDrawPosition_0x1c7                XREF[3]:     cacf(R), cb5d(W), 
@@ -1100,8 +1108,8 @@
             01cb                    dw         ??
                              Ball_PreviousSpritePointer_0x1cd
             01cd                    dw         ??
-                             EndOfBallData                                   XREF[6]:     FUN_c3b3:c5de(R), 
-                             Bird_InitState_0x1cf                                         FUN_c3b3:c5f1(W), 
+                             EndOfBallData                                   XREF[6]:     UpdatePlayerSoundAndCollisionsAn
+                             Bird_InitState_0x1cf                                         UpdatePlayerSoundAndCollisionsAn
                                                                                           UpdateRoomTimers:cbf8(R), 
                                                                                           UpdateRoomTimers:cc23(W), 
                                                                                           InitRoom_Maybe:cd04(W), 
@@ -1131,13 +1139,13 @@
                                                                                           UpdateRoomTimers:cc7e(W), 
                                                                                           UpdateRoomTimers:cc82(R)  
             01d6                    dw         ??
-                             Bird_Y_0x1d8                                    XREF[5]:     FUN_c3b3:c2c7(R), 
+                             Bird_Y_0x1d8                                    XREF[5]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           UpdateRoomTimers:cc18(W), 
                                                                                           UpdateRoomTimers:cc40(R), 
                                                                                           UpdateRoomTimers:cc5d(R), 
                                                                                           UpdateRoomTimers:cc61(W)  
             01d8                    dw         ??
-                             Bird_X_0x1da                                    XREF[6]:     FUN_c3b3:c2cc(R), 
+                             Bird_X_0x1da                                    XREF[6]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           UpdateRoomTimers:cc1a(W), 
                                                                                           UpdateRoomTimers:cc63(R), 
                                                                                           UpdateRoomTimers:cc80(R), 
@@ -1209,9 +1217,9 @@
                              12 (c): the collision mask of the bottom of the drop.
                                      the mask is different depending on which frame
                                      of the drop sprite it uses.
-                             Drop0_Data_0x1ef                                XREF[8]:     FUN_c3b3:c27e(*), 
-                             DropDataBlock_0x1ef                                          FUN_c3b3:c28c(R), 
-                             Drop0_CeilingWiggleTimer_0x1ef                               FUN_c3b3:c29d(R), 
+                             Drop0_Data_0x1ef                                XREF[8]:     UpdatePlayerSoundAndCollisionsAn
+                             DropDataBlock_0x1ef                                          UpdatePlayerSoundAndCollisionsAn
+                             Drop0_CeilingWiggleTimer_0x1ef                               UpdatePlayerSoundAndCollisionsAn
                                                                                           UpdateAndDrawDrops:cf53(*), 
                                                                                           UpdateAndDrawDrops:cf5f(R), 
                                                                                           UpdateAndDrawDrops:cfc6(*), 
@@ -1220,9 +1228,9 @@
             01ef                    db         ??
                              Drop0_SpeedY_01f0
             01f0                    dw         ??
-                             Drop0_Y_0x1f2                                   XREF[1]:     FUN_c3b3:c290(R)  
+                             Drop0_Y_0x1f2                                   XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             01f2                    dw         ??
-                             Drop0_X_0x1f4                                   XREF[1]:     FUN_c3b3:c294(R)  
+                             Drop0_X_0x1f4                                   XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             01f4                    db         ??
                              Drop0_SpriteData_0x1f5
             01f5                    dw         ??
@@ -1232,7 +1240,7 @@
             01f9                    dw         ??
                              Drop0_CollisionMask_0x1fb
             01fb                    db         ??
-                             Drop1_Data_0x1fc                                XREF[6]:     FUN_c3b3:c28c(R), 
+                             Drop1_Data_0x1fc                                XREF[6]:     UpdatePlayerSoundAndCollisionsAn
                              Drop1_CeilingWiggleTimer_0x1fc                               UpdateAndDrawDrops:cf5f(R), 
                                                                                           UpdateAndDrawDrops:cfae(RW), 
                                                                                           UpdateAndDrawDrops:cfb0(R), 
@@ -1395,8 +1403,8 @@
                              3: x pos
                              4: if key, then which door it unlocks
                              In the buffer, the two keys are always first.
-                             EndOfDropDataBuffer_0x271                       XREF[9]:     FUN_c3b3:c2e7(*), 
-                             Room0_Data                                                   FUN_c3b3:c2e9(*), 
+                             EndOfDropDataBuffer_0x271                       XREF[9]:     UpdatePlayerSoundAndCollisionsAn
+                             Room0_Data                                                   UpdatePlayerSoundAndCollisionsAn
                              PickUp_VisibleState_0x271                                    GetRoomDataForCurrentRoom:cf0f(*
                              PerRoomPickupData_0x271                                      UpdateAndDrawDrops:cfa7(*), 
                                                                                           InitRoomKeysAndPickups:d14e(*), 
@@ -1414,7 +1422,7 @@
             0273                    db         ??
                              PickUp_Y
             0274                    db         ??
-                             PickUp_DoorUnlockIndex                          XREF[3]:     FUN_c3b3:c2eb(*), 
+                             PickUp_DoorUnlockIndex                          XREF[3]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           InitRoomKeysAndPickups:d157(W), 
                                                                                           InitRoomKeysAndPickups:d175(W)  
             0275                    db         ??
@@ -1683,13 +1691,13 @@
             0368                    ??         ??
             0369                    ??         ??
             036a                    ??         ??
-                             SomeValueRelatedToDrops_Maybe_0x36b             XREF[5]:     FUN_c3b3:c06b(*), 
-                                                                                          FUN_c3b3:c070(W), 
+                             SomeValueRelatedToDrops_Maybe_0x36b             XREF[5]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           InitRoom_Maybe:cd4d(*), 
                                                                                           InitRoom_Maybe:cd53(*), 
                                                                                           InitRoom_Maybe:cd57(*)  
             036b                    undefined1 ??
-                             SomeValue_0x36c                                 XREF[1]:     FUN_c3b3:c070(W)  
+                             SomeValue_0x36c                                 XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             036c                    undefined1 ??
             036d                    ??         ??
             036e                    ??         ??
@@ -1838,19 +1846,19 @@
             03fd                    ??         ??
             03fe                    ??         ??
             03ff                    ??         ??
-                             VideoMemory_Page0_0x0400                        XREF[9]:     FUN_c3b3:c0ed(*), 
-                                                                                          FUN_c3b3:c0f3(*), 
-                                                                                          FUN_c3b3:c0f6(R), 
-                                                                                          FUN_c3b3:c313(*), 
-                                                                                          FUN_c3b3:c657(*), 
-                                                                                          FUN_c3b3:c65d(*), 
-                                                                                          FUN_c3b3:c660(R), 
+                             VideoMemory_Page0_0x0400                        XREF[9]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           ClearVideoMemory_0x0400_to_0x340
                                                                                           ScreenTransitionWipe:ce36(W)  
             0400                    undefined2 ??
-                             DAT_0402                                        XREF[4]:     FUN_c3b3:c0f6(R), 
-                                                                                          FUN_c3b3:c0fc(*), 
-                                                                                          FUN_c3b3:c660(R), 
+                             DAT_0402                                        XREF[4]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           ClearVideoMemory_0x0400_to_0x340
             0402                    undefined2 ??
             0404                    ??         ??
@@ -1982,9 +1990,9 @@
             0481                    ??         ??
             0482                    ??         ??
             0483                    ??         ??
-                             DAT_0484                                        XREF[1]:     FUN_c3b3:c465(*)  
+                             DAT_0484                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             0484                    ??         ??
-                             DAT_0485                                        XREF[1]:     FUN_c3b3:c477(*)  
+                             DAT_0485                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             0485                    ??         ??
             0486                    ??         ??
             0487                    ??         ??
@@ -1992,9 +2000,9 @@
             0489                    ??         ??
             048a                    ??         ??
             048b                    ??         ??
-                             DAT_048c                                        XREF[1]:     FUN_c3b3:c465(*)  
+                             DAT_048c                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             048c                    ??         ??
-                             DAT_048d                                        XREF[1]:     FUN_c3b3:c465(*)  
+                             DAT_048d                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             048d                    ??         ??
             048e                    ??         ??
             048f                    ??         ??
@@ -2823,7 +2831,7 @@
             07c6                    ??         ??
             07c7                    ??         ??
             07c8                    ??         ??
-                             DAT_07c9                                        XREF[1]:     FUN_c3b3:c0b0(*)  
+                             DAT_07c9                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             07c9                    ??         ??
             07ca                    ??         ??
             07cb                    ??         ??
@@ -3146,7 +3154,7 @@
             0907                    ??         ??
             0908                    ??         ??
             0909                    ??         ??
-                             DAT_090a                                        XREF[1]:     FUN_c3b3:c0b0(*)  
+                             DAT_090a                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             090a                    ??         ??
             090b                    ??         ??
             090c                    ??         ??
@@ -4775,7 +4783,7 @@
             0f63                    ??         ??
             0f64                    ??         ??
             0f65                    ??         ??
-                             DAT_0f66                                        XREF[1]:     FUN_c3b3:c64c(*)  
+                             DAT_0f66                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             0f66                    ??         ??
             0f67                    ??         ??
             0f68                    ??         ??
@@ -6670,7 +6678,7 @@
             16c9                    ??         ??
             16ca                    ??         ??
             16cb                    ??         ??
-                             DAT_16cc                                        XREF[1]:     FUN_c3b3:c0e4(*)  
+                             DAT_16cc                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             16cc                    ??         ??
             16cd                    ??         ??
             16ce                    ??         ??
@@ -7000,7 +7008,7 @@
             180f                    ??         ??
             1810                    ??         ??
             1811                    ??         ??
-                             DAT_1812                                        XREF[1]:     FUN_c3b3:c0c6(*)  
+                             DAT_1812                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             1812                    ??         ??
             1813                    ??         ??
             1814                    ??         ??
@@ -7015,14 +7023,14 @@
             181d                    ??         ??
             181e                    ??         ??
             181f                    ??         ??
-                             DAT_1820                                        XREF[2]:     FUN_c3b3:c411(*), 
-                                                                                          FUN_c3b3:c467(*)  
+                             DAT_1820                                        XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             1820                    ??         ??
-                             DAT_1821                                        XREF[2]:     FUN_c3b3:c419(*), 
-                                                                                          FUN_c3b3:c46f(*)  
+                             DAT_1821                                        XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             1821                    ??         ??
-                             DAT_1822                                        XREF[2]:     FUN_c3b3:c423(*), 
-                                                                                          FUN_c3b3:c479(*)  
+                             DAT_1822                                        XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             1822                    ??         ??
             1823                    ??         ??
             1824                    ??         ??
@@ -7117,12 +7125,12 @@
             187d                    ??         ??
             187e                    ??         ??
             187f                    ??         ??
-                             DAT_1880                                        XREF[2]:     FUN_c3b3:c411(*), 
-                                                                                          FUN_c3b3:c467(*)  
+                             DAT_1880                                        XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             1880                    ??         ??
-                             DAT_1881                                        XREF[1]:     FUN_c3b3:c419(*)  
+                             DAT_1881                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             1881                    ??         ??
-                             DAT_1882                                        XREF[1]:     FUN_c3b3:c423(*)  
+                             DAT_1882                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             1882                    ??         ??
             1883                    ??         ??
             1884                    ??         ??
@@ -7333,7 +7341,7 @@
             194f                    ??         ??
             1950                    ??         ??
             1951                    ??         ??
-                             DAT_1952                                        XREF[1]:     FUN_c3b3:c0d8(*)  
+                             DAT_1952                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             1952                    ??         ??
             1953                    ??         ??
             1954                    ??         ??
@@ -8022,20 +8030,21 @@
             1bfd                    ??         ??
             1bfe                    ??         ??
             1bff                    ??         ??
-                             VideoMemory_Page1_0x1c00                        XREF[12]:    c048(*), FUN_c3b3:c08d(*), 
-                                                                                          FUN_c3b3:c0f8(W), 
-                                                                                          FUN_c3b3:c0fe(*), 
-                                                                                          FUN_c3b3:c30b(*), 
-                                                                                          FUN_c3b3:c637(*), 
-                                                                                          FUN_c3b3:c662(W), 
-                                                                                          FUN_c3b3:c666(*), 
+                             VideoMemory_Page1_0x1c00                        XREF[12]:    c048(*), 
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           InitRoom_Maybe:cd0e(*), 
                                                                                           LoadPage1AddressToX:ce0b(*), 
                                                                                           ClearVideoMemory_0x0400_to_0x340
                                                                                           ScreenTransitionWipe:ce32(R)  
             1c00                    undefined2 ??
-                             DAT_1c02                                        XREF[3]:     FUN_c3b3:c0f8(W), 
-                                                                                          FUN_c3b3:c662(W), 
+                             DAT_1c02                                        XREF[3]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           ClearVideoMemory_0x0400_to_0x340
             1c02                    undefined2 ??
             1c04                    ??         ??
@@ -14183,7 +14192,7 @@
             33fd                    ??         ??
             33fe                    ??         ??
             33ff                    ??         ??
-                             SpriteData_ClonedDestination_0x3400             XREF[4]:     FUN_c3b3:c432(*), 
+                             SpriteData_ClonedDestination_0x3400             XREF[4]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           Jump_IsAlreadyClimbing:c97f(*), 
                                                                                           DrawLifeIconsAndPlayerRegenerati
                                                                                           dbc5(*)  
@@ -16118,7 +16127,8 @@
             3b7d                    ??         ??
             3b7e                    ??         ??
             3b7f                    ??         ??
-                             Player_CollisionMasks_InRam_0x3b80              XREF[2]:     FUN_c3b3:c3dd(*), dbcb(*)  
+                             Player_CollisionMasks_InRam_0x3b80              XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          dbcb(*)  
             3b80                    ??         ??
             3b81                    ??         ??
             3b82                    ??         ??
@@ -16934,9 +16944,9 @@
             3eba                    dw         ??
             3ebc                    dw         ??
             3ebe                    dw         ??
-                             Player_DoorStateData_0x3ec0                     XREF[11]:    FUN_c3b3:c2ef(*), 
-                                                                                          FUN_c3b3:c2f4(*), 
-                                                                                          FUN_c3b3:c2f8(*), 
+                             Player_DoorStateData_0x3ec0                     XREF[11]:    UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           FUN_ccb1:ccc8(*), 
                                                                                           FUN_ccb1:cccd(*), 
                                                                                           InitRoom_Maybe:cd1b(*), 
@@ -17521,8 +17531,8 @@
                              Jump_SkipPlayerUpdate                           XREF[1]:     c189(j)  
             c194 bd cc b1           JSR        FUN_ccb1                                      = ??
                                                                                              undefined FUN_ccb1()
-            c197 bd c3 b3           JSR        FUN_c3b3                                      = ??
-                                                                                             undefined FUN_c3b3(undefined A, undefined B, ushort * X)
+            c197 bd c3 b3           JSR        UpdatePlayerSoundAndCollisionsAndPhysics      = ??
+                                                                                             undefined UpdatePlayerSoundAndCollisionsAndPhysics(undefine
             c19a 96 49              LDA        <Ball_IsActive_0x49                           = ??
             c19c 27 09              BEQ        Jump_SkipBallUpdate
             c19e 0f 49              CLR        <Ball_IsActive_0x49                           = ??
@@ -17592,8 +17602,9 @@
                              **************************************************************
                              undefined __stdcall WaitForVSync_Maybe(void)
              undefined         A:1            <RETURN>
-                             WaitForVSync_Maybe                              XREF[3]:     c045(c), FUN_c3b3:c08a(c), 
-                                                                                          FUN_c3b3:c652(c)  
+                             WaitForVSync_Maybe                              XREF[3]:     c045(c), 
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             c201 34 01              PSHS        CC
             c203 0f 14              CLR        <InterruptHasBeenHitCounter_0x14
             c205 1c ef              ANDCC      #11101111b                                    keep all except interrupt
@@ -17607,7 +17618,7 @@
                              **************************************************************
                              undefined __stdcall ClearTimerAndScoreStrings(void)
              undefined         A:1            <RETURN>
-                             ClearTimerAndScoreStrings                       XREF[1]:     FUN_c3b3:c150(c)  
+                             ClearTimerAndScoreStrings                       XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             c20d 8e 00 bb           LDX        #PlayerOneScoreString_0xbb                    = ??
                              Loop_ClearCharacter                             XREF[1]:     c215(j)  
             c210 6f 80              CLR        ,X+=>PlayerOneScoreString_0xbb                = ??
@@ -17636,8 +17647,8 @@
              undefined2        X:2            param_3
              undefined2        Y:2            param_4
              byte *            U:2            param_5
-                             CheckScoreStringAgainstHighScoreString          XREF[2]:     FUN_c3b3:c0c0(c), 
-                                                                                          FUN_c3b3:c0d2(c)  
+                             CheckScoreStringAgainstHighScoreString          XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             c222 8e 00 b3           LDX        #HighScoreString_0xb3                         = ??
             c225 34 50              PSHS        param_5 param_3
                              Loop_SameCharacter                              XREF[1]:     c22d(j)  
@@ -17656,10 +17667,10 @@
             c237 2b e8              BMI        Jump_ToRTS                                    if at the end, jump so we can return
             c239 a7 80              STA        ,param_3+=>HighScoreString_0xb3               copy the character to the highscore string
             c23b 20 f8              BRA        Loop_NextCharacterToCopy
-                             TextScreenPositions                             XREF[2]:     FUN_c3b3:c0a7(*), 
-                                                                                          FUN_c3b3:c0b0(R)  
+                             TextScreenPositions                             XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             c23d 07 c9              dw         07C9h                                         Downland V1.1
-                             WORD_c23f                                       XREF[1]:     FUN_c3b3:c0b0(R)  
+                             WORD_c23f                                       XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             c23f 09 0a              dw         090Ah                                         Written By:
             c241 0a 47              dw         0A47h                                         Micheal Aichlmayr
             c243 0b 89              dw         0B89h                                         Copyright 1983
@@ -17672,7 +17683,7 @@
             c251 15 8b              dw         158Bh                                         High Score
             c253 18 06              dw         1806h                                         Player One
             c255 19 46              dw         1946h                                         Player Two
-                             Jump_TestAllCollisions                          XREF[3]:     c46b(j), c473(j), c47d(j)  
+                             Jump_PerformObjectBoundingBoxCollisions         XREF[3]:     c46b(j), c473(j), c47d(j)  
             c257 35 20              PULS        Y
                              **************************************************************
                              * Test collisions with pick up items                         *
@@ -17825,7 +17836,8 @@
              undefined         A:1            A
              undefined         B:1            B
              undefined2 *      X:2            X
-                             ClearPickupFromScreen                           XREF[2]:     FUN_c3b3:c343(c), c35c(j)  
+                             ClearPickupFromScreen                           XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          c35c(j)  
             c351 ec 89 18 00        LDD        0x1800,X                                      load value to D on second page
             c355 ed 84              STD        ,X                                            store D to first page
             c357 30 88 20           LEAX       0x20,X                                        move to next line
@@ -17839,8 +17851,8 @@
              undefined         A:1            <RETURN>
              undefined         A:1            A
              undefined         B:1            B
-                             PlaySound                                       XREF[2]:     FUN_c3b3:c348(c), 
-                                                                                          FUN_c3b3:c5a3(c)  
+                             PlaySound                                       XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             c35f 97 4d              STA        <SecondUtilityCounter_0x4d                    = ??
             c361 d7 26              STB        <UtilityCounter_0x26                          = ??
                              Loop_UpdateRegisters                            XREF[1]:     c373(j)  
@@ -17870,10 +17882,10 @@
                              **************************************************************
                              undefined __stdcall TestPlayerObjectCollision(void)
              undefined         A:1            <RETURN>
-                             TestPlayerObjectCollision                       XREF[4]:     FUN_c3b3:c274(c), 
-                                                                                          FUN_c3b3:c298(c), 
-                                                                                          FUN_c3b3:c2ba(c), 
-                                                                                          FUN_c3b3:c2d1(c)  
+                             TestPlayerObjectCollision                       XREF[4]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             c37c 8e 01 aa           LDX        #Player_PhysicsData_0x1aa                     = ??
             c37f a6 04              LDA        0x4,X=>PlayerY_0x1ae                          = ??
             c381 91 41              CMPA       <Object_CollisionY_0x41                       = ??
@@ -17908,22 +17920,22 @@
                              Jump_HasCollision                               XREF[2]:     c39f(j), c3a9(j)  
             c3af 86 ff              LDA        #0xff
             c3b1 39                 RTS
-                             Jump_Return                                     XREF[5]:     FUN_c3b3:c3c3(j), 
-                                                                                          FUN_c3b3:c56c(j), 
-                                                                                          FUN_c3b3:c5ae(j), 
-                                                                                          FUN_c3b3:c5c5(j), 
+                             Jump_Return                                     XREF[5]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           DrawLifeIconsAndPlayerRegenerati
             c3b2 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall FUN_c3b3(undefined A, undefined B, u
+                             undefined __stdcall UpdatePlayerSoundAndCollisionsAndPhy
              undefined         A:1            <RETURN>
              undefined         A:1            A
              undefined         B:1            B
              ushort *          X:2            X
              undefined2        Stack[-0x2]:2  previousFunctionOnStack_Maybe           XREF[1]:     c69f(*)  
-                             FUN_c3b3                                        XREF[1]:     c197(c)  
+                             UpdatePlayerSoundAndCollisionsAndPhysics        XREF[1]:     c197(c)  
             c3b3 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     = ??
             c3b7 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
             c3b9 4a                 DECA
@@ -17942,6 +17954,13 @@
             c3d3 10 2b 02 e1        LBMI       BigInitFunction_Maybe::Jump_JoystickCheck     jump if player state is FF
             c3d7 10 26 00 bd        LBNE       Jump_PlayerIsDead                             jump if the state is 1 or more
             c3db 6c 36              INC        -0xa,Y=>ConstantZeroToFFCounter               = ??
+                             The "mysterious sprites" are masks used to extract five 
+                             lines across the player sprite on the screen. The extracted 
+                             lines are then compared to a clean version of the player 
+                             sprite overlaid a clean background. Any differences between 
+                             the extracted pixels and the clean version triggers a 
+                             jump to a bounding box collision check against all the 
+                             moving objects. 
             c3dd ce 3b 80           LDU        #Player_CollisionMasks_InRam_0x3b80           location of the collision masks in RAM
             c3e0 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
             c3e2 c6 3c              LDB        #0x3c                                         size of the four collision masks for a frame along 4 pixels
@@ -17969,22 +17988,31 @@
             c400 30 88 20           LEAX       0x20,X                                        get the position one pixel under the player location
                                                                                              on screen
             c403 34 20              PSHS        Y
-            c405 10 8e 00 74        LDY        #PlayerSprite_UtilityBuffer_0x74              = ??
+            c405 10 8e 00 74        LDY        #Player_CollisionMaskBuffer_0x74              = ??
             c409 86 05              LDA        #0x5                                          five lines of the sprite
             c40b 97 26              STA        <UtilityCounter_0x26                          = ??
                              X - video page location of player sprite on screen (1 pixel d
                              Y - player sprite utility buffer
                              U - player collision mask for current frame and
                                  x position
-                             I think the idea is to fill the buffer
-                             with the player pixels and some of the
-                             background.
-                             Loop_FillPlayerUtilityBuffer                    XREF[1]:     c42e(j)  
-            c40d 37 06              PULU        A B=>DAT_0168                                get A and B, move U up two bytes
+                             Fill the buffer with the pixels around the player and the
+                             background. Then later it's compared with the player sprite 
+                             in ram. Any differences means that there's a collision with 
+                             something.
+                             Loop_FillPlayerCollisionMaskBuffer              XREF[1]:     c42e(j)  
+            c40d 37 06              PULU        A B=>DAT_0168                                fill A and B, move U up two bytes
+                                                                                             they are masks that decide what pixels to keep 
+                                                                                             when extracting from the screen
                              first byte of line
-            c40f a4 84              ANDA       ,X                                            keep only the bits on screen
-            c411 aa 89 18 00        ORA        0x1800,X=>DAT_1820                            blend with the clean background area
-            c415 a7 a0              STA        ,Y+=>PlayerSprite_UtilityBuffer_0x74          store in the the player utility buffer
+            c40f a4 84              ANDA       ,X                                            keep only the screen pixel bits that correspond 
+                                                                                             to the mask bits
+                                                                                             screen: 01010101
+                                                                                             mask:   00011110
+                                                                                             result: 00010100 
+            c411 aa 89 18 00        ORA        0x1800,X=>DAT_1820                            blend with the clean background area. probably 
+                                                                                             in case some other drawing routine had erased some
+                                                                                             pixels.
+            c415 a7 a0              STA        ,Y+=>Player_CollisionMaskBuffer_0x74          store in the the collision mask extraction buffer
                              second byte of line
             c417 e4 01              ANDB       0x1,X                                         do all the same for B
             c419 ea 89 18 01        ORB        0x1801,X=>DAT_1821                            = ??
@@ -17994,13 +18022,14 @@
             c421 a4 02              ANDA       0x2,X
             c423 aa 89 18 02        ORA        0x1802,X=>DAT_1822                            = ??
             c427 a7 a0              STA        ,Y+=>DAT_0076                                 = ??
-            c429 30 88 60           LEAX       0x60,X                                        move three pixels down
+            c429 30 88 60           LEAX       0x60,X                                        move three pixels down on screen to get the next line
             c42c 0a 26              DEC        <UtilityCounter_0x26                          = ??
-            c42e 26 dd              BNE        Loop_FillPlayerUtilityBuffer
+            c42e 26 dd              BNE        Loop_FillPlayerCollisionMaskBuffer
+                             get the current player animation frame
             c430 35 20              PULS        Y
             c432 ce 34 00           LDU        #SpriteData_ClonedDestination_0x3400          = ??
             c435 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
-            c437 c6 c0              LDB        #0xc0                                         16 lines * 3 bytes * 4 sprites
+            c437 c6 c0              LDB        #0xc0                                         size of sprite for animation frame: 16 lines * 3 bytes * 4 
             c439 3d                 MUL
             c43a 33 cb              LEAU       B,U                                           set U to the current animation sprite
             c43c a6 26              LDA        0x6,Y=>PlayerX_0x1b0                          = ??
@@ -18019,37 +18048,40 @@
             c455 ae 2c              LDX        0xc,Y=>PlayerY_PreviousVideoPageDrawPosition  = ??
             c457 30 89 18 20        LEAX       0x1820,X                                      set X to the clean video page, one pixel down
             c45b 34 20              PSHS        Y
-            c45d 10 8e 00 74        LDY        #PlayerSprite_UtilityBuffer_0x74              = ??
+            c45d 10 8e 00 74        LDY        #Player_CollisionMaskBuffer_0x74              = ??
             c461 86 05              LDA        #0x5                                          num sprite collision mask rows
             c463 97 26              STA        <UtilityCounter_0x26                          = ??
                              U - player sprite
                              X - second video memory page
                              Y - sprite utility buffer
-                             I think the utility buffer contains the player and background
-                             five lines. And then it tries to compare those lines with the
-                             from the clean background. The theory is that any differences
-                             pixels means that the player is overlapping an object and so 
-                             jumps to the collision functions.
+                             The utility buffer contains the extracted player and 
+                             background pixels for five lines. And then it tries to 
+                             compare those lines with the ones from the player sprite
+                             in ram and the clean background.
+                             Any differences in pixels means that the player is 
+                             overlapping an object and so it jumps to the bounding 
+                             box collision functions.
                              Loop_CheckCollisionMaskLine                     XREF[1]:     c488(j)  
-            c465 37 06              PULU        A B                                          = ??
+            c465 37 06              PULU        A B                                          get the first two sprite bytes
                              test first byte
-            c467 aa 84              ORA        ,X=>DAT_1820                                  = ??
-            c469 a1 a0              CMPA       ,Y+=>PlayerSprite_UtilityBuffer_0x74          = ??
-            c46b 10 26 fd e8        LBNE       Jump_TestAllCollisions
+            c467 aa 84              ORA        ,X=>DAT_1820                                  blend with the byte from the clean background
+            c469 a1 a0              CMPA       ,Y+=>Player_CollisionMaskBuffer_0x74          check against the collision mask buffer for differences
+            c46b 10 26 fd e8        LBNE       Jump_PerformObjectBoundingBoxCollisions
                              test second byte
             c46f ea 01              ORB        0x1,X=>DAT_1821                               = ??
             c471 e1 a0              CMPB       ,Y+=>DAT_0075                                 = ??
-            c473 10 26 fd e0        LBNE       Jump_TestAllCollisions
+            c473 10 26 fd e0        LBNE       Jump_PerformObjectBoundingBoxCollisions
                              test third byte
             c477 37 02              PULU        A=>DAT_0485                                  = ??
             c479 aa 02              ORA        0x2,X=>DAT_1822                               = ??
             c47b a1 a0              CMPA       ,Y+=>DAT_0076                                 = ??
-            c47d 10 26 fd d6        LBNE       Jump_TestAllCollisions
+            c47d 10 26 fd d6        LBNE       Jump_PerformObjectBoundingBoxCollisions
             c481 30 88 60           LEAX       0x60,X                                        go down three pixels
             c484 33 46              LEAU       0x6,U                                         skip two lines in the sprite frame
             c486 0a 26              DEC        <UtilityCounter_0x26                          = ??
             c488 26 db              BNE        Loop_CheckCollisionMaskLine
             c48a 35 20              PULS        Y
+                             At this point, the player isn't colliding with any objects
                              Jump_HandlePlayerJumpAndRope                    XREF[2]:     c2da(j), c3c7(j)  
             c48c 96 2c              LDA        <Player_JumpUpInTheAirCounter_0x2c            = ??
             c48e 10 26 03 17        LBNE       Jump_IsJumpingUp_Maybe
@@ -18096,7 +18128,7 @@
                              **************************************************************
                              char __stdcall ComputeVideoPageDestination_Maybe(void)
              char              A:1            <RETURN>
-                             ComputeVideoPageDestination_Maybe               XREF[3]:     FUN_c3b3:c498(c), 
+                             ComputeVideoPageDestination_Maybe               XREF[3]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c87f(c), 
                                                                                           Jump_IsAlreadyClimbing:c8ca(c)  
             c4e7 8e c5 09           LDX        #SomeKindOfHorizontalBitOffsetTable           set X to this table
@@ -18131,8 +18163,8 @@
             c50a 00                 db         0h
             c50b 00                 db         0h
             c50c 01                 db         1h
-                             BitPatternTableForRopeOrFloor_Maybe             XREF[4]:     FUN_c3b3:c49e(*), 
-                                                                                          FUN_c3b3:c4a1(*), 
+                             BitPatternTableForRopeOrFloor_Maybe             XREF[4]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           Jump_IsAlreadyClimbing:c93d(*), 
                                                                                           Jump_IsAlreadyClimbing:c940(*)  
             c50d 03 c0              dw         0000001111000000b
@@ -18158,8 +18190,8 @@
                              **************************************************************
                              undefined __stdcall ClearSpeedToZero(void)
              undefined         A:1            <RETURN>
-                             ClearSpeedToZero                                XREF[8]:     FUN_c3b3:c53c(c), 
-                                                                                          FUN_c3b3:c573(c), 
+                             ClearSpeedToZero                                XREF[8]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c794(c), 
                                                                                           BigInitFunction_Maybe:c7e7(c), 
                                                                                           BigInitFunction_Maybe:c80c(c), 
@@ -18266,7 +18298,7 @@
                              **************************************************************
                              undefined __stdcall GetPlayerLivesAddress(void)
              undefined         A:1            <RETURN>
-                             GetPlayerLivesAddress                           XREF[3]:     FUN_c3b3:c5f4(c), 
+                             GetPlayerLivesAddress                           XREF[3]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c6e0(c), 
                                                                                           DrawLifeIconsAndPlayerRegenerati
             c5c8 8e c5 d2           LDX        #PlayerLivesAddresses                         = 0055
@@ -18278,12 +18310,12 @@
                                                                                           GetPlayerLivesAddress:c5cf(*)  
             c5d2 00 55              addr       PlayerOne_Lives                               = ??
             c5d4 00 56              addr       PlayerTwo_Lives                               = ??
-                             AddressesToSomePlayerData                       XREF[2]:     FUN_c3b3:c696(*), 
-                                                                                          FUN_c3b3:c69d(*)  
+                             AddressesToSomePlayerData                       XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             c5d6 00 57              addr       Player1_SomeDataAddress_Always0Maybe          = ??
             c5d8 00 5c              addr       Player2_SomeDataAddress_Always0Maybe          = ??
-                             PTR_String_GetReadyPlayerOne_c5da               XREF[2]:     FUN_c3b3:c647(*), 
-                                                                                          FUN_c3b3:c64a(*)  
+                             PTR_String_GetReadyPlayerOne_c5da               XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             c5da da da              addr       String_GetReadyPlayerOne                      = 16
             c5dc da ef              addr       String_GetReadyPlayerTwo                      = 16
                              ResetTimerTo2048IfAtZeroWhenDied_Maybe          XREF[1]:     c5b4(j)  
@@ -18392,7 +18424,7 @@
              undefined         B:1            B
              byte *            X:2            X
              short *           Y:2            Y
-                             BigInitFunction_Maybe                           XREF[1]:     FUN_c3b3:c184(c)  
+                             BigInitFunction_Maybe                           XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             c6a9 86 28              LDA        #0x28                                         40 frames for initial pause when the game starts
             c6ab a7 3d              STA        -0x3,Y=>Player_CantMoveCounter_Maybe_0x1a7    = ??
             c6ad cc 01 90           LDD        #0x190                                        400
@@ -18403,7 +18435,7 @@
                              **************************************************************
                              * if the player has moved, then set the regen timer to 0     *
                              **************************************************************
-                             Jump_JoystickCheck                              XREF[1]:     FUN_c3b3:c3d3(j)  
+                             Jump_JoystickCheck                              XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             c6b8 bd dc 66           JSR        UpdateJoystick_Maybe                          undefined UpdateJoystick_Maybe(void)
             c6bb 96 15              LDA        <Player_JoystickDirection_0x15                = ??
             c6bd 27 04              BEQ        Jump_DecrementRegenTimer                      if player is moving, then set the
@@ -18462,7 +18494,7 @@
             c711 30 88 20           LEAX       0x20,X                                        move to next line
             c714 0a 26              DEC        <UtilityCounter_0x26                          = ??
             c716 26 ed              BNE        Loop_ClearPlayerArea
-                             Jump_PlayerLanding_Maybe                        XREF[1]:     FUN_c3b3:c538(j)  
+                             Jump_PlayerLanding_Maybe                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             c718 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
             c71a 2b 18              BMI        Jump_ProcessPlayerControls_Maybe
             c71c ec a4              LDD        ,Y=>Player_SpeedY_0x1aa                       = ??
@@ -18518,7 +18550,7 @@
             c77d 86 ff              LDA        #0xff
             c77f 97 2e              STA        <Player_WontDieWhenLanding_Maybe_0x2e         = ??
             c781 97 2d              STA        <Player_IsTouchingGround_Maybe_0x2d           = ??
-                             Jump_JumpToClimbingRopeSubroutine               XREF[1]:     FUN_c3b3:c506(j)  
+                             Jump_JumpToClimbingRopeSubroutine               XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             c783 7e c8 6f           JMP        Jump_Player_IsClimbingRope_IsPositive
                              Jump_HandleGoingToOneHandedRope                 XREF[2]:     c7f0(j), c84c(j)  
             c786 e6 26              LDB        0x6,Y=>PlayerX_0x1b0                          = ??
@@ -18667,8 +18699,8 @@
             c875 27 02              BEQ        LAB_c879
             c877 0a 2f              DEC        <Player_CantJumpAfterLandingCounter_Maybe_0x  = ??
                              LAB_c879                                        XREF[6]:     c79f(j), c7a6(j), 
-                                                                                          FUN_c3b3:c7ba(j), c7c4(j), 
-                                                                                          c833(j), c875(j)  
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          c7c4(j), c833(j), c875(j)  
             c879 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope                 = ??
             c87b 81 01              CMPA       #0x1
             c87d 27 78              BEQ        LAB_c8f7
@@ -18823,8 +18855,8 @@
                              Jump_ClimbingRope                               XREF[2]:     c91f(j), c969(j)  
             c97a bd d8 52           JSR        LoadPosRelativeToYAndComputeScreenPos         undefined LoadPosRelativeToYAndComputeScreenPos(void)
             c97d ed 28              STD        0x8,Y=>Player_VideoPageDrawDestination_0x1b2  = ??
-                             LAB_c97f                                        XREF[3]:     FUN_c3b3:c561(j), c94d(j), 
-                                                                                          c95b(j)  
+                             LAB_c97f                                        XREF[3]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          c94d(j), c95b(j)  
             c97f ce 34 00           LDU        #SpriteData_ClonedDestination_0x3400          = ??
             c982 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2    = ??
             c984 81 03              CMPA       #0x3
@@ -18854,7 +18886,7 @@
              short             Y:2            Y
              ushort            U:2            U
                              Check whether we need to draw the player
-                             DrawLifeIconsAndPlayerRegeneration              XREF[1]:     FUN_c3b3:c5a9(c)  
+                             DrawLifeIconsAndPlayerRegeneration              XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             c9a2 ef 2a              STU        0xa,Y=>Player_SpritePointer_0x1b4             = ??
             c9a4 11 a3 2e           CMPU       0xe,Y=>Player_PreviousSpritePointer_0x1b8     = ??
             c9a7 26 10              BNE        Jump_ContinueDrawing                          Are the sprite pointer and previous sprite pointer the same?
@@ -19006,8 +19038,8 @@
                              byte __stdcall TerrainCollisionTest_Maybe(byte A)
              byte              A:1            <RETURN>
              byte              A:1            A
-                             TerrainCollisionTest_Maybe                      XREF[11]:    FUN_c3b3:c4b2(c), 
-                                                                                          FUN_c3b3:c4b9(c), 
+                             TerrainCollisionTest_Maybe                      XREF[11]:    UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           FUN_c8b9:c8b9(c), 
                                                                                           Jump_IsAlreadyClimbing:c951(c), 
                                                                                           Jump_IsAlreadyClimbing:c958(c), 
@@ -19036,7 +19068,7 @@
                              **************************************************************
                              undefined __stdcall UpdateBall(void)
              undefined         A:1            <RETURN>
-                             UpdateBall                                      XREF[1]:     FUN_c3b3:c1e0(c)  
+                             UpdateBall                                      XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             cab6 10 8e 01 bf        LDY        #Ball_Physics_0x1bf                           = ??
             caba a6 3b              LDA        -0x5,Y=>Ball_InitState_0x1ba                  needs to be initialized?
             cabc 27 f4              BEQ        Jump_ToBallInit                               it does
@@ -19191,7 +19223,7 @@
              undefined         A:1            A
              undefined         B:1            B
              undefined2 *      X:2            X
-                             InitAllTimers                                   XREF[1]:     FUN_c3b3:c165(c)  
+                             InitAllTimers                                   XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             cba5 8d 12              BSR        GetPlayerRoomTimerBuffer                      undefined GetPlayerRoomTimerBuffer(void)
             cba7 c6 14              LDB        #20                                           total number of player one and two timers
             cba9 d7 26              STB        <UtilityCounter_0x26                          = ??
@@ -19210,7 +19242,7 @@
                              **************************************************************
                              undefined __stdcall GetPlayerRoomTimerBuffer(void)
              undefined         A:1            <RETURN>
-                             GetPlayerRoomTimerBuffer                        XREF[5]:     FUN_c3b3:c5e3(c), 
+                             GetPlayerRoomTimerBuffer                        XREF[5]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           InitAllTimers:cba5(c), 
                                                                                           UpdateRoomTimers:cbc6(c), 
                                                                                           UpdateRoomTimers:cbd0(c), 
@@ -19225,7 +19257,7 @@
                              **************************************************************
                              undefined __stdcall UpdateRoomTimers(void)
              undefined         A:1            <RETURN>
-                             UpdateRoomTimers                                XREF[1]:     FUN_c3b3:c1e3(c)  
+                             UpdateRoomTimers                                XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             cbc3 d6 39              LDB        <CurrentRoomNumber_0x39                       = ??
             cbc5 58                 LSLB
             cbc6 8d f1              BSR        GetPlayerRoomTimerBuffer                      undefined GetPlayerRoomTimerBuffer(void)
@@ -19383,7 +19415,7 @@
                              **************************************************************
                              undefined __stdcall LoadPlayerPhysicsToYAndGetRoomGraphi
              undefined         A:1            <RETURN>
-                             LoadPlayerPhysicsToYAndGetRoomGraphicsAndDataA  XREF[2]:     FUN_c3b3:c177(c), 
+                             LoadPlayerPhysicsToYAndGetRoomGraphicsAndDataA  XREF[2]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           FUN_ccb1:ccb4(c)  
             cca3 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     = ??
                              **************************************************************
@@ -19391,7 +19423,7 @@
                              **************************************************************
                              undefined __stdcall LoadRoomDoorDataAddrIntoX(void)
              undefined         A:1            <RETURN>
-                             LoadRoomDoorDataAddrIntoX                       XREF[2]:     FUN_c3b3:c2fa(c), 
+                             LoadRoomDoorDataAddrIntoX                       XREF[2]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           InitRoom_Maybe:cd19(c)  
             cca7 9e 3b              LDX        <RoomGraphicsAndDoorDataAddress_0x3b          = ??
             cca9 96 39              LDA        <CurrentRoomNumber_0x39                       = ??
@@ -19406,7 +19438,7 @@
                              **************************************************************
                              undefined FUN_ccb1()
              undefined         A:1            <RETURN>
-                             FUN_ccb1                                        XREF[1]:     FUN_c3b3:c194(c)  
+                             FUN_ccb1                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             ccb1 bd cf 1d           JSR        DrawPickups                                   undefined DrawPickups(undefined A, undefined B, byte * X)
             ccb4 8d ed              BSR        LoadPlayerPhysicsToYAndGetRoomGraphicsAndDat  undefined LoadPlayerPhysicsToYAndGetRoomGraphicsAndDataAddr
                              LAB_ccb6                                        XREF[1]:     cd7d(j)  
@@ -19427,8 +19459,8 @@
                              **************************************************************
                              undefined InitRoom_Maybe()
              undefined         A:1            <RETURN>
-                             InitRoom_Maybe                                  XREF[2]:     FUN_c3b3:c17a(c), 
-                                                                                          FUN_c3b3:c6a2(c)  
+                             InitRoom_Maybe                                  XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             ccd3 a6 05              LDA        0x5,X                                         get the room number from the door data
             ccd5 81 21              CMPA       #0x21                                         touching the last door?
             ccd7 26 12              BNE        Jump_NotTheLastDoor
@@ -19523,8 +19555,8 @@
              ushort *          X:2            X
              undefined2        Y:2            Y
              undefined2        U:2            U
-                             DrawDoorOrMultipleDoors_Maybe                   XREF[3]:     FUN_c3b3:c310(c), 
-                                                                                          FUN_c3b3:c318(c), 
+                             DrawDoorOrMultipleDoors_Maybe                   XREF[3]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           InitRoom_Maybe:cd27(c)  
             cd81 34 50              PSHS        U X
             cd83 ec 84              LDD        ,X                                            load the drawing address of the door
@@ -19584,7 +19616,7 @@
              char              B:1            param_2
                              A: number of bits to shift by. the result will be A * 2
                              B: number of lines of the sprite to process
-                             ShiftBitsInSpriteDrawingBuffer                  XREF[2]:     FUN_c3b3:c59d(c), 
+                             ShiftBitsInSpriteDrawingBuffer                  XREF[2]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           DrawDoorOrMultipleDoors_Maybe:cd
             cdc9 8e 00 83           LDX        #SpriteDrawingBuffer_0x83                     = ??
                              Jump_ProcessThreeBytes                          XREF[1]:     cde0(j)  
@@ -19611,7 +19643,8 @@
                              **************************************************************
                              undefined __stdcall InitVideoRegisters(void)
              undefined         A:1            <RETURN>
-                             InitVideoRegisters                              XREF[3]:     c04e(c), FUN_c3b3:c093(c), 
+                             InitVideoRegisters                              XREF[3]:     c04e(c), 
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           InitVideoAndSetupRoomAndGraphics
             cde3 b6 ff 22           LDA        PIA1_B_DATA_REG__FF22
             cde6 84 07              ANDA       #00000111b                                    bit 0: RS-232C DATA INPUT
@@ -19629,10 +19662,11 @@
                              undefined __stdcall SetupSAMPages(byte param_1)
              undefined         A:1            <RETURN>
              byte              A:1            param_1
-                             SetupSAMPages                                   XREF[5]:     c04b(c), FUN_c3b3:c090(c), 
-                                                                                          FUN_c3b3:c0f0(c), 
-                                                                                          FUN_c3b3:c63a(c), 
-                                                                                          FUN_c3b3:c65a(c)  
+                             SetupSAMPages                                   XREF[5]:     c04b(c), 
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             cdf7 8e ff c6           LDX        #SAM_PAGE_SELECT_REG_SAM_F0_FFC6              The first Sam Page Select Register Address
             cdfa 44                 LSRA                                                     shift right A (to skip the first bit?)
             cdfb c6 07              LDB        #0x7                                          go through the 7 flags of A to setup
@@ -19662,7 +19696,7 @@
                              **************************************************************
                              undefined __stdcall LoadPage1AddressToX(void)
              undefined         A:1            <RETURN>
-                             LoadPage1AddressToX                             XREF[2]:     FUN_c3b3:c087(c), 
+                             LoadPage1AddressToX                             XREF[2]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           InitRoom_Maybe:cd13(c)  
             ce0b 8e 1c 00           LDX        #VideoMemory_Page1_0x1c00                     = ??
             ce0e 20 03              BRA        ClearVideoMemory_0x0400_to_0x3400::JUMP_Load
@@ -19671,8 +19705,8 @@
                              **************************************************************
                              undefined __stdcall ClearVideoMemory_0x0400_to_0x3400(vo
              undefined         A:1            <RETURN>
-                             ClearVideoMemory_0x0400_to_0x3400               XREF[3]:     FUN_c3b3:c096(c), 
-                                                                                          FUN_c3b3:c634(c), 
+                             ClearVideoMemory_0x0400_to_0x3400               XREF[3]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           InitVideoAndSetupRoomAndGraphics
             ce10 8e 04 00           LDX        #0x400                                        start of video memory?
                              JUMP_Load0x1bToD_ce13                           XREF[1]:     LoadPage1AddressToX:ce0e(j)  
@@ -19736,7 +19770,7 @@
                              **************************************************************
                              undefined __stdcall InitPlayerSomething(void)
              undefined         A:1            <RETURN>
-                             InitPlayerSomething                             XREF[1]:     FUN_c3b3:c17d(c)  
+                             InitPlayerSomething                             XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             ce68 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                     = ??
             ce6c 86 02              LDA        #0x2
             ce6e a7 3b              STA        -0x5,Y=>Player_SomeGameState_0x1a5            = ??
@@ -19802,15 +19836,15 @@
                              **************************************************************
                              undefined __stdcall InitVideoAndSetupRoomAndGraphics(void)
              undefined         A:1            <RETURN>
-                             InitVideoAndSetupRoomAndGraphics                XREF[1]:     FUN_c3b3:c16e(c)  
+                             InitVideoAndSetupRoomAndGraphics                XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             ceb6 bd ce 10           JSR        ClearVideoMemory_0x0400_to_0x3400             undefined ClearVideoMemory_0x0400_to_0x3400(void)
             ceb9 bd cd e3           JSR        InitVideoRegisters                            undefined InitVideoRegisters(void)
             cebc 8e d2 5a           LDX        #RoomGraphicsAndDoorData_0xd25a               = D26Eh
             cebf 9f 3b              STX        <RoomGraphicsAndDoorDataAddress_0x3b          = ??
             cec1 0f 39              CLR        <CurrentRoomNumber_0x39                       = ??
             cec3 39                 RTS
-                             TitleScreenBackground_DrawCommands              XREF[2]:     FUN_c3b3:c09e(*), 
-                                                                                          FUN_c3b3:c63d(*)  
+                             TitleScreenBackground_DrawCommands              XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             cec4 80                 db         80h                                           shape code: over 127 means that it repeats. stalactite
             cec5 0c                 db         Ch                                            repeat count for previous shape.
             cec6 04                 db         4h                                            top right hand corner piece
@@ -19827,7 +19861,7 @@
                              **************************************************************
                              undefined __stdcall InitKeyStateData(void)
              undefined         A:1            <RETURN>
-                             InitKeyStateData                                XREF[2]:     FUN_c3b3:c171(c), 
+                             InitKeyStateData                                XREF[2]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           InitRoom_Maybe:cce0(c)  
             cecf c6 22              LDB        #0x22                                         34 bytes to clear
             ced1 8e 3e c0           LDX        #Player_DoorStateData_0x3ec0                  clear start address
@@ -19871,7 +19905,7 @@
                              **************************************************************
                              undefined __stdcall Init_PlayerLivesIconParameters(void)
              undefined         A:1            <RETURN>
-                             Init_PlayerLivesIconParameters                  XREF[1]:     FUN_c3b3:c174(c)  
+                             Init_PlayerLivesIconParameters                  XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             cefa 10 8e 01 e9        LDY        #CurrentPlayerSpritePointer_0x1e9             = ??
             cefe cc 02 14           LDD        #0x214
             cf01 bd d8 56           JSR        ComputeScreenLocationFromAAndB                undefined ComputeScreenLocationFromAAndB(void)
@@ -19951,9 +19985,9 @@
                              **************************************************************
                              undefined __stdcall UpdateAndDrawDrops(void)
              undefined         A:1            <RETURN>
-                             UpdateAndDrawDrops                              XREF[3]:     FUN_c3b3:c140(c), 
-                                                                                          FUN_c3b3:c1d8(c), 
-                                                                                          FUN_c3b3:c674(c)  
+                             UpdateAndDrawDrops                              XREF[3]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             cf53 10 8e 01 ef        LDY        #DropDataBlock_0x1ef                          = ??
             cf57 96 40              LDA        <Drop_TickTockBetweenFFto0andBack_0x40        = ??
             cf59 27 02              BEQ        Jump_TickTockIsZero
@@ -20323,9 +20357,9 @@
                              **************************************************************
                              undefined __stdcall InitDrops(void)
              undefined         A:1            <RETURN>
-                             InitDrops                                       XREF[4]:     FUN_c3b3:c07c(c), 
-                                                                                          FUN_c3b3:c168(c), 
-                                                                                          FUN_c3b3:c66b(c), 
+                             InitDrops                                       XREF[4]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           InitRoom_Maybe:ccfc(c)  
             d11a 4f                 CLRA                                                     Disable all the drops in memory
             d11b c6 0a              LDB        #10                                           num drops
@@ -20373,7 +20407,7 @@
                              **************************************************************
                              undefined __stdcall SetupPickupScreenLocationAndNumLines
              undefined         A:1            <RETURN>
-                             SetupPickupScreenLocationAndNumLinesToClear     XREF[2]:     FUN_c3b3:c33e(c), 
+                             SetupPickupScreenLocationAndNumLinesToClear     XREF[2]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           DrawPickups:cf2a(c)  
             d142 ec 22              LDD        0x2,Y
             d144 bd d8 56           JSR        ComputeScreenLocationFromAAndB                undefined ComputeScreenLocationFromAAndB(void)
@@ -20385,7 +20419,7 @@
                              **************************************************************
                              undefined __stdcall InitRoomKeysAndPickups(void)
              undefined         A:1            <RETURN>
-                             InitRoomKeysAndPickups                          XREF[2]:     FUN_c3b3:c16b(c), 
+                             InitRoomKeysAndPickups                          XREF[2]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           InitRoom_Maybe:ccdd(c)  
             d14c 86 ff              LDA        #0xff
             d14e 8e 02 71           LDX        #PerRoomPickupData_0x271                      = ??
@@ -20654,8 +20688,8 @@
                                      82: left hand corner piece going up-right (80 + 2)
                                      83: etc, etc.
                              U contains the pointer to the room draw commands
-                             DrawBackground                                  XREF[3]:     FUN_c3b3:c0a1(c), 
-                                                                                          FUN_c3b3:c640(c), 
+                             DrawBackground                                  XREF[3]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           InitRoom_Maybe:cd16(c)  
             d24e 86 01              LDA        #0x1
             d250 97 20              STA        <CrtArtifactDrawingMaskIndex_0x20             store 1 at 0x20
@@ -20678,7 +20712,7 @@
                              Room0_GraphicsAndDoorData_0xd26e                XREF[1]:     d25a(*)  
             d26e d3 5e              dw         Room0_DrawCommands                            first level exit door?
             d270 ff ff              dw         FFFFh                                         initial start up "door", maybe
-                             InitialPlayerPosition_0xd272                    XREF[1]:     FUN_c3b3:c15e(R)  
+                             InitialPlayerPosition_0xd272                    XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             d272 a5 70              dw         A570h                                         initial game start position
             d274 00                 db         0h                                            room number, maybe
             d275 00                 db         0h                                            global door index
@@ -22220,9 +22254,9 @@
                              **************************************************************
                              undefined __stdcall EraseAndUpdateAndDrawObject(void)
              undefined         A:1            <RETURN>
-                             EraseAndUpdateAndDrawObject                     XREF[4]:     FUN_c3b3:c191(c), 
-                                                                                          FUN_c3b3:c1a4(c), 
-                                                                                          FUN_c3b3:c34e(j), 
+                             EraseAndUpdateAndDrawObject                     XREF[4]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           UpdateRoomTimers:cca0(j)  
             d860 a6 3b              LDA        -0x5,Y=>Player_SomeGameState_0x1a5            = ??
             d862 27 4e              BEQ        DrawingFunctionFor3ByteWideSprites::Jump_Ski
@@ -22282,7 +22316,7 @@
                              **************************************************************
                              undefined __stdcall EraseSpriteFromScreen(void)
              undefined         A:1            <RETURN>
-                             EraseSpriteFromScreen                           XREF[2]:     FUN_c3b3:c5ba(c), 
+                             EraseSpriteFromScreen                           XREF[2]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           EraseAndUpdateAndDrawObject:d869
             d8b5 ee 2c              LDU        0xc,Y=>PlayerY_PreviousVideoPageDrawPosition  = ??
             d8b7 ae 2e              LDX        0xe,Y=>Player_PreviousSpritePointer_0x1b8     = ??
@@ -22323,11 +22357,11 @@
              byte *            X:2            screenLocation
              undefined2        Y:2            param_4
              byte *            U:2            textStrings
-                             PrintString                                     XREF[11]:    FUN_c3b3:c0b2(c), 
-                                                                                          FUN_c3b3:c0cc(c), 
-                                                                                          FUN_c3b3:c0de(c), 
-                                                                                          FUN_c3b3:c0ea(c), 
-                                                                                          FUN_c3b3:c64f(c), 
+                             PrintString                                     XREF[11]:    UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           InitRoom_Maybe:cd3f(c), 
                                                                                           InitRoom_Maybe:cd68(c), 
                                                                                           InitRoom_Maybe:cd74(c), d905(j), 
@@ -22667,7 +22701,7 @@
             da16 00                 db         00000000b
             da17 30                 db         00110000b
             da18 30                 db         00110000b
-                             TextStrings                                     XREF[1]:     FUN_c3b3:c0a4(*)  
+                             TextStrings                                     XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             da19 0d                 db         13                                            D
             da1a 18                 db         24                                            O
             da1b 20                 db         32                                            W
@@ -22865,13 +22899,13 @@
             dacf 20                 db         32
             dad0 18                 db         24
             dad1 ff                 db         255
-                             String_PL1                                      XREF[2]:     FUN_c3b3:c159(*), 
-                                                                                          FUN_c3b3:c622(*)  
+                             String_PL1                                      XREF[2]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             dad2 19                 db         25                                            P
             dad3 15                 db         21                                            L
             dad4 01                 db         1                                             1
             dad5 ff                 db         255
-                             String_PL2                                      XREF[1]:     FUN_c3b3:c618(*)  
+                             String_PL2                                      XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             dad6 19                 db         25                                            P
             dad7 15                 db         21                                            L
             dad8 02                 db         2                                             2
@@ -22938,7 +22972,7 @@
              undefined         B:1            B
              undefined2        X:2            X
              undefined2        Y:2            Y
-                             UpdateAndPrintPlayerScore                       XREF[3]:     FUN_c3b3:c339(c), 
+                             UpdateAndPrintPlayerScore                       XREF[3]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           InitRoom_Maybe:cce6(c), 
                                                                                           InitRoom_Maybe:cd5f(c)  
             db0c 8d 47              BSR        ConvertDRegisterToString                      undefined ConvertDRegisterToString(void)
@@ -22957,9 +22991,9 @@
                              **************************************************************
                              undefined __stdcall FindFirstNonZeroCharacterInString(vo
              undefined         A:1            <RETURN>
-                             FindFirstNonZeroCharacterInString               XREF[5]:     FUN_c3b3:c0c9(c), 
-                                                                                          FUN_c3b3:c0db(c), 
-                                                                                          FUN_c3b3:c0e7(c), 
+                             FindFirstNonZeroCharacterInString               XREF[5]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           UpdateAndPrintPlayerScore:db1c(c
                                                                                           db2b(j)  
             db21 a6 c4              LDA        ,U                                            get character
@@ -23212,9 +23246,9 @@
              undefined         A:1            A
              undefined         B:1            B
              undefined2        X:2            X
-                             IncrementRomAddressCounter                      XREF[9]:     FUN_c3b3:c10d(c), 
-                                                                                          FUN_c3b3:c1f1(c), 
-                                                                                          FUN_c3b3:c31d(c), 
+                             IncrementRomAddressCounter                      XREF[9]:     UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
                                                                                           DrawLifeIconsAndPlayerRegenerati
                                                                                           DrawLifeIconsAndPlayerRegenerati
                                                                                           UpdateRoomTimers:cc2b(c), 
@@ -23279,7 +23313,7 @@
                              **************************************************************
                              undefined __stdcall UpdateJoystick_Maybe(void)
              undefined         A:1            <RETURN>
-                             UpdateJoystick_Maybe                            XREF[3]:     FUN_c3b3:c110(c), 
+                             UpdateJoystick_Maybe                            XREF[3]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           BigInitFunction_Maybe:c6b8(c), 
                                                                                           BigInitFunction_Maybe:c734(c)  
             dc66 8d 66              BSR        DisableSound                                  undefined DisableSound(void)
@@ -23354,7 +23388,7 @@
                              **************************************************************
                              undefined __stdcall EnableSound(void)
              undefined         A:1            <RETURN>
-                             EnableSound                                     XREF[1]:     FUN_c3b3:c075(c)  
+                             EnableSound                                     XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             dcc7 b6 ff 23           LDA        PIA1_B_CONTROL_REG_FF23
             dcca 8a 08              ORA        #00001000b
             dccc 20 05              BRA        DisableSound::JUMP_dcd3_Set_PIA1_B_CONTROL_R
@@ -23663,9 +23697,9 @@
             deed 20 00              dw         0010000000000000b
                              Unlike the other sprites, this is 3 bytes per line
                              for 9 lines. 
-                             PlayerSplatSprite+1                             XREF[2,1]:   FUN_c3b3:c587(*), 
-                             PlayerSplatSprite                                            FUN_c3b3:c58c(R), 
-                                                                                          FUN_c3b3:c58c(R)  
+                             PlayerSplatSprite+1                             XREF[2,1]:   UpdatePlayerSoundAndCollisionsAn
+                             PlayerSplatSprite                                            UpdatePlayerSoundAndCollisionsAn
+                                                                                          UpdatePlayerSoundAndCollisionsAn
             deef 04 00              dw         0000010000000000b
             def1 00 03              dw         0000000000000011b
             def3 07 00              dw         0000011100000000b
