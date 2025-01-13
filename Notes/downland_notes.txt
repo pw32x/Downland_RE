@@ -88,11 +88,6 @@ Clean Background
 	
 Questions
 
-	what is the mysterious sprite data?	
-
-
-	how do room transitions work?
-
 	one room has drops falling closer to the rope. why?
 
 	how does the player code flow?

@@ -1691,13 +1691,14 @@
             0368                    ??         ??
             0369                    ??         ??
             036a                    ??         ??
-                             SomeValueRelatedToDrops_Maybe_0x36b             XREF[5]:     UpdatePlayerSoundAndCollisionsAn
+                             RoomsPlayersHaveVisited_0x36b                   XREF[6]:     UpdatePlayerSoundAndCollisionsAn
                                                                                           UpdatePlayerSoundAndCollisionsAn
+                                                                                          InitRoom_Maybe:cd46(*), 
                                                                                           InitRoom_Maybe:cd4d(*), 
                                                                                           InitRoom_Maybe:cd53(*), 
                                                                                           InitRoom_Maybe:cd57(*)  
             036b                    undefined1 ??
-                             SomeValue_0x36c                                 XREF[1]:     UpdatePlayerSoundAndCollisionsAn
+                             Room1VisitedPlayerFlags_0x36c                   XREF[1]:     UpdatePlayerSoundAndCollisionsAn
             036c                    undefined1 ??
             036d                    ??         ??
             036e                    ??         ??
@@ -17314,16 +17315,16 @@
             c028 b7 ff 02           STA        PIA0_B_DATA_REG__FF02                         setup keyboard columns
             c02b b6 ff 00           LDA        PIA0_A_DATA_REG__FF00                         get keyboard/joystick button state
             c02e 84 10              ANDA       #00010000b                                    only keep bit 4, but never use it? ooookay.
-            c030 26 0f              BNE        LAB_c041                                      just jump ahead
-            c032 cc 00 09           LDD        #0x9                                          skipped
-            c035 fd ff b4           STD        PALETTE_FFB4                                  skipped
-            c038 cc 24 3f           LDD        #0x243f                                       skipped
-            c03b fd ff b6           STD        PALETTE_FFB6                                  skipped
-            c03e 86 e8              LDA        #0xe8                                         skipped
-            c040 8c 86 f8           CMPX       #0x86f8                                       skipped
+            c030 26 0f              BNE        Jump_OverPaletteSetting                       just jump ahead
+            c032 cc 00 09           LDD        #0x9                                          black (0x00) and magenta (0x09) color index?
+            c035 fd ff b4           STD        PALETTE_FFB4
+            c038 cc 24 3f           LDD        #0x243f                                       low intensity green (0x02) and faded blue (0x43) ? 
+            c03b fd ff b6           STD        PALETTE_FFB6
+            c03e 86 e8              LDA        #0xe8
+            c040 8c 86 f8           CMPX       #0x86f8
                              -- Length Override: 1 (actual length is 3)
                              -- Fallthrough: c043
-                             LAB_c041                                        XREF[1]:     c030(j)  
+                             Jump_OverPaletteSetting                         XREF[1]:     c030(j)  
             c041 86 f8              LDA        #11111000b                                    // 248
                              LAB_c043                                        XREF[2]:     c040, c040  
             c043 97 6a              STA        <SAM_SETUP_BITS_MAYBE_0x6a                    store at address 106
@@ -17349,11 +17350,11 @@
                                                                                              undefined CopySpritesFromRomToRam(void)
             c069 0c 51              INC        <SelectedNumberOfPlayers_0x51                 = ??
                              LAB_c06b                                        XREF[1]:     dc12(j)  
-            c06b 8e 03 6b           LDX        #SomeValueRelatedToDrops_Maybe_0x36b          = ??
+            c06b 8e 03 6b           LDX        #RoomsPlayersHaveVisited_0x36b                = ??
             c06e 86 0a              LDA        #10                                           setup a loop to
                                                                                              clear 10 bytes from 0x36b
                              LOOP_Clear10Bytes_c070                          XREF[1]:     c073(j)  
-            c070 6f 80              CLR        ,X+=>SomeValueRelatedToDrops_Maybe_0x36b      = ??
+            c070 6f 80              CLR        ,X+=>RoomsPlayersHaveVisited_0x36b            = ??
             c072 4a                 DECA
             c073 26 fb              BNE        LOOP_Clear10Bytes_c070
             c075 bd dc c7           JSR        EnableSound                                   = ??
@@ -19496,39 +19497,42 @@
             cd16 bd d2 4e           JSR        DrawBackground                                undefined DrawBackground(void)
             cd19 8d 8c              BSR        LoadRoomDoorDataAddrIntoX                     undefined LoadRoomDoorDataAddrIntoX(void)
             cd1b 10 8e 3e c0        LDY        #Player_DoorStateData_0x3ec0                  address to room or door graphics?
-                             LAB_cd1f                                        XREF[1]:     cd2e(j)  
-            cd1f a6 05              LDA        0x5,X=>DAT_1c05                               Y of spawn point?
+                             Draw the activated doors for this room
+                             X - Door Information (location, index, etc.)
+                             Y - Door State Data (has door at index been activated?)
+                             Loop_DrawNextDoor                               XREF[1]:     cd2e(j)  
+            cd1f a6 05              LDA        0x5,X=>DAT_1c05                               get the door index
             cd21 a6 a6              LDA        A,Y=>Player_DoorStateData_0x3ec0              = ??
-            cd23 94 52              ANDA       <CurrentPlayer_0x52                           = ??
-            cd25 27 02              BEQ        LAB_cd29
+            cd23 94 52              ANDA       <CurrentPlayer_0x52                           is it active for this player?
+            cd25 27 02              BEQ        Jump_SkipDrawingDoor                          skip if not
             cd27 8d 58              BSR        DrawDoorOrMultipleDoors_Maybe                 undefined DrawDoorOrMultipleDoors_Maybe(undefined A, undefi
-                             LAB_cd29                                        XREF[1]:     cd25(j)  
-            cd29 30 88 06           LEAX       0x6,X                                         X of spawn point?
-            cd2c a6 84              LDA        ,X=>DAT_1c06                                  = ??
-            cd2e 26 ef              BNE        LAB_cd1f
+                             Jump_SkipDrawingDoor                            XREF[1]:     cd25(j)  
+            cd29 30 88 06           LEAX       0x6,X                                         Skip to next door information
+            cd2c a6 84              LDA        ,X=>DAT_1c06                                  get the first byte
+            cd2e 26 ef              BNE        Loop_DrawNextDoor                             loop if it's not 0, the sentinel value
             cd30 8e 04 00           LDX        #0x400
             cd33 9f 4e              STX        <CurrentVideoMemLocation_0x4e                 = ??
             cd35 17 00 e5           LBSR       ScreenTransitionWipe                          char ScreenTransitionWipe(void)
             cd38 be 01 eb           LDX        PlayerLives_DrawLocationInPage_0x1eb          = ??
-            cd3b 30 1c              LEAX       -0x4,X
+            cd3b 30 1c              LEAX       -0x4,X                                        get the player sprite address? and then not use it?
             cd3d de 53              LDU        <CurrentInGamePlayerStringPointer             = ??
             cd3f bd d8 e2           JSR        PrintString                                   undefined PrintString(undefined param_1, undefined param_2,
             cd42 96 39              LDA        <CurrentRoomNumber_0x39                       = ??
-            cd44 27 17              BEQ        LAB_cd5d
-            cd46 8e 03 6b           LDX        #0x36b
+            cd44 27 17              BEQ        Jump_AlreadyVisitedThisRoom
+            cd46 8e 03 6b           LDX        #RoomsPlayersHaveVisited_0x36b                = ??
             cd49 96 39              LDA        <CurrentRoomNumber_0x39                       = ??
             cd4b 30 86              LEAX       A,X
-            cd4d a6 84              LDA        ,X=>SomeValueRelatedToDrops_Maybe_0x36b       = ??
-            cd4f 94 52              ANDA       <CurrentPlayer_0x52                           = ??
-            cd51 26 0a              BNE        LAB_cd5d
-            cd53 a6 84              LDA        ,X=>SomeValueRelatedToDrops_Maybe_0x36b       = ??
+            cd4d a6 84              LDA        ,X=>RoomsPlayersHaveVisited_0x36b             get 0 or 1
+            cd4f 94 52              ANDA       <CurrentPlayer_0x52                           and with 0b01 or 0b10
+            cd51 26 0a              BNE        Jump_AlreadyVisitedThisRoom                   if result of AND is > 0 then jump
+            cd53 a6 84              LDA        ,X=>RoomsPlayersHaveVisited_0x36b             = ??
             cd55 9a 52              ORA        <CurrentPlayer_0x52                           = ??
-            cd57 a7 84              STA        ,X=>SomeValueRelatedToDrops_Maybe_0x36b       = ??
+            cd57 a7 84              STA        ,X=>RoomsPlayersHaveVisited_0x36b             we've now visited this room
             cd59 cc 03 e8           LDD        #0x3e8
             cd5c 8c dc 1b           CMPX       #0xdc1b
                              -- Length Override: 1 (actual length is 3)
                              -- Fallthrough: cd5f
-                             LAB_cd5d                                        XREF[2]:     cd44(j), cd51(j)  
+                             Jump_AlreadyVisitedThisRoom                     XREF[2]:     cd44(j), cd51(j)  
             cd5d dc 1b              LDD        <ZeroValue                                    = ??
                              LAB_cd5f                                        XREF[1]:     cd5c  
             cd5f bd db 0c           JSR        UpdateAndPrintPlayerScore                     undefined UpdateAndPrintPlayerScore(undefined A, undefined 
@@ -19722,32 +19726,32 @@
                              **************************************************************
                              char __stdcall ScreenTransitionWipe(void)
              char              A:1            <RETURN>
-             undefined1        Stack[-0x1]:1  local_1                                 XREF[3]:     ce1d(*), ce38(*), 
+             undefined1        Stack[-0x1]:1  drawDottedLineFlag                      XREF[3]:     ce1d(*), ce38(*), 
                                                                                                    ce5e(*)  
                              ScreenTransitionWipe                            XREF[1]:     InitRoom_Maybe:cd35(c)  
-            ce1d 6f e2              CLR        ,-S=>local_1
-            ce1f 8e 04 00           LDX        #0x400                                        destination location
-                             LAB_ce22                                        XREF[1]:     ce63(j)  
+            ce1d 6f e2              CLR        ,-S=>drawDottedLineFlag                       save some space on the stack
+            ce1f 8e 04 00           LDX        #0x400                                        initial setup main screen video page
+                             Loop_DrawTransitionSections                     XREF[1]:     ce63(j)  
             ce22 1f 10              TFR        X,D
-            ce24 c5 1f              BITB       #0x1f
-            ce26 26 08              BNE        LAB_ce30
+            ce24 c5 1f              BITB       #00011111b
+            ce26 26 08              BNE        Jump_SkipSleep                                pause when reaching the end of the line, maybe
+                             run an empty loop to serve as a delay
             ce28 10 8e 04 00        LDY        #0x400                                        start at the beginning of the first page
-                             Loop_Sleep_Maybe                                XREF[1]:     ce2e(j)  
+                             Loop_Sleep                                      XREF[1]:     ce2e(j)  
             ce2c 31 3f              LEAY       -0x1,Y
-            ce2e 26 fc              BNE        Loop_Sleep_Maybe                              reverse loop back until 0? why?
-                                                                                             just a delay?
-                             LAB_ce30                                        XREF[1]:     ce26(j)  
+            ce2e 26 fc              BNE        Loop_Sleep                                    seems like just a delay
+                             Jump_SkipSleep                                  XREF[1]:     ce26(j)  
             ce30 c6 06              LDB        #0x6                                          devide the screen into 6 equal parts
                                                                                              1024 bytes each in video mem
-                             LAB_ce32                                        XREF[1]:     ce51(j)  
+                             Loop_NextSection                                XREF[1]:     ce51(j)  
             ce32 a6 89 18 00        LDA        0x1800,X=>VideoMemory_Page1_0x1c00            get source pixel from second video page
             ce36 a7 84              STA        ,X=>VideoMemory_Page0_0x0400                  copy to first page
-            ce38 a6 e4              LDA        ,S=>local_1
-            ce3a 26 05              BNE        LAB_ce41
+            ce38 a6 e4              LDA        ,S=>drawDottedLineFlag
+            ce3a 26 05              BNE        Jump_SkipDrawingDottedLine
             ce3c 86 55              LDA        #01010101b                                    dotted line pattern
             ce3e a7 88 20           STA        0x20,X=>DAT_0420                              draw dotted pattern on next line
-                             LAB_ce41                                        XREF[1]:     ce3a(j)  
-            ce41 30 89 04 00        LEAX       0x400,X                                       jump to next section to wipe
+                             Jump_SkipDrawingDottedLine                      XREF[1]:     ce3a(j)  
+            ce41 30 89 04 00        LEAX       0x400,X                                       jump to next section 32 pixels down to wipe
             ce45 34 04              PSHS        B
             ce47 1f 10              TFR        X,D                                           use the A component of X to play the sound during the wipe
                                                                                              A goes from 8->C->10->14->18->1c
@@ -19755,15 +19759,18 @@
             ce4b b7 ff 20           STA        PIA1_A_DATA_REG__FF20                         send the data to the sound generator
             ce4e 35 04              PULS        B
             ce50 5a                 DECB
-            ce51 26 df              BNE        LAB_ce32
-            ce53 30 89 e8 01        LEAX       -0x17ff,X
+            ce51 26 df              BNE        Loop_NextSection
+            ce53 30 89 e8 01        LEAX       -0x17ff,X                                     done with the six sections, jump back to the start
+                                                                                             but land one byte over
             ce57 8c 07 e0           CMPX       #0x7e0
-            ce5a 25 04              BCS        LAB_ce60
-            ce5c 86 ff              LDA        #0xff
-            ce5e a7 e4              STA        ,S=>local_1
-                             LAB_ce60                                        XREF[1]:     ce5a(j)  
+            ce5a 25 04              BCS        Jump_SkipSettingDrawDottedLineFlag            if we reach the last line of the section, then set the
+                                                                                             stack value which will stop the dotted line to be
+                                                                                             drawn?
+            ce5c 86 ff              LDA        #0xff                                         we've reached the last line, set the value on the stack
+            ce5e a7 e4              STA        ,S=>drawDottedLineFlag
+                             Jump_SkipSettingDrawDottedLineFlag              XREF[1]:     ce5a(j)  
             ce60 8c 08 00           CMPX       #0x800
-            ce63 26 bd              BNE        LAB_ce22
+            ce63 26 bd              BNE        Loop_DrawTransitionSections
             ce65 35 02              PULS        A
             ce67 39                 RTS
                              **************************************************************
