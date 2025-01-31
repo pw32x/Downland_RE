@@ -88,16 +88,30 @@ Clean Background
 	
 Questions
 
-	one room has drops falling closer to the rope. why?
+	how are floor collisions detected?
+	
+		starts at 0xc298 
+		it checks a position 16 pixels underneath the player
+		it gets two bytes from the clean version of the background
+		compares a collision mask with them
+	
+	how is detecting vertical ropes done?
+	
+		starts at 0xc85f
+	
+	how is detecting horizontal ropes done?
+		probably the same way vertical ropes are found, by looking at two 
+		consecutive white pixels
+
+	how does the player bounce off walls when jumping?
 
 	how does the player code flow?
 
-		how are floor collisions detected?
-		how is detecting vertical ropes done?
-		how is detecting horizontal ropes done?
-		how is the death fall sequence done?
+	go through unnamed functions
 	
-	does the game wait for vsync on game loop?
+	go through unnamed labels
+
+	go through Maybe functions
 	
 	when and how are sounds handled?
 	
@@ -116,6 +130,13 @@ Todo
 How To	
 
 	how to change first room when starting game?
+
+	how to disable collisions with objects that kill?
+	
+		set two nops (12 12) to 
+			c2a1
+			c2bd
+			c2d4
 
 	How to change the game timer on start?
 		change memory location cbac to 0xFFFF
