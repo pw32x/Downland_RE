@@ -49,7 +49,7 @@ class Program
 
         public string m_comment = "";
         public string m_label = "";
-        public string m_code;
+        public string m_code = "";
         public bool m_isDataLabel = false; // we only know if it's a data label after reading the next line
 
         public enum ParsedLineType
@@ -218,9 +218,20 @@ class Program
             parseState.ParseLine(fileLine);
         }
 
+
+        // write to file
+        StringBuilder sb = new StringBuilder();
+
         foreach (var parsedLine in parseState.m_parsedLines)
         {
-            Console.WriteLine(parsedLine.ToString());
+            string exportedLine = parsedLine.ToString();
+            //Console.WriteLine(exportedLine);
+            sb.AppendLine(exportedLine);
         }
+
+        Directory.CreateDirectory(@"..\..\..\..\exported_asm");
+        File.WriteAllText(@"..\..\..\..\exported_asm\downland.asm", sb.ToString());
+
+
     }
 }
