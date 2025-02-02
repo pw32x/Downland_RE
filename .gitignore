@@ -398,3 +398,5 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+exported_asm/downland.sym
+exported_asm/downland.map

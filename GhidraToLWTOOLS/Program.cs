@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection.Emit;
@@ -46,11 +47,13 @@ class Program
     class ParsedLine
     {
         public uint m_address;
-        public string m_addressString;
+        public string m_addressString = "";
 
         public string m_comment = "";
         public string m_label = "";
         public string m_code = "";
+        public string m_dataToken = "";
+        private string m_dataValue = "";
         public bool m_isDataLabel = false; // we only know if it's a data label after reading the next line
         public bool m_addSpacing = false;
 
@@ -59,7 +62,8 @@ class Program
             Nothing,
             Label,
             Comment,
-            Code
+            Code,
+            Data
         }
 
 
@@ -94,6 +98,13 @@ class Program
                 sb.Append("        ");
                 sb.Append(m_code);
                 
+                break;
+            case ParsedLineType.Data:
+                sb.Append("        ");
+                sb.Append(m_dataToken);
+                sb.Append("        ");
+                sb.Append(m_dataValue);
+
                 break;
             }
 
@@ -160,18 +171,29 @@ class Program
 
                 if (!string.IsNullOrEmpty(label))
                 {
-                    if (label.Contains(' ')) // if the label contains a space, then it's a comment.
+                    if (label.Contains(' ') || // if the label contains a space, then for sure it's a comment.
+                        label.Contains(':'))   // or punctuation. yes, very hardcoded
                     {
-                        m_comment = "\n; " + label.Trim();
+                        // if the last line isn't a comment, add a line separator
+                        if (parseState.m_lastParsedLine.m_parsedLineType != ParsedLineType.Comment)
+                            m_comment = "\n";
+
+                        m_comment += ";" + line.Trim();
                         m_parsedLineType= ParsedLineType.Comment;
                         m_addSpacing = false;
                     }
                     else
                     {
+                        // when labels have something like +1 at the end, 
+                        // Ghidra seems to think they're used but they don't
+                        // appear to be. Just rename the + to _ to make a 
+                        // harmless but unused label.
+
+                        label = label.Replace("+", "_");
+
                         m_label = label;
                         m_parsedLineType = ParsedLineType.Label; 
                     }
-
                 }
             }
             else 
@@ -208,25 +230,72 @@ class Program
                 }
                 else
                 {
-                    // is in ROM. Could be data or could be code.
-
+                    string subString = "";
                     if (commentIndex != -1)
                     {
                         int size = commentIndex - 36;
-                        m_code = line.Substring(36, size).Trim();
+                        subString = line.Substring(36, size).Trim();
                     }
                     else
                     {
-                        m_code = line.Substring(36, line.Length - 36).Trim();
+                        subString = line.Substring(36, line.Length - 36).Trim();
                     }
 
-                    int arrowIndex = m_code.IndexOf("=>");
-                    if (arrowIndex >= 0) 
+                    bool isData = false;
+                    // is in ROM. Could be data or could be code.
+
+                    var tokens = subString.Split(' ');
+                    string firstToken = tokens[0];
+
+                    if (firstToken == "addr")
                     {
-                        m_code = m_code.Substring(0, arrowIndex);
+                        firstToken = "dw";
                     }
 
-                    m_parsedLineType = ParsedLineType.Code;                    
+                    if (firstToken == "db" ||
+                        firstToken == "dw" ||
+                        firstToken.StartsWith("undef") ||
+                        firstToken == "??")
+                     {
+                        isData = true;
+                     }
+
+                    if (isData)
+                    {
+                        if (firstToken != "dw")
+                            firstToken = "db";
+                        m_parsedLineType = ParsedLineType.Data;
+
+                        m_dataToken = "." + firstToken;
+
+                        int counter = 1;
+                        m_dataValue = tokens[counter];
+                        while (string.IsNullOrEmpty(m_dataValue))
+                        {
+                            counter++;
+                            m_dataValue = tokens[counter];
+                        }
+
+                        if (m_dataValue.EndsWith("h"))
+                        {
+                            m_dataValue = "0x" + m_dataValue.Substring(0, m_dataValue.Length - 1);
+                        }
+                    }
+                    else
+                    {
+                        m_code = subString;
+
+                        if (m_code.Contains(" offset "))
+                            m_code = m_code.Replace("offset ", "");
+
+                        int arrowIndex = m_code.IndexOf("=>");
+                        if (arrowIndex >= 0) 
+                        {
+                            m_code = m_code.Substring(0, arrowIndex);
+                        }
+
+                        m_parsedLineType = ParsedLineType.Code;                    
+                    }
                 }
             }
         }
@@ -251,6 +320,35 @@ class Program
         }
     }
 
+    private static void AddHardwareVariables(StringBuilder sb)
+    {
+        sb.AppendLine("; Hardware constants");
+        sb.AppendLine("PIA0_A_DATA_REG__FF00 equ 0xff00");
+        sb.AppendLine("PIA0_A_CONTROL_REG__FF01 equ 0xff01");
+        sb.AppendLine("PIA0_B_DATA_REG__FF02 equ 0xff02");
+        sb.AppendLine("PIA0_B_CTRL_REG__FF03 equ 0xff03");
+
+        sb.AppendLine("VMODE_REG__FF98 equ 0xff98");
+
+        sb.AppendLine("PIA1_A_DATA_REG__FF20 equ 0xff20");
+        sb.AppendLine("PIA1_B_DATA_REG__FF22 equ 0xff22");
+        sb.AppendLine("PIA1_B_CONTROL_REG__FF23 equ 0xff23");
+
+        sb.AppendLine("PALETTE_FFB4 equ 0xffb4");
+        sb.AppendLine("PALETTE_FFB6 equ 0xffb6");
+
+        //sb.AppendLine("LAB_c003 equ ");
+
+        sb.AppendLine("SAM_V0_FFC0 equ 0xffc0");
+        sb.AppendLine("SAM_V1_FFC3 equ 0xffc3");
+        sb.AppendLine("SAM_V2_FFC5 equ 0xffc5");
+        sb.AppendLine("SAM_PAGE_SELECT_REG_SAM_F0_FFC6 equ 0xffc6");
+
+        sb.AppendLine("RomRam_MapType_FFDE equ 0xffde");        
+        sb.AppendLine();
+        sb.AppendLine();
+    }
+
     static void Main(string[] args)
     {
         var fileLines = File.ReadAllLines(@"..\..\..\..\downland.txt");
@@ -266,10 +364,18 @@ class Program
         // write to file
         StringBuilder sb = new StringBuilder();
 
+        AddHardwareVariables(sb);
+
         foreach (var parsedLine in parseState.m_parsedLines)
         {
+            if (parsedLine.m_address == 0xc000)
+                sb.AppendLine("        org 0xc000");
+
             string exportedLine = parsedLine.ToString();
             //Console.WriteLine(exportedLine);
+
+
+
             sb.AppendLine(exportedLine);
         }
 
@@ -278,4 +384,6 @@ class Program
 
 
     }
+
+
 }

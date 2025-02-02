@@ -17179,7 +17179,6 @@
                                                                                           IncrementRomAddressCounter:dc49(R)  
             c000 12                 NOP
             c001 1a 50              ORCC       #01010000b
-                             LAB_c003+1                                      XREF[0,1]:   DrawDoorOrMultipleDoors_Maybe:cd8f(*)  
             c003 10 ce 01 9f        LDS        #StackStart_0x019f                               ; setup stack at address 415 019f
             c007 8e 00 00           LDX        #0x0
                              Clear_Memory_Loop                               XREF[1]:     c00f(j)  
@@ -17199,7 +17198,7 @@
                                                                                                 ; 
             c01e b7 ff 03           STA        PIA0_B_CTRL_REG__FF03
             c021 86 20              LDA        #00100000b                                       ; bit 5: swap artifact colors
-            c023 b7 ff 98           STA        VMODE_REG
+            c023 b7 ff 98           STA        VMODE_REG__FF98
             c026 86 fe              LDA        #11111110b                                       ; enable all columns except the first 
             c028 b7 ff 02           STA        PIA0_B_DATA_REG__FF02                            ; setup keyboard columns
             c02b b6 ff 00           LDA        PIA0_A_DATA_REG__FF00                            ; get keyboard/joystick button state
@@ -17210,12 +17209,11 @@
             c038 cc 24 3f           LDD        #0x243f                                          ; low intensity green (0x02) and faded blue (0x43) ? 
             c03b fd ff b6           STD        PALETTE_FFB6
             c03e 86 e8              LDA        #0xe8
-            c040 8c 86 f8           CMPX       #0x86f8
-                             -- Length Override: 1 (actual length is 3)
-                             -- Fallthrough: c043
+            c040 8c                 ??         8Ch                                              ; When PC reaches here this byte and the next two are 
+                                                                                                ; interpeted as CMPX #0x86f8 which does nothing. 
                              Jump_OverPaletteSetting                         XREF[1]:     c030(j)  
-            c041 86 f8              LDA        #11111000b                                       ; // 248
-                             LAB_c043                                        XREF[2]:     c040, c040  
+            c041 86 f8              LDA        #0xf8                                            ; // 248
+                             LAB_c043                                        XREF[1]:     c040  
             c043 97 6a              STA        <SAM_SETUP_BITS_MAYBE_0x6a                       ; store at address 106
             c045 bd c2 01           JSR        WaitForVSync_Maybe                               ; = ??
                                                                                                 ; undefined WaitForVSync_Maybe(void)
@@ -17285,7 +17283,7 @@
             c0ae 34 10              PSHS        X
             c0b0 ae 84              LDX        ,X=>TextScreenPositions                          ; load to X the address stored in X (c23d)
             c0b2 bd d8 e2           JSR        PrintString                                      ; = ??
-                                                                                                ; undefined PrintString(undefined param_1, undefined param_2, byte * scr
+                                                                                                ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
             c0b5 35 10              PULS        X
             c0b7 30 02              LEAX       0x2,X                                            ; move to next screen position
             c0b9 0a 26              DEC        <UtilityCounter_0x26                             ; = ??
@@ -17300,7 +17298,7 @@
             c0c9 bd db 21           JSR        FindFirstNonZeroCharacterInString                ; = ??
                                                                                                 ; undefined FindFirstNonZeroCharacterInString(void)
             c0cc bd d8 e2           JSR        PrintString                                      ; = ??
-                                                                                                ; undefined PrintString(undefined param_1, undefined param_2, byte * scr
+                                                                                                ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
                              print player two score
             c0cf ce 00 c3           LDU        #PlayerTwoScoreString_0xc3                       ; = ??
             c0d2 bd c2 22           JSR        CheckScoreStringAgainstHighScoreString           ; = ??
@@ -17310,25 +17308,25 @@
             c0db bd db 21           JSR        FindFirstNonZeroCharacterInString                ; = ??
                                                                                                 ; undefined FindFirstNonZeroCharacterInString(void)
             c0de bd d8 e2           JSR        PrintString                                      ; = ??
-                                                                                                ; undefined PrintString(undefined param_1, undefined param_2, byte * scr
+                                                                                                ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
                              print high score
             c0e1 ce 00 b3           LDU        #HighScoreString_0xb3                            ; = ??
             c0e4 8e 16 cc           LDX        #DAT_16cc                                        ; screen location
             c0e7 bd db 21           JSR        FindFirstNonZeroCharacterInString                ; = ??
                                                                                                 ; undefined FindFirstNonZeroCharacterInString(void)
             c0ea bd d8 e2           JSR        PrintString                                      ; = ??
-                                                                                                ; undefined PrintString(undefined param_1, undefined param_2, byte * scr
+                                                                                                ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
             c0ed cc 04 00           LDD        #VideoMemory_Page0_0x0400                        ; A = 0x04, B = 0x00. A is Sam Page setup bits
             c0f0 bd cd f7           JSR        SetupSAMPages                                    ; = ??
                                                                                                 ; undefined SetupSAMPages(byte param_1)
                              Done drawing. Copy from page 0 to page 1
             c0f3 8e 04 00           LDX        #VideoMemory_Page0_0x0400                        ; setup loop to copy page 0 to page 1
-                             LOOP_Copy_Page0_to_Page1                        XREF[1]:     c101(j)  
+                             LOOP_Copy_TitleScreen_Page0_to_Page1            XREF[1]:     c101(j)  
             c0f6 ec 84              LDD        ,X=>VideoMemory_Page0_0x0400                     ; load to D from two bytes of the first video page
             c0f8 ed 89 18 00        STD        0x1800,X=>VideoMemory_Page1_0x1c00               ; store D to the first two bytes of the second video page
             c0fc 30 02              LEAX       0x2,X=>DAT_0402                                  ; move X to the next pair of bytes in video page 0
             c0fe 8c 1c 00           CMPX       #VideoMemory_Page1_0x1c00                        ; = ??
-            c101 26 f3              BNE        LOOP_Copy_Page0_to_Page1
+            c101 26 f3              BNE        LOOP_Copy_TitleScreen_Page0_to_Page1
                              Some initial player setup
             c103 1c ef              ANDCC      #11101111b                                       ; disable interrupts, maybe
             c105 96 51              LDA        <SelectedNumberOfPlayers_0x51                    ; = ??
@@ -17811,7 +17809,7 @@
                              Jump_HasCollision                               XREF[2]:     c39f(j), c3a9(j)  
             c3af 86 ff              LDA        #0xff
             c3b1 39                 RTS
-                             Jump_Return                                     XREF[5]:     UpdatePlayerSoundAndCollisionsAndPhysics:c3c3(j), 
+                             Jump_Return_Helper                              XREF[5]:     UpdatePlayerSoundAndCollisionsAndPhysics:c3c3(j), 
                                                                                           UpdatePlayerSoundAndCollisionsAndPhysics:c56c(j), 
                                                                                           UpdatePlayerSoundAndCollisionsAndPhysics:c5ae(j), 
                                                                                           UpdatePlayerSoundAndCollisionsAndPhysics:c5c5(j), 
@@ -17835,13 +17833,13 @@
             c3be f7 ff 20           STB        PIA1_A_DATA_REG__FF20                            ; play sound when animation frame is not 0?
                              Jump_SkipPlaySound                              XREF[1]:     c3ba(j)  
             c3c1 a6 3b              LDA        -0x5,Y=>Player_GameStateCounter_0x1a5            ; = ??
-            c3c3 27 ed              BEQ        Jump_IsAlreadyClimbing::Jump_Return              ; inactive, so just return
+            c3c3 27 ed              BEQ        Jump_Return_Helper                               ; inactive, so just return
             c3c5 81 01              CMPA       #0x1                                             ; check if the game is currently in a room transition
             c3c7 10 27 00 c1        LBEQ       Jump_HandlePlayerJumpAndRope                     ; it is in a screen transition
             c3cb 96 30              LDA        <Player_DeathPauseInTheAirTimer                  ; are we in a death animation?
             c3cd 10 26 01 7b        LBNE       Jump_PlayerStillDyingInTheAir
             c3d1 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1a8   ; = ??
-            c3d3 10 2b 02 e1        LBMI       BigInitFunction_Maybe::Jump_JoystickCheck        ; jump if player state is FF
+            c3d3 10 2b 02 e1        LBMI       Jump_JoystickCheck                               ; jump if player state is FF
             c3d7 10 26 00 bd        LBNE       Jump_PlayerIsDeadSoSkipStuff                     ; jump if the state is 1 or more
             c3db 6c 36              INC        -0xa,Y=>ConstantZeroToFFCounter                  ; = ??
                              The "mysterious sprites" located between the player and 
@@ -18050,7 +18048,7 @@
             c502 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1a8   ; = ??
             c504 26 69              BNE        Jump_PlayerIsDead_Maybe
                              Jump_NotTouchingGround                          XREF[1]:     c571(j)  
-            c506 7e c7 83           JMP        BigInitFunction_Maybe::Jump_JumpToClimbingRope
+            c506 7e c7 83           JMP        Jump_JumpToClimbingRopeSubroutine
                              SomeKindOfHorizontalBitOffsetTable              XREF[8]:     ComputeSomeScreenOffset_Maybe:c4e7(*), 
                                                                                           ComputeSomeScreenOffset_Maybe:c4f0(*), 
                                                                                           Jump_IsAlreadyClimbing:c921(*), 
@@ -18104,7 +18102,7 @@
             c530 26 3d              BNE        Jump_PlayerIsDead_Maybe
             c532 ec a4              LDD        ,Y=>Player_SpeedY_0x1aa                          ; = ??
             c534 10 83 01 00        CMPD       #0x100
-            c538 10 26 01 dc        LBNE       BigInitFunction_Maybe::Jump_PlayerLanding_Maybe
+            c538 10 26 01 dc        LBNE       Jump_PlayerLanding_Maybe
                              Jump_PerformPlayerDeath                         XREF[1]:     c2e1(j)  
             c53c 8d e7              BSR        ClearSpeedToZero                                 ; undefined ClearSpeedToZero(void)
             c53e 6f 35              CLR        -0xb,Y=>Player_IsClimbingRope_0x19f              ; = ??
@@ -18123,9 +18121,8 @@
             c554 27 05              BEQ        Jump_FaceLeftInTheAir
             c556 86 ff              LDA        #0xff                                            ; set facing right
             c558 a7 3c              STA        -0x4,Y=>Player_FacingDirection_0x1a6             ; = ??
-            c55a 8c 6f 3c           CMPX       #0x6f3c
-                             -- Length Override: 1 (actual length is 3)
-                             -- Fallthrough: c55d
+            c55a 8c                 ??         8Ch                                              ; When PC reaches here this byte and the next two are 
+                                                                                                ; interpeted as CMPX #0x6f3c which does nothing. 
                              Jump_FaceLeftInTheAir                           XREF[1]:     c554(j)  
             c55b 6f 3c              CLR        -0x4,Y=>Player_FacingDirection_0x1a6             ; set facing left
                              LAB_c55d                                        XREF[1]:     c55a  
@@ -18137,7 +18134,7 @@
             c566 a7 3d              STA        -0x3,Y=>Player_CantMoveCounter_Maybe_0x1a7       ; = ??
             c568 86 02              LDA        #0x2                                             ; set to the mid-air jump frame
             c56a a7 3e              STA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1a8   ; = ??
-            c56c 7e c3 b2           JMP        Jump_IsAlreadyClimbing::Jump_Return
+            c56c 7e c3 b2           JMP        Jump_Return_Helper
                              Jump_PlayerIsDead_Maybe                         XREF[2]:     c504(j), c530(j)  
             c56f 96 2d              LDA        <Player_IsFalling_0x2d                           ; = ??
             c571 26 93              BNE        Jump_NotTouchingGround
@@ -18178,7 +18175,7 @@
             c5a9 bd c9 a2           JSR        DrawLifeIconsAndPlayerRegeneration               ; undefined DrawLifeIconsAndPlayerRegeneration(undefined A, undefined B,
                              LAB_c5ac                                        XREF[1]:     c578(j)  
             c5ac 6a 3d              DEC        -0x3,Y=>Player_CantMoveCounter_Maybe_0x1a7       ; = ??
-            c5ae 10 26 fe 00        LBNE       Jump_IsAlreadyClimbing::Jump_Return
+            c5ae 10 26 fe 00        LBNE       Jump_Return_Helper
             c5b2 6a 3e              DEC        -0x2,Y=>Player_State_AliveDeadRegenState_0x1a8   ; = ??
             c5b4 27 28              BEQ        ResetTimerTo2048IfAtZeroWhenDied_Maybe
             c5b6 86 0c              LDA        #0xc
@@ -18188,7 +18185,7 @@
             c5bf a7 3f              STA        -0x1,Y=>Player_NumRowsInSprite_0x1a9             ; = ??
             c5c1 86 46              LDA        #0x46
             c5c3 a7 3d              STA        -0x3,Y=>Player_CantMoveCounter_Maybe_0x1a7       ; = ??
-            c5c5 16 fd ea           LBRA       Jump_IsAlreadyClimbing::Jump_Return
+            c5c5 16 fd ea           LBRA       Jump_Return_Helper
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
@@ -18268,7 +18265,7 @@
             c647 8e c5 da           LDX        #PTR_String_GetReadyPlayerOne_c5da               ; = dada
             c64a ee 86              LDU        A,X=>PTR_String_GetReadyPlayerOne_c5da           ; = dada
             c64c 8e 0f 66           LDX        #DAT_0f66                                        ; = ??
-            c64f bd d8 e2           JSR        PrintString                                      ; undefined PrintString(undefined param_1, undefined param_2, byte * scr
+            c64f bd d8 e2           JSR        PrintString                                      ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
             c652 bd c2 01           JSR        WaitForVSync_Maybe                               ; undefined WaitForVSync_Maybe(void)
             c655 1c ef              ANDCC      #0xef
             c657 cc 04 00           LDD        #VideoMemory_Page0_0x0400                        ; A = 0x04, B = 0x00. A is Sam Page setup bits
@@ -18415,20 +18412,20 @@
             c743 81 02              CMPA       #0x2                                             ; compare to going right
             c745 27 13              BEQ        Jump_GoingRight
             c747 81 04              CMPA       #0x4                                             ; compare to going left
-            c749 27 08              BEQ        Jump_GoingLeft                                   ; Jump_GoingLeft
+            c749 27 08              BEQ        Jump_PlayerGoingLeft                             ; Jump_GoingLeft
             c74b 0f 2c              CLR        <Player_JumpUpInTheAirCounter_0x2c               ; = ??
             c74d 0f 2f              CLR        <Player_CantJumpAfterLandingCounter_Maybe_0x2f   ; = ??
             c74f 0f 2e              CLR        <Player_SafeLandingFromFalling_0x2e              ; = ??
             c751 20 74              BRA        Jump_HandleRun
-                             Jump_GoingLeft                                  XREF[1]:     c749(j)  
+                             Jump_PlayerGoingLeft                            XREF[1]:     c749(j)  
             c753 6f 3c              CLR        -0x4,Y=>Player_FacingDirection_0x1a6             ; set the facing direction to 0
             c755 cc ff ca           LDD        #0xffca                                          ; speed -54
-            c758 20 07              BRA        Jump_UpdateSpeed
+            c758 20 07              BRA        Jump_UpdateSpeed_X
                              Jump_GoingRight                                 XREF[1]:     c745(j)  
             c75a 86 ff              LDA        #0xff
             c75c a7 3c              STA        -0x4,Y=>Player_FacingDirection_0x1a6             ; set the facing direction to FF
             c75e cc 00 36           LDD        #0x36                                            ; speed 54
-                             Jump_UpdateSpeed                                XREF[1]:     c758(j)  
+                             Jump_UpdateSpeed_X                              XREF[1]:     c758(j)  
             c761 ed 22              STD        0x2,Y=>Player_SpeedX_0x1ac                       ; = ??
                              LAB_c763                                        XREF[1]:     c739(j)  
             c763 96 52              LDA        <CurrentPlayer_0x52                              ; = ??
@@ -18512,10 +18509,10 @@
             c7ee 81 14              CMPA       #InterruptHasBeenHitCounter_0x14                 ; = ??
             c7f0 22 94              BHI        Jump_HandleGoingToOneHandedRope
             c7f2 dc 1b              LDD        <ZeroValue                                       ; = ??
-            c7f4 20 03              BRA        Jump_UpdateSpeed
+            c7f4 20 03              BRA        Jump_UpdateSpeed_Y
                              Jump_UpdateLeftSpeed                            XREF[1]:     c7e5(j)  
             c7f6 cc ff ca           LDD        #0xffca                                          ; speed going left
-                             Jump_UpdateSpeed                                XREF[1]:     c7f4(j)  
+                             Jump_UpdateSpeed_Y                              XREF[1]:     c7f4(j)  
             c7f9 ed 22              STD        0x2,Y=>Player_SpeedX_0x1ac                       ; = ??
             c7fb 20 5c              BRA        Jump_SetRunRightAnimationFrame
                              Jump_ClimbingUp_Maybe                           XREF[1]:     c7d3(j)  
@@ -18599,7 +18596,7 @@
                                                                                           c833(j), c875(j)  
             c879 a6 35              LDA        -0xb,Y=>Player_IsClimbingRope_0x19f              ; = ??
             c87b 81 01              CMPA       #0x1
-            c87d 27 78              BEQ        Jump_IsAlreadyClimbing::Jump_ApplyPlayerPhysics
+            c87d 27 78              BEQ        Jump_ApplyPlayerPhysics
                              Check whether the player is touching a vine/rope
             c87f bd c4 e7           JSR        ComputeSomeScreenOffset_Maybe                    ; char ComputeSomeScreenOffset_Maybe(void)
             c882 30 89 01 00        LEAX       0x100,X                                          ; eight pixels underneath. midheight on player sprite?
@@ -18628,7 +18625,7 @@
                              -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
                              Jump_NotTouchingRope_Maybe                      XREF[2]:     c896(j), c8a2(j)  
             c8b5 6f 35              CLR        -0xb,Y=>Player_IsClimbingRope_0x19f              ; = ??
-            c8b7 20 3e              BRA        Jump_IsAlreadyClimbing::Jump_ApplyPlayerPhysics
+            c8b7 20 3e              BRA        Jump_ApplyPlayerPhysics
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
@@ -18790,7 +18787,7 @@
                                                                                                 ; If so, then skip to draw
             c9ad ee 28              LDU        0x8,Y=>Player_VideoPageDrawDestination_0x1b2     ; = ??
             c9af 11 a3 2c           CMPU       0xc,Y=>PlayerY_PreviousVideoPageDrawPosition_0   ; = ??
-            c9b2 10 27 f9 fc        LBEQ       Jump_IsAlreadyClimbing::Jump_Return              ; Is the current draw position and the previous draw position
+            c9b2 10 27 f9 fc        LBEQ       Jump_Return_Helper                               ; Is the current draw position and the previous draw position
                                                                                                 ; the same?
                                                                                                 ; If so, then jump to return
             c9b6 0c 48              INC        <Player_NeedsUpdate_Maybe_0x48                   ; = ??
@@ -19401,7 +19398,7 @@
             cd38 be 01 eb           LDX        PlayerLives_DrawLocationInPage_0x1eb             ; = ??
             cd3b 30 1c              LEAX       -0x4,X                                           ; get the player sprite address? and then not use it?
             cd3d de 53              LDU        <CurrentInGamePlayerStringPointer                ; = ??
-            cd3f bd d8 e2           JSR        PrintString                                      ; undefined PrintString(undefined param_1, undefined param_2, byte * scr
+            cd3f bd d8 e2           JSR        PrintString                                      ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
             cd42 96 39              LDA        <CurrentRoomNumber_0x39                          ; = ??
             cd44 27 17              BEQ        Jump_AlreadyVisitedThisRoom
             cd46 8e 03 6b           LDX        #RoomsPlayersHaveVisited_0x36b                   ; = ??
@@ -19414,21 +19411,20 @@
             cd55 9a 52              ORA        <CurrentPlayer_0x52                              ; = ??
             cd57 a7 84              STA        ,X=>RoomsPlayersHaveVisited_0x36b                ; we've now visited this room
             cd59 cc 03 e8           LDD        #0x3e8
-            cd5c 8c dc 1b           CMPX       #0xdc1b
-                             -- Length Override: 1 (actual length is 3)
-                             -- Fallthrough: cd5f
+            cd5c 8c                 ??         8Ch                                              ; When PC reaches here this byte and the next two are 
+                                                                                                ; interpeted as CMPX #0xdc1b which does nothing. 
                              Jump_AlreadyVisitedThisRoom                     XREF[2]:     cd44(j), cd51(j)  
             cd5d dc 1b              LDD        <ZeroValue                                       ; = ??
                              LAB_cd5f                                        XREF[1]:     cd5c  
             cd5f bd db 0c           JSR        UpdateAndPrintPlayerScore                        ; undefined UpdateAndPrintPlayerScore(undefined A, undefined B, undefine
             cd62 8e 04 55           LDX        #0x455
             cd65 ce db 04           LDU        #String_Chamber                                  ; = 12
-            cd68 bd d8 e2           JSR        PrintString                                      ; undefined PrintString(undefined param_1, undefined param_2, byte * scr
+            cd68 bd d8 e2           JSR        PrintString                                      ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
             cd6b ce 00 d0           LDU        #0xd0
             cd6e 86 24              LDA        #0x24
             cd70 d6 39              LDB        <CurrentRoomNumber_0x39                          ; = ??
             cd72 ed c4              STD        ,U=>TimerNumbers_1_0xd0                          ; = ??
-            cd74 bd d8 e2           JSR        PrintString                                      ; undefined PrintString(undefined param_1, undefined param_2, byte * scr
+            cd74 bd d8 e2           JSR        PrintString                                      ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
             cd77 7e cf 0f           JMP        GetRoomDataForCurrentRoom
                              -- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
                              LAB_cd7a                                        XREF[2]:     ccbe(j), ccc4(j)  
@@ -19456,9 +19452,8 @@
             cd8b 25 03              BCS        Jump_OffsetLeft
             cd8d cb 07              ADDB       #0x7                                             ; otherwise offset to the right.
                                                                                                 ; for some reason
-            cd8f 8c c0 04           CMPX       #LAB_c003+1
-                             -- Length Override: 1 (actual length is 3)
-                             -- Fallthrough: cd92
+            cd8f 8c                 ??         8Ch                                              ; When PC reaches here this byte and the next two are 
+                                                                                                ; interpeted as CMPX #0xc004 which does nothing. 
                              Jump_OffsetLeft                                 XREF[1]:     cd8b(j)  
             cd90 c0 04              SUBB       #0x4
                              LAB_cd92                                        XREF[1]:     cd8f  
@@ -19485,7 +19480,7 @@
                              for the 1 to 3 offset in UtilityCounter, shift the graphics i
                              by offset * 2 bits
             cdb5 96 26              LDA        <UtilityCounter_0x26                             ; = ??
-            cdb7 27 29              BEQ        ShiftBitsInSpriteDrawingBuffer::Jump_DoneWork_
+            cdb7 27 29              BEQ        Jump_DoneWork_RTS_cde2
             cdb9 c6 10              LDB        #0x10                                            ; num lines in a sprite? 16
             cdbb 8d 0c              BSR        ShiftBitsInSpriteDrawingBuffer                   ; undefined ShiftBitsInSpriteDrawingBuffer(undefined param_1, char param
             cdbd 35 40              PULS        U                                               ; pull back the drawing location into U
@@ -19566,10 +19561,10 @@
             cdfd 44                 LSRA                                                        ; shift right A
             cdfe 25 03              BCS        LAB_ce03                                         ; was there a bit? If so, jump.
             ce00 a7 84              STA        ,X=>SAM_PAGE_SELECT_REG_SAM_F0_FFC6              ; there wasn't, set the bit to disable the page
-            ce02 8c a7 01           CMPX       #0xa701                                          ; now what? don't we want to skip this and the
+            ce02 8c                 ??         8Ch                                              ; now what? don't we want to skip this and the
                                                                                                 ; setting on the odd numbered address?
-                             -- Length Override: 1 (actual length is 3)
-                             -- Fallthrough: ce05
+                                                                                                ; When PC reaches here this byte and the next two are 
+                                                                                                ; interpeted as CMPX #0xa701 which does nothing. 
                              LAB_ce03                                        XREF[1]:     cdfe(j)  
             ce03 a7 01              STA        0x1,X=>SAM_PAGE_SELECT_REG_SAM_F0_FFC7           ; set the value to the odd numbered SAM port at FFCX
                                                                                                 ; to enable the page
@@ -19587,7 +19582,7 @@
                              LoadPage1AddressToX                             XREF[2]:     UpdatePlayerSoundAndCollisionsAndPhysics:c087(c), 
                                                                                           InitRoom_Maybe:cd13(c)  
             ce0b 8e 1c 00           LDX        #VideoMemory_Page1_0x1c00                        ; = ??
-            ce0e 20 03              BRA        ClearVideoMemory_0x0400_to_0x3400::JUMP_Load0x
+            ce0e 20 03              BRA        JUMP_Load0x1bToD_ce13
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
@@ -21362,9 +21357,8 @@
             d5a6 27 12              BEQ        Jump_EncounteredFFEndValue                       ; Ju
             d5a8 4a                 DECA
             d5a9 e6 c0              LDB        ,U+                                              ; This is a repeatable command, get the count and store in B
-            d5ab 8c c6 01           CMPX       #0xc601
-                             -- Length Override: 1 (actual length is 3)
-                             -- Fallthrough: d5ae
+            d5ab 8c                 ??         8Ch                                              ; When PC reaches here this byte and the next two are 
+                                                                                                ; interpeted as CMPX #0xc601 which does nothing. 
                              Jump_SingleDrawCommand                          XREF[1]:     d5a3(j)  
             d5ac c6 01              LDB        #0x1                                             ; load 1 to B, overriding above. but why?
                              LAB_d5ae                                        XREF[1]:     d5ab  
@@ -21893,18 +21887,18 @@
                                                                                           DrawSegment_Orientation6_LeftAndUp:d7c2(c)  
             d7cd 96 21              LDA        <DrawSegment_CurrentScreenY_0x21                 ; = ??
             d7cf d6 1d              LDB        <DrawSegmentLine_Counter_0x1d                    ; = ??
-            d7d1 27 12              BEQ        Jump_DoneDrawingPixels
+            d7d1 27 12              BEQ        Jump_DoneDrawingHorizontalPixels
             d7d3 d6 25              LDB        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25   ; = ??
-                             Loop_DrawPixels                                 XREF[1]:     d7e3(j)  
+                             Loop_DrawHorizontalPixels                       XREF[1]:     d7e3(j)  
             d7d5 34 56              PSHS        U X B A
             d7d7 8d 4e              BSR        DrawPixelWithCrtArtifacts                        ; undefined DrawPixelWithCrtArtifacts(void)
             d7d9 35 56              PULS        A B X U
             d7db 0a 1d              DEC        <DrawSegmentLine_Counter_0x1d                    ; = ??
-            d7dd 27 06              BEQ        Jump_DoneDrawingPixels
+            d7dd 27 06              BEQ        Jump_DoneDrawingHorizontalPixels
             d7df ad 84              JSR        ,X                                               ; call the DrawSegment_MovePos function
             d7e1 97 21              STA        <DrawSegment_CurrentScreenY_0x21                 ; = ??
-            d7e3 20 f0              BRA        Loop_DrawPixels
-                             Jump_DoneDrawingPixels                          XREF[2]:     d7d1(j), d7dd(j)  
+            d7e3 20 f0              BRA        Loop_DrawHorizontalPixels
+                             Jump_DoneDrawingHorizontalPixels                XREF[2]:     d7d1(j), d7dd(j)  
             d7e5 39                 RTS
                              **************************************************************
                              * Draw a segment vertically pixel by pixel,                  *
@@ -21926,19 +21920,19 @@
                                                                                           DrawSegment_Orientation7_UpAndLeft:d7cb(c)  
             d7e6 96 22              LDA        <DrawSegment_CurrentScreenX_0x22                 ; = ??
             d7e8 d6 1d              LDB        <DrawSegmentLine_Counter_0x1d                    ; = ??
-            d7ea 27 12              BEQ        Jump_DoneDrawingPixels
+            d7ea 27 12              BEQ        Jump_DoneDrawingVerticalPixels
                              setup loop
             d7ec d6 25              LDB        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25   ; = ??
-                             Loop_DrawPixels                                 XREF[1]:     d7fc(j)  
+                             Loop_DrawVerticalPixels                         XREF[1]:     d7fc(j)  
             d7ee 34 56              PSHS        U X B A
             d7f0 8d 35              BSR        DrawPixelWithCrtArtifacts                        ; undefined DrawPixelWithCrtArtifacts(void)
             d7f2 35 56              PULS        A B X U
             d7f4 0a 1d              DEC        <DrawSegmentLine_Counter_0x1d                    ; = ??
-            d7f6 27 06              BEQ        Jump_DoneDrawingPixels
+            d7f6 27 06              BEQ        Jump_DoneDrawingVerticalPixels
             d7f8 ad 84              JSR        ,X                                               ; call the DrawSegment_MovePos function
             d7fa 97 22              STA        <DrawSegment_CurrentScreenX_0x22                 ; = ??
-            d7fc 20 f0              BRA        Loop_DrawPixels
-                             Jump_DoneDrawingPixels                          XREF[2]:     d7ea(j), d7f6(j)  
+            d7fc 20 f0              BRA        Loop_DrawVerticalPixels
+                             Jump_DoneDrawingVerticalPixels                  XREF[2]:     d7ea(j), d7f6(j)  
             d7fe 39                 RTS
                              **************************************************************
                              * These DrawSegment_MovePos functions work like this:        *
@@ -22137,7 +22131,7 @@
                                                                                           UpdatePlayerSoundAndCollisionsAndPhysics:c34e(j), 
                                                                                           UpdateRoomTimers:cca0(j)  
             d860 a6 3b              LDA        -0x5,Y=>Player_GameStateCounter_0x1a5            ; = ??
-            d862 27 4e              BEQ        DrawingFunctionFor3ByteWideSprites::Jump_SkipU
+            d862 27 4e              BEQ        Jump_SkipUpdate
             d864 2b 4d              BMI        Jump_StateIsFFAndUninitialized
             d866 4a                 DECA
             d867 27 03              BEQ        Jump_StateIsNowZero
@@ -22228,13 +22222,13 @@
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall PrintString(undefined param_1, undef
+                             undefined __stdcall PrintString(undefined A, undefined B
              undefined         A:1            <RETURN>
-             undefined         A:1            param_1
-             undefined         B:1            param_2
-             byte *            X:2            screenLocation
-             undefined2        Y:2            param_4
-             byte *            U:2            textStrings
+             undefined         A:1            A
+             undefined         B:1            B
+             byte *            X:2            X
+             undefined2        Y:2            Y
+             byte *            U:2            U
                              PrintString                                     XREF[11]:    UpdatePlayerSoundAndCollisionsAndPhysics:c0b2(c), 
                                                                                           UpdatePlayerSoundAndCollisionsAndPhysics:c0cc(c), 
                                                                                           UpdatePlayerSoundAndCollisionsAndPhysics:c0de(c), 
@@ -22247,20 +22241,21 @@
             d8e2 10 8e d9 08        LDY        #CharacterFont                                   ; = 00110000b
             d8e6 c6 07              LDB        #0x7                                             ; number of lines in a character. Redundant because
                                                                                                 ; it's set again below?
-            d8e8 a6 c0              LDA        ,textStrings+
+            d8e8 a6 c0              LDA        ,U+                                              ; U points to the text strings
             d8ea 2b 1b              BMI        Loop_HitEndOfString                              ; last character was 0xff
             d8ec 3d                 MUL
-            d8ed 31 ab              LEAY       param_2,param_4                                  ; Jump to the specified character in rom
+            d8ed 31 ab              LEAY       B,Y                                              ; Jump to the specified character in rom
             d8ef c6 07              LDB        #0x7                                             ; number of lines in a character
                              Loop_DrawCharacter                              XREF[1]:     d8ff(j)  
-            d8f1 a6 a0              LDA        ,param_4+=>CharacterFont                         ; get the character row
+            d8f1 a6 a0              LDA        ,Y+=>CharacterFont                               ; get the character row
             d8f3 94 69              ANDA       <CharacterDrawingMask_0x69_Nice                  ; apply the character row draw mask
-            d8f5 aa 89 18 00        ORA        0x1800,screenLocation                            ; blend into second page
-            d8f9 a7 84              STA        ,screenLocation                                  ; draw blended value to first page
-            d8fb 30 88 20           LEAX       0x20,screenLocation                              ; Go to next line
+            d8f5 aa 89 18 00        ORA        0x1800,X                                         ; blend into second page. 
+                                                                                                ; X contains the screen location
+            d8f9 a7 84              STA        ,X                                               ; draw blended value to first page
+            d8fb 30 88 20           LEAX       0x20,X                                           ; Go to next line
             d8fe 5a                 DECB
             d8ff 26 f0              BNE        Loop_DrawCharacter
-            d901 30 89 ff 21        LEAX       -0xdf,screenLocation                             ; backup by 223 bytes
+            d901 30 89 ff 21        LEAX       -0xdf,X                                          ; backup by 223 bytes
             d905 20 db              BRA        PrintString
                              Loop_HitEndOfString                             XREF[1]:     d8ea(j)  
             d907 39                 RTS
@@ -22852,7 +22847,6 @@
                                                                                           InitRoom_Maybe:cce6(c), InitRoom_Maybe:cd5f(c)  
             db0c 8d 47              BSR        ConvertDRegisterToString                         ; undefined ConvertDRegisterToString(void)
             db0e ce db 32           LDU        #PlayerScoreStringLocationPointers               ; = 00bb
-                             LAB_db11                                        XREF[1]:     UpdateJoystick_Maybe:dc8c(*)  
             db11 96 52              LDA        <CurrentPlayer_0x52                              ; = ??
             db13 84 02              ANDA       #0x2
             db15 ee c6              LDU        A,U=>PlayerScoreStringLocationPointers           ; = 00bb
@@ -23206,9 +23200,8 @@
             dc85 b6 ff 00           LDA        PIA0_A_DATA_REG__FF00
             dc88 2b 03              BMI        LAB_dc8d
             dc8a d0 11              SUBB       <SomeCounter_0x11                                ; = ??
-            dc8c 8c db 11           CMPX       #LAB_db11
-                             -- Length Override: 1 (actual length is 3)
-                             -- Fallthrough: dc8f
+            dc8c 8c                 ??         8Ch                                              ; When PC reaches here this byte and the next two are 
+                                                                                                ; interpeted as CMPX #0xdb11 which does nothing. 
                              LAB_dc8d                                        XREF[1]:     dc88(j)  
             dc8d db 11              ADDB       <0x11
                              LAB_dc8f                                        XREF[1]:     dc8c  
@@ -23228,9 +23221,8 @@
             dca5 c1 3f              CMPB       #0x3f
             dca7 26 07              BNE        LAB_dcb0
             dca9 c6 03              LDB        #0x3
-            dcab 8c c6 01           CMPX       #0xc601
-                             -- Length Override: 1 (actual length is 3)
-                             -- Fallthrough: dcae
+            dcab 8c                 ??         8Ch                                              ; When PC reaches here this byte and the next two are 
+                                                                                                ; interpeted as CMPX #0xc601 which does nothing. 
                              Jump_GoingUp                                    XREF[1]:     dca3(j)  
             dcac c6 01              LDB        #0x1
                              LAB_dcae                                        XREF[1]:     dcab  
@@ -23238,14 +23230,13 @@
                              LAB_dcb0                                        XREF[1]:     dca7(j)  
             dcb0 44                 LSRA
             dcb1 44                 LSRA
-            dcb2 27 07              BEQ        Jump_GoingLeft
+            dcb2 27 07              BEQ        Jump_JoystickGoingLeft
             dcb4 81 3f              CMPA       #0x3f
             dcb6 26 07              BNE        LAB_dcbf
             dcb8 86 02              LDA        #0x2
-            dcba 8c 86 04           CMPX       #0x8604
-                             -- Length Override: 1 (actual length is 3)
-                             -- Fallthrough: dcbd
-                             Jump_GoingLeft                                  XREF[1]:     dcb2(j)  
+            dcba 8c                 ??         8Ch                                              ; When PC reaches here this byte and the next two are 
+                                                                                                ; interpeted as CMPX #0x8604 which does nothing. 
+                             Jump_JoystickGoingLeft                          XREF[1]:     dcb2(j)  
             dcbb 86 04              LDA        #0x4
                              LAB_dcbd                                        XREF[1]:     dcba  
             dcbd 97 15              STA        <Player_JoystickDirection_0x15                   ; = ??
@@ -23260,19 +23251,19 @@
                              undefined __stdcall EnableSound(void)
              undefined         A:1            <RETURN>
                              EnableSound                                     XREF[1]:     UpdatePlayerSoundAndCollisionsAndPhysics:c075(c)  
-            dcc7 b6 ff 23           LDA        PIA1_B_CONTROL_REG_FF23
+            dcc7 b6 ff 23           LDA        PIA1_B_CONTROL_REG__FF23
             dcca 8a 08              ORA        #00001000b
-            dccc 20 05              BRA        DisableSound::JUMP_dcd3_Set_PIA1_B_CONTROL_REG
+            dccc 20 05              BRA        JUMP_dcd3_Set_PIA1_B_CONTROL_REG
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
                              undefined __stdcall DisableSound(void)
              undefined         A:1            <RETURN>
                              DisableSound                                    XREF[1]:     UpdateJoystick_Maybe:dc66(c)  
-            dcce b6 ff 23           LDA        PIA1_B_CONTROL_REG_FF23
+            dcce b6 ff 23           LDA        PIA1_B_CONTROL_REG__FF23
             dcd1 84 f7              ANDA       #11110111b
                              JUMP_dcd3_Set_PIA1_B_CONTROL_REG                XREF[1]:     EnableSound:dccc(j)  
-            dcd3 b7 ff 23           STA        PIA1_B_CONTROL_REG_FF23
+            dcd3 b7 ff 23           STA        PIA1_B_CONTROL_REG__FF23
             dcd6 39                 RTS
                              PlayerSprite_Right_Stand_0xdcd6                 XREF[1]:     dbc3(*)  
             dcd7 0a 80              dw         0000101010000000b                                ; 0000101010000000b

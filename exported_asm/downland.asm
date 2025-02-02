@@ -1,3 +1,21 @@
+; Hardware constants
+PIA0_A_DATA_REG__FF00 equ 0xff00
+PIA0_A_CONTROL_REG__FF01 equ 0xff01
+PIA0_B_DATA_REG__FF02 equ 0xff02
+PIA0_B_CTRL_REG__FF03 equ 0xff03
+VMODE_REG__FF98 equ 0xff98
+PIA1_A_DATA_REG__FF20 equ 0xff20
+PIA1_B_DATA_REG__FF22 equ 0xff22
+PIA1_B_CONTROL_REG__FF23 equ 0xff23
+PALETTE_FFB4 equ 0xffb4
+PALETTE_FFB6 equ 0xffb6
+SAM_V0_FFC0 equ 0xffc0
+SAM_V1_FFC3 equ 0xffc3
+SAM_V2_FFC5 equ 0xffc5
+SAM_PAGE_SELECT_REG_SAM_F0_FFC6 equ 0xffc6
+RomRam_MapType_FFDE equ 0xffde
+
+
 ;
 ; Coco Ram
 ; RAM:0000-RAM:3fff
@@ -353,10 +371,9 @@ BirdSprite_ClonedInRam_0x3ee2 equ 0x3ee2
 ;**************************************************************
 
 CartridgeRomStart:                                                  
+        org 0xc000
         NOP                                                          
         ORCC       #01010000b                                        
-
-LAB_c003+1:                                                         
         LDS        #StackStart_0x019f                                ; setup stack at address 415 019f
         LDX        #0x0                                              
 
@@ -365,13 +382,13 @@ Clear_Memory_Loop:
         CMPX       #0x4000                                           
         BNE        Clear_Memory_Loop                                 
 
-; Setup IRQ vector
+;Setup IRQ vector
         LDA        #0x7e                                             ; JMP instruction number
         STA        InterruptJumpInstruction_0x10c                    
         LDX        #InterruptHandler                                 ; the address of the interrupt handler
         STX        InterruptHandlerAddress_0x10d                     
 
-; init hardware register stuff
+;init hardware register stuff
         LDA        #00110101b                                        ; bit 0 VSYNC IRQ ON
                                                                      ; bit 2 DATA DIRECTION NORMAL
                                                                      ; bit 4 1
@@ -379,7 +396,7 @@ Clear_Memory_Loop:
                                                                      ; 
         STA        PIA0_B_CTRL_REG__FF03                             
         LDA        #00100000b                                        ; bit 5: swap artifact colors
-        STA        VMODE_REG                                         
+        STA        VMODE_REG__FF98                                   
         LDA        #11111110b                                        ; enable all columns except the first 
         STA        PIA0_B_DATA_REG__FF02                             ; setup keyboard columns
         LDA        PIA0_A_DATA_REG__FF00                             ; get keyboard/joystick button state
@@ -390,14 +407,11 @@ Clear_Memory_Loop:
         LDD        #0x243f                                           ; low intensity green (0x02) and faded blue (0x43) ? 
         STD        PALETTE_FFB6                                      
         LDA        #0xe8                                             
-        CMPX       #0x86f8                                           
-
-; -- Length Override: 1 (actual length is 3)
-
-; -- Fallthrough: c043
+        .db        0x8C                                              ; When PC reaches here this byte and the next two are 
+                                                                     ; interpeted as CMPX #0x86f8 which does nothing. 
 
 Jump_OverPaletteSetting:                                            
-        LDA        #11111000b                                        ; // 248
+        LDA        #0xf8                                             ; // 248
 
 LAB_c043:                                                           
         STA        <SAM_SETUP_BITS_MAYBE_0x6a                        ; store at address 106
@@ -462,8 +476,7 @@ LOOP_Clear10Bytes_c070:
         LDU        #TitleScreenBackground_DrawCommands               
         JSR        DrawBackground                                    
                                                                      ; undefined DrawBackground(void)
-
-; Print Intro Text To Screen
+;Print Intro Text To Screen
         LDU        #TextStrings                                      
         LDX        #TextScreenPositions                              
         LDA        #13                                               ; number of strings to process
@@ -473,13 +486,13 @@ Loop_PrintString:
         PSHS        X                                                
         LDX        ,X                                                ; load to X the address stored in X (c23d)
         JSR        PrintString                                       
-                                                                     ; undefined PrintString(undefined param_1, undefined param_2, byte * scr
+                                                                     ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
         PULS        X                                                
         LEAX       0x2,X                                             ; move to next screen position
         DEC        <UtilityCounter_0x26                              
         BNE        Loop_PrintString                                  
 
-; print player one score
+;print player one score
         LDU        #PlayerOneScoreString_0xbb                        
         JSR        CheckScoreStringAgainstHighScoreString            
                                                                      ; undefined CheckScoreStringAgainstHighScoreString(undefined A, undefine
@@ -488,9 +501,8 @@ Loop_PrintString:
         JSR        FindFirstNonZeroCharacterInString                 
                                                                      ; undefined FindFirstNonZeroCharacterInString(void)
         JSR        PrintString                                       
-                                                                     ; undefined PrintString(undefined param_1, undefined param_2, byte * scr
-
-; print player two score
+                                                                     ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
+;print player two score
         LDU        #PlayerTwoScoreString_0xc3                        
         JSR        CheckScoreStringAgainstHighScoreString            
                                                                      ; undefined CheckScoreStringAgainstHighScoreString(undefined A, undefine
@@ -499,30 +511,28 @@ Loop_PrintString:
         JSR        FindFirstNonZeroCharacterInString                 
                                                                      ; undefined FindFirstNonZeroCharacterInString(void)
         JSR        PrintString                                       
-                                                                     ; undefined PrintString(undefined param_1, undefined param_2, byte * scr
-
-; print high score
+                                                                     ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
+;print high score
         LDU        #HighScoreString_0xb3                             
         LDX        #DAT_16cc                                         ; screen location
         JSR        FindFirstNonZeroCharacterInString                 
                                                                      ; undefined FindFirstNonZeroCharacterInString(void)
         JSR        PrintString                                       
-                                                                     ; undefined PrintString(undefined param_1, undefined param_2, byte * scr
+                                                                     ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
         LDD        #VideoMemory_Page0_0x0400                         ; A = 0x04, B = 0x00. A is Sam Page setup bits
         JSR        SetupSAMPages                                     
                                                                      ; undefined SetupSAMPages(byte param_1)
-
-; Done drawing. Copy from page 0 to page 1
+;Done drawing. Copy from page 0 to page 1
         LDX        #VideoMemory_Page0_0x0400                         ; setup loop to copy page 0 to page 1
 
-LOOP_Copy_Page0_to_Page1:                                           
+LOOP_Copy_TitleScreen_Page0_to_Page1:                               
         LDD        ,X                                                ; load to D from two bytes of the first video page
         STD        0x1800,X                                          ; store D to the first two bytes of the second video page
         LEAX       0x2,X                                             ; move X to the next pair of bytes in video page 0
         CMPX       #VideoMemory_Page1_0x1c00                         
-        BNE        LOOP_Copy_Page0_to_Page1                          
+        BNE        LOOP_Copy_TitleScreen_Page0_to_Page1              
 
-; Some initial player setup
+;Some initial player setup
         ANDCC      #11101111b                                        ; disable interrupts, maybe
         LDA        <SelectedNumberOfPlayers_0x51                     
         STA        <CurrentNumberOfPlayers_0x50                      
@@ -683,12 +693,9 @@ Jump_InterruptNotHitYet:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall Clear512BytesInRamFrom_0x7e0
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            param_1
+;undefined __stdcall Clear512BytesInRamFrom_0x7e00_To_0x8
+;undefined         A:1            <RETURN>
+;undefined         A:1            param_1
 
 Clear512BytesInRamFrom_0x7e00_To_0x8000:                            
         LDX        #0x7e00                                           
@@ -701,10 +708,8 @@ LAB_c1f9:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall WaitForVSync_Maybe(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall WaitForVSync_Maybe(void)
+;undefined         A:1            <RETURN>
 
 WaitForVSync_Maybe:                                                 
         PSHS        CC                                               
@@ -719,10 +724,8 @@ LoopUntilInterruptChanges0x14:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall ClearTimerAndScoreStrings(vo
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall ClearTimerAndScoreStrings(void)
+;undefined         A:1            <RETURN>
 
 ClearTimerAndScoreStrings:                                          
         LDX        #PlayerOneScoreString_0xbb                        
@@ -734,10 +737,8 @@ Loop_ClearCharacter:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall SetupStringEndCharactersForD
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall SetupStringEndCharactersForDynamicSt
+;undefined         A:1            <RETURN>
 
 SetupStringEndCharactersForDynamicStrings:                          
         LDA        #0xff                                             
@@ -751,20 +752,13 @@ Jump_ToRTS:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall CheckScoreStringAgainstHighS
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            A
-
-; undefined         B:1            B
-
-; undefined2        X:2            X
-
-; undefined2        Y:2            Y
-
-; byte *            U:2            U
+;undefined __stdcall CheckScoreStringAgainstHighScoreStri
+;undefined         A:1            <RETURN>
+;undefined         A:1            A
+;undefined         B:1            B
+;undefined2        X:2            X
+;undefined2        Y:2            Y
+;byte *            U:2            U
 
 CheckScoreStringAgainstHighScoreString:                             
         LDX        #HighScoreString_0xb3                             
@@ -791,21 +785,21 @@ Loop_NextCharacterToCopy:
         BRA        Loop_NextCharacterToCopy                          
 
 TextScreenPositions:                                                
-        dw         07C9h                                             ; Downland V1.1
+        .dw        0x07C9                                            ; Downland V1.1
 
 WORD_c23f:                                                          
-        dw         090Ah                                             ; Written By:
-        dw         0A47h                                             ; Micheal Aichlmayr
-        dw         0B89h                                             ; Copyright 1983
-        dw         0CC6h                                             ; Spectral Associates
-        dw         0E0Ah                                             ; Licensed To
-        dw         0F47h                                             ; Tandy Corporation
-        dw         1086h                                             ; All rights reserved
-        dw         1305h                                             ; One Player
-        dw         1311h                                             ; Two Player
-        dw         158Bh                                             ; High Score
-        dw         1806h                                             ; Player One
-        dw         1946h                                             ; Player Two
+        .dw        0x090A                                            ; Written By:
+        .dw        0x0A47                                            ; Micheal Aichlmayr
+        .dw        0x0B89                                            ; Copyright 1983
+        .dw        0x0CC6                                            ; Spectral Associates
+        .dw        0x0E0A                                            ; Licensed To
+        .dw        0x0F47                                            ; Tandy Corporation
+        .dw        0x1086                                            ; All rights reserved
+        .dw        0x1305                                            ; One Player
+        .dw        0x1311                                            ; Two Player
+        .dw        0x158B                                            ; High Score
+        .dw        0x1806                                            ; Player One
+        .dw        0x1946                                            ; Player Two
 
 Jump_PerformObjectBoundingBoxCollisions:                            
         PULS        Y                                                
@@ -898,14 +892,14 @@ Jump_CollidesWithObjectThatKills:
 Jump_CollidesWithPickup:                                            
         LDA        <CurrentPlayer_0x52                               
 
-; figure out which player bit to turn off for the
+;figure out which player bit to turn off for the picked up tre
         COMA                                                         
         ANDA       ,Y                                                
         STA        ,Y                                                
         LDB        0x4,Y                                             
         BMI        Jump_SkipDoorActivation                           
 
-; activate the door for the picked up key
+;activate the door for the picked up key
         LDX        #Player_DoorStateData_0x3ec0                      
         LEAX       B,X                                               
         LDA        ,X                                                
@@ -942,7 +936,7 @@ Jump_SkipDoorActivation:
         DECA                                                         
         BEQ        Jump_IsMoneyBag                                   
 
-; at this point, it's a key
+;at this point, it's a key
         CLRA                                                         
         ADDD       #0xc8                                             ; pick up points
         BRA        Jump_AddToScore                                   
@@ -966,29 +960,24 @@ Jump_AddToScore:
         LDY        #Player_PhysicsData_0x1aa                         
         JMP        EraseAndUpdateAndDrawObject                       
 
-; -- Flow Override: CALL_RETURN (COMPUTED_CALL_TER
+;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
 ;**************************************************************
 ;* Clears the sprite graphics from page 0                     *
 ;* How: copies two bytes from page1 to page0 for              *
 ;* the number of lines specified in UtilityCounter_0x26       *
 ;**************************************************************
-
-; undefined __stdcall ClearPickupFromScreen(undefi
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            A
-
-; undefined         B:1            B
-
-; undefined2 *      X:2            X
+;undefined __stdcall ClearPickupFromScreen(undefined A, u
+;undefined         A:1            <RETURN>
+;undefined         A:1            A
+;undefined         B:1            B
+;undefined2 *      X:2            X
 
 ClearPickupFromScreen:                                              
-        ??         ECh                                               ; load value to D on second page
+        .db        0xEC                                              ; load value to D on second page
                                                                      ; 
-        ??         89h                                               
-        ??         18h                                               
-        ??         00h                                               
+        .db        0x89                                              
+        .db        0x18                                              
+        .db        0x00                                              
         STD        ,X                                                ; store D to first page
         LEAX       0x20,X                                            ; move to next line
         DEC        <UtilityCounter_0x26                              
@@ -997,14 +986,10 @@ ClearPickupFromScreen:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall PlaySound(undefined A, undef
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            A
-
-; undefined         B:1            B
+;undefined __stdcall PlaySound(undefined A, undefined B)
+;undefined         A:1            <RETURN>
+;undefined         A:1            A
+;undefined         B:1            B
 
 PlaySound:                                                          
         STA        <SecondUtilityCounter_0x4d                        
@@ -1023,10 +1008,8 @@ Loop_UpdateRegisters:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DoIdleLoopOnB(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall DoIdleLoopOnB(void)
+;undefined         A:1            <RETURN>
 
 DoIdleLoopOnB:                                                      
         LDB        <SecondUtilityCounter_0x4d                        
@@ -1038,10 +1021,8 @@ Loop_DecrementB:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall TestPlayerObjectCollision(vo
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall TestPlayerObjectCollision(void)
+;undefined         A:1            <RETURN>
 
 TestPlayerObjectCollision:                                          
         LDX        #Player_PhysicsData_0x1aa                         
@@ -1083,23 +1064,17 @@ Jump_HasCollision:
         LDA        #0xff                                             
         RTS                                                          
 
-Jump_Return:                                                        
+Jump_Return_Helper:                                                 
         RTS                                                          
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall UpdatePlayerSoundAndCollisio
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            A
-
-; undefined         B:1            B
-
-; ushort *          X:2            X
-
-; Stack[-0x2]:2  previousFunctionOnStack_Maybe
+;undefined __stdcall UpdatePlayerSoundAndCollisionsAndPhy
+;undefined         A:1            <RETURN>
+;undefined         A:1            A
+;undefined         B:1            B
+;ushort *          X:2            X
+;undefined2        Stack[-0x2]:2  previousFunctionOnStack_Maybe           XREF[1]:     c69f(*)
 
 UpdatePlayerSoundAndCollisionsAndPhysics:                           
         LDY        #Player_PhysicsData_0x1aa                         
@@ -1111,31 +1086,24 @@ UpdatePlayerSoundAndCollisionsAndPhysics:
 
 Jump_SkipPlaySound:                                                 
         LDA        -0x5,Y                                            
-        BEQ        Jump_IsAlreadyClimbing::Jump_Return               ; inactive, so just return
+        BEQ        Jump_Return_Helper                                ; inactive, so just return
         CMPA       #0x1                                              ; check if the game is currently in a room transition
         LBEQ       Jump_HandlePlayerJumpAndRope                      ; it is in a screen transition
         LDA        <Player_DeathPauseInTheAirTimer                   ; are we in a death animation?
         LBNE       Jump_PlayerStillDyingInTheAir                     
         LDA        -0x2,Y                                            
-        LBMI       BigInitFunction_Maybe::Jump_JoystickCheck         ; jump if player state is FF
+        LBMI       Jump_JoystickCheck                                ; jump if player state is FF
         LBNE       Jump_PlayerIsDeadSoSkipStuff                      ; jump if the state is 1 or more
         INC        -0xa,Y                                            
 
-; The "mysterious sprites" located between the pla
-
-; ball sprites in rom data are masks used to extra
-
-; lines across the player sprite on the screen. Th
-
-; lines are then compared to a clean version of th
-
-; sprite overlaid a clean background. Any differen
-
-; the extracted pixels and the clean version trigg
-
-; jump to a bounding box collision check against a
-
-; moving objects.
+;The "mysterious sprites" located between the player and
+;ball sprites in rom data are masks used to extract five
+;lines across the player sprite on the screen. The extracted
+;lines are then compared to a clean version of the player
+;sprite overlaid a clean background. Any differences between
+;the extracted pixels and the clean version triggers a
+;jump to a bounding box collision check against all the
+;moving objects.
         LDU        #Player_CollisionMasks_InRam_0x3b80               ; location of the collision masks in RAM
         LDA        -0x8,Y                                            
         LDB        #0x3c                                             ; size of the four collision masks for a frame along 4 pixels
@@ -1168,19 +1136,13 @@ Jump_DontAdjustU:
         LDA        #0x5                                              ; five lines of the sprite
         STA        <UtilityCounter_0x26                              
 
-; X - video page location of player sprite on scre
-
-; Y - player sprite utility buffer
-
-; U - player collision mask for current frame and
-
-; x position
-
-; Fill the buffer with the pixels around the playe
-
-; background. Then later it's compared with the pl
-
-; in ram. Any differences means that there's a col
+;X - video page location of player sprite on screen (1 pixel d
+;Y - player sprite utility buffer
+;U - player collision mask for current frame and
+;x position
+;Fill the buffer with the pixels around the player and the
+;background. Then later it's compared with the player sprite
+;in ram. Any differences means that there's a collision with
 
 something.:                                                         
 
@@ -1188,8 +1150,7 @@ Loop_FillPlayerCollisionMaskBuffer:
         PULU        A B                                              ; fill A and B, move U up two bytes
                                                                      ; they are masks that decide what pixels to keep 
                                                                      ; when extracting from the screen
-
-; first byte of line
+;first byte of line
         ANDA       ,X                                                ; keep only the screen pixel bits that correspond 
                                                                      ; to the mask bits
                                                                      ; screen: 01010101
@@ -1200,12 +1161,12 @@ Loop_FillPlayerCollisionMaskBuffer:
                                                                      ; pixels.
         STA        ,Y+                                               ; store in the the collision mask extraction buffer
 
-; second byte of line
+;second byte of line
         ANDB       0x1,X                                             ; do all the same for B
         ORB        0x1801,X                                          
         STB        ,Y+                                               
 
-; third byte of line
+;third byte of line
         PULU        A                                                ; do the same for the third byte of the current line
         ANDA       0x2,X                                             
         ORA        0x1802,X                                          
@@ -1214,7 +1175,7 @@ Loop_FillPlayerCollisionMaskBuffer:
         DEC        <UtilityCounter_0x26                              
         BNE        Loop_FillPlayerCollisionMaskBuffer                
 
-; get the current player animation frame
+;get the current player animation frame
         PULS        Y                                                
         LDU        #SpriteData_ClonedDestination_0x3400              
         LDA        -0x8,Y                                            
@@ -1242,40 +1203,31 @@ Jump_DontAdjustUAgain:
         LDA        #0x5                                              ; num sprite collision mask rows
         STA        <UtilityCounter_0x26                              
 
-; U - player sprite
-
-; X - second video memory page
-
-; Y - sprite utility buffer
-
-; The utility buffer contains the extracted player
-
-; background pixels for five lines. And then it tr
-
-; compare those lines with the ones from the playe
-
-; in ram and the clean background.
-
-; Any differences in pixels means that the player
-
-; overlapping an object and so it jumps to the bou
-
-; box collision functions.
+;U - player sprite
+;X - second video memory page
+;Y - sprite utility buffer
+;The utility buffer contains the extracted player and
+;background pixels for five lines. And then it tries to
+;compare those lines with the ones from the player sprite
+;in ram and the clean background.
+;Any differences in pixels means that the player is
+;overlapping an object and so it jumps to the bounding
+;box collision functions.
 
 Loop_CheckCollisionMaskLine:                                        
         PULU        A B                                              ; get the first two sprite bytes
 
-; test first byte
+;test first byte
         ORA        ,X                                                ; blend with the byte from the clean background
         CMPA       ,Y+                                               ; check against the collision mask buffer for differences
         LBNE       Jump_PerformObjectBoundingBoxCollisions           
 
-; test second byte
+;test second byte
         ORB        0x1,X                                             
         CMPB       ,Y+                                               
         LBNE       Jump_PerformObjectBoundingBoxCollisions           
 
-; test third byte
+;test third byte
         PULU        A                                                
         ORA        0x2,X                                             
         CMPA       ,Y+                                               
@@ -1286,7 +1238,7 @@ Loop_CheckCollisionMaskLine:
         BNE        Loop_CheckCollisionMaskLine                       
         PULS        Y                                                
 
-; At this point, the player isn't colliding with a
+;At this point, the player isn't colliding with any objects
 
 Jump_HandlePlayerJumpAndRope:                                       
         LDA        <Player_JumpUpInTheAirCounter_0x2c                
@@ -1298,17 +1250,14 @@ Jump_HandlePlayerJumpAndRope:
 Jump_PlayerIsDeadSoSkipStuff:                                       
         BSR        ComputeSomeScreenOffset_Maybe                     ; char ComputeSomeScreenOffset_Maybe(void)
 
-; At this point
-
-; B -> 0 or 1
-
-; X -> 0, 2, 4, 6
+;At this point
+;B -> 0 or 1
+;X -> 0, 2, 4, 6
         LEAX       0x200,X                                           ; sixteen pixels down
         LDU        #PlayerFloorCollisionMask                         
         LDD        A,U                                               ; A will contain offset into the array for the 
                                                                      ; x position
-
-; detecting whether we're standing or not, maybe
+;detecting whether we're standing or not, maybe
         ANDA       0x1800,X                                          
         ANDB       0x1801,X                                          
         CMPD       <ZeroValue                                        ; check if A and B are empty. if they are
@@ -1345,10 +1294,8 @@ Jump_NotHitTerminalVelocity:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; char __stdcall ComputeSomeScreenOffset_Maybe(voi
-
-; char              A:1            <RETURN>
+;char __stdcall ComputeSomeScreenOffset_Maybe(void)
+;char              A:1            <RETURN>
 
 ComputeSomeScreenOffset_Maybe:                                      
         LDX        #SomeKindOfHorizontalBitOffsetTable               ; set X to this table
@@ -1377,40 +1324,38 @@ Jump_PlayerLandingIsSafe:
         BNE        Jump_PlayerIsDead_Maybe                           
 
 Jump_NotTouchingGround:                                             
-        JMP        BigInitFunction_Maybe::Jump_JumpToClimbingRope    
+        JMP        Jump_JumpToClimbingRopeSubroutine                 
 
 SomeKindOfHorizontalBitOffsetTable:                                 
-        db         0h                                                
-        db         0h                                                
-        db         0h                                                
-        db         1h                                                
+        .db        0x0                                               
+        .db        0x0                                               
+        .db        0x0                                               
+        .db        0x1                                               
 
 PlayerFloorCollisionMask:                                           
-        dw         0000001111000000b                                 
-        dw         0000000011110000b                                 
-        dw         0000000000111100b                                 
-        dw         0000111100000000b                                 
+        .dw        0000001111000000b                                 
+        .dw        0000000011110000b                                 
+        .dw        0000000000111100b                                 
+        .dw        0000111100000000b                                 
 
 Ball_WideCollisionMask:                                             
-        dw         0011111111110000b                                 
-        dw         0000111111111100b                                 
-        dw         0000001111111111b                                 
-        dw         1111111111000000b                                 
+        .dw        0011111111110000b                                 
+        .dw        0000111111111100b                                 
+        .dw        0000001111111111b                                 
+        .dw        1111111111000000b                                 
 
-RopeShapeLookupTable_Maybe+1:                                       
+RopeShapeLookupTable_Maybe_1:                                       
 
 RopeShapeLookupTable_Maybe:                                         
-        dw         0000001100000000b                                 
-        dw         0000000011000000b                                 
-        dw         0000000000110000b                                 
-        dw         0000110000000000b                                 
+        .dw        0000001100000000b                                 
+        .dw        0000000011000000b                                 
+        .dw        0000000000110000b                                 
+        .dw        0000110000000000b                                 
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall ClearSpeedToZero(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall ClearSpeedToZero(void)
+;undefined         A:1            <RETURN>
 
 ClearSpeedToZero:                                                   
         LDD        <ZeroValue                                        
@@ -1424,7 +1369,7 @@ Jump_PlayerIsNotFalling:
         BNE        Jump_PlayerIsDead_Maybe                           
         LDD        ,Y                                                
         CMPD       #0x100                                            
-        LBNE       BigInitFunction_Maybe::Jump_PlayerLanding_Maybe   
+        LBNE       Jump_PlayerLanding_Maybe                          
 
 Jump_PerformPlayerDeath:                                            
         BSR        ClearSpeedToZero                                  ; undefined ClearSpeedToZero(void)
@@ -1445,11 +1390,8 @@ Jump_PlayerStillDyingInTheAir:
         BEQ        Jump_FaceLeftInTheAir                             
         LDA        #0xff                                             ; set facing right
         STA        -0x4,Y                                            
-        CMPX       #0x6f3c                                           
-
-; -- Length Override: 1 (actual length is 3)
-
-; -- Fallthrough: c55d
+        .db        0x8C                                              ; When PC reaches here this byte and the next two are 
+                                                                     ; interpeted as CMPX #0x6f3c which does nothing. 
 
 Jump_FaceLeftInTheAir:                                              
         CLR        -0x4,Y                                            ; set facing left
@@ -1464,7 +1406,7 @@ Jump_PlayerStartDeathFallling:
         STA        -0x3,Y                                            
         LDA        #0x2                                              ; set to the mid-air jump frame
         STA        -0x2,Y                                            
-        JMP        Jump_IsAlreadyClimbing::Jump_Return               
+        JMP        Jump_Return_Helper                                
 
 Jump_PlayerIsDead_Maybe:                                            
         LDA        <Player_IsFalling_0x2d                            
@@ -1474,9 +1416,8 @@ Jump_PlayerIsDead_Maybe:
         DECA                                                         
         BEQ        LAB_c5ac                                          
 
-; clear from 0x83 to 0xb3 for the
-
-; sprite drawing buffer
+;clear from 0x83 to 0xb3 for the
+;sprite drawing buffer
         LDX        #SpriteDrawingBuffer_0x83                         
         LDA        #0x30                                             ; clean 48 bytes
 
@@ -1485,7 +1426,7 @@ Loop_ClearSpriteDrawingBuffer:
         DECA                                                         
         BNE        Loop_ClearSpriteDrawingBuffer                     
 
-; from 0x98 to 0xb3, load the splat sprite
+;from 0x98 to 0xb3, load the splat sprite
         LDX        #PlayerSplatSpriteInRam_0x98                      
         LDU        #PlayerSplatSprite                                
         LDA        #0x1b                                             ; 27 bytes. 9 lines of 3 bytes each
@@ -1500,7 +1441,7 @@ Loop_LoadUndentifiedData:
                                                                      ; so, for every four pixels...
         BEQ        Jump_PlaySplatSound                               ; don't need to adjust if we are on pixel 0
 
-; adjust the sprite to draw
+;adjust the sprite to draw
         STA        <UtilityCounter_0x26                              ; pixel offset
         LDB        #0x10                                             ; 16 lines in the sprite
         JSR        ShiftBitsInSpriteDrawingBuffer                    ; undefined ShiftBitsInSpriteDrawingBuffer(undefined param_1, char param
@@ -1509,13 +1450,13 @@ Jump_PlaySplatSound:
         LDD        #0x2508                                           ; setup A and B parameters for splat sound 
         JSR        PlaySound                                         ; play splat sound
 
-; perform actual drawing of sprite
+;perform actual drawing of sprite
         LDU        #SpriteDrawingBuffer_0x83                         
         JSR        DrawLifeIconsAndPlayerRegeneration                ; undefined DrawLifeIconsAndPlayerRegeneration(undefined A, undefined B,
 
 LAB_c5ac:                                                           
         DEC        -0x3,Y                                            
-        LBNE       Jump_IsAlreadyClimbing::Jump_Return               
+        LBNE       Jump_Return_Helper                                
         DEC        -0x2,Y                                            
         BEQ        ResetTimerTo2048IfAtZeroWhenDied_Maybe            
         LDA        #0xc                                              
@@ -1525,14 +1466,12 @@ LAB_c5ac:
         STA        -0x1,Y                                            
         LDA        #0x46                                             
         STA        -0x3,Y                                            
-        LBRA       Jump_IsAlreadyClimbing::Jump_Return               
+        LBRA       Jump_Return_Helper                                
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall GetPlayerLivesAddress(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall GetPlayerLivesAddress(void)
+;undefined         A:1            <RETURN>
 
 GetPlayerLivesAddress:                                              
         LDX        #PlayerLivesAddresses                             
@@ -1542,16 +1481,16 @@ GetPlayerLivesAddress:
         RTS                                                          
 
 PlayerLivesAddresses:                                               
-        addr       PlayerOne_Lives                                   
-        addr       PlayerTwo_Lives                                   
+        .dw        PlayerOne_Lives                                   
+        .dw        PlayerTwo_Lives                                   
 
 AddressesToSomePlayerData:                                          
-        addr       Player1_SomeDataAddress_Always0Maybe              
-        addr       Player2_SomeDataAddress_Always0Maybe              
+        .dw        Player1_SomeDataAddress_Always0Maybe              
+        .dw        Player2_SomeDataAddress_Always0Maybe              
 
 PTR_String_GetReadyPlayerOne_c5da:                                  
-        addr       String_GetReadyPlayerOne                          
-        addr       String_GetReadyPlayerTwo                          
+        .dw        String_GetReadyPlayerOne                          
+        .dw        String_GetReadyPlayerTwo                          
 
 ResetTimerTo2048IfAtZeroWhenDied_Maybe:                             
         LDA        Bird_InitState_0x1cf                              
@@ -1612,7 +1551,7 @@ DoneSetupPlayer_DrawGetReadyScreen:
         LDX        #PTR_String_GetReadyPlayerOne_c5da                
         LDU        A,X                                               
         LDX        #DAT_0f66                                         
-        JSR        PrintString                                       ; undefined PrintString(undefined param_1, undefined param_2, byte * scr
+        JSR        PrintString                                       ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
         JSR        WaitForVSync_Maybe                                ; undefined WaitForVSync_Maybe(void)
         ANDCC      #0xef                                             
         LDD        #VideoMemory_Page0_0x0400                         ; A = 0x04, B = 0x00. A is Sam Page setup bits
@@ -1625,7 +1564,7 @@ LOOP_Copy_Page0_to_Page1:
         CMPX       #VideoMemory_Page1_0x1c00                         
         BNE        LOOP_Copy_Page0_to_Page1                          
 
-; Init drops
+;Init drops
         JSR        InitDrops                                         ; undefined InitDrops(void)
         LDA        #10                                               ; menu screen room number
         STA        <NumberOfDropsToProcess_0x3f                      ; set to 10 drops
@@ -1663,18 +1602,12 @@ Jump_IncrementGameState:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall BigInitFunction_Maybe(undefi
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            A
-
-; undefined         B:1            B
-
-; byte *            X:2            X
-
-; short *           Y:2            Y
+;undefined __stdcall BigInitFunction_Maybe(undefined A, u
+;undefined         A:1            <RETURN>
+;undefined         A:1            A
+;undefined         B:1            B
+;byte *            X:2            X
+;short *           Y:2            Y
 
 BigInitFunction_Maybe:                                              
         LDA        #0x28                                             ; 40 frames for initial pause when the game starts
@@ -1718,9 +1651,8 @@ Jump_CheckActiveRegenTimers:
         BNE        Jump_RegenTimersNotDone                           
         PSHS        Y                                                
 
-; The player stopped regenerating, so erase the
-
-; regenerating head icon for the current life.
+;The player stopped regenerating, so erase the
+;regenerating head icon for the current life.
         LDY        #CurrentPlayerSpritePointer_0x1e9                 
         JSR        GetPlayerLivesAddress                             ; undefined GetPlayerLivesAddress(void)
         LDA        ,X                                                
@@ -1739,9 +1671,8 @@ Loop_ClearHeadIcon:
         DEC        <UtilityCounter_0x26                              
         BNE        Loop_ClearHeadIcon                                
 
-; clear the screen for the area covered by the
-
-; regenerating player
+;clear the screen for the area covered by the
+;regenerating player
         PULS        Y                                                
         CLR        -0x2,Y                                            ; set to alive state
         LDX        0x8,Y                                             
@@ -1784,23 +1715,23 @@ Jump_ProcessPlayerControls_Maybe:
         CMPA       #0x2                                              ; compare to going right
         BEQ        Jump_GoingRight                                   
         CMPA       #0x4                                              ; compare to going left
-        BEQ        Jump_GoingLeft                                    ; Jump_GoingLeft
+        BEQ        Jump_PlayerGoingLeft                              ; Jump_GoingLeft
         CLR        <Player_JumpUpInTheAirCounter_0x2c                
         CLR        <Player_CantJumpAfterLandingCounter_Maybe_0x2f    
         CLR        <Player_SafeLandingFromFalling_0x2e               
         BRA        Jump_HandleRun                                    
 
-Jump_GoingLeft:                                                     
+Jump_PlayerGoingLeft:                                               
         CLR        -0x4,Y                                            ; set the facing direction to 0
         LDD        #0xffca                                           ; speed -54
-        BRA        Jump_UpdateSpeed                                  
+        BRA        Jump_UpdateSpeed_X                                
 
 Jump_GoingRight:                                                    
         LDA        #0xff                                             
         STA        -0x4,Y                                            ; set the facing direction to FF
         LDD        #0x36                                             ; speed 54
 
-Jump_UpdateSpeed:                                                   
+Jump_UpdateSpeed_X:                                                 
         STD        0x2,Y                                             
 
 LAB_c763:                                                           
@@ -1880,7 +1811,7 @@ Player_IsNotJumping:
         CMPA       #0x3                                              ; going down?
         BEQ        Jump_MovingDown_Maybe                             
 
-; handling going left, maybe
+;handling going left, maybe
         LDA        -0x4,Y                                            
         BEQ        Jump_FacingLeft_Already                           
         CLR        <Player_MoveLeftRightHoldingRopeCounter_0x36      
@@ -1890,19 +1821,19 @@ Jump_FacingLeft_Already:
         LDA        -0xb,Y                                            
         BEQ        Jump_UpdateLeftSpeed                              
 
-; Pressing left while holding on to the rope to go
+;Pressing left while holding on to the rope to go one handed
         JSR        ClearSpeedToZero                                  ; undefined ClearSpeedToZero(void)
         INC        <Player_MoveLeftRightHoldingRopeCounter_0x36      
         LDA        <Player_MoveLeftRightHoldingRopeCounter_0x36      
         CMPA       #InterruptHasBeenHitCounter_0x14                  
         BHI        Jump_HandleGoingToOneHandedRope                   
         LDD        <ZeroValue                                        
-        BRA        Jump_UpdateSpeed                                  
+        BRA        Jump_UpdateSpeed_Y                                
 
 Jump_UpdateLeftSpeed:                                               
         LDD        #0xffca                                           ; speed going left
 
-Jump_UpdateSpeed:                                                   
+Jump_UpdateSpeed_Y:                                                 
         STD        0x2,Y                                             
         BRA        Jump_SetRunRightAnimationFrame                    
 
@@ -1957,7 +1888,7 @@ LAB_c83f:
         LDA        -0xb,Y                                            
         BEQ        Jump_SetRightSpeed                                
 
-; Handle pressing right to go one handed while hol
+;Handle pressing right to go one handed while holding rope
         JSR        ClearSpeedToZero                                  ; undefined ClearSpeedToZero(void)
         INC        <Player_MoveLeftRightHoldingRopeCounter_0x36      
         LDA        <Player_MoveLeftRightHoldingRopeCounter_0x36      
@@ -2000,9 +1931,9 @@ Jump_AnimationFrameIsSet:
 LAB_c879:                                                           
         LDA        -0xb,Y                                            
         CMPA       #0x1                                              
-        BEQ        Jump_IsAlreadyClimbing::Jump_ApplyPlayerPhysics   
+        BEQ        Jump_ApplyPlayerPhysics                           
 
-; Check whether the player is touching a vine/rope
+;Check whether the player is touching a vine/rope
         JSR        ComputeSomeScreenOffset_Maybe                     ; char ComputeSomeScreenOffset_Maybe(void)
         LEAX       0x100,X                                           ; eight pixels underneath. midheight on player sprite?
         LDU        #RopeShapeLookupTable_Maybe                       
@@ -2022,7 +1953,7 @@ LAB_c8a4:
         LDA        -0xb,Y                                            
         BMI        Jump_IsAlreadyClimbing                            
 
-; Set player as climbing
+;Set player as climbing
         LDA        #0xff                                             
         STA        -0xb,Y                                            
         JSR        ClearSpeedToZero                                  ; undefined ClearSpeedToZero(void)
@@ -2030,20 +1961,17 @@ LAB_c8a4:
         CLR        <Player_SafeLandingFromFalling_0x2e               
         BRA        Jump_IsAlreadyClimbing                            ; undefined Jump_IsAlreadyClimbing(undefined A, undefined B, char * X, s
 
-; -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
 
 Jump_NotTouchingRope_Maybe:                                         
         CLR        -0xb,Y                                            
-        BRA        Jump_IsAlreadyClimbing::Jump_ApplyPlayerPhysics   
+        BRA        Jump_ApplyPlayerPhysics                           
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; byte __stdcall RopeCollisionTest(byte param_1)
-
-; byte              A:1            <RETURN>
-
-; byte              A:1            param_1
+;byte __stdcall RopeCollisionTest(byte param_1)
+;byte              A:1            <RETURN>
+;byte              A:1            param_1
 
 RopeCollisionTest:                                                  
         JSR        TerrainCollisionTest                              ; byte TerrainCollisionTest(byte A)
@@ -2054,18 +1982,12 @@ RopeCollisionTest:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall Jump_IsAlreadyClimbing(undef
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            A
-
-; undefined         B:1            B
-
-; char *            X:2            X
-
-; short *           Y:2            Y
+;undefined __stdcall Jump_IsAlreadyClimbing(undefined A,
+;undefined         A:1            <RETURN>
+;undefined         A:1            A
+;undefined         B:1            B
+;char *            X:2            X
+;short *           Y:2            Y
 
 Jump_IsAlreadyClimbing:                                             
         LDA        <Player_JumpUpInTheAirCounter_0x2c                
@@ -2190,22 +2112,14 @@ LAB_c990:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawLifeIconsAndPlayerRegene
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            A
-
-; undefined         B:1            B
-
-; char *            X:2            X
-
-; short             Y:2            Y
-
-; ushort            U:2            U
-
-; Check whether we need to draw the player
+;undefined __stdcall DrawLifeIconsAndPlayerRegeneration(u
+;undefined         A:1            <RETURN>
+;undefined         A:1            A
+;undefined         B:1            B
+;char *            X:2            X
+;short             Y:2            Y
+;ushort            U:2            U
+;Check whether we need to draw the player
 
 DrawLifeIconsAndPlayerRegeneration:                                 
         STU        0xa,Y                                             
@@ -2217,7 +2131,7 @@ DrawLifeIconsAndPlayerRegeneration:
                                                                      ; If so, then skip to draw
         LDU        0x8,Y                                             
         CMPU       0xc,Y                                             
-        LBEQ       Jump_IsAlreadyClimbing::Jump_Return               ; Is the current draw position and the previous draw position
+        LBEQ       Jump_Return_Helper                                ; Is the current draw position and the previous draw position
                                                                      ; the same?
                                                                      ; If so, then jump to return
         INC        <Player_NeedsUpdate_Maybe_0x48                    
@@ -2227,7 +2141,7 @@ Jump_ContinueDrawing:
         LDA        -0x2,Y                                            
         LBGT       Jump_PlayerIsDead                                 
 
-; Reinits the player animations for regeneration
+;Reinits the player animations for regeneration
         LDB        -0x4,Y                                            
         PSHS        Y                                                
         LDY        #CurrentPlayerSpritePointer_0x1e9                 
@@ -2264,9 +2178,8 @@ Jump_SkipDecrementLives:
         CMPA       #0x1                                              
         LBNE       Loop_DrawHeadLifeIcon                             ; if we're not at the last life icon, just draw it normally
 
-; At this point I think it's the regenerating
-
-; head life icon
+;At this point I think it's the regenerating
+;head life icon
         LDU        #SpriteData_ClonedDestination_0x3400              ; address to the facing right player sprites
         LDA        -0x4,Y                                            
         BNE        Jump_SkipGettingLeftFacingSprites                 
@@ -2281,7 +2194,7 @@ Jump_SkipGettingLeftFacingSprites:
 Loop_DrawRegenHeadLifeIcon:                                         
         LDD        ,U                                                ; get the first two bytes of the sprite
 
-; mess around the two bytes of the sprite
+;mess around the two bytes of the sprite
         LSLA                                                         
         LSLB                                                         
         ORA        ,U+                                               
@@ -2290,10 +2203,8 @@ Loop_DrawRegenHeadLifeIcon:
         ANDB       ,Y+                                               
         STD        ,X                                                ; draw the messed up bytes to the address in the
                                                                      ; first page of video memory stored in X
-
-; do the same to the third byte of the sprite's th
-
-; bytes per line
+;do the same to the third byte of the sprite's three
+;bytes per line
         LDA        ,U                                                
         LSLA                                                         
         ORA        ,U+                                               
@@ -2303,7 +2214,7 @@ Loop_DrawRegenHeadLifeIcon:
         DEC        <UtilityCounter_0x26                              
         BNE        Loop_DrawRegenHeadLifeIcon                        
 
-; draw player sprite in regeneration mode
+;draw player sprite in regeneration mode
         LDY        #Player_PhysicsData_0x1aa                         
         LDX        0x8,Y                                             
         STX        0xc,Y                                             
@@ -2322,14 +2233,13 @@ Loop_DrawRegenHeadLifeIcon:
         TFR        PC,Y                                              ; setup Y to become a random data generator
         LEAY       B,Y                                               
 
-; draw the player sprite but use random data and
-
-; bit manipulation to generate the static effect
+;draw the player sprite but use random data and
+;bit manipulation to generate the static effect
 
 Loop_DrawRegenPlayerSprite:                                         
         LDD        ,U                                                ; load the first two bytes of the player sprite
 
-; mess around the pixel bytes
+;mess around the pixel bytes
         LSLA                                                         
         LSLB                                                         
         ORA        ,U+                                               
@@ -2340,7 +2250,7 @@ Loop_DrawRegenPlayerSprite:
         ORB        0x1801,X                                          
         STD        ,X                                                ; draw the pixels to the first page of video memory
 
-; do the same for the third byte
+;do the same for the third byte
         LDA        ,U                                                
         LSLA                                                         
         ORA        ,U+                                               
@@ -2351,7 +2261,7 @@ Loop_DrawRegenPlayerSprite:
         DEC        <UtilityCounter_0x26                              
         BNE        Loop_DrawRegenPlayerSprite                        
 
-; we're done, so return
+;we're done, so return
         PULS        Y                                                
         RTS                                                          
 
@@ -2378,12 +2288,9 @@ Jump_PlayerIsDead:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; byte __stdcall TerrainCollisionTest(byte A)
-
-; byte              A:1            <RETURN>
-
-; byte              A:1            A
+;byte __stdcall TerrainCollisionTest(byte A)
+;byte              A:1            <RETURN>
+;byte              A:1            A
 
 TerrainCollisionTest:                                               
         STA        <SomeValue_0x34                                   ; store pixel from A here
@@ -2406,10 +2313,8 @@ Jump_ToBallInit:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall UpdateBall(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall UpdateBall(void)
+;undefined         A:1            <RETURN>
 
 UpdateBall:                                                         
         LDY        #Ball_Physics_0x1bf                               
@@ -2419,7 +2324,7 @@ UpdateBall:
         BGT        Jump_BallJumpingUp                                
         BMI        Jump_HandleBallOnGround                           
 
-; ball is falling
+;ball is falling
         LDX        #SomeKindOfHorizontalBitOffsetTable               
         LDB        0x6,Y                                             
         ANDB       #0x3                                              ; figure out which two bits on the byte it affects.
@@ -2435,9 +2340,8 @@ UpdateBall:
         LDU        #Ball_GroundCollisionMaskData                     
         LDD        A,U                                               
 
-; Binary and A & B with the terrain underneath
-
-; the ball. If it's zero, then we haven't hit
+;Binary and A & B with the terrain underneath
+;the ball. If it's zero, then we haven't hit
 
 anything.:                                                          
         ANDA       DAT_1800,X                                        
@@ -2464,9 +2368,8 @@ Jump_NoBallGroundHit:
 Jump_SkipFallSpeedClamp:                                            
         STD        ,Y                                                
 
-; Increment a value up to A, but I don't know what
-
-; this is for.
+;Increment a value up to A, but I don't know what
+;this is for.
         LDA        -0x2,Y                                            
         CMPA       #0xa                                              
         BCC        Jump_SkipFallCounterIncrement                     
@@ -2477,10 +2380,10 @@ Jump_SkipFallCounterIncrement:
         BRA        Jump_UpdateBallPosition                           
 
 Ball_GroundCollisionMaskData:                                       
-        dw         0000001100000000b                                 
-        dw         0000000011000000b                                 
-        dw         0000000000110000b                                 
-        dw         0000110000000000b                                 
+        .dw        0000001100000000b                                 
+        .dw        0000000011000000b                                 
+        .dw        0000000000110000b                                 
+        .dw        0000110000000000b                                 
 
 Jump_TheBallHasHitTheGround:                                        
         LDD        #0xff00                                           
@@ -2496,10 +2399,8 @@ Jump_HandleBallOnGround:
                                                                      ; setup the ball to jump up
         BMI        Jump_SetupBallSprite                              ; the counter is negative, so stay at this 
                                                                      ; position for now. don't update physics
-
-; the fall state counter is now positive.
-
-; setup the ball to jump up
+;the fall state counter is now positive.
+;setup the ball to jump up
         LDD        #0xff00                                           
         STD        ,Y                                                
         LDA        #0xa                                              
@@ -2512,7 +2413,7 @@ Jump_BallJumpingUp:
         STD        ,Y                                                
         DEC        <Ball_FallStateCounter_0x32                       ; we're only falling for a limited number of steps
 
-; if the fall state counter is 0, then stop going
+;if the fall state counter is 0, then stop going upwards.
         BNE        Jump_UpdateBallPosition                           
         LDD        <ZeroValue                                        
         STD        ,Y                                                ; set speed y to 0
@@ -2525,9 +2426,8 @@ Jump_UpdateBallPosition:
         ADDD       0x2,Y                                             
         STD        0x6,Y                                             
 
-; terrain collision checking
-
-; possibly for when running into a wall
+;terrain collision checking
+;possibly for when running into a wall
         LDX        #SomeKindOfHorizontalBitOffsetTable               
         LDB        0x6,Y                                             
         ANDB       #0x3                                              
@@ -2568,12 +2468,11 @@ Jump_SetupBallSprite:
 Jump_SkipSetSquishedBallSprite:                                     
         LDA        0x6,Y                                             
 
-; figure out which ball sprite to use
-
-; depending on x position
+;figure out which ball sprite to use
+;depending on x position
         ANDA       #0x3                                              
 
-; clamp X value from 0 to 3
+;clamp X value from 0 to 3
         LDB        #0x18                                             ; size of a ball sprite in ram (3 bytes for 8 lines)
         MUL                                                          
         LEAU       D,U                                               ; Move U to the correct sprite for 
@@ -2585,16 +2484,11 @@ Jump_SkipSetSquishedBallSprite:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall InitAllTimers(undefined A, u
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            A
-
-; undefined         B:1            B
-
-; undefined2 *      X:2            X
+;undefined __stdcall InitAllTimers(undefined A, undefined
+;undefined         A:1            <RETURN>
+;undefined         A:1            A
+;undefined         B:1            B
+;undefined2 *      X:2            X
 
 InitAllTimers:                                                      
         BSR        GetPlayerRoomTimerBuffer                          ; undefined GetPlayerRoomTimerBuffer(void)
@@ -2609,15 +2503,13 @@ LAB_cbae:
         RTS                                                          
 
 PlayerRoomTimerBufferPointers_0xccb5:                               
-        addr       PlayerOne_PerRoomTimers_0x3e98                    
-        addr       PlayerTwo_PerRoomTimers_0x3eac                    
+        .dw        PlayerOne_PerRoomTimers_0x3e98                    
+        .dw        PlayerTwo_PerRoomTimers_0x3eac                    
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall GetPlayerRoomTimerBuffer(voi
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall GetPlayerRoomTimerBuffer(void)
+;undefined         A:1            <RETURN>
 
 GetPlayerRoomTimerBuffer:                                           
         LDX        #PlayerRoomTimerBufferPointers_0xccb5             
@@ -2628,10 +2520,8 @@ GetPlayerRoomTimerBuffer:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall UpdateRoomTimers(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall UpdateRoomTimers(void)
+;undefined         A:1            <RETURN>
 
 UpdateRoomTimers:                                                   
         LDB        <CurrentRoomNumber_0x39                           
@@ -2643,7 +2533,7 @@ UpdateRoomTimers:
         BSR        GetPlayerRoomTimerBuffer                          ; undefined GetPlayerRoomTimerBuffer(void)
         CLR        <UtilityCounter_0x26                              ; init room timer counter
 
-; increment other room timers
+;increment other room timers
 
 Loop_NextRoomTimer:                                                 
         LDB        <UtilityCounter_0x26                              ; current room timer counter
@@ -2665,9 +2555,8 @@ Jump_IsCurrentRoomTimer:
         INC        <UtilityCounter_0x26                              ; we're done with this room timer
         BRA        Loop_NextRoomTimer                                
 
-; update current room timer and activate bird
-
-; if it hits zero.
+;update current room timer and activate bird
+;if it hits zero.
 
 Jump_DoneIncrementingOtherRoomTimers:                               
         LDY        #Bird_PhysicsData                                 
@@ -2730,7 +2619,7 @@ Jump_BirdIsActive:
         CMPA       #0xb1                                             ; lower screen bound
         BCS        Jump_BirdYHasntHitScreenBounds                    
 
-; the bird hit the bottom of the screen
+;the bird hit the bottom of the screen
         LDD        ,Y                                                
         BMI        Jump_UpdateBirdYPosition                          ; if we were already going up, then skip
         BRA        Jump_FlipBirdYSpeed                               ; the bird is currently going down, we'll need 
@@ -2740,14 +2629,10 @@ Jump_BirdYHitUpperScreenBound:
         LDD        ,Y                                                ; get the current Y speed
         BPL        Jump_UpdateBirdYPosition                          ; if we were already going downwards, then just
                                                                      ; skip the next part
-
-; we reach here if
-
-; the bird hit the upper screen bound going up
-
-; the bird hit the lower screen bound going down
-
-; in that case, we invert the speed
+;we reach here if
+;the bird hit the upper screen bound going up
+;the bird hit the lower screen bound going down
+;in that case, we invert the speed
 
 Jump_FlipBirdYSpeed:                                                
         COMA                                                         ; invert the Y speed
@@ -2762,7 +2647,7 @@ Jump_UpdateBirdYPosition:
 Jump_BirdYHasntHitScreenBounds:                                     
         STD        0x4,Y                                             
 
-; update X position and check bounds
+;update X position and check bounds
         LDD        0x6,Y                                             
         ADDD       0x2,Y                                             
         CMPA       #0x7                                              
@@ -2777,13 +2662,10 @@ Jump_BirdHitLeftScreenBound:
         LDD        0x2,Y                                             
         BPL        Jump_UpdateBirdXPosition                          
 
-; we reach here if
-
-; the bird hit the left screen bound going left
-
-; the bird hit the right screen bound going right
-
-; in that case, we invert the speed
+;we reach here if
+;the bird hit the left screen bound going left
+;the bird hit the right screen bound going right
+;in that case, we invert the speed
 
 Jump_FlipBirdXSpeed:                                                
         COMA                                                         
@@ -2805,9 +2687,8 @@ Jump_BirdUpdateAnimation:
                                                                      ; next frame of the bird animation
         LEAU       0x48,U                                            
 
-; figure out which frame of the sprite
-
-; to display depending on X position
+;figure out which frame of the sprite
+;to display depending on X position
 
 Jump_DontGoToFrame1OfAnimation:                                     
         LDA        0x6,Y                                             
@@ -2818,24 +2699,20 @@ Jump_DontGoToFrame1OfAnimation:
         STU        0xa,Y                                             
         JMP        EraseAndUpdateAndDrawObject                       
 
-; -- Flow Override: CALL_RETURN (COMPUTED_CALL_TER
+;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall LoadPlayerPhysicsToYAndRoomD
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall LoadPlayerPhysicsToYAndRoomDataInfoX
+;undefined         A:1            <RETURN>
 
 LoadPlayerPhysicsToYAndRoomDataInfoX:                               
         LDY        #Player_PhysicsData_0x1aa                         
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall LoadRoomDoorDataAddrIntoX(vo
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall LoadRoomDoorDataAddrIntoX(void)
+;undefined         A:1            <RETURN>
 
 LoadRoomDoorDataAddrIntoX:                                          
         LDX        <RoomGraphicsAndDoorDataAddress_0x3b              
@@ -2849,10 +2726,8 @@ LAB_ccb0:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined FUN_ccb1()
-
-; undefined         A:1            <RETURN>
+;undefined FUN_ccb1()
+;undefined         A:1            <RETURN>
 
 FUN_ccb1:                                                           
         JSR        DrawPickups                                       ; undefined DrawPickups(undefined A, undefined B, byte * X)
@@ -2874,10 +2749,8 @@ LAB_ccb6:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined InitRoom_Maybe()
-
-; undefined         A:1            <RETURN>
+;undefined InitRoom_Maybe()
+;undefined         A:1            <RETURN>
 
 InitRoom_Maybe:                                                     
         LDA        0x5,X                                             ; get the room number from the door data
@@ -2916,11 +2789,9 @@ Jump_NotTheLastDoor:
         BSR        LoadRoomDoorDataAddrIntoX                         ; undefined LoadRoomDoorDataAddrIntoX(void)
         LDY        #Player_DoorStateData_0x3ec0                      ; address to room or door graphics?
 
-; Draw the activated doors for this room
-
-; X - Door Information (location, index, etc.)
-
-; Y - Door State Data (has door at index been acti
+;Draw the activated doors for this room
+;X - Door Information (location, index, etc.)
+;Y - Door State Data (has door at index been activated?)
 
 Loop_DrawNextDoor:                                                  
         LDA        0x5,X                                             ; get the door index
@@ -2939,7 +2810,7 @@ Jump_SkipDrawingDoor:
         LDX        PlayerLives_DrawLocationInPage_0x1eb              
         LEAX       -0x4,X                                            ; get the player sprite address? and then not use it?
         LDU        <CurrentInGamePlayerStringPointer                 
-        JSR        PrintString                                       ; undefined PrintString(undefined param_1, undefined param_2, byte * scr
+        JSR        PrintString                                       ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
         LDA        <CurrentRoomNumber_0x39                           
         BEQ        Jump_AlreadyVisitedThisRoom                       
         LDX        #RoomsPlayersHaveVisited_0x36b                    
@@ -2952,11 +2823,8 @@ Jump_SkipDrawingDoor:
         ORA        <CurrentPlayer_0x52                               
         STA        ,X                                                ; we've now visited this room
         LDD        #0x3e8                                            
-        CMPX       #0xdc1b                                           
-
-; -- Length Override: 1 (actual length is 3)
-
-; -- Fallthrough: cd5f
+        .db        0x8C                                              ; When PC reaches here this byte and the next two are 
+                                                                     ; interpeted as CMPX #0xdc1b which does nothing. 
 
 Jump_AlreadyVisitedThisRoom:                                        
         LDD        <ZeroValue                                        
@@ -2965,37 +2833,30 @@ LAB_cd5f:
         JSR        UpdateAndPrintPlayerScore                         ; undefined UpdateAndPrintPlayerScore(undefined A, undefined B, undefine
         LDX        #0x455                                            
         LDU        #String_Chamber                                   
-        JSR        PrintString                                       ; undefined PrintString(undefined param_1, undefined param_2, byte * scr
+        JSR        PrintString                                       ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
         LDU        #0xd0                                             
         LDA        #0x24                                             
         LDB        <CurrentRoomNumber_0x39                           
         STD        ,U                                                
-        JSR        PrintString                                       ; undefined PrintString(undefined param_1, undefined param_2, byte * scr
+        JSR        PrintString                                       ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
         JMP        GetRoomDataForCurrentRoom                         
 
-; -- Flow Override: CALL_RETURN (COMPUTED_CALL_TER
+;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
 
 LAB_cd7a:                                                           
         LEAX       0x6,X                                             
         JMP        LAB_ccb6                                          
-        ??         39h    9                                          
+        .db        0x39                                              
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawDoorOrMultipleDoors_Mayb
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            A
-
-; undefined         B:1            B
-
-; ushort *          X:2            X
-
-; undefined2        Y:2            Y
-
-; undefined2        U:2            U
+;undefined __stdcall DrawDoorOrMultipleDoors_Maybe(undefi
+;undefined         A:1            <RETURN>
+;undefined         A:1            A
+;undefined         B:1            B
+;ushort *          X:2            X
+;undefined2        Y:2            Y
+;undefined2        U:2            U
 
 DrawDoorOrMultipleDoors_Maybe:                                      
         PSHS        U X                                              
@@ -3006,11 +2867,8 @@ DrawDoorOrMultipleDoors_Maybe:
         BCS        Jump_OffsetLeft                                   
         ADDB       #0x7                                              ; otherwise offset to the right.
                                                                      ; for some reason
-        CMPX       #LAB_c003+1                                       
-
-; -- Length Override: 1 (actual length is 3)
-
-; -- Fallthrough: cd92
+        .db        0x8C                                              ; When PC reaches here this byte and the next two are 
+                                                                     ; interpeted as CMPX #0xc004 which does nothing. 
 
 Jump_OffsetLeft:                                                    
         SUBB       #0x4                                              
@@ -3019,7 +2877,7 @@ LAB_cd92:
         PSHS        B                                                ; save the X screen position
         JSR        ComputeScreenLocationFromAAndB                    ; undefined ComputeScreenLocationFromAAndB(void)
 
-; save the drawing location into U
+;save the drawing location into U
         TFR        B,U                                               
         PULS        A                                                ; retrieve the X screen position
         ANDA       #0x3                                              
@@ -3039,11 +2897,10 @@ LOOP_DrawOneLineOfDoorToBufferAt0x83:
         DEC        <SecondUtilityCounter_0x4d                        
         BNE        LOOP_DrawOneLineOfDoorToBufferAt0x83              
 
-; for the 1 to 3 offset in UtilityCounter, shift t
-
-; by offset * 2 bits
+;for the 1 to 3 offset in UtilityCounter, shift the graphics i
+;by offset * 2 bits
         LDA        <UtilityCounter_0x26                              
-        BEQ        ShiftBitsInSpriteDrawingBuffer::Jump_DoneWork_    
+        BEQ        Jump_DoneWork_RTS_cde2                            
         LDB        #0x10                                             ; num lines in a sprite? 16
         BSR        ShiftBitsInSpriteDrawingBuffer                    ; undefined ShiftBitsInSpriteDrawingBuffer(undefined param_1, char param
         PULS        U                                                ; pull back the drawing location into U
@@ -3059,18 +2916,12 @@ LOOP_AlreadyDone:
 ;* we use this function to shift the graphics in a sprite     *
 ;* drawing buffer so that they land on the appropriate pix... *
 ;**************************************************************
-
-; undefined __stdcall ShiftBitsInSpriteDrawingBuff
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            param_1
-
-; char              B:1            param_2
-
-; A: number of bits to shift by. the result will b
-
-; B: number of lines of the sprite to process
+;undefined __stdcall ShiftBitsInSpriteDrawingBuffer(undef
+;undefined         A:1            <RETURN>
+;undefined         A:1            param_1
+;char              B:1            param_2
+;A: number of bits to shift by. the result will be A * 2
+;B: number of lines of the sprite to process
 
 ShiftBitsInSpriteDrawingBuffer:                                     
         LDX        #SpriteDrawingBuffer_0x83                         
@@ -3078,11 +2929,9 @@ ShiftBitsInSpriteDrawingBuffer:
 Jump_ProcessThreeBytes:                                             
         LDA        <UtilityCounter_0x26                              ; values from 1 to 3
 
-; shift by two bits at a time to the right
-
-; because the screen is 256 pixels wide
-
-; and graphics are treated as 128?
+;shift by two bits at a time to the right
+;because the screen is 256 pixels wide
+;and graphics are treated as 128?
 
 Jump_ShuffleBitsAround:                                             
         LSR        ,X                                                
@@ -3102,10 +2951,8 @@ Jump_DoneWork_RTS_cde2:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall InitVideoRegisters(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall InitVideoRegisters(void)
+;undefined         A:1            <RETURN>
 
 InitVideoRegisters:                                                 
         LDA        PIA1_B_DATA_REG__FF22                             
@@ -3121,12 +2968,9 @@ InitVideoRegisters:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall SetupSAMPages(byte param_1)
-
-; undefined         A:1            <RETURN>
-
-; byte              A:1            param_1
+;undefined __stdcall SetupSAMPages(byte param_1)
+;undefined         A:1            <RETURN>
+;byte              A:1            param_1
 
 SetupSAMPages:                                                      
         LDX        #SAM_PAGE_SELECT_REG_SAM_F0_FFC6                  ; The first Sam Page Select Register Address
@@ -3141,12 +2985,10 @@ LAB_cdfd:
         LSRA                                                         ; shift right A
         BCS        LAB_ce03                                          ; was there a bit? If so, jump.
         STA        ,X                                                ; there wasn't, set the bit to disable the page
-        CMPX       #0xa701                                           ; now what? don't we want to skip this and the
+        .db        0x8C                                              ; now what? don't we want to skip this and the
                                                                      ; setting on the odd numbered address?
-
-; -- Length Override: 1 (actual length is 3)
-
-; -- Fallthrough: ce05
+                                                                     ; When PC reaches here this byte and the next two are 
+                                                                     ; interpeted as CMPX #0xa701 which does nothing. 
 
 LAB_ce03:                                                           
         STA        0x1,X                                             ; set the value to the odd numbered SAM port at FFCX
@@ -3161,21 +3003,17 @@ LAB_ce05:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall LoadPage1AddressToX(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall LoadPage1AddressToX(void)
+;undefined         A:1            <RETURN>
 
 LoadPage1AddressToX:                                                
         LDX        #VideoMemory_Page1_0x1c00                         
-        BRA        ClearVideoMemory_0x0400_to_0x3400::JUMP_Load0x    
+        BRA        JUMP_Load0x1bToD_ce13                             
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall ClearVideoMemory_0x0400_to_0
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall ClearVideoMemory_0x0400_to_0x3400(vo
+;undefined         A:1            <RETURN>
 
 ClearVideoMemory_0x0400_to_0x3400:                                  
         LDX        #0x400                                            ; start of video memory?
@@ -3191,12 +3029,9 @@ LOOP_UntilReachingAddress0x3400:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; char __stdcall ScreenTransitionWipe(void)
-
-; char              A:1            <RETURN>
-
-; Stack[-0x1]:1  drawDottedLineFlag
+;char __stdcall ScreenTransitionWipe(void)
+;char              A:1            <RETURN>
+;undefined1        Stack[-0x1]:1  drawDottedLineFlag                      XREF[3]:     ce1d(*), ce38(*),
 
 ScreenTransitionWipe:                                               
         CLR        ,-S                                               ; save some space on the stack
@@ -3207,7 +3042,7 @@ Loop_DrawTransitionSections:
         BITB       #00011111b                                        
         BNE        Jump_SkipSleep                                    ; pause when reaching the end of the line, maybe
 
-; run an empty loop to serve as a delay
+;run an empty loop to serve as a delay
         LDY        #0x400                                            ; start at the beginning of the first page
 
 Loop_Sleep:                                                         
@@ -3253,10 +3088,8 @@ Jump_SkipSettingDrawDottedLineFlag:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall InitPlayerSomething(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall InitPlayerSomething(void)
+;undefined         A:1            <RETURN>
 
 InitPlayerSomething:                                                
         LDY        #Player_PhysicsData_0x1aa                         
@@ -3268,12 +3101,9 @@ InitPlayerSomething:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall InitBouncingBall(void)
-
-; undefined         A:1            <RETURN>
-
-; Check whether we need to init the ball for the l
+;undefined __stdcall InitBouncingBall(void)
+;undefined         A:1            <RETURN>
+;Check whether we need to init the ball for the level.
 
 InitBouncingBall:                                                   
         LDX        #RoomsWithBouncingBall                            
@@ -3284,14 +3114,12 @@ Loop_SearchForRoomNumber:
         CMPA       <CurrentRoomNumber_0x39                           
         BNE        Loop_SearchForRoomNumber                          
 
-; we found that the current room number
-
-; uses the bouncing ball.
-
-; start initializing it
+;we found that the current room number
+;uses the bouncing ball.
+;start initializing it
         LDY        #Ball_Physics_0x1bf                               
 
-; Clear the ball data
+;Clear the ball data
         LDX        #Ball_InitState_0x1ba                             
 
 Loop_ClearBallData:                                                 
@@ -3299,7 +3127,7 @@ Loop_ClearBallData:
         CMPX       #EndOfBallData                                    ; end of ball data
         BNE        Loop_ClearBallData                                
 
-; Init the ball data
+;Init the ball data
         LDA        #0x1                                              
         STA        -0x5,Y                                            ; init ball state to 1
         LDA        #0x8                                              
@@ -3319,26 +3147,24 @@ Jump_NoBallForThisRoom:
         RTS                                                          
 
 RoomsWithBouncingBall:                                              
-        db         0h                                                
+        .db        0x0                                               
 
 BYTE_cead:                                                          
-        db         2h                                                
-        db         5h                                                
-        db         6h                                                
-        db         Ah                                                ; this suggests the ball existing in rooms
+        .db        0x2                                               
+        .db        0x5                                               
+        .db        0x6                                               
+        .db        0xA                                               ; this suggests the ball existing in rooms
                                                                      ; past the tenth. 
-        db         Bh                                                
-        db         Ch                                                
-        db         Dh                                                
-        db         Eh                                                
-        db         FFh                                               
+        .db        0xB                                               
+        .db        0xC                                               
+        .db        0xD                                               
+        .db        0xE                                               
+        .db        0xFF                                              
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall InitVideoAndSetupRoomAndGrap
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall InitVideoAndSetupRoomAndGraphics(void)
+;undefined         A:1            <RETURN>
 
 InitVideoAndSetupRoomAndGraphics:                                   
         JSR        ClearVideoMemory_0x0400_to_0x3400                 ; undefined ClearVideoMemory_0x0400_to_0x3400(void)
@@ -3349,24 +3175,22 @@ InitVideoAndSetupRoomAndGraphics:
         RTS                                                          
 
 TitleScreenBackground_DrawCommands:                                 
-        db         80h                                               ; shape code: over 127 means that it repeats. stalactite
-        db         Ch                                                ; repeat count for previous shape.
-        db         4h                                                ; top right hand corner piece
-        db         81h                                               ; repeatable wall, going down
-        db         Ah                                                ; repeat 10 times
-        db         89h                                               ; repeatable floor piece going left
-        db         Eh                                                ; repeat 15 times
-        db         87h                                               ; repeatable wall, going up
-        db         Ah                                                ; do it 10 times
-        db         2h                                                ; left hand corner piece
-        db         FFh                                               ; end
+        .db        0x80                                              ; shape code: over 127 means that it repeats. stalactite
+        .db        0xC                                               ; repeat count for previous shape.
+        .db        0x4                                               ; top right hand corner piece
+        .db        0x81                                              ; repeatable wall, going down
+        .db        0xA                                               ; repeat 10 times
+        .db        0x89                                              ; repeatable floor piece going left
+        .db        0xE                                               ; repeat 15 times
+        .db        0x87                                              ; repeatable wall, going up
+        .db        0xA                                               ; do it 10 times
+        .db        0x2                                               ; left hand corner piece
+        .db        0xFF                                              ; end
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall InitKeyStateData(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall InitKeyStateData(void)
+;undefined         A:1            <RETURN>
 
 InitKeyStateData:                                                   
         LDB        #0x22                                             ; 34 bytes to clear
@@ -3392,31 +3216,29 @@ Jump_HitEndOfActiveKeyOffsets:
         RTS                                                          
 
 OffsetsToKeysAlreadyActivated_0xceea:                               
-        db         0h                                                
+        .db        0x0                                               
 
 BYTE_ceeb:                                                          
-        db         2h                                                
-        db         4h                                                
-        db         5h                                                
-        db         7h                                                
-        db         8h                                                
-        db         9h                                                
-        db         Ch                                                
-        db         Dh                                                
-        db         Eh                                                
-        db         Fh                                                
-        db         10h                                               
-        db         11h                                               
-        db         12h                                               
-        db         14h                                               
-        db         FFh                                               
+        .db        0x2                                               
+        .db        0x4                                               
+        .db        0x5                                               
+        .db        0x7                                               
+        .db        0x8                                               
+        .db        0x9                                               
+        .db        0xC                                               
+        .db        0xD                                               
+        .db        0xE                                               
+        .db        0xF                                               
+        .db        0x10                                              
+        .db        0x11                                              
+        .db        0x12                                              
+        .db        0x14                                              
+        .db        0xFF                                              
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall Init_PlayerLivesIconParamete
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall Init_PlayerLivesIconParameters(void)
+;undefined         A:1            <RETURN>
 
 Init_PlayerLivesIconParameters:                                     
         LDY        #CurrentPlayerSpritePointer_0x1e9                 
@@ -3431,16 +3253,11 @@ Init_PlayerLivesIconParameters:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall GetRoomDataForCurrentRoom(un
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            param_1
-
-; undefined         B:1            B
-
-; byte *            X:2            param_3
+;undefined __stdcall GetRoomDataForCurrentRoom(undefined
+;undefined         A:1            <RETURN>
+;undefined         A:1            param_1
+;undefined         B:1            B
+;byte *            X:2            param_3
 
 GetRoomDataForCurrentRoom:                                          
         LDY        #PerRoomPickupData_0x271                          
@@ -3452,16 +3269,11 @@ GetRoomDataForCurrentRoom:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawPickups(undefined A, und
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            A
-
-; undefined         B:1            B
-
-; byte *            X:2            X
+;undefined __stdcall DrawPickups(undefined A, undefined B
+;undefined         A:1            <RETURN>
+;undefined         A:1            A
+;undefined         B:1            B
+;byte *            X:2            X
 
 DrawPickups:                                                        
         LDA        #0x5                                              
@@ -3490,18 +3302,12 @@ Jump_SkipToNextPickup:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawSprite_16PixelsWide(unde
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            param_1
-
-; undefined         B:1            param_2
-
-; byte *            X:2            X
-
-; undefined2        Y:2            param_4
+;undefined __stdcall DrawSprite_16PixelsWide(undefined pa
+;undefined         A:1            <RETURN>
+;undefined         A:1            param_1
+;undefined         B:1            param_2
+;byte *            X:2            X
+;undefined2        Y:2            param_4
 
 DrawSprite_16PixelsWide:                                            
         LDD        ,U++                                              ; load two bytes of the sprite (one line)
@@ -3516,10 +3322,8 @@ DrawSprite_16PixelsWide:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall UpdateAndDrawDrops(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall UpdateAndDrawDrops(void)
+;undefined         A:1            <RETURN>
 
 UpdateAndDrawDrops:                                                 
         LDY        #DropDataBlock_0x1ef                              
@@ -3556,24 +3360,24 @@ Jump_ProcessDrop:
 
 Jump_UpdateDropPosition:                                            
         LDD        0x3,Y                                             
-        ADDD       offset Drop1_SpeedY_0x1fd,Y                       
+        ADDD       Drop1_SpeedY_0x1fd,Y                              
         STD        0x3,Y                                             
         LDD        #0x200                                            ; falling drop speed to this, even if 
                                                                      ; we were wiggling. 
-        STD        offset Drop1_SpeedY_0x1fd,Y                       
+        STD        Drop1_SpeedY_0x1fd,Y                              
 
-; erase drop from screen
+;erase drop from screen
         LDA        0x3,Y                                             
         LDB        0x5,Y                                             
         JSR        ComputeScreenLocationFromAAndB                    ; undefined ComputeScreenLocationFromAAndB(void)
         STD        0x8,Y                                             
         LBSR       EraseDropSpriteFromScreen                         ; byte EraseDropSpriteFromScreen(void)
 
-; store previous video page draw location
+;store previous video page draw location
         LDX        0x8,Y                                             
         STX        0xa,Y                                             
 
-; draw the drop sprite at the new location
+;draw the drop sprite at the new location
         LDU        0x6,Y                                             
         LDB        #0x6                                              ; number of lines in the sprite
         STB        <UtilityCounter_0x26                              
@@ -3597,7 +3401,7 @@ Jump_WiggleUpwards:
         LDD        #0xff80                                           ; drop speed?
 
 Jump_StoreDropSpeedY:                                               
-        STD        offset Drop1_SpeedY_0x1fd,Y                       
+        STD        Drop1_SpeedY_0x1fd,Y                              
         BRA        Jump_UpdateDropPosition                           
 
 Jump_DropTouchedTerrain:                                            
@@ -3671,17 +3475,15 @@ LAB_d00e:
         LBRA       Jump_DropIsWiggling                               
 
 Drop_CollisionMasks_0xd031:                                         
-        db         11110000b                                         
-        db         00111100b                                         
-        db         00001111b                                         
-        db         00000011b                                         
+        .db        11110000b                                         
+        .db        00111100b                                         
+        .db        00001111b                                         
+        .db        00000011b                                         
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; byte __stdcall EraseDropSpriteFromScreen(void)
-
-; byte              A:1            <RETURN>
+;byte __stdcall EraseDropSpriteFromScreen(void)
+;byte              A:1            <RETURN>
 
 EraseDropSpriteFromScreen:                                          
         LDX        0xa,Y                                             ; previous position
@@ -3710,234 +3512,226 @@ Jump_NextLine:
         RTS                                                          
 
 Drops_SpawnPositionsTable:                                          
-        dw         Room0_DropPositions                               
-        dw         Room1_DropPositions                               
-        dw         Room2_DropPositions                               
-        dw         Room3_DropPositions                               
-        dw         Room4_DropPositions                               
-        dw         Room5_DropPositions                               
-        dw         Room6_DropPositions                               
-        dw         Room7_DropPositions                               
-        dw         Room8_DropPositions                               
-        dw         Room9_DropPositions                               
-        dw         Room10_DropPositions                              
+        .dw        Room0_DropPositions                               
+        .dw        Room1_DropPositions                               
+        .dw        Room2_DropPositions                               
+        .dw        Room3_DropPositions                               
+        .dw        Room4_DropPositions                               
+        .dw        Room5_DropPositions                               
+        .dw        Room6_DropPositions                               
+        .dw        Room7_DropPositions                               
+        .dw        Room8_DropPositions                               
+        .dw        Room9_DropPositions                               
+        .dw        Room10_DropPositions                              
 
-; Drop Positions
-
-Format::                                                            
-
-; byte 0: number of drops areas (add 1)
-
-; for every area
-
-; byte 0: drop positions count
-
-; byte 1: vertical position in screen pixels
-
-; byte 2: horizontal position in screen pixels
+;Drop Positions
+;Format:
+;byte 0: number of drops areas (add 1)
+;for every area
+;byte 0: drop positions count
+;byte 1: vertical position in screen pixels
+;byte 2: horizontal position in screen pixels
 
 Room0_DropPositions:                                                
-        db         6                                                 
-        db         12                                                
-        db         17                                                
-        db         15                                                
-        db         9                                                 
-        db         62                                                
-        db         39                                                
-        db         1                                                 
-        db         107                                               
-        db         15                                                
-        db         5                                                 
-        db         107                                               
-        db         47                                                
-        db         1                                                 
-        db         152                                               
-        db         31                                                
-        db         1                                                 
-        db         152                                               
-        db         63                                                
-        db         1                                                 
-        db         152                                               
-        db         95                                                
+        .db        6                                                 
+        .db        12                                                
+        .db        17                                                
+        .db        15                                                
+        .db        9                                                 
+        .db        62                                                
+        .db        39                                                
+        .db        1                                                 
+        .db        107                                               
+        .db        15                                                
+        .db        5                                                 
+        .db        107                                               
+        .db        47                                                
+        .db        1                                                 
+        .db        152                                               
+        .db        31                                                
+        .db        1                                                 
+        .db        152                                               
+        .db        63                                                
+        .db        1                                                 
+        .db        152                                               
+        .db        95                                                
 
 Room1_DropPositions:                                                
-        db         5                                                 
-        db         5                                                 
-        db         17                                                
-        db         15                                                
-        db         4                                                 
-        db         17                                                
-        db         79                                                
-        db         5                                                 
-        db         62                                                
-        db         15                                                
-        db         1                                                 
-        db         62                                                
-        db         79                                                
-        db         1                                                 
-        db         107                                               
-        db         103                                               
-        db         2                                                 
-        db         152                                               
-        db         71                                                
+        .db        5                                                 
+        .db        5                                                 
+        .db        17                                                
+        .db        15                                                
+        .db        4                                                 
+        .db        17                                                
+        .db        79                                                
+        .db        5                                                 
+        .db        62                                                
+        .db        15                                                
+        .db        1                                                 
+        .db        62                                                
+        .db        79                                                
+        .db        1                                                 
+        .db        107                                               
+        .db        103                                               
+        .db        2                                                 
+        .db        152                                               
+        .db        71                                                
 
 Room2_DropPositions:                                                
-        db         4                                                 
-        db         12                                                
-        db         17                                                
-        db         15                                                
-        db         2                                                 
-        db         62                                                
-        db         15                                                
-        db         1                                                 
-        db         62                                                
-        db         55                                                
-        db         9                                                 
-        db         107                                               
-        db         39                                                
-        db         4                                                 
-        db         152                                               
-        db         15                                                
+        .db        4                                                 
+        .db        12                                                
+        .db        17                                                
+        .db        15                                                
+        .db        2                                                 
+        .db        62                                                
+        .db        15                                                
+        .db        1                                                 
+        .db        62                                                
+        .db        55                                                
+        .db        9                                                 
+        .db        107                                               
+        .db        39                                                
+        .db        4                                                 
+        .db        152                                               
+        .db        15                                                
 
 Room3_DropPositions:                                                
-        db         5                                                 
-        db         12                                                
-        db         17                                                
-        db         15                                                
-        db         3                                                 
-        db         62                                                
-        db         15                                                
-        db         6                                                 
-        db         62                                                
-        db         63                                                
-        db         3                                                 
-        db         107                                               
-        db         15                                                
-        db         0                                                 
-        db         152                                               
-        db         15                                                
-        db         1                                                 
-        db         152                                               
-        db         47                                                
+        .db        5                                                 
+        .db        12                                                
+        .db        17                                                
+        .db        15                                                
+        .db        3                                                 
+        .db        62                                                
+        .db        15                                                
+        .db        6                                                 
+        .db        62                                                
+        .db        63                                                
+        .db        3                                                 
+        .db        107                                               
+        .db        15                                                
+        .db        0                                                 
+        .db        152                                               
+        .db        15                                                
+        .db        1                                                 
+        .db        152                                               
+        .db        47                                                
 
 Room4_DropPositions:                                                
-        db         4                                                 
-        db         12                                                
-        db         17                                                
-        db         15                                                
-        db         1                                                 
-        db         62                                                
-        db         15                                                
-        db         8                                                 
-        db         77                                                
-        db         31                                                
-        db         1                                                 
-        db         152                                               
-        db         47                                                
-        db         1                                                 
-        db         152                                               
-        db         87                                                
+        .db        4                                                 
+        .db        12                                                
+        .db        17                                                
+        .db        15                                                
+        .db        1                                                 
+        .db        62                                                
+        .db        15                                                
+        .db        8                                                 
+        .db        77                                                
+        .db        31                                                
+        .db        1                                                 
+        .db        152                                               
+        .db        47                                                
+        .db        1                                                 
+        .db        152                                               
+        .db        87                                                
 
 Room5_DropPositions:                                                
-        db         4                                                 
-        db         12                                                
-        db         17                                                
-        db         15                                                
-        db         1                                                 
-        db         62                                                
-        db         103                                               
-        db         10                                                
-        db         107                                               
-        db         31                                                
-        db         1                                                 
-        db         152                                               
-        db         15                                                
-        db         2                                                 
-        db         152                                               
-        db         71                                                
+        .db        4                                                 
+        .db        12                                                
+        .db        17                                                
+        .db        15                                                
+        .db        1                                                 
+        .db        62                                                
+        .db        103                                               
+        .db        10                                                
+        .db        107                                               
+        .db        31                                                
+        .db        1                                                 
+        .db        152                                               
+        .db        15                                                
+        .db        2                                                 
+        .db        152                                               
+        .db        71                                                
 
 Room6_DropPositions:                                                
-        db         1                                                 
-        db         12                                                
-        db         17                                                
-        db         15                                                
-        db         9                                                 
-        db         92                                                
-        db         39                                                
+        .db        1                                                 
+        .db        12                                                
+        .db        17                                                
+        .db        15                                                
+        .db        9                                                 
+        .db        92                                                
+        .db        39                                                
 
 Room7_DropPositions:                                                
-        db         6                                                 
-        db         5                                                 
-        db         17                                                
-        db         15                                                
-        db         1                                                 
-        db         32                                                
-        db         63                                                
-        db         4                                                 
-        db         17                                                
-        db         79                                                
-        db         0                                                 
-        db         92                                                
-        db         39                                                
-        db         0                                                 
-        db         92                                                
-        db         87                                                
-        db         0                                                 
-        db         107                                               
-        db         47                                                
-        db         0                                                 
-        db         107                                               
-        db         79                                                
+        .db        6                                                 
+        .db        5                                                 
+        .db        17                                                
+        .db        15                                                
+        .db        1                                                 
+        .db        32                                                
+        .db        63                                                
+        .db        4                                                 
+        .db        17                                                
+        .db        79                                                
+        .db        0                                                 
+        .db        92                                                
+        .db        39                                                
+        .db        0                                                 
+        .db        92                                                
+        .db        87                                                
+        .db        0                                                 
+        .db        107                                               
+        .db        47                                                
+        .db        0                                                 
+        .db        107                                               
+        .db        79                                                
 
 Room8_DropPositions:                                                
-        db         4                                                 
-        db         12                                                
-        db         17                                                
-        db         15                                                
-        db         8                                                 
-        db         62                                                
-        db         47                                                
-        db         10                                                
-        db         92                                                
-        db         15                                                
-        db         10                                                
-        db         122                                               
-        db         31                                                
-        db         10                                                
-        db         152                                               
-        db         15                                                
+        .db        4                                                 
+        .db        12                                                
+        .db        17                                                
+        .db        15                                                
+        .db        8                                                 
+        .db        62                                                
+        .db        47                                                
+        .db        10                                                
+        .db        92                                                
+        .db        15                                                
+        .db        10                                                
+        .db        122                                               
+        .db        31                                                
+        .db        10                                                
+        .db        152                                               
+        .db        15                                                
 
 Room9_DropPositions:                                                
-        db         2                                                 
-        db         12                                                
-        db         17                                                
-        db         15                                                
-        db         3                                                 
-        db         62                                                
-        db         15                                                
-        db         5                                                 
-        db         92                                                
-        db         55                                                
+        .db        2                                                 
+        .db        12                                                
+        .db        17                                                
+        .db        15                                                
+        .db        3                                                 
+        .db        62                                                
+        .db        15                                                
+        .db        5                                                 
+        .db        92                                                
+        .db        55                                                
 
 Room10_DropPositions:                                               
-        db         0                                                 ; count of drops areas
-        db         12                                                ; number of drops
-        db         17                                                ; vertical position in screen pixels
-        db         14                                                ; horizontal position in screen pixels
+        .db        0                                                 ; count of drops areas
+        .db        12                                                ; number of drops
+        .db        17                                                ; vertical position in screen pixels
+        .db        14                                                ; horizontal position in screen pixels
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall InitDrops(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall InitDrops(void)
+;undefined         A:1            <RETURN>
 
 InitDrops:                                                          
         CLRA                                                         ; Disable all the drops in memory
         LDB        #10                                               ; num drops
         BSR        SetFirstByteOfEachDrop                            ; undefined SetFirstByteOfEachDrop(byte value, byte numDrops)
 
-; determine how many drops to init
+;determine how many drops to init
         LDA        <GameCompletionCount_0x3a                         
         BEQ        Jump_NormalDifficultyMode                         ; if completed the game at least once, we're 
                                                                      ; in hard mode. Init the full 10 drops 
@@ -3964,14 +3758,10 @@ Jump_InitDrops:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall SetFirstByteOfEachDrop(byte
-
-; undefined         A:1            <RETURN>
-
-; byte              A:1            value
-
-; byte              B:1            numDrops
+;undefined __stdcall SetFirstByteOfEachDrop(byte value, b
+;undefined         A:1            <RETURN>
+;byte              A:1            value
+;byte              B:1            numDrops
 
 SetFirstByteOfEachDrop:                                             
         LDX        #Drop0_CeilingWiggleTimer_0x1ef                   ; point X to this address. 
@@ -3986,10 +3776,8 @@ Loop_NextDrop:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall SetupPickupScreenLocationAnd
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall SetupPickupScreenLocationAndNumLines
+;undefined         A:1            <RETURN>
 
 SetupPickupScreenLocationAndNumLinesToClear:                        
         LDD        0x2,Y                                             
@@ -4000,10 +3788,8 @@ SetupPickupScreenLocationAndNumLinesToClear:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall InitRoomKeysAndPickups(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall InitRoomKeysAndPickups(void)
+;undefined         A:1            <RETURN>
 
 InitRoomKeysAndPickups:                                             
         LDA        #0xff                                             
@@ -4087,241 +3873,202 @@ Jump_DontCreateTreasure:
         RTS                                                          
 
 KeyPickUpDoorIndexes_EasyMode:                                      
-        undefined1 01h                                               
+        .db        0x01                                              
 
 DAT_d1c3:                                                           
-        undefined1 03h                                               
-        ??         1Eh                                               
-        ??         1Ch                                               
-        ??         13h                                               
-        ??         06h                                               
-        ??         0Bh                                               
-        ??         0Ah                                               
-        ??         15h                                               
-        ??         1Ah                                               
-        ??         16h                                               
-        ??         17h                                               
-        ??         18h                                               
-        ??         19h                                               
-        ??         1Bh                                               
-        ??         21h    !                                          
-        ??         1Dh                                               
-        ??         FFh                                               
-        ??         1Fh                                               
-        ??         20h                                               
+        .db        0x03                                              
+        .db        0x1E                                              
+        .db        0x1C                                              
+        .db        0x13                                              
+        .db        0x06                                              
+        .db        0x0B                                              
+        .db        0x0A                                              
+        .db        0x15                                              
+        .db        0x1A                                              
+        .db        0x16                                              
+        .db        0x17                                              
+        .db        0x18                                              
+        .db        0x19                                              
+        .db        0x1B                                              
+        .db        0x21                                              
+        .db        0x1D                                              
+        .db        0xFF                                              
+        .db        0x1F                                              
+        .db        0x20                                              
 
 KeyPickUpDoorIndexes_HardMode:                                      
-        undefined1 01h                                               
+        .db        0x01                                              
 
 DAT_d1d7:                                                           
-        undefined1 03h                                               
+        .db        0x03                                              
 
 DAT_d1d8:                                                           
-        undefined1 1Eh                                               
+        .db        0x1E                                              
 
 DAT_d1d9:                                                           
-        undefined1 1Ch                                               
-        ??         06h                                               
-        ??         13h                                               
-        ??         0Ah                                               
-        ??         0Bh                                               
-        ??         15h                                               
-        ??         1Ah                                               
-        ??         17h                                               
-        ??         16h                                               
-        ??         19h                                               
-        ??         18h                                               
-        ??         21h    !                                          
-        ??         1Bh                                               
-        ??         1Dh                                               
-        ??         FFh                                               
-        ??         20h                                               
-        ??         1Fh                                               
+        .db        0x1C                                              
+        .db        0x06                                              
+        .db        0x13                                              
+        .db        0x0A                                              
+        .db        0x0B                                              
+        .db        0x15                                              
+        .db        0x1A                                              
+        .db        0x17                                              
+        .db        0x16                                              
+        .db        0x19                                              
+        .db        0x18                                              
+        .db        0x21                                              
+        .db        0x1B                                              
+        .db        0x1D                                              
+        .db        0xFF                                              
+        .db        0x20                                              
+        .db        0x1F                                              
 
 PickUp_StartPositions:                                              
-        ??         3Ah    :                                          
-        ??         1Ch                                               
-        ??         69h    i                                          
-        ??         5Ch    \                                          
-        ??         65h    e                                          
-        ??         20h                                               
-        ??         91h                                               
-        ??         30h    0                                          
-        ??         91h                                               
-        ??         50h    P                                          
+        .db        0x3A                                              
+        .db        0x1C                                              
+        .db        0x69                                              
+        .db        0x5C                                              
+        .db        0x65                                              
+        .db        0x20                                              
+        .db        0x91                                              
+        .db        0x30                                              
+        .db        0x91                                              
+        .db        0x50                                              
 
 DAT_d1f4:                                                           
-        ??         23h    #                                          
-        ??         34h    4                                          
-        ??         23h    #                                          
-        ??         48h    H                                          
-        ??         38h    8                                          
-        ??         64h    d                                          
-        ??         97h                                               
-        ??         3Ch    <                                          
-        ??         97h                                               
-        ??         5Ch    \                                          
-        ??         3Ah    :                                          
-        ??         60h    `                                          
-        ??         44h    D                                          
-        ??         1Ch                                               
-        ??         4Dh    M                                          
-        ??         34h    4                                          
-        ??         69h    i                                          
-        ??         64h    d                                          
-        ??         78h    x                                          
-        ??         40h    @                                          
-        ??         41h    A                                          
-        ??         70h    p                                          
-        ??         4Bh    K                                          
-        ??         24h    $                                          
-        ??         6Ch    l                                          
-        ??         50h    P                                          
-        ??         6Ch    l                                          
-        ??         70h    p                                          
-        ??         9Dh                                               
-        ??         0Ch                                               
-        ??         3Fh    ?                                          
-        ??         0Ch                                               
-        ??         6Ch    l                                          
-        ??         0Ch                                               
-        ??         17h                                               
-        ??         60h    `                                          
-        ??         96h                                               
-        ??         3Ch    <                                          
-        ??         96h                                               
-        ??         64h    d                                          
-        ??         14h                                               
-        ??         6Ch    l                                          
-        ??         30h    0                                          
-        ??         04h                                               
-        ??         4Bh    K                                          
-        ??         1Ch                                               
-        ??         5Dh    ]                                          
-        ??         04h                                               
-        ??         9Bh                                               
-        ??         50h    P                                          
-        ??         15h                                               
-        ??         18h                                               
-        ??         6Ah    j                                          
-        ??         6Ch    l                                          
-        ??         2Bh    +                                          
-        ??         40h    @                                          
-        ??         5Fh    _                                          
-        ??         18h                                               
-        ??         93h                                               
-        ??         34h    4                                          
-        ??         30h    0                                          
-        ??         0Ch                                               
-        ??         9Bh                                               
-        ??         44h    D                                          
-        ??         2Ch    ,                                          
-        ??         3Ch    <                                          
-        ??         3Dh    =                                          
-        ??         6Ch    l                                          
-        ??         9Bh                                               
-        ??         2Ch    ,                                          
-        ??         21h    !                                          
-        ??         38h    8                                          
-        ??         34h    4                                          
-        ??         20h                                               
-        ??         40h    @                                          
-        ??         60h    `                                          
-        ??         5Dh    ]                                          
-        ??         1Ch                                               
-        ??         7Ch    |                                          
-        ??         60h    `                                          
-        ??         13h                                               
-        ??         30h    0                                          
-        ??         3Dh    =                                          
-        ??         38h    8                                          
-        ??         44h    D                                          
-        ??         18h                                               
-        ??         96h                                               
-        ??         38h    8                                          
-        ??         96h                                               
-        ??         60h    `                                          
+        .db        0x23                                              
+        .db        0x34                                              
+        .db        0x23                                              
+        .db        0x48                                              
+        .db        0x38                                              
+        .db        0x64                                              
+        .db        0x97                                              
+        .db        0x3C                                              
+        .db        0x97                                              
+        .db        0x5C                                              
+        .db        0x3A                                              
+        .db        0x60                                              
+        .db        0x44                                              
+        .db        0x1C                                              
+        .db        0x4D                                              
+        .db        0x34                                              
+        .db        0x69                                              
+        .db        0x64                                              
+        .db        0x78                                              
+        .db        0x40                                              
+        .db        0x41                                              
+        .db        0x70                                              
+        .db        0x4B                                              
+        .db        0x24                                              
+        .db        0x6C                                              
+        .db        0x50                                              
+        .db        0x6C                                              
+        .db        0x70                                              
+        .db        0x9D                                              
+        .db        0x0C                                              
+        .db        0x3F                                              
+        .db        0x0C                                              
+        .db        0x6C                                              
+        .db        0x0C                                              
+        .db        0x17                                              
+        .db        0x60                                              
+        .db        0x96                                              
+        .db        0x3C                                              
+        .db        0x96                                              
+        .db        0x64                                              
+        .db        0x14                                              
+        .db        0x6C                                              
+        .db        0x30                                              
+        .db        0x04                                              
+        .db        0x4B                                              
+        .db        0x1C                                              
+        .db        0x5D                                              
+        .db        0x04                                              
+        .db        0x9B                                              
+        .db        0x50                                              
+        .db        0x15                                              
+        .db        0x18                                              
+        .db        0x6A                                              
+        .db        0x6C                                              
+        .db        0x2B                                              
+        .db        0x40                                              
+        .db        0x5F                                              
+        .db        0x18                                              
+        .db        0x93                                              
+        .db        0x34                                              
+        .db        0x30                                              
+        .db        0x0C                                              
+        .db        0x9B                                              
+        .db        0x44                                              
+        .db        0x2C                                              
+        .db        0x3C                                              
+        .db        0x3D                                              
+        .db        0x6C                                              
+        .db        0x9B                                              
+        .db        0x2C                                              
+        .db        0x21                                              
+        .db        0x38                                              
+        .db        0x34                                              
+        .db        0x20                                              
+        .db        0x40                                              
+        .db        0x60                                              
+        .db        0x5D                                              
+        .db        0x1C                                              
+        .db        0x7C                                              
+        .db        0x60                                              
+        .db        0x13                                              
+        .db        0x30                                              
+        .db        0x3D                                              
+        .db        0x38                                              
+        .db        0x44                                              
+        .db        0x18                                              
+        .db        0x96                                              
+        .db        0x38                                              
+        .db        0x96                                              
+        .db        0x60                                              
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawBackground(void)
-
-; undefined         A:1            <RETURN>
-
-; Each room has an array of draw commands.
-
-; Each command defines a shape to draw.
-
-; Commands with the highest bit set get repeated
-
-; with the next byte in the buffer being the repea
-
-; Background Piece codes
-
-; 0: normal stalactite going right
-
-; 1: single wall piece going down
-
-; 2: left hand corner piece
-
-; 3: top right hand corner piece / bottom
-
-; 4: top right hand corner piece
-
-; 5: bottom right side of floating platfor
-
-; 6: floor piece going right
-
-; 7: wall piece going up
-
-; 8: corner piece going down-left
-
-; 9: floor piece going left
-
-; a: short line going down
-
-; b: short line going up
-
-; c: very short rope
-
-; d: short rope
-
-; e: mid-length rope
-
-; f: long rope
-
-; 10: very long rope
-
-; 11: super long rope
-
-; 12: excessively long rope
-
-; 13: rediculously long rope
-
-; 14: horizontal rope start going right
-
-; 15: horizontal rope end going right
-
-; 16: horizontal rope going right
-
-; 17: blank area going right
-
-; 18: blank area going left, maybe
-
-; 19: blank area going down-right
-
-; repeatable pieces (code + count)
-
-; 80: stalactite (80 + 0)
-
-; 81: wall going down (80 + 1)
-
-; 82: left hand corner piece going up-righ
-
-; 83: etc, etc.
-
-; U contains the pointer to the room draw commands
+;undefined __stdcall DrawBackground(void)
+;undefined         A:1            <RETURN>
+;Each room has an array of draw commands.
+;Each command defines a shape to draw.
+;Commands with the highest bit set get repeated
+;with the next byte in the buffer being the repeat count.
+;Background Piece codes
+;0: normal stalactite going right
+;1: single wall piece going down
+;2: left hand corner piece
+;3: top right hand corner piece / bottom left side of
+;4: top right hand corner piece
+;5: bottom right side of floating platforms
+;6: floor piece going right
+;7: wall piece going up
+;8: corner piece going down-left
+;9: floor piece going left
+;a: short line going down
+;b: short line going up
+;c: very short rope
+;d: short rope
+;e: mid-length rope
+;f: long rope
+;10: very long rope
+;11: super long rope
+;12: excessively long rope
+;13: rediculously long rope
+;14: horizontal rope start going right
+;15: horizontal rope end going right
+;16: horizontal rope going right
+;17: blank area going right
+;18: blank area going left, maybe
+;19: blank area going down-right
+;repeatable pieces (code + count)
+;80: stalactite (80 + 0)
+;81: wall going down (80 + 1)
+;82: left hand corner piece going up-right (80 + 2)
+;83: etc, etc.
+;U contains the pointer to the room draw commands
 
 DrawBackground:                                                     
         LDA        #0x1                                              
@@ -4333,799 +4080,799 @@ DrawBackground:
         JMP        Jump_ProcessDrawCommands                          
 
 RoomGraphicsAndDoorData_0xd25a:                                     
-        dw         Room0_GraphicsAndDoorData_0xd26e                  
-        dw         Room1_GraphicsAndDoorData                         
-        dw         Room2_GraphicsAndDoorData                         
-        dw         Room3_GraphicsAndDoorData                         
-        dw         Room4_GraphicsAndDoorData                         
-        dw         Room5_GraphicsAndDoorData                         
-        dw         Room6_GraphicsAndDoorData                         
-        dw         Room7_GraphicsAndDoorData                         
-        dw         Room8_GraphicsAndDoorData                         
-        dw         Room9_GraphicsAndDoorData                         
+        .dw        Room0_GraphicsAndDoorData_0xd26e                  
+        .dw        Room1_GraphicsAndDoorData                         
+        .dw        Room2_GraphicsAndDoorData                         
+        .dw        Room3_GraphicsAndDoorData                         
+        .dw        Room4_GraphicsAndDoorData                         
+        .dw        Room5_GraphicsAndDoorData                         
+        .dw        Room6_GraphicsAndDoorData                         
+        .dw        Room7_GraphicsAndDoorData                         
+        .dw        Room8_GraphicsAndDoorData                         
+        .dw        Room9_GraphicsAndDoorData                         
 
 Room0_GraphicsAndDoorData_0xd26e:                                   
-        dw         Room0_DrawCommands                                ; first level exit door?
-        dw         FFFFh                                             ; initial start up "door", maybe
+        .dw        Room0_DrawCommands                                ; first level exit door?
+        .dw        0xFFFF                                            ; initial start up "door", maybe
 
 InitialPlayerPosition_0xd272:                                       
-        dw         A570h                                             ; initial game start position
-        db         0h                                                ; room number, maybe
-        db         0h                                                ; global door index
-        dw         1E72h                                             ; door position
-        dw         8707h                                             ; spawn here in next room
-        db         1h                                                ; room index, maybe
-        db         1h                                                ; global door index
-        db         0h                                                ; end tag
+        .dw        0xA570                                            ; initial game start position
+        .db        0x0                                               ; room number, maybe
+        .db        0x0                                               ; global door index
+        .dw        0x1E72                                            ; door position
+        .dw        0x8707                                            ; spawn here in next room
+        .db        0x1                                               ; room index, maybe
+        .db        0x1                                               ; global door index
+        .db        0x0                                               ; end tag
 
 Room1_GraphicsAndDoorData:                                          
-        dw         Room1_DrawCommands                                
-        dw         8705h                                             ; first door spawn position
-        dw         1E70h                                             ; spawn here in next room
-        db         0h                                                ; room index, maybe
-        db         2h                                                ; global door index
-        dw         4B72h                                             
-        dw         A507h                                             
-        db         2h                                                ; room index
-        db         3h                                                
-        dw         1E72h                                             
-        dw         7807h                                             
-        db         2h                                                ; room index
-        db         4h                                                
-        dw         1E05h                                             
-        dw         7870h                                             
-        db         6h                                                ; room index
-        db         1Ah                                               
-        db         0h                                                
+        .dw        Room1_DrawCommands                                
+        .dw        0x8705                                            ; first door spawn position
+        .dw        0x1E70                                            ; spawn here in next room
+        .db        0x0                                               ; room index, maybe
+        .db        0x2                                               ; global door index
+        .dw        0x4B72                                            
+        .dw        0xA507                                            
+        .db        0x2                                               ; room index
+        .db        0x3                                               
+        .dw        0x1E72                                            
+        .dw        0x7807                                            
+        .db        0x2                                               ; room index
+        .db        0x4                                               
+        .dw        0x1E05                                            
+        .dw        0x7870                                            
+        .db        0x6                                               ; room index
+        .db        0x1A                                              
+        .db        0x0                                               
 
 Room2_GraphicsAndDoorData:                                          
-        dw         Room2_DrawCommands                                
-        dw         A505h                                             
-        dw         4B70h                                             
-        db         1h                                                
-        db         5h                                                
-        dw         7805h                                             
-        dw         1E70h                                             ; position after entering room from second room door?
-        db         1h                                                
-        db         6h                                                
-        dw         7872h                                             
-        dw         7807h                                             
-        db         3h                                                
-        db         7h                                                
-        dw         4B72h                                             
-        dw         4B07h                                             
-        db         3h                                                
-        db         13h                                               
-        dw         1E72h                                             
-        dw         1E07h                                             
-        db         3h                                                
-        db         12h                                               
-        dw         1E05h                                             
-        dw         8770h                                             
-        db         5h                                                
-        db         15h                                               
-        db         0h                                                
+        .dw        Room2_DrawCommands                                
+        .dw        0xA505                                            
+        .dw        0x4B70                                            
+        .db        0x1                                               
+        .db        0x5                                               
+        .dw        0x7805                                            
+        .dw        0x1E70                                            ; position after entering room from second room door?
+        .db        0x1                                               
+        .db        0x6                                               
+        .dw        0x7872                                            
+        .dw        0x7807                                            
+        .db        0x3                                               
+        .db        0x7                                               
+        .dw        0x4B72                                            
+        .dw        0x4B07                                            
+        .db        0x3                                               
+        .db        0x13                                              
+        .dw        0x1E72                                            
+        .dw        0x1E07                                            
+        .db        0x3                                               
+        .db        0x12                                              
+        .dw        0x1E05                                            
+        .dw        0x8770                                            
+        .db        0x5                                               
+        .db        0x15                                              
+        .db        0x0                                               
 
 Room3_GraphicsAndDoorData:                                          
-        dw         Room3_DrawCommands                                
-        dw         7805h                                             
-        dw         7870h                                             
-        db         2h                                                
-        db         8h                                                
-        dw         A572h                                             
-        dw         A507h                                             
-        db         4h                                                
-        db         9h                                                
-        dw         7872h                                             
-        dw         7807h                                             
-        db         4h                                                
-        db         Ah                                                
-        dw         4B05h                                             
-        dw         4B70h                                             
-        db         2h                                                
-        db         14h                                               
-        dw         4B72h                                             
-        dw         4B07h                                             
-        db         4h                                                
-        db         Bh                                                
-        dw         1E05h                                             
-        dw         1E70h                                             
-        db         2h                                                
-        db         11h                                               
-        dw         1E72h                                             
-        dw         1E07h                                             
-        db         4h                                                
-        db         10h                                               
-        db         0h                                                
+        .dw        Room3_DrawCommands                                
+        .dw        0x7805                                            
+        .dw        0x7870                                            
+        .db        0x2                                               
+        .db        0x8                                               
+        .dw        0xA572                                            
+        .dw        0xA507                                            
+        .db        0x4                                               
+        .db        0x9                                               
+        .dw        0x7872                                            
+        .dw        0x7807                                            
+        .db        0x4                                               
+        .db        0xA                                               
+        .dw        0x4B05                                            
+        .dw        0x4B70                                            
+        .db        0x2                                               
+        .db        0x14                                              
+        .dw        0x4B72                                            
+        .dw        0x4B07                                            
+        .db        0x4                                               
+        .db        0xB                                               
+        .dw        0x1E05                                            
+        .dw        0x1E70                                            
+        .db        0x2                                               
+        .db        0x11                                              
+        .dw        0x1E72                                            
+        .dw        0x1E07                                            
+        .db        0x4                                               
+        .db        0x10                                              
+        .db        0x0                                               
 
 Room4_GraphicsAndDoorData:                                          
-        dw         Room4_DrawCommands                                
-        dw         A505h                                             
-        dw         A570h                                             
-        db         3h                                                
-        db         Ch                                                
-        dw         7805h                                             
-        dw         7870h                                             
-        db         3h                                                
-        db         Dh                                                
-        dw         4B05h                                             
-        dw         4B70h                                             
-        db         3h                                                
-        db         Eh                                                
-        dw         1E05h                                             
-        dw         1E70h                                             
-        db         3h                                                
-        db         Fh                                                
-        db         0h                                                
+        .dw        Room4_DrawCommands                                
+        .dw        0xA505                                            
+        .dw        0xA570                                            
+        .db        0x3                                               
+        .db        0xC                                               
+        .dw        0x7805                                            
+        .dw        0x7870                                            
+        .db        0x3                                               
+        .db        0xD                                               
+        .dw        0x4B05                                            
+        .dw        0x4B70                                            
+        .db        0x3                                               
+        .db        0xE                                               
+        .dw        0x1E05                                            
+        .dw        0x1E70                                            
+        .db        0x3                                               
+        .db        0xF                                               
+        .db        0x0                                               
 
 Room5_GraphicsAndDoorData:                                          
-        dw         Room5_DrawCommands                                
-        dw         8772h                                             
-        dw         1E07h                                             
-        db         2h                                                
-        db         16h                                               
-        dw         A505h                                             
-        dw         3C70h                                             
-        db         6h                                                
-        db         17h                                               
-        dw         4B72h                                             
-        dw         A507h                                             
-        db         7h                                                
-        db         1Ah                                               
-        db         0h                                                
+        .dw        Room5_DrawCommands                                
+        .dw        0x8772                                            
+        .dw        0x1E07                                            
+        .db        0x2                                               
+        .db        0x16                                              
+        .dw        0xA505                                            
+        .dw        0x3C70                                            
+        .db        0x6                                               
+        .db        0x17                                              
+        .dw        0x4B72                                            
+        .dw        0xA507                                            
+        .db        0x7                                               
+        .db        0x1A                                              
+        .db        0x0                                               
 
 Room6_GraphicsAndDoorData:                                          
-        dw         Room6_DrawCommands                                
-        dw         7872h                                             
-        dw         1E07h                                             
-        db         1h                                                
-        db         19h                                               
-        dw         3C72h                                             
-        dw         A507h                                             
-        db         5h                                                
-        db         18h                                               
-        db         0h                                                
+        .dw        Room6_DrawCommands                                
+        .dw        0x7872                                            
+        .dw        0x1E07                                            
+        .db        0x1                                               
+        .db        0x19                                              
+        .dw        0x3C72                                            
+        .dw        0xA507                                            
+        .db        0x5                                               
+        .db        0x18                                              
+        .db        0x0                                               
 
 Room7_GraphicsAndDoorData:                                          
-        dw         Room7_DrawCommands                                
-        dw         A505h                                             
-        dw         4B70h                                             
-        db         5h                                                
-        db         1Bh                                               
-        dw         4B72h                                             
-        dw         A507h                                             
-        db         8h                                                
-        db         1Ch                                               
-        db         0h                                                
+        .dw        Room7_DrawCommands                                
+        .dw        0xA505                                            
+        .dw        0x4B70                                            
+        .db        0x5                                               
+        .db        0x1B                                              
+        .dw        0x4B72                                            
+        .dw        0xA507                                            
+        .db        0x8                                               
+        .db        0x1C                                              
+        .db        0x0                                               
 
 Room8_GraphicsAndDoorData:                                          
-        dw         Room8_DrawCommands                                
-        dw         A505h                                             
-        dw         4B70h                                             
-        db         7h                                                
-        db         1Dh                                               
-        dw         2D72h                                             
-        dw         1E07h                                             
-        db         9h                                                
-        db         1Eh                                               
-        db         0h                                                
+        .dw        Room8_DrawCommands                                
+        .dw        0xA505                                            
+        .dw        0x4B70                                            
+        .db        0x7                                               
+        .db        0x1D                                              
+        .dw        0x2D72                                            
+        .dw        0x1E07                                            
+        .db        0x9                                               
+        .db        0x1E                                              
+        .db        0x0                                               
 
 Room9_GraphicsAndDoorData:                                          
-        dw         Room9_DrawCommands                                
-        dw         9605h                                             
-        dw         A570h                                             
-        db         8h                                                
-        db         20h                                               
-        dw         1E05h                                             
-        dw         2D70h                                             
-        db         8h                                                
-        db         1Fh                                               
-        dw         A572h                                             
-        dw         A570h                                             
-        db         0h                                                
-        db         21h                                               
-        db         0h                                                
+        .dw        Room9_DrawCommands                                
+        .dw        0x9605                                            
+        .dw        0xA570                                            
+        .db        0x8                                               
+        .db        0x20                                              
+        .dw        0x1E05                                            
+        .dw        0x2D70                                            
+        .db        0x8                                               
+        .db        0x1F                                              
+        .dw        0xA572                                            
+        .dw        0xA570                                            
+        .db        0x0                                               
+        .db        0x21                                              
+        .db        0x0                                               
 
 Room0_DrawCommands:                                                 
-        db         Fh                                                
-        db         80h                                               
-        db         6h                                                
-        db         Ch                                                
-        db         80h                                               
-        db         4h                                                
-        db         4h                                                
-        db         Ah                                                
-        db         89h                                               
-        db         Bh                                                
-        db         3h                                                
-        db         80h                                               
-        db         8h                                                
-        db         Fh                                                
-        db         4h                                                
-        db         81h                                               
-        db         7h                                                
-        db         89h                                               
-        db         Eh                                                
-        db         87h                                               
-        db         4h                                                
-        db         2h                                                
-        db         Fh                                                
-        db         19h                                               
-        db         19h                                               
-        db         17h                                               
-        db         1h                                                
-        db         Ch                                                
-        db         7h                                                
-        db         97h                                               
-        db         3h                                                
-        db         1h                                                
-        db         Ch                                                
-        db         7h                                                
-        db         97h                                               
-        db         3h                                                
-        db         1h                                                
-        db         Ch                                                
-        db         7h                                                
-        db         9h                                                
-        db         98h                                               
-        db         3h                                                
-        db         9h                                                
-        db         98h                                               
-        db         3h                                                
-        db         9h                                                
-        db         18h                                               
-        db         1Ah                                               
-        db         1Ah                                               
-        db         5h                                                
-        db         17h                                               
-        db         3h                                                
-        db         Dh                                                
-        db         80h                                               
-        db         3h                                                
-        db         Dh                                                
-        db         5h                                                
-        db         89h                                               
-        db         7h                                                
-        db         18h                                               
-        db         89h                                               
-        db         3h                                                
-        db         87h                                               
-        db         4h                                                
-        db         2h                                                
-        db         FFh                                               
+        .db        0xF                                               
+        .db        0x80                                              
+        .db        0x6                                               
+        .db        0xC                                               
+        .db        0x80                                              
+        .db        0x4                                               
+        .db        0x4                                               
+        .db        0xA                                               
+        .db        0x89                                              
+        .db        0xB                                               
+        .db        0x3                                               
+        .db        0x80                                              
+        .db        0x8                                               
+        .db        0xF                                               
+        .db        0x4                                               
+        .db        0x81                                              
+        .db        0x7                                               
+        .db        0x89                                              
+        .db        0xE                                               
+        .db        0x87                                              
+        .db        0x4                                               
+        .db        0x2                                               
+        .db        0xF                                               
+        .db        0x19                                              
+        .db        0x19                                              
+        .db        0x17                                              
+        .db        0x1                                               
+        .db        0xC                                               
+        .db        0x7                                               
+        .db        0x97                                              
+        .db        0x3                                               
+        .db        0x1                                               
+        .db        0xC                                               
+        .db        0x7                                               
+        .db        0x97                                              
+        .db        0x3                                               
+        .db        0x1                                               
+        .db        0xC                                               
+        .db        0x7                                               
+        .db        0x9                                               
+        .db        0x98                                              
+        .db        0x3                                               
+        .db        0x9                                               
+        .db        0x98                                              
+        .db        0x3                                               
+        .db        0x9                                               
+        .db        0x18                                              
+        .db        0x1A                                              
+        .db        0x1A                                              
+        .db        0x5                                               
+        .db        0x17                                              
+        .db        0x3                                               
+        .db        0xD                                               
+        .db        0x80                                              
+        .db        0x3                                               
+        .db        0xD                                               
+        .db        0x5                                               
+        .db        0x89                                              
+        .db        0x7                                               
+        .db        0x18                                              
+        .db        0x89                                              
+        .db        0x3                                               
+        .db        0x87                                              
+        .db        0x4                                               
+        .db        0x2                                               
+        .db        0xFF                                              
 
 Room1_DrawCommands:                                                 
-        db         80h                                               
-        db         5h                                                
-        db         4h                                                
-        db         17h                                               
-        db         2h                                                
-        db         0h                                                
-        db         0h                                                
-        db         Dh                                                
-        db         0h                                                
-        db         4h                                                
-        db         Ah                                                
-        db         9h                                                
-        db         3h                                                
-        db         1h                                                
-        db         Ah                                                
-        db         89h                                               
-        db         3h                                                
-        db         3h                                                
-        db         Fh                                                
-        db         4h                                                
-        db         81h                                               
-        db         4h                                                
-        db         89h                                               
-        db         Ah                                                
-        db         87h                                               
-        db         6h                                                
-        db         9h                                                
-        db         81h                                               
-        db         5h                                                
-        db         9h                                                
-        db         9h                                                
-        db         7h                                                
-        db         9h                                                
-        db         Bh                                                
-        db         87h                                               
-        db         4h                                                
-        db         2h                                                
-        db         10h                                               
-        db         80h                                               
-        db         3h                                                
-        db         12h                                               
-        db         4h                                                
-        db         81h                                               
-        db         4h                                                
-        db         3h                                                
-        db         0h                                                
-        db         0h                                                
-        db         5h                                                
-        db         9h                                                
-        db         7h                                                
-        db         9h                                                
-        db         7h                                                
-        db         9h                                                
-        db         7h                                                
-        db         7h                                                
-        db         2h                                                
-        db         Dh                                                
-        db         7h                                                
-        db         9h                                                
-        db         9h                                                
-        db         7h                                                
-        db         18h                                               
-        db         1h                                                
-        db         89h                                               
-        db         7h                                                
-        db         Bh                                                
-        db         2h                                                
-        db         FFh                                               
+        .db        0x80                                              
+        .db        0x5                                               
+        .db        0x4                                               
+        .db        0x17                                              
+        .db        0x2                                               
+        .db        0x0                                               
+        .db        0x0                                               
+        .db        0xD                                               
+        .db        0x0                                               
+        .db        0x4                                               
+        .db        0xA                                               
+        .db        0x9                                               
+        .db        0x3                                               
+        .db        0x1                                               
+        .db        0xA                                               
+        .db        0x89                                              
+        .db        0x3                                               
+        .db        0x3                                               
+        .db        0xF                                               
+        .db        0x4                                               
+        .db        0x81                                              
+        .db        0x4                                               
+        .db        0x89                                              
+        .db        0xA                                               
+        .db        0x87                                              
+        .db        0x6                                               
+        .db        0x9                                               
+        .db        0x81                                              
+        .db        0x5                                               
+        .db        0x9                                               
+        .db        0x9                                               
+        .db        0x7                                               
+        .db        0x9                                               
+        .db        0xB                                               
+        .db        0x87                                              
+        .db        0x4                                               
+        .db        0x2                                               
+        .db        0x10                                              
+        .db        0x80                                              
+        .db        0x3                                               
+        .db        0x12                                              
+        .db        0x4                                               
+        .db        0x81                                              
+        .db        0x4                                               
+        .db        0x3                                               
+        .db        0x0                                               
+        .db        0x0                                               
+        .db        0x5                                               
+        .db        0x9                                               
+        .db        0x7                                               
+        .db        0x9                                               
+        .db        0x7                                               
+        .db        0x9                                               
+        .db        0x7                                               
+        .db        0x7                                               
+        .db        0x2                                               
+        .db        0xD                                               
+        .db        0x7                                               
+        .db        0x9                                               
+        .db        0x9                                               
+        .db        0x7                                               
+        .db        0x18                                              
+        .db        0x1                                               
+        .db        0x89                                              
+        .db        0x7                                               
+        .db        0xB                                               
+        .db        0x2                                               
+        .db        0xFF                                              
 
 Room2_DrawCommands:                                                 
-        db         80h                                               
-        db         3h                                                
-        db         Ch                                                
-        db         80h                                               
-        db         4h                                                
-        db         Fh                                                
-        db         0h                                                
-        db         Dh                                                
-        db         0h                                                
-        db         4h                                                
-        db         Ah                                                
-        db         9h                                                
-        db         3h                                                
-        db         1h                                                
-        db         Ah                                                
-        db         89h                                               
-        db         9h                                                
-        db         19h                                               
-        db         0h                                                
-        db         Fh                                                
-        db         80h                                               
-        db         3h                                                
-        db         Ch                                                
-        db         0h                                                
-        db         0h                                                
-        db         4h                                                
-        db         Ah                                                
-        db         9h                                                
-        db         9h                                                
-        db         1h                                                
-        db         9h                                                
-        db         9h                                                
-        db         1h                                                
-        db         9h                                                
-        db         9h                                                
-        db         1h                                                
-        db         89h                                               
-        db         8h                                                
-        db         Bh                                                
-        db         2h                                                
-        db         80h                                               
-        db         4h                                                
-        db         7h                                                
-        db         89h                                               
-        db         5h                                                
-        db         Bh                                                
-        db         87h                                               
-        db         3h                                                
-        db         2h                                                
-        db         Fh                                                
-        db         0h                                                
-        db         4h                                                
-        db         1h                                                
-        db         9h                                                
-        db         3h                                                
-        db         0h                                                
-        db         1Ah                                               
-        db         7h                                                
-        db         2h                                                
-        db         Ch                                                
-        db         5h                                                
-        db         89h                                               
-        db         8h                                                
-        db         Bh                                                
-        db         2h                                                
-        db         FFh                                               
+        .db        0x80                                              
+        .db        0x3                                               
+        .db        0xC                                               
+        .db        0x80                                              
+        .db        0x4                                               
+        .db        0xF                                               
+        .db        0x0                                               
+        .db        0xD                                               
+        .db        0x0                                               
+        .db        0x4                                               
+        .db        0xA                                               
+        .db        0x9                                               
+        .db        0x3                                               
+        .db        0x1                                               
+        .db        0xA                                               
+        .db        0x89                                              
+        .db        0x9                                               
+        .db        0x19                                              
+        .db        0x0                                               
+        .db        0xF                                               
+        .db        0x80                                              
+        .db        0x3                                               
+        .db        0xC                                               
+        .db        0x0                                               
+        .db        0x0                                               
+        .db        0x4                                               
+        .db        0xA                                               
+        .db        0x9                                               
+        .db        0x9                                               
+        .db        0x1                                               
+        .db        0x9                                               
+        .db        0x9                                               
+        .db        0x1                                               
+        .db        0x9                                               
+        .db        0x9                                               
+        .db        0x1                                               
+        .db        0x89                                              
+        .db        0x8                                               
+        .db        0xB                                               
+        .db        0x2                                               
+        .db        0x80                                              
+        .db        0x4                                               
+        .db        0x7                                               
+        .db        0x89                                              
+        .db        0x5                                               
+        .db        0xB                                               
+        .db        0x87                                              
+        .db        0x3                                               
+        .db        0x2                                               
+        .db        0xF                                               
+        .db        0x0                                               
+        .db        0x4                                               
+        .db        0x1                                               
+        .db        0x9                                               
+        .db        0x3                                               
+        .db        0x0                                               
+        .db        0x1A                                              
+        .db        0x7                                               
+        .db        0x2                                               
+        .db        0xC                                               
+        .db        0x5                                               
+        .db        0x89                                              
+        .db        0x8                                               
+        .db        0xB                                               
+        .db        0x2                                               
+        .db        0xFF                                              
 
 Room3_DrawCommands:                                                 
-        db         80h                                               
-        db         Ch                                                
-        db         4h                                                
-        db         Ah                                                
-        db         89h                                               
-        db         Dh                                                
-        db         19h                                               
-        db         80h                                               
-        db         3h                                                
-        db         4h                                                
-        db         1h                                                
-        db         9h                                                
-        db         9h                                                
-        db         1h                                                
-        db         Fh                                                
-        db         4h                                                
-        db         1h                                                
-        db         1h                                                
-        db         0h                                                
-        db         87h                                               
-        db         5h                                                
-        db         2h                                                
-        db         12h                                               
-        db         0h                                                
-        db         Dh                                                
-        db         0h                                                
-        db         12h                                               
-        db         0h                                                
-        db         4h                                                
-        db         Ah                                                
-        db         9h                                                
-        db         3h                                                
-        db         1h                                                
-        db         Ah                                                
-        db         9h                                                
-        db         3h                                                
-        db         1h                                                
-        db         Ah                                                
-        db         89h                                               
-        db         4h                                                
-        db         87h                                               
-        db         3h                                                
-        db         8h                                                
-        db         81h                                               
-        db         2h                                                
-        db         89h                                               
-        db         9h                                                
-        db         Bh                                                
-        db         2h                                                
-        db         5h                                                
-        db         9h                                                
-        db         9h                                                
-        db         Bh                                                
-        db         2h                                                
-        db         0h                                                
-        db         7h                                                
-        db         9h                                                
-        db         9h                                                
-        db         Bh                                                
-        db         2h                                                
-        db         1Ah                                               
-        db         9h                                                
-        db         Bh                                                
-        db         2h                                                
-        db         FFh                                               
+        .db        0x80                                              
+        .db        0xC                                               
+        .db        0x4                                               
+        .db        0xA                                               
+        .db        0x89                                              
+        .db        0xD                                               
+        .db        0x19                                              
+        .db        0x80                                              
+        .db        0x3                                               
+        .db        0x4                                               
+        .db        0x1                                               
+        .db        0x9                                               
+        .db        0x9                                               
+        .db        0x1                                               
+        .db        0xF                                               
+        .db        0x4                                               
+        .db        0x1                                               
+        .db        0x1                                               
+        .db        0x0                                               
+        .db        0x87                                              
+        .db        0x5                                               
+        .db        0x2                                               
+        .db        0x12                                              
+        .db        0x0                                               
+        .db        0xD                                               
+        .db        0x0                                               
+        .db        0x12                                              
+        .db        0x0                                               
+        .db        0x4                                               
+        .db        0xA                                               
+        .db        0x9                                               
+        .db        0x3                                               
+        .db        0x1                                               
+        .db        0xA                                               
+        .db        0x9                                               
+        .db        0x3                                               
+        .db        0x1                                               
+        .db        0xA                                               
+        .db        0x89                                              
+        .db        0x4                                               
+        .db        0x87                                              
+        .db        0x3                                               
+        .db        0x8                                               
+        .db        0x81                                              
+        .db        0x2                                               
+        .db        0x89                                              
+        .db        0x9                                               
+        .db        0xB                                               
+        .db        0x2                                               
+        .db        0x5                                               
+        .db        0x9                                               
+        .db        0x9                                               
+        .db        0xB                                               
+        .db        0x2                                               
+        .db        0x0                                               
+        .db        0x7                                               
+        .db        0x9                                               
+        .db        0x9                                               
+        .db        0xB                                               
+        .db        0x2                                               
+        .db        0x1A                                              
+        .db        0x9                                               
+        .db        0xB                                               
+        .db        0x2                                               
+        .db        0xFF                                              
 
 Room4_DrawCommands:                                                 
-        db         80h                                               
-        db         Bh                                                
-        db         12h                                               
-        db         4h                                                
-        db         81h                                               
-        db         Ah                                                
-        db         89h                                               
-        db         Eh                                                
-        db         Bh                                                
-        db         7h                                                
-        db         5h                                                
-        db         9h                                                
-        db         Bh                                                
-        db         7h                                                
-        db         5h                                                
-        db         9h                                                
-        db         Bh                                                
-        db         2h                                                
-        db         0h                                                
-        db         4h                                                
-        db         11h                                               
-        db         0h                                                
-        db         14h                                               
-        db         96h                                               
-        db         4h                                                
-        db         15h                                               
-        db         98h                                               
-        db         6h                                                
-        db         80h                                               
-        db         6h                                                
-        db         19h                                               
-        db         19h                                               
-        db         9h                                                
-        db         98h                                               
-        db         4h                                                
-        db         9h                                                
-        db         81h                                               
-        db         3h                                                
-        db         Ch                                                
-        db         87h                                               
-        db         3h                                                
-        db         97h                                               
-        db         4h                                                
-        db         81h                                               
-        db         3h                                                
-        db         Ch                                                
-        db         87h                                               
-        db         3h                                                
-        db         1Ah                                               
-        db         1Ah                                               
-        db         7h                                                
-        db         89h                                               
-        db         7h                                                
-        db         7h                                                
-        db         89h                                               
-        db         4h                                                
-        db         Bh                                                
-        db         2h                                                
-        db         FFh                                               
+        .db        0x80                                              
+        .db        0xB                                               
+        .db        0x12                                              
+        .db        0x4                                               
+        .db        0x81                                              
+        .db        0xA                                               
+        .db        0x89                                              
+        .db        0xE                                               
+        .db        0xB                                               
+        .db        0x7                                               
+        .db        0x5                                               
+        .db        0x9                                               
+        .db        0xB                                               
+        .db        0x7                                               
+        .db        0x5                                               
+        .db        0x9                                               
+        .db        0xB                                               
+        .db        0x2                                               
+        .db        0x0                                               
+        .db        0x4                                               
+        .db        0x11                                              
+        .db        0x0                                               
+        .db        0x14                                              
+        .db        0x96                                              
+        .db        0x4                                               
+        .db        0x15                                              
+        .db        0x98                                              
+        .db        0x6                                               
+        .db        0x80                                              
+        .db        0x6                                               
+        .db        0x19                                              
+        .db        0x19                                              
+        .db        0x9                                               
+        .db        0x98                                              
+        .db        0x4                                               
+        .db        0x9                                               
+        .db        0x81                                              
+        .db        0x3                                               
+        .db        0xC                                               
+        .db        0x87                                              
+        .db        0x3                                               
+        .db        0x97                                              
+        .db        0x4                                               
+        .db        0x81                                              
+        .db        0x3                                               
+        .db        0xC                                               
+        .db        0x87                                              
+        .db        0x3                                               
+        .db        0x1A                                              
+        .db        0x1A                                              
+        .db        0x7                                               
+        .db        0x89                                              
+        .db        0x7                                               
+        .db        0x7                                               
+        .db        0x89                                              
+        .db        0x4                                               
+        .db        0xB                                               
+        .db        0x2                                               
+        .db        0xFF                                              
 
 Room5_DrawCommands:                                                 
-        db         12h                                               
-        db         80h                                               
-        db         7h                                                
-        db         Dh                                                
-        db         80h                                               
-        db         3h                                                
-        db         4h                                                
-        db         Ah                                                
-        db         89h                                               
-        db         3h                                                
-        db         3h                                                
-        db         0h                                                
-        db         4h                                                
-        db         Ah                                                
-        db         89h                                               
-        db         4h                                                
-        db         7h                                                
-        db         9h                                                
-        db         7h                                                
-        db         9h                                                
-        db         7h                                                
-        db         89h                                               
-        db         5h                                                
-        db         81h                                               
-        db         4h                                                
-        db         Dh                                                
-        db         0h                                                
-        db         Fh                                                
-        db         80h                                               
-        db         7h                                                
-        db         4h                                                
-        db         1h                                                
-        db         Ah                                                
-        db         9h                                                
-        db         9h                                                
-        db         7h                                                
-        db         89h                                               
-        db         5h                                                
-        db         3h                                                
-        db         0h                                                
-        db         0h                                                
-        db         4h                                                
-        db         1h                                                
-        db         89h                                               
-        db         Bh                                                
-        db         Bh                                                
-        db         2h                                                
-        db         0h                                                
-        db         7h                                                
-        db         9h                                                
-        db         9h                                                
-        db         87h                                               
-        db         7h                                                
-        db         2h                                                
-        db         FFh                                               
+        .db        0x12                                              
+        .db        0x80                                              
+        .db        0x7                                               
+        .db        0xD                                               
+        .db        0x80                                              
+        .db        0x3                                               
+        .db        0x4                                               
+        .db        0xA                                               
+        .db        0x89                                              
+        .db        0x3                                               
+        .db        0x3                                               
+        .db        0x0                                               
+        .db        0x4                                               
+        .db        0xA                                               
+        .db        0x89                                              
+        .db        0x4                                               
+        .db        0x7                                               
+        .db        0x9                                               
+        .db        0x7                                               
+        .db        0x9                                               
+        .db        0x7                                               
+        .db        0x89                                              
+        .db        0x5                                               
+        .db        0x81                                              
+        .db        0x4                                               
+        .db        0xD                                               
+        .db        0x0                                               
+        .db        0xF                                               
+        .db        0x80                                              
+        .db        0x7                                               
+        .db        0x4                                               
+        .db        0x1                                               
+        .db        0xA                                               
+        .db        0x9                                               
+        .db        0x9                                               
+        .db        0x7                                               
+        .db        0x89                                              
+        .db        0x5                                               
+        .db        0x3                                               
+        .db        0x0                                               
+        .db        0x0                                               
+        .db        0x4                                               
+        .db        0x1                                               
+        .db        0x89                                              
+        .db        0xB                                               
+        .db        0xB                                               
+        .db        0x2                                               
+        .db        0x0                                               
+        .db        0x7                                               
+        .db        0x9                                               
+        .db        0x9                                               
+        .db        0x87                                              
+        .db        0x7                                               
+        .db        0x2                                               
+        .db        0xFF                                              
 
 Room6_DrawCommands:                                                 
-        db         13h                                               
-        db         80h                                               
-        db         9h                                                
-        db         Dh                                                
-        db         0h                                                
-        db         4h                                                
-        db         1h                                                
-        db         1h                                                
-        db         Ah                                                
-        db         89h                                               
-        db         Bh                                                
-        db         3h                                                
-        db         80h                                               
-        db         7h                                                
-        db         10h                                               
-        db         0h                                                
-        db         4h                                                
-        db         1h                                                
-        db         Ah                                                
-        db         9h                                                
-        db         3h                                                
-        db         1h                                                
-        db         1h                                                
-        db         89h                                               
-        db         Eh                                                
-        db         87h                                               
-        db         Ah                                                
-        db         2h                                                
-        db         FFh                                               
+        .db        0x13                                              
+        .db        0x80                                              
+        .db        0x9                                               
+        .db        0xD                                               
+        .db        0x0                                               
+        .db        0x4                                               
+        .db        0x1                                               
+        .db        0x1                                               
+        .db        0xA                                               
+        .db        0x89                                              
+        .db        0xB                                               
+        .db        0x3                                               
+        .db        0x80                                              
+        .db        0x7                                               
+        .db        0x10                                              
+        .db        0x0                                               
+        .db        0x4                                               
+        .db        0x1                                               
+        .db        0xA                                               
+        .db        0x9                                               
+        .db        0x3                                               
+        .db        0x1                                               
+        .db        0x1                                               
+        .db        0x89                                              
+        .db        0xE                                               
+        .db        0x87                                              
+        .db        0xA                                               
+        .db        0x2                                               
+        .db        0xFF                                              
 
 Room7_DrawCommands:                                                 
-        db         0h                                                
-        db         13h                                               
-        db         80h                                               
-        db         3h                                                
-        db         4h                                                
-        db         0h                                                
-        db         2h                                                
-        db         0h                                                
-        db         0h                                                
-        db         13h                                               
-        db         0h                                                
-        db         4h                                                
-        db         81h                                               
-        db         3h                                                
-        db         Ah                                                
-        db         9h                                                
-        db         3h                                                
-        db         81h                                               
-        db         5h                                                
-        db         89h                                               
-        db         7h                                                
-        db         7h                                                
-        db         7h                                                
-        db         5h                                                
-        db         7h                                                
-        db         2h                                                
-        db         2h                                                
-        db         7h                                                
-        db         7h                                                
-        db         9h                                                
-        db         1h                                                
-        db         9h                                                
-        db         1h                                                
-        db         9h                                                
-        db         9h                                                
-        db         7h                                                
-        db         9h                                                
-        db         7h                                                
-        db         9h                                                
-        db         1h                                                
-        db         1h                                                
-        db         84h                                               
-        db         3h                                                
-        db         8h                                                
-        db         1h                                                
-        db         1h                                                
-        db         89h                                               
-        db         6h                                                
-        db         87h                                               
-        db         6h                                                
-        db         5h                                                
-        db         9h                                                
-        db         Bh                                                
-        db         87h                                               
-        db         2h                                                
-        db         2h                                                
-        db         FFh                                               
+        .db        0x0                                               
+        .db        0x13                                              
+        .db        0x80                                              
+        .db        0x3                                               
+        .db        0x4                                               
+        .db        0x0                                               
+        .db        0x2                                               
+        .db        0x0                                               
+        .db        0x0                                               
+        .db        0x13                                              
+        .db        0x0                                               
+        .db        0x4                                               
+        .db        0x81                                              
+        .db        0x3                                               
+        .db        0xA                                               
+        .db        0x9                                               
+        .db        0x3                                               
+        .db        0x81                                              
+        .db        0x5                                               
+        .db        0x89                                              
+        .db        0x7                                               
+        .db        0x7                                               
+        .db        0x7                                               
+        .db        0x5                                               
+        .db        0x7                                               
+        .db        0x2                                               
+        .db        0x2                                               
+        .db        0x7                                               
+        .db        0x7                                               
+        .db        0x9                                               
+        .db        0x1                                               
+        .db        0x9                                               
+        .db        0x1                                               
+        .db        0x9                                               
+        .db        0x9                                               
+        .db        0x7                                               
+        .db        0x9                                               
+        .db        0x7                                               
+        .db        0x9                                               
+        .db        0x1                                               
+        .db        0x1                                               
+        .db        0x84                                              
+        .db        0x3                                               
+        .db        0x8                                               
+        .db        0x1                                               
+        .db        0x1                                               
+        .db        0x89                                              
+        .db        0x6                                               
+        .db        0x87                                              
+        .db        0x6                                               
+        .db        0x5                                               
+        .db        0x9                                               
+        .db        0xB                                               
+        .db        0x87                                              
+        .db        0x2                                               
+        .db        0x2                                               
+        .db        0xFF                                              
 
 Room8_DrawCommands:                                                 
-        db         14h                                               
-        db         96h                                               
-        db         9h                                                
-        db         15h                                               
-        db         98h                                               
-        db         Bh                                                
-        db         Fh                                                
-        db         80h                                               
-        db         9h                                                
-        db         Dh                                                
-        db         0h                                                
-        db         4h                                                
-        db         1h                                                
-        db         Ah                                                
-        db         89h                                               
-        db         9h                                                
-        db         86h                                               
-        db         7h                                                
-        db         Eh                                                
-        db         4h                                                
-        db         81h                                               
-        db         3h                                                
-        db         89h                                               
-        db         Bh                                                
-        db         86h                                               
-        db         9h                                                
-        db         Eh                                                
-        db         4h                                                
-        db         81h                                               
-        db         3h                                                
-        db         89h                                               
-        db         Eh                                                
-        db         Bh                                                
-        db         2h                                                
-        db         86h                                               
-        db         Ah                                                
-        db         89h                                               
-        db         Bh                                                
-        db         87h                                               
-        db         3h                                                
-        db         2h                                                
-        db         Eh                                                
-        db         86h                                               
-        db         9h                                                
-        db         89h                                               
-        db         Bh                                                
-        db         87h                                               
-        db         4h                                                
-        db         2h                                                
-        db         FFh                                               
+        .db        0x14                                              
+        .db        0x96                                              
+        .db        0x9                                               
+        .db        0x15                                              
+        .db        0x98                                              
+        .db        0xB                                               
+        .db        0xF                                               
+        .db        0x80                                              
+        .db        0x9                                               
+        .db        0xD                                               
+        .db        0x0                                               
+        .db        0x4                                               
+        .db        0x1                                               
+        .db        0xA                                               
+        .db        0x89                                              
+        .db        0x9                                               
+        .db        0x86                                              
+        .db        0x7                                               
+        .db        0xE                                               
+        .db        0x4                                               
+        .db        0x81                                              
+        .db        0x3                                               
+        .db        0x89                                              
+        .db        0xB                                               
+        .db        0x86                                              
+        .db        0x9                                               
+        .db        0xE                                               
+        .db        0x4                                               
+        .db        0x81                                              
+        .db        0x3                                               
+        .db        0x89                                              
+        .db        0xE                                               
+        .db        0xB                                               
+        .db        0x2                                               
+        .db        0x86                                              
+        .db        0xA                                               
+        .db        0x89                                              
+        .db        0xB                                               
+        .db        0x87                                              
+        .db        0x3                                               
+        .db        0x2                                               
+        .db        0xE                                               
+        .db        0x86                                              
+        .db        0x9                                               
+        .db        0x89                                              
+        .db        0xB                                               
+        .db        0x87                                              
+        .db        0x4                                               
+        .db        0x2                                               
+        .db        0xFF                                              
 
 Room9_DrawCommands:                                                 
-        db         80h                                               
-        db         5h                                                
-        db         Dh                                                
-        db         0h                                                
-        db         Dh                                                
-        db         0h                                                
-        db         Dh                                                
-        db         0h                                                
-        db         12h                                               
-        db         4h                                                
-        db         81h                                               
-        db         Ah                                                
-        db         89h                                               
-        db         Ah                                                
-        db         9Ah                                               
-        db         3h                                                
-        db         5h                                                
-        db         9h                                                
-        db         9h                                                
-        db         3h                                                
-        db         99h                                               
-        db         3h                                                
-        db         9h                                                
-        db         9h                                                
-        db         7h                                                
-        db         9h                                                
-        db         9h                                                
-        db         87h                                               
-        db         6h                                                
-        db         2h                                                
-        db         11h                                               
-        db         0h                                                
-        db         0h                                                
-        db         19h                                               
-        db         17h                                               
-        db         17h                                               
-        db         1h                                                
-        db         Dh                                                
-        db         7h                                                
-        db         17h                                               
-        db         1h                                                
-        db         Dh                                                
-        db         7h                                                
-        db         17h                                               
-        db         1h                                                
-        db         Dh                                                
-        db         7h                                                
-        db         9h                                                
-        db         18h                                               
-        db         9h                                                
-        db         18h                                               
-        db         9h                                                
-        db         18h                                               
-        db         18h                                               
-        db         1Ah                                               
-        db         5h                                                
-        db         89h                                               
-        db         5h                                                
-        db         Bh                                                
-        db         2h                                                
-        db         FFh                                               
+        .db        0x80                                              
+        .db        0x5                                               
+        .db        0xD                                               
+        .db        0x0                                               
+        .db        0xD                                               
+        .db        0x0                                               
+        .db        0xD                                               
+        .db        0x0                                               
+        .db        0x12                                              
+        .db        0x4                                               
+        .db        0x81                                              
+        .db        0xA                                               
+        .db        0x89                                              
+        .db        0xA                                               
+        .db        0x9A                                              
+        .db        0x3                                               
+        .db        0x5                                               
+        .db        0x9                                               
+        .db        0x9                                               
+        .db        0x3                                               
+        .db        0x99                                              
+        .db        0x3                                               
+        .db        0x9                                               
+        .db        0x9                                               
+        .db        0x7                                               
+        .db        0x9                                               
+        .db        0x9                                               
+        .db        0x87                                              
+        .db        0x6                                               
+        .db        0x2                                               
+        .db        0x11                                              
+        .db        0x0                                               
+        .db        0x0                                               
+        .db        0x19                                              
+        .db        0x17                                              
+        .db        0x17                                              
+        .db        0x1                                               
+        .db        0xD                                               
+        .db        0x7                                               
+        .db        0x17                                              
+        .db        0x1                                               
+        .db        0xD                                               
+        .db        0x7                                               
+        .db        0x17                                              
+        .db        0x1                                               
+        .db        0xD                                               
+        .db        0x7                                               
+        .db        0x9                                               
+        .db        0x18                                              
+        .db        0x9                                               
+        .db        0x18                                              
+        .db        0x9                                               
+        .db        0x18                                              
+        .db        0x18                                              
+        .db        0x1A                                              
+        .db        0x5                                               
+        .db        0x89                                              
+        .db        0x5                                               
+        .db        0xB                                               
+        .db        0x2                                               
+        .db        0xFF                                              
 
 Jump_ProcessDrawCommands:                                           
         LDX        #DrawCommandFunctions_d5bb                        ; load the address of a data block to X
 
-; U will point to the room's draw commands
+;U will point to the room's draw commands
 
 LOOP_GetNextDrawCommand:                                            
         LDA        ,U+                                               ; get next command, increment U
@@ -5134,11 +4881,8 @@ LOOP_GetNextDrawCommand:
         BEQ        Jump_EncounteredFFEndValue                        ; Ju
         DECA                                                         
         LDB        ,U+                                               ; This is a repeatable command, get the count and store in B
-        CMPX       #0xc601                                           
-
-; -- Length Override: 1 (actual length is 3)
-
-; -- Fallthrough: d5ae
+        .db        0x8C                                              ; When PC reaches here this byte and the next two are 
+                                                                     ; interpeted as CMPX #0xc601 which does nothing. 
 
 Jump_SingleDrawCommand:                                             
         LDB        #0x1                                              ; load 1 to B, overriding above. but why?
@@ -5159,61 +4903,59 @@ Loop_CallDrawCommand:
 Jump_EncounteredFFEndValue:                                         
         RTS                                                          
 
-; there are more than two dozen different pieces
-
-; these seem to be the function related to drawing
-
-; each piece. maybe.
+;there are more than two dozen different pieces
+;these seem to be the function related to drawing
+;each piece. maybe.
 
 DrawCommandFunctions_d5bb:                                          
-        dw         DrawPiece_00_Stalactite                           
-        dw         DrawPiece_01_WallGoingDown                        
-        dw         DrawPiece_02_LeftHandCornerPiece                  
-        dw         DrawPiece_03_TopRightHandCornerPiece              
-        dw *       DrawPiece_04_TopRightHandCornerPiece2             
-        dw         DrawPiece_05_BottomRightSideOfFloatingPlatforms   
-        dw         DrawPiece_06_FloorPieceGoingRight                 
-        dw         DrawPiece_07_WallPieceGoingUp                     
-        dw         DrawPiece_08_CornerPieceGoingDownLeft             
-        dw         DrawPiece_09_FloorPieceGoingLeft                  ; DrawPiece_0_
-        dw         DrawPiece_0a_ShortLineGoingDown                   
-        dw         DrawPiece_0b_ShortLineGoingUp                     
-        dw         DrawPiece_0c_VeryShortRope                        
-        dw         DrawPiece_0d_ShortRope                            
-        dw         DrawPiece_0e_MidLengthRope                        
-        dw         DrawPiece_0f_LongRope                             
-        dw         DrawPiece_10_VeryLongRope                         
-        dw         DrawPiece_11_SuperLongRope                        
-        dw         DrawPiece_12_ExcessivelyLongRope                  
-        dw         DrawPiece_13_RediculouslyLongRope                 
-        dw         DrawPiece_14_HorizontalRopeStartGoingRight        
-        dw         DrawPiece_15_HorizontalRopeEndGoingRight          
-        dw         DrawPiece_16_HorizontalRopeGoingRight             
-        dw         DrawPiece_17_BlankAreaGoingRight                  
-        dw         DrawPiece_18_BlankAreaGoingLeft                   
-        dw         DrawPiece_19_BlankAreaGoingDownRight              
-        dw         DrawPiece_20_UnknownOrBuggy                       
+        .dw        DrawPiece_00_Stalactite                           
+        .dw        DrawPiece_01_WallGoingDown                        
+        .dw        DrawPiece_02_LeftHandCornerPiece                  
+        .dw        DrawPiece_03_TopRightHandCornerPiece              
+        .dw        *                                                 
+        .dw        DrawPiece_05_BottomRightSideOfFloatingPlatforms   
+        .dw        DrawPiece_06_FloorPieceGoingRight                 
+        .dw        DrawPiece_07_WallPieceGoingUp                     
+        .dw        DrawPiece_08_CornerPieceGoingDownLeft             
+        .dw        DrawPiece_09_FloorPieceGoingLeft                  ; DrawPiece_0_
+        .dw        DrawPiece_0a_ShortLineGoingDown                   
+        .dw        DrawPiece_0b_ShortLineGoingUp                     
+        .dw        DrawPiece_0c_VeryShortRope                        
+        .dw        DrawPiece_0d_ShortRope                            
+        .dw        DrawPiece_0e_MidLengthRope                        
+        .dw        DrawPiece_0f_LongRope                             
+        .dw        DrawPiece_10_VeryLongRope                         
+        .dw        DrawPiece_11_SuperLongRope                        
+        .dw        DrawPiece_12_ExcessivelyLongRope                  
+        .dw        DrawPiece_13_RediculouslyLongRope                 
+        .dw        DrawPiece_14_HorizontalRopeStartGoingRight        
+        .dw        DrawPiece_15_HorizontalRopeEndGoingRight          
+        .dw        DrawPiece_16_HorizontalRopeGoingRight             
+        .dw        DrawPiece_17_BlankAreaGoingRight                  
+        .dw        DrawPiece_18_BlankAreaGoingLeft                   
+        .dw        DrawPiece_19_BlankAreaGoingDownRight              
+        .dw        DrawPiece_20_UnknownOrBuggy                       
 
 DrawPiece_00_Stalactite:                                            
         LDU        #DrawData_00_Stalactite                           
         JMP        DrawBackgroundPiece                               
 
-; -- Flow Override: CALL_RETURN (COMPUTED_CALL_TER
+;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
 
 DrawData_00_Stalactite:                                             
-        db         03h                                               ; num segments
+        .db        0x03                                              ; num segments
                                                                      ; 
-        db         80h                                               ; subpixels to move along X
-        db         04h                                               ; number of pixels to move along Y 
-        db         00h                                               ; orientation 0, up and right
+        .db        0x80                                              ; subpixels to move along X
+        .db        0x04                                              ; number of pixels to move along Y 
+        .db        0x00                                              ; orientation 0, up and right
                                                                      ; 
-        db         80h                                               ; subpixels to move along X
-        db         0Ah                                               ; number of pixels to move along Y 
-        db         03h                                               ; orientation 3, down and right
+        .db        0x80                                              ; subpixels to move along X
+        .db        0x0A                                              ; number of pixels to move along Y 
+        .db        0x03                                              ; orientation 3, down and right
                                                                      ; 
-        db         80h                                               ; subpixels to move along X
-        db         07h                                               ; number of pixels to move along Y 
-        db         00h                                               ; orienation 0, up and right
+        .db        0x80                                              ; subpixels to move along X
+        .db        0x07                                              ; number of pixels to move along Y 
+        .db        0x00                                              ; orienation 0, up and right
 
 DrawPiece_07_WallPieceGoingUp:                                      
         LDU        #DrawData_07_WallPieceGoingUp                     
@@ -5225,47 +4967,47 @@ DrawPiece_01_WallGoingDown:
 Jump_JumpToDrawBackgroundPiece:                                     
         JMP        DrawBackgroundPiece                               
 
-; -- Flow Override: CALL_RETURN (COMPUTED_CALL_TER
+;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
 
 DrawData_01_WallGoingDown:                                          
-        db         03h                                               
-        db         40h                                               
-        db         08h                                               
-        db         04h                                               
-        db         40h                                               
-        db         05h                                               
-        db         03h                                               
-        db         00h                                               
-        db         05h                                               
-        db         04h                                               
+        .db        0x03                                              
+        .db        0x40                                              
+        .db        0x08                                              
+        .db        0x04                                              
+        .db        0x40                                              
+        .db        0x05                                              
+        .db        0x03                                              
+        .db        0x00                                              
+        .db        0x05                                              
+        .db        0x04                                              
 
 DrawData_07_WallPieceGoingUp:                                       
-        db         03h                                               
-        db         00h                                               
-        db         05h                                               
-        db         00h                                               
-        db         40h                                               
-        db         05h                                               
-        db         07h                                               
-        db         40h                                               
-        db         08h                                               
-        db         00h                                               
+        .db        0x03                                              
+        .db        0x00                                              
+        .db        0x05                                              
+        .db        0x00                                              
+        .db        0x40                                              
+        .db        0x05                                              
+        .db        0x07                                              
+        .db        0x40                                              
+        .db        0x08                                              
+        .db        0x00                                              
 
 DrawPiece_02_LeftHandCornerPiece:                                   
         LDU        #DrawData_02_LeftHandCornerPiece                  
         BRA        Jump_AnotherJumpToDrawBackgroundPiece             
 
 DrawData_02_LeftHandCornerPiece:                                    
-        db         3h                                                
-        db         0h                                                
-        db         4h                                                
-        db         7h                                                
-        db         80h                                               
-        db         7h                                                
-        db         0h                                                
-        db         FFh                                               
-        db         7h                                                
-        db         0h                                                
+        .db        0x3                                               
+        .db        0x0                                               
+        .db        0x4                                               
+        .db        0x7                                               
+        .db        0x80                                              
+        .db        0x7                                               
+        .db        0x0                                               
+        .db        0xFF                                              
+        .db        0x7                                               
+        .db        0x0                                               
 
 DrawPiece_08_CornerPieceGoingDownLeft:                              
         LDU        #DrawData_08_CornerPieceGoingDownLeft             
@@ -5273,35 +5015,35 @@ DrawPiece_08_CornerPieceGoingDownLeft:
 Jump_AnotherJumpToDrawBackgroundPiece:                              
         JMP        DrawBackgroundPiece                               
 
-; -- Flow Override: CALL_RETURN (COMPUTED_CALL_TER
+;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
 
 DrawData_08_CornerPieceGoingDownLeft:                               
-        db         03h                                               
-        db         FFh                                               
-        db         07h                                               
-        db         04h                                               
-        db         80h                                               
-        db         07h                                               
-        db         04h                                               
-        db         00h                                               
-        db         04h                                               
-        db         03h                                               
+        .db        0x03                                              
+        .db        0xFF                                              
+        .db        0x07                                              
+        .db        0x04                                              
+        .db        0x80                                              
+        .db        0x07                                              
+        .db        0x04                                              
+        .db        0x00                                              
+        .db        0x04                                              
+        .db        0x03                                              
 
 DrawPiece_03_TopRightHandCornerPiece:                               
         LDU        #DrawData_03_TopRightHandCornerPiece              
         BRA        Jump_AgainAnotherJumpToDrawBackgroundPiece        
 
 DrawData_03_TopRightHandCornerPiece:                                
-        db         03h                                               
-        db         80h                                               
-        db         06h                                               
-        db         03h                                               
-        db         00h                                               
-        db         04h                                               
-        db         03h                                               
-        db         FFh                                               
-        db         08h                                               
-        db         03h                                               
+        .db        0x03                                              
+        .db        0x80                                              
+        .db        0x06                                              
+        .db        0x03                                              
+        .db        0x00                                              
+        .db        0x04                                              
+        .db        0x03                                              
+        .db        0xFF                                              
+        .db        0x08                                              
+        .db        0x03                                              
 
 DrawPiece_04_TopRightHandCornerPiece2:                              
         LDU        #DrawData_04_TopRightHandCornerPiece2             ; set a new U stack
@@ -5309,35 +5051,35 @@ DrawPiece_04_TopRightHandCornerPiece2:
 Jump_AgainAnotherJumpToDrawBackgroundPiece:                         
         JMP        DrawBackgroundPiece                               
 
-; -- Flow Override: CALL_RETURN (COMPUTED_CALL_TER
+;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
 
 DrawData_04_TopRightHandCornerPiece2:                               
-        db         03h                                               
-        db         80h                                               
-        db         06h                                               
-        db         03h                                               
-        db         FFh                                               
-        db         05h                                               
-        db         03h                                               
-        db         80h                                               
-        db         07h                                               
-        db         03h                                               
+        .db        0x03                                              
+        .db        0x80                                              
+        .db        0x06                                              
+        .db        0x03                                              
+        .db        0xFF                                              
+        .db        0x05                                              
+        .db        0x03                                              
+        .db        0x80                                              
+        .db        0x07                                              
+        .db        0x03                                              
 
 DrawPiece_05_BottomRightSideOfFloatingPlatforms:                    
         LDU        #DrawData_05_BottomRightSideOfFloatingPlatforms   
         BRA        Jump_AgainAnotherJumpToDrawBackgroundPiece        
 
 DrawData_05_BottomRightSideOfFloatingPlatforms:                     
-        db         03h                                               
-        db         FFh                                               
-        db         08h                                               
-        db         00h                                               
-        db         00h                                               
-        db         05h                                               
-        db         00h                                               
-        db         80h                                               
-        db         05h                                               
-        db         00h                                               
+        .db        0x03                                              
+        .db        0xFF                                              
+        .db        0x08                                              
+        .db        0x00                                              
+        .db        0x00                                              
+        .db        0x05                                              
+        .db        0x00                                              
+        .db        0x80                                              
+        .db        0x05                                              
+        .db        0x00                                              
 
 DrawPiece_14_HorizontalRopeStartGoingRight:                         
         LDU        #DrawData_14_HorizontalRopeStartGoingRight        
@@ -5349,10 +5091,10 @@ DrawPiece_14_HorizontalRopeStartGoingRight:
         RTS                                                          
 
 DrawData_14_HorizontalRopeStartGoingRight:                          
-        db         01h                                               
-        db         FFh                                               
-        db         0Ah                                               
-        db         03h                                               
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x0A                                              
+        .db        0x03                                              
 
 DrawPiece_15_HorizontalRopeEndGoingRight:                           
         LDU        #DrawData_15_HorizontalRopeEndGoingRight          
@@ -5364,67 +5106,64 @@ DrawPiece_15_HorizontalRopeEndGoingRight:
         RTS                                                          
 
 DrawData_15_HorizontalRopeEndGoingRight:                            
-        db         01h                                               
-        db         FFh                                               
-        db         0Ah                                               
-        db         00h                                               
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x0A                                              
+        .db        0x00                                              
 
 DrawPiece_06_FloorPieceGoingRight:                                  
         LDU        #DrawData_17_BlankAreaGoingRight                  
 ;**************************************************************
 ;*                       THUNK FUNCTION                       *
 ;**************************************************************
-
-; thunk undefined __stdcall DrawBackgroundPieceWra
-
-; Thunked-Function: DrawBackgroundPiece
-
-; undefined         A:1            <RETURN>
+;thunk undefined __stdcall DrawBackgroundPieceWrapper(void)
+;Thunked-Function: DrawBackgroundPiece
+;undefined         A:1            <RETURN>
 
 DrawBackgroundPieceWrapper:                                         
         JMP        DrawBackgroundPiece                               
 
 DrawData_17_BlankAreaGoingRight:                                    
-        db         01h                                               
-        db         00h                                               
-        db         09h                                               
-        db         02h                                               
+        .db        0x01                                              
+        .db        0x00                                              
+        .db        0x09                                              
+        .db        0x02                                              
 
 DrawPiece_09_FloorPieceGoingLeft:                                   
         LDU        #DrawData_18_BlankAreaGoingLeft                   
         BRA        DrawBackgroundPieceWrapper                        ; undefined DrawBackgroundPieceWrapper(void)
 
-; -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
 
 DrawData_18_BlankAreaGoingLeft:                                     
-        db         01h                                               
-        db         00h                                               
-        db         09h                                               
-        db         06h                                               
+        .db        0x01                                              
+        .db        0x00                                              
+        .db        0x09                                              
+        .db        0x06                                              
 
 DrawPiece_0a_ShortLineGoingDown:                                    
         LDU        #DrawData_19_BlankAreaGoingDownRight              
         BRA        DrawBackgroundPieceWrapper                        ; undefined DrawBackgroundPieceWrapper(void)
 
-; -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
 
 DrawData_19_BlankAreaGoingDownRight:                                
-        db         01h                                               
-        db         00h                                               
-        db         10h                                               
-        db         03h                                               
+        .db        0x01                                              
+        .db        0x00                                              
+        .db        0x10                                              
+        .db        0x03                                              
 
 DrawPiece_0b_ShortLineGoingUp:                                      
         LDU        #DrawData_0b_ShortLineGoingUp                     
         BRA        DrawBackgroundPieceWrapper                        ; undefined DrawBackgroundPieceWrapper(void)
 
-; -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
 
 DrawData_0b_ShortLineGoingUp:                                       
-        db         01h                                               
-        db         00h                                               
-        db         10h                                               
-        db         00h                                               
+        .db        0x01                                              
+        .db        0x00                                              
+        .db        0x10                                              
+        .db        0x00                                              
 
 DrawPiece_17_BlankAreaGoingRight:                                   
         LDU        #DrawData_17_BlankAreaGoingRight                  
@@ -5454,104 +5193,104 @@ DrawPiece_0c_VeryShortRope:
         BRA        Jump_DrawRope                                     
 
 DrawData_0c_VeryShortRope:                                          
-        db         02h                                               
-        db         00h                                               
-        db         07h                                               
-        db         03h                                               
-        db         00h                                               
-        db         07h                                               
-        db         00h                                               
+        .db        0x02                                              
+        .db        0x00                                              
+        .db        0x07                                              
+        .db        0x03                                              
+        .db        0x00                                              
+        .db        0x07                                              
+        .db        0x00                                              
 
 DrawPiece_0d_ShortRope:                                             
         LDX        #DrawData_0d_ShortRope                            
         BRA        Jump_DrawRope                                     
 
 DrawData_0d_ShortRope:                                              
-        db         02h                                               
-        db         00h                                               
-        db         16h                                               
-        db         03h                                               
-        db         00h                                               
-        db         16h                                               
-        db         00h                                               
+        .db        0x02                                              
+        .db        0x00                                              
+        .db        0x16                                              
+        .db        0x03                                              
+        .db        0x00                                              
+        .db        0x16                                              
+        .db        0x00                                              
 
 DrawPiece_0e_MidLengthRope:                                         
         LDX        #DrawData_0e_MidLengthRope                        
         BRA        Jump_DrawRope                                     
 
 DrawData_0e_MidLengthRope:                                          
-        db         02h                                               
-        db         00h                                               
-        db         25h                                               
-        db         03h                                               
-        db         00h                                               
-        db         25h                                               
-        db         00h                                               
+        .db        0x02                                              
+        .db        0x00                                              
+        .db        0x25                                              
+        .db        0x03                                              
+        .db        0x00                                              
+        .db        0x25                                              
+        .db        0x00                                              
 
 DrawPiece_0f_LongRope:                                              
         LDX        #DrawData_0f_LongRope                             
         BRA        Jump_DrawRope                                     
 
 DrawData_0f_LongRope:                                               
-        db         02h                                               
-        db         00h                                               
-        db         34h                                               
-        db         03h                                               
-        db         00h                                               
-        db         34h                                               
-        db         00h                                               
+        .db        0x02                                              
+        .db        0x00                                              
+        .db        0x34                                              
+        .db        0x03                                              
+        .db        0x00                                              
+        .db        0x34                                              
+        .db        0x00                                              
 
 DrawPiece_10_VeryLongRope:                                          
         LDX        #DrawData_10_VeryLongRope                         
         BRA        Jump_DrawRope                                     
 
 DrawData_10_VeryLongRope:                                           
-        db         02h                                               
-        db         00h                                               
-        db         43h                                               
-        db         03h                                               
-        db         00h                                               
-        db         43h                                               
-        db         00h                                               
+        .db        0x02                                              
+        .db        0x00                                              
+        .db        0x43                                              
+        .db        0x03                                              
+        .db        0x00                                              
+        .db        0x43                                              
+        .db        0x00                                              
 
 DrawPiece_11_SuperLongRope:                                         
         LDX        #DrawData_11_SuperLongRope                        
         BRA        Jump_DrawRope                                     
 
 DrawData_11_SuperLongRope:                                          
-        db         02h                                               
-        db         00h                                               
-        db         52h                                               
-        db         03h                                               
-        db         00h                                               
-        db         52h                                               
-        db         00h                                               
+        .db        0x02                                              
+        .db        0x00                                              
+        .db        0x52                                              
+        .db        0x03                                              
+        .db        0x00                                              
+        .db        0x52                                              
+        .db        0x00                                              
 
 DrawPiece_12_ExcessivelyLongRope:                                   
         LDX        #DrawData_12_ExcessivelyLongRope                  
         BRA        Jump_DrawRope                                     
 
 DrawData_12_ExcessivelyLongRope:                                    
-        db         02h                                               
-        db         00h                                               
-        db         61h                                               
-        db         03h                                               
-        db         00h                                               
-        db         61h                                               
-        db         00h                                               
+        .db        0x02                                              
+        .db        0x00                                              
+        .db        0x61                                              
+        .db        0x03                                              
+        .db        0x00                                              
+        .db        0x61                                              
+        .db        0x00                                              
 
 DrawPiece_13_RediculouslyLongRope:                                  
         LDX        #DrawData_13_RediculouslyLongRope                 
         BRA        Jump_DrawRope                                     
 
 DrawData_13_RediculouslyLongRope:                                   
-        db         02h                                               
-        db         00h                                               
-        db         8Eh                                               
-        db         03h                                               
-        db         00h                                               
-        db         8Eh                                               
-        db         00h                                               
+        .db        0x02                                              
+        .db        0x00                                              
+        .db        0x8E                                              
+        .db        0x03                                              
+        .db        0x00                                              
+        .db        0x8E                                              
+        .db        0x00                                              
 
 Jump_DrawRope:                                                      
         PSHS        X                                                
@@ -5566,19 +5305,19 @@ Jump_DrawRope:
         STA        <CrtArtifactDrawingMaskIndex_0x20                 
         BRA        DrawBackgroundPiece                               ; undefined DrawBackgroundPiece(void)
 
-; -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
 
 DrawData_PreRope_Maybe:                                             
-        db         01h                                               
-        db         FFh                                               
-        db         06h                                               
-        db         03h                                               
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x06                                              
+        .db        0x03                                              
 
 DrawData_PostRope_Maybe:                                            
-        db         01h                                               
-        db         FFh                                               
-        db         06h                                               
-        db         00h                                               
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x06                                              
+        .db        0x00                                              
 
 DrawPiece_16_HorizontalRopeGoingRight:                              
         LDU        #DrawData_17_BlankAreaGoingRight                  
@@ -5591,10 +5330,8 @@ DrawPiece_16_HorizontalRopeGoingRight:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawBackgroundPiece(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall DrawBackgroundPiece(void)
+;undefined         A:1            <RETURN>
 
 DrawBackgroundPiece:                                                
         LDA        ,U+                                               ; get segment count
@@ -5615,43 +5352,35 @@ Loop_ProcessSegment:
         RTS                                                          
 
 LineDrawingFunctions_0xd77d:                                        
-        dw         DrawSegment_Orientation0_UpAndRight               
-        dw         DrawSegment_Orientation1_RightAndUp               
-        dw         DrawSegment_Orientation2_RightAndDown             
-        dw         DrawSegment_Orientation3_DownAndRight             
-        dw         DrawSegment_Orientation4_DownAndLeft              
-        dw         DrawSegment_Orientation5_LeftAndDown              
-        dw         DrawSegment_Orientation6_LeftAndUp                
-        dw         DrawSegment_Orientation7_UpAndLeft                
+        .dw        DrawSegment_Orientation0_UpAndRight               
+        .dw        DrawSegment_Orientation1_RightAndUp               
+        .dw        DrawSegment_Orientation2_RightAndDown             
+        .dw        DrawSegment_Orientation3_DownAndRight             
+        .dw        DrawSegment_Orientation4_DownAndLeft              
+        .dw        DrawSegment_Orientation5_LeftAndDown              
+        .dw        DrawSegment_Orientation6_LeftAndUp                
+        .dw        DrawSegment_Orientation7_UpAndLeft                
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawSegment_Orientation0_UpA
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            param_1
-
-; undefined         B:1            param_2
+;undefined __stdcall DrawSegment_Orientation0_UpAndRight(
+;undefined         A:1            <RETURN>
+;undefined         A:1            param_1
+;undefined         B:1            param_2
 
 DrawSegment_Orientation0_UpAndRight:                                
         LDX        #DrawSegment_MovePosUpAndRight                    
         CLR        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25    
         BRA        DrawVerticalSegment                               ; undefined DrawVerticalSegment(undefined A, undefined B, undefined * X)
 
-; -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawSegment_Orientation1_Rig
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            param_1
-
-; undefined         B:1            param_2
+;undefined __stdcall DrawSegment_Orientation1_RightAndUp(
+;undefined         A:1            <RETURN>
+;undefined         A:1            param_1
+;undefined         B:1            param_2
 
 DrawSegment_Orientation1_RightAndUp:                                
         LDX        #DrawSegment_MovePosRightAndUp                    
@@ -5659,54 +5388,42 @@ DrawSegment_Orientation1_RightAndUp:
         STA        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25    
         BRA        DrawHorizontalSegment                             ; undefined DrawHorizontalSegment(undefined A, undefined B, undefined * X)
 
-; -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawSegment_Orientation2_Rig
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            param_1
-
-; undefined         B:1            param_2
+;undefined __stdcall DrawSegment_Orientation2_RightAndDow
+;undefined         A:1            <RETURN>
+;undefined         A:1            param_1
+;undefined         B:1            param_2
 
 DrawSegment_Orientation2_RightAndDown:                              
         LDX        #DrawSegment_MovePosRightAndDown                  
         CLR        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25    
         BRA        DrawHorizontalSegment                             ; undefined DrawHorizontalSegment(undefined A, undefined B, undefined * X)
 
-; -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawSegment_Orientation3_Dow
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            param_1
-
-; undefined         B:1            param_2
+;undefined __stdcall DrawSegment_Orientation3_DownAndRigh
+;undefined         A:1            <RETURN>
+;undefined         A:1            param_1
+;undefined         B:1            param_2
 
 DrawSegment_Orientation3_DownAndRight:                              
         LDX        #DrawSegment_MovePosDownAndRight                  
         CLR        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25    
         BRA        DrawVerticalSegment                               ; undefined DrawVerticalSegment(undefined A, undefined B, undefined * X)
 
-; -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawSegment_Orientation4_Dow
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            param_1
-
-; undefined         B:1            param_2
+;undefined __stdcall DrawSegment_Orientation4_DownAndLeft
+;undefined         A:1            <RETURN>
+;undefined         A:1            param_1
+;undefined         B:1            param_2
 
 DrawSegment_Orientation4_DownAndLeft:                               
         LDX        #DrawSegment_MovePosDownAndLeft                   
@@ -5714,38 +5431,30 @@ DrawSegment_Orientation4_DownAndLeft:
         STA        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25    
         BRA        DrawVerticalSegment                               ; undefined DrawVerticalSegment(undefined A, undefined B, undefined * X)
 
-; -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawSegment_Orientation5_Lef
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            param_1
-
-; undefined         B:1            param_2
+;undefined __stdcall DrawSegment_Orientation5_LeftAndDown
+;undefined         A:1            <RETURN>
+;undefined         A:1            param_1
+;undefined         B:1            param_2
 
 DrawSegment_Orientation5_LeftAndDown:                               
         LDX        #DrawSegment_MovePosLeftAndDown                   
         CLR        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25    
         BRA        DrawHorizontalSegment                             ; undefined DrawHorizontalSegment(undefined A, undefined B, undefined * X)
 
-; -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
+;undefined __stdcall DrawSegment_Orientation6_LeftAndUp(u
+;undefined         A:1            <RETURN>
+;undefined         A:1            param_1
+;undefined         B:1            param_2
 
-; undefined __stdcall DrawSegment_Orientation6_Lef
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            param_1
-
-; undefined         B:1            param_2
-
-DrawSegment_Orientation6_LeftAndUp+2:                               
+DrawSegment_Orientation6_LeftAndUp_2:                               
 
 DrawSegment_Orientation6_LeftAndUp:                                 
         LDX        #DrawSegment_MovePosLeftAndUp                     
@@ -5753,18 +5462,14 @@ DrawSegment_Orientation6_LeftAndUp:
         STA        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25    
         BRA        DrawHorizontalSegment                             ; undefined DrawHorizontalSegment(undefined A, undefined B, undefined * X)
 
-; -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawSegment_Orientation7_UpA
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            param_1
-
-; undefined         B:1            param_2
+;undefined __stdcall DrawSegment_Orientation7_UpAndLeft(u
+;undefined         A:1            <RETURN>
+;undefined         A:1            param_1
+;undefined         B:1            param_2
 
 DrawSegment_Orientation7_UpAndLeft:                                 
         LDX        #DrawSegment_MovePosUpAndLeft                     
@@ -5772,7 +5477,7 @@ DrawSegment_Orientation7_UpAndLeft:
         STA        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25    
         BRA        DrawVerticalSegment                               ; undefined DrawVerticalSegment(undefined A, undefined B, undefined * X)
 
-; -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
 ;**************************************************************
 ;* Draw a segment horizontally pixel by pixel, for            *
 ;* the number specified in DrawSegmentLine_Counter.           *
@@ -5781,36 +5486,30 @@ DrawSegment_Orientation7_UpAndLeft:
 ;* A DrawSegment_MovePos function determines whether          *
 ;* we're going left or first, then up or down.                *
 ;**************************************************************
-
-; undefined __stdcall DrawHorizontalSegment(undefi
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            A
-
-; undefined         B:1            B
-
-; undefined *       X:2            X
-
-; X contains a DrawSegment_MovePos function
+;undefined __stdcall DrawHorizontalSegment(undefined A, u
+;undefined         A:1            <RETURN>
+;undefined         A:1            A
+;undefined         B:1            B
+;undefined *       X:2            X
+;X contains a DrawSegment_MovePos function
 
 DrawHorizontalSegment:                                              
         LDA        <DrawSegment_CurrentScreenY_0x21                  
         LDB        <DrawSegmentLine_Counter_0x1d                     
-        BEQ        Jump_DoneDrawingPixels                            
+        BEQ        Jump_DoneDrawingHorizontalPixels                  
         LDB        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25    
 
-Loop_DrawPixels:                                                    
+Loop_DrawHorizontalPixels:                                          
         PSHS        U X B A                                          
         BSR        DrawPixelWithCrtArtifacts                         ; undefined DrawPixelWithCrtArtifacts(void)
         PULS        A B X U                                          
         DEC        <DrawSegmentLine_Counter_0x1d                     
-        BEQ        Jump_DoneDrawingPixels                            
+        BEQ        Jump_DoneDrawingHorizontalPixels                  
         JSR        ,X                                                ; call the DrawSegment_MovePos function
         STA        <DrawSegment_CurrentScreenY_0x21                  
-        BRA        Loop_DrawPixels                                   
+        BRA        Loop_DrawHorizontalPixels                         
 
-Jump_DoneDrawingPixels:                                             
+Jump_DoneDrawingHorizontalPixels:                                   
         RTS                                                          
 ;**************************************************************
 ;* Draw a segment vertically pixel by pixel,                  *
@@ -5820,38 +5519,32 @@ Jump_DoneDrawingPixels:
 ;* A DrawSegment_MovePos function determines whether          *
 ;* we're going up or down first, then left or right.          *
 ;**************************************************************
-
-; undefined __stdcall DrawVerticalSegment(undefine
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            A
-
-; undefined         B:1            B
-
-; undefined *       X:2            X
-
-; X contains a DrawSegment_MovePos function
+;undefined __stdcall DrawVerticalSegment(undefined A, und
+;undefined         A:1            <RETURN>
+;undefined         A:1            A
+;undefined         B:1            B
+;undefined *       X:2            X
+;X contains a DrawSegment_MovePos function
 
 DrawVerticalSegment:                                                
         LDA        <DrawSegment_CurrentScreenX_0x22                  
         LDB        <DrawSegmentLine_Counter_0x1d                     
-        BEQ        Jump_DoneDrawingPixels                            
+        BEQ        Jump_DoneDrawingVerticalPixels                    
 
-; setup loop
+;setup loop
         LDB        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25    
 
-Loop_DrawPixels:                                                    
+Loop_DrawVerticalPixels:                                            
         PSHS        U X B A                                          
         BSR        DrawPixelWithCrtArtifacts                         ; undefined DrawPixelWithCrtArtifacts(void)
         PULS        A B X U                                          
         DEC        <DrawSegmentLine_Counter_0x1d                     
-        BEQ        Jump_DoneDrawingPixels                            
+        BEQ        Jump_DoneDrawingVerticalPixels                    
         JSR        ,X                                                ; call the DrawSegment_MovePos function
         STA        <DrawSegment_CurrentScreenX_0x22                  
-        BRA        Loop_DrawPixels                                   
+        BRA        Loop_DrawVerticalPixels                           
 
-Jump_DoneDrawingPixels:                                             
+Jump_DoneDrawingVerticalPixels:                                     
         RTS                                                          
 ;**************************************************************
 ;* These DrawSegment_MovePos functions work like this:        *
@@ -5868,10 +5561,8 @@ Jump_DoneDrawingPixels:
 ;* The mem location used to modify the secondary axis's po... *
 ;* is 0x1e, but only 0x1f can have an actual value.           *
 ;**************************************************************
-
-; undefined __stdcall DrawSegment_MovePosUpAndRigh
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall DrawSegment_MovePosUpAndRight(void)
+;undefined         A:1            <RETURN>
 
 DrawSegment_MovePosUpAndRight:                                      
         DEC        <DrawSegment_CurrentScreenY_0x21                  
@@ -5880,10 +5571,8 @@ DrawSegment_MovePosUpAndRight:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawSegment_MovePosRightAndU
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall DrawSegment_MovePosRightAndUp(void)
+;undefined         A:1            <RETURN>
 
 DrawSegment_MovePosRightAndUp:                                      
         INC        <DrawSegment_CurrentScreenX_0x22                  
@@ -5892,10 +5581,8 @@ DrawSegment_MovePosRightAndUp:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawSegment_MovePosRightAndD
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall DrawSegment_MovePosRightAndDown(void)
+;undefined         A:1            <RETURN>
 
 DrawSegment_MovePosRightAndDown:                                    
         INC        <DrawSegment_CurrentScreenX_0x22                  
@@ -5904,10 +5591,8 @@ DrawSegment_MovePosRightAndDown:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawSegment_MovePosDownAndRi
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall DrawSegment_MovePosDownAndRight(void)
+;undefined         A:1            <RETURN>
 
 DrawSegment_MovePosDownAndRight:                                    
         INC        <DrawSegment_CurrentScreenY_0x21                  
@@ -5916,10 +5601,8 @@ DrawSegment_MovePosDownAndRight:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawSegment_MovePosDownAndLe
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall DrawSegment_MovePosDownAndLeft(void)
+;undefined         A:1            <RETURN>
 
 DrawSegment_MovePosDownAndLeft:                                     
         INC        <DrawSegment_CurrentScreenY_0x21                  
@@ -5928,10 +5611,8 @@ DrawSegment_MovePosDownAndLeft:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawSegment_MovePosLeftAndDo
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall DrawSegment_MovePosLeftAndDown(void)
+;undefined         A:1            <RETURN>
 
 DrawSegment_MovePosLeftAndDown:                                     
         DEC        <DrawSegment_CurrentScreenX_0x22                  
@@ -5940,10 +5621,8 @@ DrawSegment_MovePosLeftAndDown:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawSegment_MovePosLeftAndUp
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall DrawSegment_MovePosLeftAndUp(void)
+;undefined         A:1            <RETURN>
 
 DrawSegment_MovePosLeftAndUp:                                       
         DEC        <DrawSegment_CurrentScreenX_0x22                  
@@ -5952,10 +5631,8 @@ DrawSegment_MovePosLeftAndUp:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawSegment_MovePosUpAndLeft
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall DrawSegment_MovePosUpAndLeft(void)
+;undefined         A:1            <RETURN>
 
 DrawSegment_MovePosUpAndLeft:                                       
         DEC        <DrawSegment_CurrentScreenY_0x21                  
@@ -5964,12 +5641,9 @@ DrawSegment_MovePosUpAndLeft:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DrawPixelWithCrtArtifacts(vo
-
-; undefined         A:1            <RETURN>
-
-; Stack[-0x1]:1  local_1
+;undefined __stdcall DrawPixelWithCrtArtifacts(void)
+;undefined         A:1            <RETURN>
+;undefined1        Stack[-0x1]:1  local_1                                 XREF[1]:     d83e(*)
 
 DrawPixelWithCrtArtifacts:                                          
         LDD        <DrawSegment_CurrentScreenYXPosition_0x21         
@@ -5996,37 +5670,31 @@ DrawPixelWithCrtArtifacts:
 Jump_DoneDrawingReturn:                                             
         RTS                                                          
 
-; there are eight pixels for a given byte.
-
-; use this table to set a pair of bits for a
-
-; given x screen position. The game treats the
-
-; 256 wide screen as 128 so it draws two bits
-
-; at a time.
+;there are eight pixels for a given byte.
+;use this table to set a pair of bits for a
+;given x screen position. The game treats the
+;256 wide screen as 128 so it draws two bits
+;at a time.
 
 Drawing_PixelBits_d84a:                                             
-        db         11000000b                                         
-        db         00110000b                                         
-        db         00001100b                                         
-        db         00000011b                                         
+        .db        11000000b                                         
+        .db        00110000b                                         
+        .db        00001100b                                         
+        .db        00000011b                                         
 
-; objects choose which CRT artifacting mask to use
+;objects choose which CRT artifacting mask to use
 
 CrtArtifactDrawing_LineDrawingMask:                                 
-        db         00000000b                                         ; invisible. doesn't draw any pixels
-        db         01010101b                                         ; only draw odd pixels. If used to draw platform, then can walk on
-        db         10101010b                                         ; only draw even pixels. if used to draw platform, can't walk on
-        db         11111111b                                         ; draw all pixels. if drawn as horizontal line, 
+        .db        00000000b                                         ; invisible. doesn't draw any pixels
+        .db        01010101b                                         ; only draw odd pixels. If used to draw platform, then can walk on
+        .db        10101010b                                         ; only draw even pixels. if used to draw platform, can't walk on
+        .db        11111111b                                         ; draw all pixels. if drawn as horizontal line, 
                                                                      ; treated as horziontal rope
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall LoadPosRelativeToYAndCompute
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall LoadPosRelativeToYAndComputeScreenPo
+;undefined         A:1            <RETURN>
 
 LoadPosRelativeToYAndComputeScreenPos:                              
         LDA        0x4,Y                                             
@@ -6057,10 +5725,8 @@ LoadPosRelativeToYAndComputeScreenPos:
 ;* background draw origin point: Y:0x10, X:0xF                *
 ;* (0x10 * 0x20) + (0xf * 2 / 8) + 0x400 = 0x603 (603.C)      *
 ;**************************************************************
-
-; undefined __stdcall ComputeScreenLocationFromAAn
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall ComputeScreenLocationFromAAndB(void)
+;undefined         A:1            <RETURN>
 
 ComputeScreenLocationFromAAndB:                                     
         LSLB                                                         
@@ -6075,19 +5741,17 @@ ComputeScreenLocationFromAAndB:
 ;**************************************************************
 ;* Used by the player, the ball, and the bird                 *
 ;**************************************************************
-
-; undefined __stdcall EraseAndUpdateAndDrawObject(
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall EraseAndUpdateAndDrawObject(void)
+;undefined         A:1            <RETURN>
 
 EraseAndUpdateAndDrawObject:                                        
         LDA        -0x5,Y                                            
-        BEQ        DrawingFunctionFor3ByteWideSprites::Jump_SkipU    
+        BEQ        Jump_SkipUpdate                                   
         BMI        Jump_StateIsFFAndUninitialized                    
         DECA                                                         
         BEQ        Jump_StateIsNowZero                               
         BSR        EraseSpriteFromScreen                             ; undefined EraseSpriteFromScreen(void)
-        ??         8Ch                                               
+        .db        0x8C                                              
 
 Jump_StateIsNowZero:                                                
         INC        -0x5,Y                                            
@@ -6117,10 +5781,8 @@ Jump_SkipRopeHandling:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined DrawingFunctionFor3ByteWideSprites()
-
-; undefined         A:1            <RETURN>
+;undefined DrawingFunctionFor3ByteWideSprites()
+;undefined         A:1            <RETURN>
 
 DrawingFunctionFor3ByteWideSprites:                                 
         STA        <UtilityCounter_0x26                              
@@ -6145,10 +5807,8 @@ Jump_StateIsFFAndUninitialized:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall EraseSpriteFromScreen(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall EraseSpriteFromScreen(void)
+;undefined         A:1            <RETURN>
 
 EraseSpriteFromScreen:                                              
         LDU        0xc,Y                                             
@@ -6164,22 +5824,21 @@ Loop_ClearNextRow:
                                                                      ; the screen
         ORA        0x1800,U                                          ; in case we've taken too many bytes from the
                                                                      ; background, bitwise or with the clean background
-
-; second byte of the line
+;second byte of the line
         COMB                                                         
         ANDB       0x1,U                                             
         ORB        0x1801,U                                          
 
-; store to the screen
+;store to the screen
         STD        ,U                                                
 
-; third byte of the line
+;third byte of the line
         LDA        ,X+                                               
         COMA                                                         
         ANDA       0x2,U                                             
         ORA        0x1802,U                                          
 
-; store third byte to the screen
+;store third byte to the screen
         STA        0x2,U                                             
         LEAU       0x20,U                                            ; go to next line
         DEC        <UtilityCounter_0x26                              
@@ -6188,697 +5847,683 @@ Loop_ClearNextRow:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall PrintString(undefined param_
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            param_1
-
-; undefined         B:1            param_2
-
-; byte *            X:2            screenLocation
-
-; undefined2        Y:2            param_4
-
-; byte *            U:2            textStrings
+;undefined __stdcall PrintString(undefined A, undefined B
+;undefined         A:1            <RETURN>
+;undefined         A:1            A
+;undefined         B:1            B
+;byte *            X:2            X
+;undefined2        Y:2            Y
+;byte *            U:2            U
 
 PrintString:                                                        
         LDY        #CharacterFont                                    
         LDB        #0x7                                              ; number of lines in a character. Redundant because
                                                                      ; it's set again below?
-        LDA        ,textStrings+                                     
+        LDA        ,U+                                               ; U points to the text strings
         BMI        Loop_HitEndOfString                               ; last character was 0xff
         MUL                                                          
-        LEAY       param_2,param_4                                   ; Jump to the specified character in rom
+        LEAY       B,Y                                               ; Jump to the specified character in rom
         LDB        #0x7                                              ; number of lines in a character
 
 Loop_DrawCharacter:                                                 
-        LDA        ,param_4+                                         ; get the character row
+        LDA        ,Y+                                               ; get the character row
         ANDA       <CharacterDrawingMask_0x69_Nice                   ; apply the character row draw mask
-        ORA        0x1800,screenLocation                             ; blend into second page
-        STA        ,screenLocation                                   ; draw blended value to first page
-        LEAX       0x20,screenLocation                               ; Go to next line
+        ORA        0x1800,X                                          ; blend into second page. 
+                                                                     ; X contains the screen location
+        STA        ,X                                                ; draw blended value to first page
+        LEAX       0x20,X                                            ; Go to next line
         DECB                                                         
         BNE        Loop_DrawCharacter                                
-        LEAX       -0xdf,screenLocation                              ; backup by 223 bytes
+        LEAX       -0xdf,X                                           ; backup by 223 bytes
         BRA        PrintString                                       
 
 Loop_HitEndOfString:                                                
         RTS                                                          
 
 CharacterFont:                                                      
-        db         00110000b                                         ; Number 0
+        .db        00110000b                                         ; Number 0
 
 BYTE_d909:                                                          
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         00110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        00110000b                                         
 
 Number_1:                                                           
-        db         00110000b                                         
-        db         11110000b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         11111100b                                         
+        .db        00110000b                                         
+        .db        11110000b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        11111100b                                         
 
 Number_2:                                                           
-        db         00110000b                                         
-        db         11001100b                                         
-        db         00001100b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         11000000b                                         
-        db         11111100b                                         
+        .db        00110000b                                         
+        .db        11001100b                                         
+        .db        00001100b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        11000000b                                         
+        .db        11111100b                                         
 
 Number_3:                                                           
-        db         00110000b                                         
-        db         11001100b                                         
-        db         00001100b                                         
-        db         00111100b                                         
-        db         00001100b                                         
-        db         11001100b                                         
-        db         00110000b                                         
+        .db        00110000b                                         
+        .db        11001100b                                         
+        .db        00001100b                                         
+        .db        00111100b                                         
+        .db        00001100b                                         
+        .db        11001100b                                         
+        .db        00110000b                                         
 
 Number_4:                                                           
-        db         00001100b                                         
-        db         00111100b                                         
-        db         11001100b                                         
-        db         11111100b                                         
-        db         00001100b                                         
-        db         00001100b                                         
-        db         00001100b                                         
+        .db        00001100b                                         
+        .db        00111100b                                         
+        .db        11001100b                                         
+        .db        11111100b                                         
+        .db        00001100b                                         
+        .db        00001100b                                         
+        .db        00001100b                                         
 
 Number_5:                                                           
-        db         11111100b                                         
-        db         11000000b                                         
-        db         11000000b                                         
-        db         11111100b                                         
-        db         00001100b                                         
-        db         11001100b                                         
-        db         00110000b                                         
+        .db        11111100b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
+        .db        11111100b                                         
+        .db        00001100b                                         
+        .db        11001100b                                         
+        .db        00110000b                                         
 
 Number_6:                                                           
-        db         00110000b                                         
-        db         11001100b                                         
-        db         11000000b                                         
-        db         11110000b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         00110000b                                         
+        .db        00110000b                                         
+        .db        11001100b                                         
+        .db        11000000b                                         
+        .db        11110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        00110000b                                         
 
 Number_7:                                                           
-        db         11111100b                                         
-        db         00001100b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         11000000b                                         
-        db         11000000b                                         
+        .db        11111100b                                         
+        .db        00001100b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
 
 Number_8:                                                           
-        db         00110000b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         00110000b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         00110000b                                         
+        .db        00110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        00110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        00110000b                                         
 
 Number_9:                                                           
-        db         00110000b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         00111100b                                         
-        db         00001100b                                         
-        db         11001100b                                         
-        db         00110000b                                         
+        .db        00110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        00111100b                                         
+        .db        00001100b                                         
+        .db        11001100b                                         
+        .db        00110000b                                         
 
 Letter_A:                                                           
-        db         00110000b                                         ; Index 10
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11111100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
+        .db        00110000b                                         ; Index 10
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11111100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
 
 Letter_B:                                                           
-        db         11110000b                                         ; index 11
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11110000b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11110000b                                         
+        .db        11110000b                                         ; index 11
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11110000b                                         
 
 Letter_C:                                                           
-        db         00110000b                                         
-        db         11001100b                                         
-        db         11000000b                                         
-        db         11000000b                                         
-        db         11000000b                                         
-        db         11001100b                                         
-        db         00110000b                                         
+        .db        00110000b                                         
+        .db        11001100b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
+        .db        11001100b                                         
+        .db        00110000b                                         
 
 Letter_D:                                                           
-        db         11110000b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11110000b                                         
+        .db        11110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11110000b                                         
 
 Letter_E:                                                           
-        db         11111100b                                         
-        db         11000000b                                         
-        db         11000000b                                         
-        db         11110000b                                         
-        db         11000000b                                         
-        db         11000000b                                         
-        db         11111100b                                         
+        .db        11111100b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
+        .db        11110000b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
+        .db        11111100b                                         
 
 Letter_F:                                                           
-        db         11111100b                                         
-        db         11000000b                                         
-        db         11000000b                                         
-        db         11110000b                                         
-        db         11000000b                                         
-        db         11000000b                                         
-        db         11000000b                                         
+        .db        11111100b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
+        .db        11110000b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
 
 Letter_G:                                                           
-        db         00110000b                                         
-        db         11001100b                                         
-        db         11000000b                                         
-        db         00111100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         00110000b                                         
+        .db        00110000b                                         
+        .db        11001100b                                         
+        .db        11000000b                                         
+        .db        00111100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        00110000b                                         
 
 Letter_H:                                                           
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11111100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11111100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
 
 Letter_I:                                                           
-        db         11111100b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         11111100b                                         
+        .db        11111100b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        11111100b                                         
 
 Letter_J:                                                           
-        db         00001100b                                         
-        db         00001100b                                         
-        db         00001100b                                         
-        db         00001100b                                         
-        db         00001100b                                         
-        db         11001100b                                         
-        db         00110000b                                         
+        .db        00001100b                                         
+        .db        00001100b                                         
+        .db        00001100b                                         
+        .db        00001100b                                         
+        .db        00001100b                                         
+        .db        11001100b                                         
+        .db        00110000b                                         
 
 Letter_K:                                                           
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11110000b                                         
-        db         11000000b                                         
-        db         11110000b                                         
-        db         11001100b                                         
-        db         11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11110000b                                         
+        .db        11000000b                                         
+        .db        11110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
 
 Letter_L:                                                           
-        db         11000000b                                         
-        db         11000000b                                         
-        db         11000000b                                         
-        db         11000000b                                         
-        db         11000000b                                         
-        db         11000000b                                         
-        db         11111100b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
+        .db        11111100b                                         
 
 Letter_M:                                                           
-        db         11001100b                                         
-        db         11111100b                                         
-        db         11111100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
+        .db        11001100b                                         
+        .db        11111100b                                         
+        .db        11111100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
 
 Letter_N:                                                           
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11110000b                                         
-        db         11111100b                                         
-        db         11111100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11110000b                                         
+        .db        11111100b                                         
+        .db        11111100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
 
 Letter_O:                                                           
-        db         00110000b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         00110000b                                         
+        .db        00110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        00110000b                                         
 
 Letter_P:                                                           
-        db         11110000b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11110000b                                         
-        db         11000000b                                         
-        db         11000000b                                         
-        db         11000000b                                         
+        .db        11110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11110000b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
 
 Letter_Q:                                                           
-        db         00110000b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11111100b                                         
-        db         00111100b                                         
+        .db        00110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11111100b                                         
+        .db        00111100b                                         
 
 Letter_R:                                                           
-        db         11110000b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11110000b                                         
-        db         11110000b                                         
-        db         11001100b                                         
-        db         11001100b                                         
+        .db        11110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11110000b                                         
+        .db        11110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
 
 Letter_S:                                                           
-        db         00110000b                                         
-        db         11001100b                                         
-        db         11000000b                                         
-        db         00110000b                                         
-        db         00001100b                                         
-        db         11001100b                                         
-        db         00110000b                                         
+        .db        00110000b                                         
+        .db        11001100b                                         
+        .db        11000000b                                         
+        .db        00110000b                                         
+        .db        00001100b                                         
+        .db        11001100b                                         
+        .db        00110000b                                         
 
 Letter_T:                                                           
-        db         11111100b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         00110000b                                         
+        .db        11111100b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
 
 Letter_U:                                                           
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         00110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        00110000b                                         
 
 Letter_V:                                                           
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         00110000b                                         
-        db         00110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
 
 Letter_W:                                                           
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11111100b                                         
-        db         11111100b                                         
-        db         11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11111100b                                         
+        .db        11111100b                                         
+        .db        11001100b                                         
 
 Letter_X:                                                           
-        db         11001100b                                         
-        db         11001100b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         11001100b                                         
-        db         11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
 
 Letter_Y:                                                           
-        db         11001100b                                         
-        db         11001100b                                         
-        db         11001100b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         00110000b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        11001100b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
 
 Letter_Z:                                                           
-        db         11111100b                                         
-        db         00001100b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         00110000b                                         
-        db         11000000b                                         
-        db         11111100b                                         
+        .db        11111100b                                         
+        .db        00001100b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
+        .db        11000000b                                         
+        .db        11111100b                                         
 
 Letter_Space:                                                       
-        db         00000000b                                         
-        db         00000000b                                         
-        db         00000000b                                         
-        db         00000000b                                         
-        db         00000000b                                         
-        db         00000000b                                         
-        db         00000000b                                         
+        .db        00000000b                                         
+        .db        00000000b                                         
+        .db        00000000b                                         
+        .db        00000000b                                         
+        .db        00000000b                                         
+        .db        00000000b                                         
+        .db        00000000b                                         
 
 Letter_Colon:                                                       
-        db         00000000b                                         
-        db         11000000b                                         
-        db         11000000b                                         
-        db         00000000b                                         
-        db         11000000b                                         
-        db         11000000b                                         
-        db         00000000b                                         
+        .db        00000000b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
+        .db        00000000b                                         
+        .db        11000000b                                         
+        .db        11000000b                                         
+        .db        00000000b                                         
 
 Letter_Period:                                                      
-        db         00000000b                                         
-        db         00000000b                                         
-        db         00000000b                                         
-        db         00000000b                                         
-        db         00000000b                                         
-        db         00110000b                                         
-        db         00110000b                                         
+        .db        00000000b                                         
+        .db        00000000b                                         
+        .db        00000000b                                         
+        .db        00000000b                                         
+        .db        00000000b                                         
+        .db        00110000b                                         
+        .db        00110000b                                         
 
 TextStrings:                                                        
-        db         13                                                ; D
-        db         24                                                ; O
-        db         32                                                ; W
-        db         23                                                ; N
-        db         21                                                ; L
-        db         10                                                ; A
-        db         23                                                ; N
-        db         13                                                ; D
-        db         36                                                ; space
-        db         31                                                ; V
-        db         1                                                 ; 1
-        db         38                                                ; .
-        db         1                                                 ; 1
-        db         255                                               ; EOS
+        .db        13                                                ; D
+        .db        24                                                ; O
+        .db        32                                                ; W
+        .db        23                                                ; N
+        .db        21                                                ; L
+        .db        10                                                ; A
+        .db        23                                                ; N
+        .db        13                                                ; D
+        .db        36                                                ; space
+        .db        31                                                ; V
+        .db        1                                                 ; 1
+        .db        38                                                ; .
+        .db        1                                                 ; 1
+        .db        255                                               ; EOS
 
 String_WrittenBy:                                                   
-        db         32                                                ; W
-        db         27                                                ; R
-        db         18                                                ; I
-        db         29                                                ; T
-        db         29                                                ; T
-        db         14                                                ; E
-        db         23                                                ; N
-        db         36                                                ; ' '
-        db         11                                                ; B
-        db         34                                                ; Y
-        db         37                                                ; :
-        db         255                                               
+        .db        32                                                ; W
+        .db        27                                                ; R
+        .db        18                                                ; I
+        .db        29                                                ; T
+        .db        29                                                ; T
+        .db        14                                                ; E
+        .db        23                                                ; N
+        .db        36                                                ; ' '
+        .db        11                                                ; B
+        .db        34                                                ; Y
+        .db        37                                                ; :
+        .db        255                                               
 
 String_MichaelAichlmayer:                                           
-        db         22                                                ; Michael Aichlmayr
-        db         18                                                
-        db         12                                                
-        db         17                                                
-        db         10                                                
-        db         14                                                
-        db         21                                                
-        db         36                                                
-        db         10                                                
-        db         18                                                
-        db         12                                                
-        db         17                                                
-        db         21                                                
-        db         22                                                
-        db         10                                                
-        db         34                                                
-        db         27                                                
-        db         255                                               
+        .db        22                                                ; Michael Aichlmayr
+        .db        18                                                
+        .db        12                                                
+        .db        17                                                
+        .db        10                                                
+        .db        14                                                
+        .db        21                                                
+        .db        36                                                
+        .db        10                                                
+        .db        18                                                
+        .db        12                                                
+        .db        17                                                
+        .db        21                                                
+        .db        22                                                
+        .db        10                                                
+        .db        34                                                
+        .db        27                                                
+        .db        255                                               
 
 String_Copyright1983:                                               
-        db         12                                                
-        db         24                                                
-        db         25                                                
-        db         34                                                
-        db         27                                                
-        db         18                                                
-        db         16                                                
-        db         17                                                
-        db         29                                                
-        db         36                                                
-        db         1                                                 
-        db         9                                                 
-        db         8                                                 
-        db         3                                                 
-        db         255                                               
+        .db        12                                                
+        .db        24                                                
+        .db        25                                                
+        .db        34                                                
+        .db        27                                                
+        .db        18                                                
+        .db        16                                                
+        .db        17                                                
+        .db        29                                                
+        .db        36                                                
+        .db        1                                                 
+        .db        9                                                 
+        .db        8                                                 
+        .db        3                                                 
+        .db        255                                               
 
 String_SpectralAssociates:                                          
-        db         28                                                
-        db         25                                                
-        db         14                                                
-        db         12                                                
-        db         29                                                
-        db         27                                                
-        db         10                                                
-        db         21                                                
-        db         36                                                
-        db         10                                                
-        db         28                                                
-        db         28                                                
-        db         24                                                
-        db         12                                                
-        db         18                                                
-        db         10                                                
-        db         29                                                
-        db         14                                                
-        db         28                                                
-        db         255                                               
+        .db        28                                                
+        .db        25                                                
+        .db        14                                                
+        .db        12                                                
+        .db        29                                                
+        .db        27                                                
+        .db        10                                                
+        .db        21                                                
+        .db        36                                                
+        .db        10                                                
+        .db        28                                                
+        .db        28                                                
+        .db        24                                                
+        .db        12                                                
+        .db        18                                                
+        .db        10                                                
+        .db        29                                                
+        .db        14                                                
+        .db        28                                                
+        .db        255                                               
 
 String_LicensedTo:                                                  
-        db         21                                                
-        db         18                                                
-        db         12                                                
-        db         14                                                
-        db         23                                                
-        db         28                                                
-        db         14                                                
-        db         13                                                
-        db         36                                                
-        db         29                                                
-        db         24                                                
-        db         36                                                
-        db         255                                               
+        .db        21                                                
+        .db        18                                                
+        .db        12                                                
+        .db        14                                                
+        .db        23                                                
+        .db        28                                                
+        .db        14                                                
+        .db        13                                                
+        .db        36                                                
+        .db        29                                                
+        .db        24                                                
+        .db        36                                                
+        .db        255                                               
 
 String_TandyCorporation:                                            
-        db         29                                                
-        db         10                                                
-        db         23                                                
-        db         13                                                
-        db         34                                                
-        db         36                                                
-        db         12                                                
-        db         24                                                
-        db         27                                                
-        db         25                                                
-        db         24                                                
-        db         27                                                
-        db         10                                                
-        db         29                                                
-        db         18                                                
-        db         24                                                
-        db         23                                                
-        db         255                                               
+        .db        29                                                
+        .db        10                                                
+        .db        23                                                
+        .db        13                                                
+        .db        34                                                
+        .db        36                                                
+        .db        12                                                
+        .db        24                                                
+        .db        27                                                
+        .db        25                                                
+        .db        24                                                
+        .db        27                                                
+        .db        10                                                
+        .db        29                                                
+        .db        18                                                
+        .db        24                                                
+        .db        23                                                
+        .db        255                                               
 
 String_AllRightsReserved:                                           
-        db         10                                                
-        db         21                                                
-        db         21                                                
-        db         36                                                
-        db         27                                                
-        db         18                                                
-        db         16                                                
-        db         17                                                
-        db         29                                                
-        db         28                                                
-        db         36                                                
-        db         27                                                
-        db         14                                                
-        db         28                                                
-        db         14                                                
-        db         27                                                
-        db         31                                                
-        db         14                                                
-        db         13                                                
-        db         255                                               
+        .db        10                                                
+        .db        21                                                
+        .db        21                                                
+        .db        36                                                
+        .db        27                                                
+        .db        18                                                
+        .db        16                                                
+        .db        17                                                
+        .db        29                                                
+        .db        28                                                
+        .db        36                                                
+        .db        27                                                
+        .db        14                                                
+        .db        28                                                
+        .db        14                                                
+        .db        27                                                
+        .db        31                                                
+        .db        14                                                
+        .db        13                                                
+        .db        255                                               
 
 String_OnePlayer:                                                   
-        db         24                                                
-        db         23                                                
-        db         14                                                
-        db         36                                                
-        db         25                                                
-        db         21                                                
-        db         10                                                
-        db         34                                                
-        db         14                                                
-        db         27                                                
-        db         255                                               
+        .db        24                                                
+        .db        23                                                
+        .db        14                                                
+        .db        36                                                
+        .db        25                                                
+        .db        21                                                
+        .db        10                                                
+        .db        34                                                
+        .db        14                                                
+        .db        27                                                
+        .db        255                                               
 
 String_TwoPlayer:                                                   
-        db         29                                                
-        db         32                                                
-        db         24                                                
-        db         36                                                
-        db         25                                                
-        db         21                                                
-        db         10                                                
-        db         34                                                
-        db         14                                                
-        db         27                                                
-        db         255                                               
+        .db        29                                                
+        .db        32                                                
+        .db        24                                                
+        .db        36                                                
+        .db        25                                                
+        .db        21                                                
+        .db        10                                                
+        .db        34                                                
+        .db        14                                                
+        .db        27                                                
+        .db        255                                               
 
 String_HighScore:                                                   
-        db         17                                                
-        db         18                                                
-        db         16                                                
-        db         17                                                
-        db         36                                                
-        db         28                                                
-        db         12                                                
-        db         24                                                
-        db         27                                                
-        db         14                                                
-        db         255                                               
+        .db        17                                                
+        .db        18                                                
+        .db        16                                                
+        .db        17                                                
+        .db        36                                                
+        .db        28                                                
+        .db        12                                                
+        .db        24                                                
+        .db        27                                                
+        .db        14                                                
+        .db        255                                               
 
 String_PlayerOne:                                                   
-        db         25                                                
-        db         21                                                
-        db         10                                                
-        db         34                                                
-        db         14                                                
-        db         27                                                
-        db         36                                                
-        db         24                                                
-        db         23                                                
-        db         14                                                
-        db         255                                               
+        .db        25                                                
+        .db        21                                                
+        .db        10                                                
+        .db        34                                                
+        .db        14                                                
+        .db        27                                                
+        .db        36                                                
+        .db        24                                                
+        .db        23                                                
+        .db        14                                                
+        .db        255                                               
 
 String_PlayerTwo:                                                   
-        db         25                                                
-        db         21                                                
-        db         10                                                
-        db         34                                                
-        db         14                                                
-        db         27                                                
-        db         36                                                
-        db         29                                                
-        db         32                                                
-        db         24                                                
-        db         255                                               
+        .db        25                                                
+        .db        21                                                
+        .db        10                                                
+        .db        34                                                
+        .db        14                                                
+        .db        27                                                
+        .db        36                                                
+        .db        29                                                
+        .db        32                                                
+        .db        24                                                
+        .db        255                                               
 
 String_PL1:                                                         
-        db         25                                                ; P
-        db         21                                                ; L
-        db         1                                                 ; 1
-        db         255                                               
+        .db        25                                                ; P
+        .db        21                                                ; L
+        .db        1                                                 ; 1
+        .db        255                                               
 
 String_PL2:                                                         
-        db         25                                                ; P
-        db         21                                                ; L
-        db         2                                                 ; 2
-        db         255                                               
+        .db        25                                                ; P
+        .db        21                                                ; L
+        .db        2                                                 ; 2
+        .db        255                                               
 
 String_GetReadyPlayerOne:                                           
-        db         16                                                ; G
-        db         14                                                ; E
-        db         29                                                ; T
-        db         36                                                ; ' '
-        db         27                                                ; R
-        db         14                                                ; E
-        db         10                                                ; A
-        db         13                                                ; D
-        db         34                                                ; Y
-        db         36                                                ; ' '
-        db         25                                                ; P
-        db         21                                                ; L
-        db         10                                                ; A
-        db         34                                                ; Y
-        db         14                                                ; E
-        db         27                                                ; R
-        db         36                                                ; ' '
-        db         24                                                ; O
-        db         23                                                ; N
-        db         14                                                ; E
-        db         255                                               
+        .db        16                                                ; G
+        .db        14                                                ; E
+        .db        29                                                ; T
+        .db        36                                                ; ' '
+        .db        27                                                ; R
+        .db        14                                                ; E
+        .db        10                                                ; A
+        .db        13                                                ; D
+        .db        34                                                ; Y
+        .db        36                                                ; ' '
+        .db        25                                                ; P
+        .db        21                                                ; L
+        .db        10                                                ; A
+        .db        34                                                ; Y
+        .db        14                                                ; E
+        .db        27                                                ; R
+        .db        36                                                ; ' '
+        .db        24                                                ; O
+        .db        23                                                ; N
+        .db        14                                                ; E
+        .db        255                                               
 
 String_GetReadyPlayerTwo:                                           
-        db         16                                                ; G
-        db         14                                                ; E
-        db         29                                                ; T
-        db         36                                                ; ' '
-        db         27                                                ; R
-        db         14                                                ; E
-        db         10                                                ; A
-        db         13                                                ; D
-        db         34                                                ; Y
-        db         36                                                ; ' '
-        db         25                                                ; P
-        db         21                                                ; L
-        db         10                                                ; A
-        db         34                                                ; Y
-        db         14                                                ; E
-        db         27                                                ; R
-        db         36                                                ; ' '
-        db         29                                                ; T
-        db         32                                                ; W
-        db         24                                                ; O
-        db         255                                               
+        .db        16                                                ; G
+        .db        14                                                ; E
+        .db        29                                                ; T
+        .db        36                                                ; ' '
+        .db        27                                                ; R
+        .db        14                                                ; E
+        .db        10                                                ; A
+        .db        13                                                ; D
+        .db        34                                                ; Y
+        .db        36                                                ; ' '
+        .db        25                                                ; P
+        .db        21                                                ; L
+        .db        10                                                ; A
+        .db        34                                                ; Y
+        .db        14                                                ; E
+        .db        27                                                ; R
+        .db        36                                                ; ' '
+        .db        29                                                ; T
+        .db        32                                                ; W
+        .db        24                                                ; O
+        .db        255                                               
 
 String_Chamber:                                                     
-        db         12                                                ; C
-        db         17                                                ; H
-        db         10                                                ; A
-        db         22                                                ; M
-        db         11                                                ; B
-        db         14                                                ; E
-        db         27                                                ; R
-        db         255                                               
+        .db        12                                                ; C
+        .db        17                                                ; H
+        .db        10                                                ; A
+        .db        22                                                ; M
+        .db        11                                                ; B
+        .db        14                                                ; E
+        .db        27                                                ; R
+        .db        255                                               
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall UpdateAndPrintPlayerScore(un
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            A
-
-; undefined         B:1            B
-
-; undefined2        X:2            X
-
-; undefined2        Y:2            Y
+;undefined __stdcall UpdateAndPrintPlayerScore(undefined
+;undefined         A:1            <RETURN>
+;undefined         A:1            A
+;undefined         B:1            B
+;undefined2        X:2            X
+;undefined2        Y:2            Y
 
 UpdateAndPrintPlayerScore:                                          
         BSR        ConvertDRegisterToString                          ; undefined ConvertDRegisterToString(void)
         LDU        #PlayerScoreStringLocationPointers                
-
-LAB_db11:                                                           
         LDA        <CurrentPlayer_0x52                               
         ANDA       #0x2                                              
         LDU        A,U                                               
@@ -6887,14 +6532,12 @@ LAB_db11:
         BSR        FindFirstNonZeroCharacterInString                 ; undefined FindFirstNonZeroCharacterInString(void)
         JMP        PrintString                                       
 
-; -- Flow Override: CALL_RETURN (COMPUTED_CALL_TER
+;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall FindFirstNonZeroCharacterInS
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall FindFirstNonZeroCharacterInString(vo
+;undefined         A:1            <RETURN>
 
 FindFirstNonZeroCharacterInString:                                  
         LDA        ,U                                                ; get character
@@ -6912,15 +6555,13 @@ Jump_FoundNonZeroCharacter:
         RTS                                                          
 
 PlayerScoreStringLocationPointers:                                  
-        addr       PlayerOneScoreString_0xbb                         
-        addr       PlayerTwoScoreString_0xc3                         
+        .dw        PlayerOneScoreString_0xbb                         
+        .dw        PlayerTwoScoreString_0xc3                         
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall PrintTimerStringToScreen(voi
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall PrintTimerStringToScreen(void)
+;undefined         A:1            <RETURN>
 
 PrintTimerStringToScreen:                                           
         PSHS        X                                                
@@ -6930,14 +6571,12 @@ PrintTimerStringToScreen:
         BSR        ReplaceZerosToSpaces_Maybe                        ; undefined ReplaceZerosToSpaces_Maybe(void)
         JMP        PrintString                                       
 
-; -- Flow Override: CALL_RETURN (COMPUTED_CALL_TER
+;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall ReplaceZerosToSpaces_Maybe(v
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall ReplaceZerosToSpaces_Maybe(void)
+;undefined         A:1            <RETURN>
 
 ReplaceZerosToSpaces_Maybe:                                         
         TFR        U,Y                                               
@@ -6958,15 +6597,13 @@ Jump_ToExit:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall ConvertDRegisterToString(voi
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall ConvertDRegisterToString(void)
+;undefined         A:1            <RETURN>
 
 ConvertDRegisterToString:                                           
         STD        <GameTimerLastDigit_0x6e                          ; store the timer here
 
-; clear game timer string
+;clear game timer string
         LDB        #0x7                                              
         LDX        #GameTimerString_0xcb                             
 
@@ -6989,10 +6626,8 @@ Loop_ClearGameTimerString:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined ConvertNumberAtPlaceToCharacter()
-
-; undefined         A:1            <RETURN>
+;undefined ConvertNumberAtPlaceToCharacter()
+;undefined         A:1            <RETURN>
 
 ConvertNumberAtPlaceToCharacter:                                    
         CLR        <GameTimerSecondDigit_0x6b                        
@@ -7013,18 +6648,12 @@ Jump_DoneFindingCharacter:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall AddPickupPointsToScore(void)
-
-; undefined         A:1            <RETURN>
-
-; The area in memory used to contain
-
-; the timer now contains the score of
-
-; the pick up the player touched. Add
-
-; it to the player's score.
+;undefined __stdcall AddPickupPointsToScore(void)
+;undefined         A:1            <RETURN>
+;The area in memory used to contain
+;the timer now contains the score of
+;the pick up the player touched. Add
+;it to the player's score.
 
 AddPickupPointsToScore:                                             
         CLRB                                                         ; set to 0
@@ -7048,10 +6677,8 @@ Loop_NextCharacterInString:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall CopySpritesFromRomToRam(void
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall CopySpritesFromRomToRam(void)
+;undefined         A:1            <RETURN>
 
 CopySpritesFromRomToRam:                                            
         LDU        #SpriteCopyInfo                                   ; set U to start of data block
@@ -7072,40 +6699,36 @@ Loop_FinishedCopyingSpritesToRam:
         RTS                                                          
 
 SpriteCopyInfo:                                                     
-        db         Ah                                                ; The number of sprites to copy
-        db         10h                                               ; the number of lines per sprite
+        .db        0xA                                               ; The number of sprites to copy
+        .db        0x10                                              ; the number of lines per sprite
 
 PTR_PlayerSprite_Right_Stand_0xdcd6_dbc3:                           
-        addr       PlayerSprite_Right_Stand_0xdcd6                   ; address to player sprite data
+        .dw        PlayerSprite_Right_Stand_0xdcd6                   ; address to player sprite data
 
 PTR_SpriteData_ClonedDestination_0x3400_dbc5:                       
-        addr       SpriteData_ClonedDestination_0x3400               ; copies of sprites along 4 bits
+        .dw        SpriteData_ClonedDestination_0x3400               ; copies of sprites along 4 bits
 
 NextSpriteToCopy_Size:                                              
-        db         Ah                                                ; the number of sprites to copy
-        db         5h                                                ; the number of lines per sprite
-        dw         Player_CollisionMasks_0xde17                      ; unidentified sprite location
-        dw         Player_CollisionMasks_InRam_0x3b80                ; copy destination
-        db         2h                                                ; the number of sprites to copy
-        db         8h                                                ; the number of lines per sprite
-        dw         BouncyBallSprite1_0xde7b                          
-        dw         BouncyBall_ClonedInRam_0x3dd8                     ; copy destination
-        db         2h                                                ; the number of sprites to copy
-        db         6h                                                ; the number of lines per sprite
-        dw         BirdSprite1_0xde9b                                
-        dw         BirdSprite_ClonedInRam_0x3ee2                     ; copy destination
-        db         FFh                                               ; end marker
+        .db        0xA                                               ; the number of sprites to copy
+        .db        0x5                                               ; the number of lines per sprite
+        .dw        Player_CollisionMasks_0xde17                      ; unidentified sprite location
+        .dw        Player_CollisionMasks_InRam_0x3b80                ; copy destination
+        .db        0x2                                               ; the number of sprites to copy
+        .db        0x8                                               ; the number of lines per sprite
+        .dw        BouncyBallSprite1_0xde7b                          
+        .dw        BouncyBall_ClonedInRam_0x3dd8                     ; copy destination
+        .db        0x2                                               ; the number of sprites to copy
+        .db        0x6                                               ; the number of lines per sprite
+        .dw        BirdSprite1_0xde9b                                
+        .dw        BirdSprite_ClonedInRam_0x3ee2                     ; copy destination
+        .db        0xFF                                              ; end marker
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined CopySpritesFromRomToRamHelper()
-
-; undefined         A:1            <RETURN>
-
-; Stack[-0x6]:2  StackValue1_0x6
-
-; Stack[-0xa]:1  StackValue2_0xa
+;undefined CopySpritesFromRomToRamHelper()
+;undefined         A:1            <RETURN>
+;undefined2        Stack[-0x6]:2  StackValue1_0x6                         XREF[4,1]:   dbdd(*), dbe5(*),
+;undefined1        Stack[-0xa]:1  StackValue2_0xa                         XREF[1]:     dbf9(*)
 
 CopySpritesFromRomToRamHelper:                                      
         PSHS        U B A                                            ; D -> 0x0a10
@@ -7160,10 +6783,8 @@ Jump_PlayerOutOfLives:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined GenerateRandomNumberFrom0ToB()
-
-; undefined         A:1            <RETURN>
+;undefined GenerateRandomNumberFrom0ToB()
+;undefined         A:1            <RETURN>
 
 GenerateRandomNumberFrom0ToB:                                       
         PSHS        X A                                              
@@ -7190,16 +6811,11 @@ LAB_dc2f:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall IncrementRomAddressCounter(u
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            A
-
-; undefined         B:1            B
-
-; undefined2        X:2            X
+;undefined __stdcall IncrementRomAddressCounter(undefined
+;undefined         A:1            <RETURN>
+;undefined         A:1            A
+;undefined         B:1            B
+;undefined2        X:2            X
 
 IncrementRomAddressCounter:                                         
         PSHS        X                                                
@@ -7216,10 +6832,8 @@ Jump_NotReachedLimit:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall InterruptHandler(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall InterruptHandler(void)
+;undefined         A:1            <RETURN>
 
 InterruptHandler:                                                   
         LDA        PIA0_B_DATA_REG__FF02                             ; get keyboard state
@@ -7229,18 +6843,12 @@ InterruptHandler:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall SetupJoystickBits_Maybe(unde
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            param_1
-
-; byte              B:1            param_2
-
-; undefined2        X:2            param_3
-
-; undefined2        Y:2            param_4
+;undefined __stdcall SetupJoystickBits_Maybe(undefined pa
+;undefined         A:1            <RETURN>
+;undefined         A:1            param_1
+;byte              B:1            param_2
+;undefined2        X:2            param_3
+;undefined2        Y:2            param_4
 
 SetupJoystickBits_Maybe:                                            
         LDU        #PIA0_A_CONTROL_REG__FF01                         ; setup left joystick maybe
@@ -7248,20 +6856,13 @@ SetupJoystickBits_Maybe:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall ResetJoystickAxisBit_Maybe(u
-
-; undefined         A:1            <RETURN>
-
-; undefined         A:1            A
-
-; byte              B:1            B
-
-; undefined2        X:2            X
-
-; undefined2        Y:2            Y
-
-; byte *            U:2            U
+;undefined __stdcall ResetJoystickAxisBit_Maybe(undefined
+;undefined         A:1            <RETURN>
+;undefined         A:1            A
+;byte              B:1            B
+;undefined2        X:2            X
+;undefined2        Y:2            Y
+;byte *            U:2            U
 
 ResetJoystickAxisBit_Maybe:                                         
         LDA        ,U                                                
@@ -7277,10 +6878,8 @@ Jump_StoreToA:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall UpdateJoystick_Maybe(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall UpdateJoystick_Maybe(void)
+;undefined         A:1            <RETURN>
 
 UpdateJoystick_Maybe:                                               
         BSR        DisableSound                                      ; undefined DisableSound(void)
@@ -7304,11 +6903,8 @@ LAB_dc7c:
         LDA        PIA0_A_DATA_REG__FF00                             
         BMI        LAB_dc8d                                          
         SUBB       <SomeCounter_0x11                                 
-        CMPX       #LAB_db11                                         
-
-; -- Length Override: 1 (actual length is 3)
-
-; -- Fallthrough: dc8f
+        .db        0x8C                                              ; When PC reaches here this byte and the next two are 
+                                                                     ; interpeted as CMPX #0xdb11 which does nothing. 
 
 LAB_dc8d:                                                           
         ADDB       <0x11                                             
@@ -7330,11 +6926,8 @@ LAB_dc8f:
         CMPB       #0x3f                                             
         BNE        LAB_dcb0                                          
         LDB        #0x3                                              
-        CMPX       #0xc601                                           
-
-; -- Length Override: 1 (actual length is 3)
-
-; -- Fallthrough: dcae
+        .db        0x8C                                              ; When PC reaches here this byte and the next two are 
+                                                                     ; interpeted as CMPX #0xc601 which does nothing. 
 
 Jump_GoingUp:                                                       
         LDB        #0x1                                              
@@ -7345,17 +6938,14 @@ LAB_dcae:
 LAB_dcb0:                                                           
         LSRA                                                         
         LSRA                                                         
-        BEQ        Jump_GoingLeft                                    
+        BEQ        Jump_JoystickGoingLeft                            
         CMPA       #0x3f                                             
         BNE        LAB_dcbf                                          
         LDA        #0x2                                              
-        CMPX       #0x8604                                           
+        .db        0x8C                                              ; When PC reaches here this byte and the next two are 
+                                                                     ; interpeted as CMPX #0x8604 which does nothing. 
 
-; -- Length Override: 1 (actual length is 3)
-
-; -- Fallthrough: dcbd
-
-Jump_GoingLeft:                                                     
+Jump_JoystickGoingLeft:                                             
         LDA        #0x4                                              
 
 LAB_dcbd:                                                           
@@ -7369,579 +6959,572 @@ LAB_dcbf:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall EnableSound(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall EnableSound(void)
+;undefined         A:1            <RETURN>
 
 EnableSound:                                                        
-        LDA        PIA1_B_CONTROL_REG_FF23                           
+        LDA        PIA1_B_CONTROL_REG__FF23                          
         ORA        #00001000b                                        
-        BRA        DisableSound::JUMP_dcd3_Set_PIA1_B_CONTROL_REG    
+        BRA        JUMP_dcd3_Set_PIA1_B_CONTROL_REG                  
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-
-; undefined __stdcall DisableSound(void)
-
-; undefined         A:1            <RETURN>
+;undefined __stdcall DisableSound(void)
+;undefined         A:1            <RETURN>
 
 DisableSound:                                                       
-        LDA        PIA1_B_CONTROL_REG_FF23                           
+        LDA        PIA1_B_CONTROL_REG__FF23                          
         ANDA       #11110111b                                        
 
 JUMP_dcd3_Set_PIA1_B_CONTROL_REG:                                   
-        STA        PIA1_B_CONTROL_REG_FF23                           
+        STA        PIA1_B_CONTROL_REG__FF23                          
         RTS                                                          
 
 PlayerSprite_Right_Stand_0xdcd6:                                    
-        dw         0000101010000000b                                 ; 0000101010000000b
-        dw         0010101010100000b                                 ; 0010101010100000b
-        dw         0001010111000000b                                 
-        dw         0010110110100000b                                 
-        dw         0010110111010000b                                 
-        dw         0001011110100000b                                 
-        dw         0000111111100000b                                 
-        dw         0001101010000000b                                 
-        dw         0001101011000000b                                 
-        dw         0001101010000000b                                 
-        dw         0001111110000000b                                 
-        dw         0000111110000000b                                 
-        dw         0000101011000000b                                 
-        dw         0000101010000000b                                 
-        dw         0000111111000000b                                 
-        dw         0000111111100000b                                 
+        .dw        0000101010000000b                                 ; 0000101010000000b
+        .dw        0010101010100000b                                 ; 0010101010100000b
+        .dw        0001010111000000b                                 
+        .dw        0010110110100000b                                 
+        .dw        0010110111010000b                                 
+        .dw        0001011110100000b                                 
+        .dw        0000111111100000b                                 
+        .dw        0001101010000000b                                 
+        .dw        0001101011000000b                                 
+        .dw        0001101010000000b                                 
+        .dw        0001111110000000b                                 
+        .dw        0000111110000000b                                 
+        .dw        0000101011000000b                                 
+        .dw        0000101010000000b                                 
+        .dw        0000111111000000b                                 
+        .dw        0000111111100000b                                 
 
 PlayerSprite_Right_Run0_0xdcf7:                                     
-        dw         0000101010000000b                                 
-        dw         0010101010100000b                                 
-        dw         0001010111000000b                                 
-        dw         0010110110100000b                                 
-        dw         0010110111010000b                                 
-        dw         0001011110100000b                                 
-        dw         0000111111100000b                                 
-        dw         0000101010000000b                                 
-        dw         0011101011011000b                                 
-        dw         0111101011111000b                                 
-        dw         0110101011111000b                                 
-        dw         0000101010101000b                                 
-        dw         0000101010101000b                                 
-        dw         0010101000111000b                                 
-        dw         0110101000111000b                                 
-        dw         0110000000000000b                                 
+        .dw        0000101010000000b                                 
+        .dw        0010101010100000b                                 
+        .dw        0001010111000000b                                 
+        .dw        0010110110100000b                                 
+        .dw        0010110111010000b                                 
+        .dw        0001011110100000b                                 
+        .dw        0000111111100000b                                 
+        .dw        0000101010000000b                                 
+        .dw        0011101011011000b                                 
+        .dw        0111101011111000b                                 
+        .dw        0110101011111000b                                 
+        .dw        0000101010101000b                                 
+        .dw        0000101010101000b                                 
+        .dw        0010101000111000b                                 
+        .dw        0110101000111000b                                 
+        .dw        0110000000000000b                                 
 
 PlayerSprite_Right_Run1_Jump_0xdd17:                                
-        dw         0000000000000000b                                 
-        dw         0000101010000000b                                 
-        dw         0010101010100000b                                 
-        dw         0001010111000000b                                 
-        dw         0010110110100000b                                 
-        dw         0010110111010000b                                 
-        dw         0001011110100000b                                 
-        dw         0000111111100110b                                 
-        dw         1111101011111110b                                 
-        dw         1111101011111110b                                 
-        dw         0000101010100000b                                 
-        dw         0000101010101010b                                 
-        dw         0011101010101110b                                 
-        dw         0110101000001110b                                 
-        dw         0110000000000000b                                 
-        dw         0000000000000000b                                 
+        .dw        0000000000000000b                                 
+        .dw        0000101010000000b                                 
+        .dw        0010101010100000b                                 
+        .dw        0001010111000000b                                 
+        .dw        0010110110100000b                                 
+        .dw        0010110111010000b                                 
+        .dw        0001011110100000b                                 
+        .dw        0000111111100110b                                 
+        .dw        1111101011111110b                                 
+        .dw        1111101011111110b                                 
+        .dw        0000101010100000b                                 
+        .dw        0000101010101010b                                 
+        .dw        0011101010101110b                                 
+        .dw        0110101000001110b                                 
+        .dw        0110000000000000b                                 
+        .dw        0000000000000000b                                 
 
 PlayerSprite_Right_Run2_0xdd37:                                     
-        dw         0000101010000000b                                 
-        dw         0010101010100000b                                 
-        dw         0001010111000000b                                 
-        dw         0010110110100000b                                 
-        dw         0010110111010000b                                 
-        dw         0001011110100000b                                 
-        dw         0000111111100000b                                 
-        dw         0000101010000000b                                 
-        dw         0111101011011000b                                 
-        dw         0111101011111000b                                 
-        dw         0110101011110000b                                 
-        dw         0000101010100000b                                 
-        dw         0110101010100000b                                 
-        dw         0110100001010000b                                 
-        dw         0110000001110000b                                 
-        dw         0000000000111000b                                 
+        .dw        0000101010000000b                                 
+        .dw        0010101010100000b                                 
+        .dw        0001010111000000b                                 
+        .dw        0010110110100000b                                 
+        .dw        0010110111010000b                                 
+        .dw        0001011110100000b                                 
+        .dw        0000111111100000b                                 
+        .dw        0000101010000000b                                 
+        .dw        0111101011011000b                                 
+        .dw        0111101011111000b                                 
+        .dw        0110101011110000b                                 
+        .dw        0000101010100000b                                 
+        .dw        0110101010100000b                                 
+        .dw        0110100001010000b                                 
+        .dw        0110000001110000b                                 
+        .dw        0000000000111000b                                 
 
 PlayerSprite_Right_Climb_0xdd57:                                    
-        dw         0000101011000000b                                 
-        dw         0001101010110000b                                 
-        dw         0001010101011000b                                 
-        dw         0011010101011000b                                 
-        dw         0011010101011000b                                 
-        dw         0001010101011000b                                 
-        dw         0011010110111000b                                 
-        dw         0110101010110000b                                 
-        dw         1110101010100000b                                 
-        dw         0110101010100000b                                 
-        dw         0010101010100000b                                 
-        dw         0010101010100000b                                 
-        dw         0010100010100000b                                 
-        dw         0001110010100000b                                 
-        dw         0000000010100000b                                 
-        dw         0000000111000000b                                 
+        .dw        0000101011000000b                                 
+        .dw        0001101010110000b                                 
+        .dw        0001010101011000b                                 
+        .dw        0011010101011000b                                 
+        .dw        0011010101011000b                                 
+        .dw        0001010101011000b                                 
+        .dw        0011010110111000b                                 
+        .dw        0110101010110000b                                 
+        .dw        1110101010100000b                                 
+        .dw        0110101010100000b                                 
+        .dw        0010101010100000b                                 
+        .dw        0010101010100000b                                 
+        .dw        0010100010100000b                                 
+        .dw        0001110010100000b                                 
+        .dw        0000000010100000b                                 
+        .dw        0000000111000000b                                 
 
 PlayerSprite_Left_Climb_0xdd77:                                     
-        dw         0001101010000000b                                 
-        dw         0110101011000000b                                 
-        dw         1101010101000000b                                 
-        dw         1101010101100000b                                 
-        dw         1101010101100000b                                 
-        dw         1101010101000000b                                 
-        dw         1110101011100000b                                 
-        dw         0110101010110000b                                 
-        dw         0010101010111000b                                 
-        dw         0010101010110000b                                 
-        dw         0010101010100000b                                 
-        dw         0010101010100000b                                 
-        dw         0010100010100000b                                 
-        dw         0010100111000000b                                 
-        dw         0010100000000000b                                 
-        dw         0001110000000000b                                 
+        .dw        0001101010000000b                                 
+        .dw        0110101011000000b                                 
+        .dw        1101010101000000b                                 
+        .dw        1101010101100000b                                 
+        .dw        1101010101100000b                                 
+        .dw        1101010101000000b                                 
+        .dw        1110101011100000b                                 
+        .dw        0110101010110000b                                 
+        .dw        0010101010111000b                                 
+        .dw        0010101010110000b                                 
+        .dw        0010101010100000b                                 
+        .dw        0010101010100000b                                 
+        .dw        0010100010100000b                                 
+        .dw        0010100111000000b                                 
+        .dw        0010100000000000b                                 
+        .dw        0001110000000000b                                 
 
 PlayerSprite_Left_Stand_0xdd97:                                     
-        dw         0000001010100000b                                 
-        dw         0000101010101000b                                 
-        dw         0000011101010000b                                 
-        dw         0000101101101000b                                 
-        dw         0001011101101000b                                 
-        dw         0000101111010000b                                 
-        dw         0000111111100000b                                 
-        dw         0000001010110000b                                 
-        dw         0000011010110000b                                 
-        dw         0000001010110000b                                 
-        dw         0000001111110000b                                 
-        dw         0000001111100000b                                 
-        dw         0000011010100000b                                 
-        dw         0000001010100000b                                 
-        dw         0000011111100000b                                 
-        dw         0000111111100000b                                 
+        .dw        0000001010100000b                                 
+        .dw        0000101010101000b                                 
+        .dw        0000011101010000b                                 
+        .dw        0000101101101000b                                 
+        .dw        0001011101101000b                                 
+        .dw        0000101111010000b                                 
+        .dw        0000111111100000b                                 
+        .dw        0000001010110000b                                 
+        .dw        0000011010110000b                                 
+        .dw        0000001010110000b                                 
+        .dw        0000001111110000b                                 
+        .dw        0000001111100000b                                 
+        .dw        0000011010100000b                                 
+        .dw        0000001010100000b                                 
+        .dw        0000011111100000b                                 
+        .dw        0000111111100000b                                 
 
 PlayerSprite_Left_Run0_0xddb7:                                      
-        dw         0000001010100000b                                 
-        dw         0000101010101000b                                 
-        dw         0000011101010000b                                 
-        dw         0000101101101000b                                 
-        dw         0001011101101000b                                 
-        dw         0000101111010000b                                 
-        dw         0000111111110000b                                 
-        dw         0000001010100000b                                 
-        dw         0001101010111100b                                 
-        dw         0001111010110111b                                 
-        dw         0001111010100110b                                 
-        dw         0000101010100000b                                 
-        dw         0000101010100000b                                 
-        dw         0001110010101110b                                 
-        dw         0001110010101110b                                 
-        dw         0000000000000110b                                 
+        .dw        0000001010100000b                                 
+        .dw        0000101010101000b                                 
+        .dw        0000011101010000b                                 
+        .dw        0000101101101000b                                 
+        .dw        0001011101101000b                                 
+        .dw        0000101111010000b                                 
+        .dw        0000111111110000b                                 
+        .dw        0000001010100000b                                 
+        .dw        0001101010111100b                                 
+        .dw        0001111010110111b                                 
+        .dw        0001111010100110b                                 
+        .dw        0000101010100000b                                 
+        .dw        0000101010100000b                                 
+        .dw        0001110010101110b                                 
+        .dw        0001110010101110b                                 
+        .dw        0000000000000110b                                 
 
 PlayerSprite_Left_Run1_Jump_0xddd7:                                 
-        dw         0000000000000000b                                 
-        dw         0000001010100000b                                 
-        dw         0000101010101000b                                 
-        dw         0000011101010000b                                 
-        dw         0000101101101000b                                 
-        dw         0001011101101000b                                 
-        dw         0000101111010000b                                 
-        dw         0110111111100000b                                 
-        dw         0111111010111111b                                 
-        dw         0111111010111111b                                 
-        dw         0000101010100000b                                 
-        dw         0110101010100000b                                 
-        dw         0111101010101110b                                 
-        dw         0111100010101110b                                 
-        dw         0000000000000110b                                 
-        dw         0000000000000000b                                 
+        .dw        0000000000000000b                                 
+        .dw        0000001010100000b                                 
+        .dw        0000101010101000b                                 
+        .dw        0000011101010000b                                 
+        .dw        0000101101101000b                                 
+        .dw        0001011101101000b                                 
+        .dw        0000101111010000b                                 
+        .dw        0110111111100000b                                 
+        .dw        0111111010111111b                                 
+        .dw        0111111010111111b                                 
+        .dw        0000101010100000b                                 
+        .dw        0110101010100000b                                 
+        .dw        0111101010101110b                                 
+        .dw        0111100010101110b                                 
+        .dw        0000000000000110b                                 
+        .dw        0000000000000000b                                 
 
 PlayerSprite_Left_Run2_0xddf7:                                      
-        dw         0000001010100000b                                 
-        dw         0000101010101000b                                 
-        dw         0000011101010000b                                 
-        dw         0000101101101000b                                 
-        dw         0001011101101000b                                 
-        dw         0000101111010000b                                 
-        dw         0000111111100000b                                 
-        dw         0000001010100000b                                 
-        dw         0001101010111110b                                 
-        dw         0001111010111110b                                 
-        dw         0001111010100110b                                 
-        dw         0000101010100000b                                 
-        dw         0000101010101110b                                 
-        dw         0000100010101110b                                 
-        dw         0001110000000110b                                 
-        dw         0001110000000000b                                 
+        .dw        0000001010100000b                                 
+        .dw        0000101010101000b                                 
+        .dw        0000011101010000b                                 
+        .dw        0000101101101000b                                 
+        .dw        0001011101101000b                                 
+        .dw        0000101111010000b                                 
+        .dw        0000111111100000b                                 
+        .dw        0000001010100000b                                 
+        .dw        0001101010111110b                                 
+        .dw        0001111010111110b                                 
+        .dw        0001111010100110b                                 
+        .dw        0000101010100000b                                 
+        .dw        0000101010101110b                                 
+        .dw        0000100010101110b                                 
+        .dw        0001110000000110b                                 
+        .dw        0001110000000000b                                 
 
-; There is one collision mask per player sprite
-
-; each collision mask sprite is 5 pixels tall
-
-; player facing right
+;There is one collision mask per player sprite
+;each collision mask sprite is 5 pixels tall
+;player facing right
 
 Player_CollisionMasks_0xde17:                                       
-        dw         0011111111110000b                                 
-        dw         0011111111110000b                                 
-        dw         0011111111000000b                                 
-        dw         0011111111000000b                                 
-        dw         0000111111000000b                                 
-        dw         0011111111110000b                                 
-        dw         0011111111110000b                                 
-        dw         0000111111000000b                                 
-        dw         0110111111111000b                                 
-        dw         0011111100111000b                                 
-        dw         0000111111000000b                                 
-        dw         0011111111110000b                                 
-        dw         0000111111110110b                                 
-        dw         0000111111110000b                                 
-        dw         0111111100001110b                                 
-        dw         0011111111110000b                                 
-        dw         0011111111110000b                                 
-        dw         0000111111000000b                                 
-        dw         0110111111110000b                                 
-        dw         0110110001110000b                                 
+        .dw        0011111111110000b                                 
+        .dw        0011111111110000b                                 
+        .dw        0011111111000000b                                 
+        .dw        0011111111000000b                                 
+        .dw        0000111111000000b                                 
+        .dw        0011111111110000b                                 
+        .dw        0011111111110000b                                 
+        .dw        0000111111000000b                                 
+        .dw        0110111111111000b                                 
+        .dw        0011111100111000b                                 
+        .dw        0000111111000000b                                 
+        .dw        0011111111110000b                                 
+        .dw        0000111111110110b                                 
+        .dw        0000111111110000b                                 
+        .dw        0111111100001110b                                 
+        .dw        0011111111110000b                                 
+        .dw        0011111111110000b                                 
+        .dw        0000111111000000b                                 
+        .dw        0110111111110000b                                 
+        .dw        0110110001110000b                                 
 
-; player climbing
-        dw         0011111111110000b                                 
-        dw         0011111111111100b                                 
-        dw         1111111111110000b                                 
-        dw         0011111111110000b                                 
-        dw         0011110011110000b                                 
-        dw         1111111111000000b                                 
-        dw         1111111111110000b                                 
-        dw         1111111111110000b                                 
-        dw         0011111111110000b                                 
-        dw         0011111111000000b                                 
+;player climbing
+        .dw        0011111111110000b                                 
+        .dw        0011111111111100b                                 
+        .dw        1111111111110000b                                 
+        .dw        0011111111110000b                                 
+        .dw        0011110011110000b                                 
+        .dw        1111111111000000b                                 
+        .dw        1111111111110000b                                 
+        .dw        1111111111110000b                                 
+        .dw        0011111111110000b                                 
+        .dw        0011111111000000b                                 
 
-; player facing left
-        dw         0000111111111100b                                 
-        dw         0001111111111000b                                 
-        dw         0000001111110000b                                 
-        dw         0000001111110000b                                 
-        dw         0000001111110000b                                 
-        dw         0000111111111000b                                 
-        dw         0001111111111000b                                 
-        dw         0000001111110000b                                 
-        dw         0001111111110110b                                 
-        dw         0001110011111110b                                 
-        dw         0000001111110000b                                 
-        dw         0000111111111000b                                 
-        dw         0110111111110000b                                 
-        dw         0000111111110000b                                 
-        dw         0111110011111110b                                 
-        dw         0000111111111000b                                 
-        dw         0001111111111000b                                 
-        dw         0000001111110000b                                 
-        dw         0001111111110110b                                 
-        dw         0000110011111110b                                 
+;player facing left
+        .dw        0000111111111100b                                 
+        .dw        0001111111111000b                                 
+        .dw        0000001111110000b                                 
+        .dw        0000001111110000b                                 
+        .dw        0000001111110000b                                 
+        .dw        0000111111111000b                                 
+        .dw        0001111111111000b                                 
+        .dw        0000001111110000b                                 
+        .dw        0001111111110110b                                 
+        .dw        0001110011111110b                                 
+        .dw        0000001111110000b                                 
+        .dw        0000111111111000b                                 
+        .dw        0110111111110000b                                 
+        .dw        0000111111110000b                                 
+        .dw        0111110011111110b                                 
+        .dw        0000111111111000b                                 
+        .dw        0001111111111000b                                 
+        .dw        0000001111110000b                                 
+        .dw        0001111111110110b                                 
+        .dw        0000110011111110b                                 
 
 BouncyBallSprite1_0xde7b:                                           
-        dw         0000000100000000b                                 
-        dw         0000010101000000b                                 
-        dw         0000110101100000b                                 
-        dw         0001010101010000b                                 
-        dw         0001010101010000b                                 
-        dw         0000110101100000b                                 
-        dw         0000010101000000b                                 
-        dw         0000000100000000b                                 
+        .dw        0000000100000000b                                 
+        .dw        0000010101000000b                                 
+        .dw        0000110101100000b                                 
+        .dw        0001010101010000b                                 
+        .dw        0001010101010000b                                 
+        .dw        0000110101100000b                                 
+        .dw        0000010101000000b                                 
+        .dw        0000000100000000b                                 
 
 BouncyBallSprite2_0xde8b:                                           
-        dw         0000000000000000b                                 
-        dw         0000000000000000b                                 
-        dw         0000010101000000b                                 
-        dw         0011010101011000b                                 
-        dw         0101010101010100b                                 
-        dw         0101010101010100b                                 
-        dw         0011010101011000b                                 
-        dw         0000010101000000b                                 
+        .dw        0000000000000000b                                 
+        .dw        0000000000000000b                                 
+        .dw        0000010101000000b                                 
+        .dw        0011010101011000b                                 
+        .dw        0101010101010100b                                 
+        .dw        0101010101010100b                                 
+        .dw        0011010101011000b                                 
+        .dw        0000010101000000b                                 
 
 BirdSprite1_0xde9b:                                                 
-        dw         1100000110000011b                                 
-        dw         1111001111001111b                                 
-        dw         0011111111111100b                                 
-        dw         0000111111110000b                                 
-        dw         0000001111000000b                                 
-        dw         0000000110000000b                                 
+        .dw        1100000110000011b                                 
+        .dw        1111001111001111b                                 
+        .dw        0011111111111100b                                 
+        .dw        0000111111110000b                                 
+        .dw        0000001111000000b                                 
+        .dw        0000000110000000b                                 
 
 BirdSprite2:                                                        
-        dw         0000000110000000b                                 
-        dw         0000001111000000b                                 
-        dw         0000111111110000b                                 
-        dw         0011111111111100b                                 
-        dw         1111001111001111b                                 
-        dw         1100000110000011b                                 
+        .dw        0000000110000000b                                 
+        .dw        0000001111000000b                                 
+        .dw        0000111111110000b                                 
+        .dw        0011111111111100b                                 
+        .dw        1111001111001111b                                 
+        .dw        1100000110000011b                                 
 
 PickupSpriteData:                                                   
 
 MoneyBagSprite:                                                     
-        dw         0001000100010000b                                 
-        dw         0001111011100100b                                 
-        dw         0000101011011000b                                 
-        dw         0000011111110000b                                 
-        dw         0000110101101100b                                 
-        dw         0001101010110010b                                 
-        dw         0011101010111000b                                 
-        dw         0011101010111000b                                 
-        dw         0011101010111000b                                 
-        dw         0001111111110000b                                 
+        .dw        0001000100010000b                                 
+        .dw        0001111011100100b                                 
+        .dw        0000101011011000b                                 
+        .dw        0000011111110000b                                 
+        .dw        0000110101101100b                                 
+        .dw        0001101010110010b                                 
+        .dw        0011101010111000b                                 
+        .dw        0011101010111000b                                 
+        .dw        0011101010111000b                                 
+        .dw        0001111111110000b                                 
 
 DiamondSprite:                                                      
-        dw         0000001010000000b                                 
-        dw         0010101010101000b                                 
-        dw         1010101010101010b                                 
-        dw         1010101010101010b                                 
-        dw         0010101010101000b                                 
-        dw         0010101010101000b                                 
-        dw         0000101010100000b                                 
-        dw         0000101010100000b                                 
-        dw         0000001010000000b                                 
-        dw         0000001010000000b                                 
+        .dw        0000001010000000b                                 
+        .dw        0010101010101000b                                 
+        .dw        1010101010101010b                                 
+        .dw        1010101010101010b                                 
+        .dw        0010101010101000b                                 
+        .dw        0010101010101000b                                 
+        .dw        0000101010100000b                                 
+        .dw        0000101010100000b                                 
+        .dw        0000001010000000b                                 
+        .dw        0000001010000000b                                 
 
 KeySprite:                                                          
-        dw         0000000000000000b                                 
-        dw         0010000000000000b                                 
-        dw         0010100000000000b                                 
-        dw         1000100000000000b                                 
-        dw         1000101101010101b                                 
-        dw         1000101010101010b                                 
-        dw         1000101101010101b                                 
-        dw         1000100000110011b                                 
-        dw         0010100000110011b                                 
-        dw         0010000000000000b                                 
+        .dw        0000000000000000b                                 
+        .dw        0010000000000000b                                 
+        .dw        0010100000000000b                                 
+        .dw        1000100000000000b                                 
+        .dw        1000101101010101b                                 
+        .dw        1000101010101010b                                 
+        .dw        1000101101010101b                                 
+        .dw        1000100000110011b                                 
+        .dw        0010100000110011b                                 
+        .dw        0010000000000000b                                 
 
-; Unlike the other sprites, this is 3 bytes per li
+;Unlike the other sprites, this is 3 bytes per line
+;for 9 lines.
 
-; for 9 lines.
-
-PlayerSplatSprite+1:                                                
+PlayerSplatSprite_1:                                                
 
 PlayerSplatSprite:                                                  
-        dw         0000010000000000b                                 
-        dw         0000000000000011b                                 
-        dw         0000011100000000b                                 
-        dw         0011000100000110b                                 
-        dw         0000000000011000b                                 
-        dw         0000010011000000b                                 
-        dw         0000100101010000b                                 
-        dw         1000000000000101b                                 
-        dw         0101010000000000b                                 
-        dw         0001011001011100b                                 
-        dw         0000000000111001b                                 
-        dw         0101010100000000b                                 
-        dw         1101101010101011b                                 
-        db         11000000b                                         
+        .dw        0000010000000000b                                 
+        .dw        0000000000000011b                                 
+        .dw        0000011100000000b                                 
+        .dw        0011000100000110b                                 
+        .dw        0000000000011000b                                 
+        .dw        0000010011000000b                                 
+        .dw        0000100101010000b                                 
+        .dw        1000000000000101b                                 
+        .dw        0101010000000000b                                 
+        .dw        0001011001011100b                                 
+        .dw        0000000000111001b                                 
+        .dw        0101010100000000b                                 
+        .dw        1101101010101011b                                 
+        .db        11000000b                                         
 
 Data_DoorSprite_0xdf0a:                                             
-        dw         0010101010000000b                                 
+        .dw        0010101010000000b                                 
 
 WORD_df0c:                                                          
-        dw         1010101010100000b                                 
-        dw         1010111110100000b                                 
-        dw         1011010111100000b                                 
-        dw         1010111110100000b                                 
-        dw         1010101010100000b                                 
-        dw         1010010110100000b                                 
-        dw         1001101001100000b                                 
-        dw         1001101001100000b                                 
-        dw         1010010110100000b                                 
-        dw         1010101010100000b                                 
-        dw         1010101010100000b                                 
-        dw         1010101010100000b                                 
-        dw         1010101010100000b                                 
-        dw         1010101010100000b                                 
-        dw         1010101010100000b                                 
+        .dw        1010101010100000b                                 
+        .dw        1010111110100000b                                 
+        .dw        1011010111100000b                                 
+        .dw        1010111110100000b                                 
+        .dw        1010101010100000b                                 
+        .dw        1010010110100000b                                 
+        .dw        1001101001100000b                                 
+        .dw        1001101001100000b                                 
+        .dw        1010010110100000b                                 
+        .dw        1010101010100000b                                 
+        .dw        1010101010100000b                                 
+        .dw        1010101010100000b                                 
+        .dw        1010101010100000b                                 
+        .dw        1010101010100000b                                 
+        .dw        1010101010100000b                                 
 
 Data_DropSprites_0xdf2a:                                            
-        dw         0000000000000000b                                 ; why four different drops?
-        dw         0100000000000000b                                 
-        dw         0110000000000000b                                 
-        dw         1111000000000000b                                 
-        dw         1111000000000000b                                 
-        dw         0110000000000000b                                 
-        dw         0000000000000000b                                 
-        dw         0001000000000000b                                 
-        dw         0001100000000000b                                 
-        dw         0011110000000000b                                 
-        dw         0011110000000000b                                 
-        dw         0001100000000000b                                 
-        dw         0000000000000000b                                 
-        dw         0000010000000000b                                 
-        dw         0000011000000000b                                 
-        dw         0000111100000000b                                 
-        dw         0000111100000000b                                 
-        dw         0000011000000000b                                 
-        dw         0000000000000000b                                 
-        dw         0000000100000000b                                 
-        dw         0000000110000000b                                 
-        dw         0000001111000000b                                 
-        dw         0000001111000000b                                 
-        dw         0000000110000000b                                 
+        .dw        0000000000000000b                                 ; why four different drops?
+        .dw        0100000000000000b                                 
+        .dw        0110000000000000b                                 
+        .dw        1111000000000000b                                 
+        .dw        1111000000000000b                                 
+        .dw        0110000000000000b                                 
+        .dw        0000000000000000b                                 
+        .dw        0001000000000000b                                 
+        .dw        0001100000000000b                                 
+        .dw        0011110000000000b                                 
+        .dw        0011110000000000b                                 
+        .dw        0001100000000000b                                 
+        .dw        0000000000000000b                                 
+        .dw        0000010000000000b                                 
+        .dw        0000011000000000b                                 
+        .dw        0000111100000000b                                 
+        .dw        0000111100000000b                                 
+        .dw        0000011000000000b                                 
+        .dw        0000000000000000b                                 
+        .dw        0000000100000000b                                 
+        .dw        0000000110000000b                                 
+        .dw        0000001111000000b                                 
+        .dw        0000001111000000b                                 
+        .dw        0000000110000000b                                 
 
 EndOfGameRom:                                                       
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         00h                                               
-        ??         FEh                                               
-        ??         01h                                               
-        ??         FFh                                               
-        ??         F7h                                               
-        ??         FFh                                               
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x00                                              
+        .db        0xFE                                              
+        .db        0x01                                              
+        .db        0xFF                                              
+        .db        0xF7                                              
+        .db        0xFF                                              
