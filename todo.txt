@@ -4,6 +4,8 @@ GhidraToLWTOOLS TODO
     
     remove XREFs
     
+    remove unneeded DAT_ variables
+    
     remove unneeded function declarations
     
     remove ;-- flow overrides
@@ -11,6 +13,8 @@ GhidraToLWTOOLS TODO
     remove ;undefined
     
     remove EOL comments with "; undefined"
+    
+    what's up with TimerNumbers ?
 
 
 Reverse Engineering TODO

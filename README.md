@@ -9,6 +9,8 @@ This project is to reverse engineer the Downland game rom and produce an assembl
 
 The reverse engineering is not complete. There are a lot of small areas and functions that need to be figured out, but a lot of the major parts are there. And what is there is very likely not 100% accurate and some parts are probably completely wrong. Fair warning! :)
 
+The Notes folder is where the research findings (fun facts!) are located.
+
 While the RE isn't complete, what is there is enough to build a Downland rom idential to the original from the assembly. 
 
 To Generate downland.asm:
@@ -19,10 +21,9 @@ To Generate downland.asm:
 
 To build downland.asm into downland.bin:
 - install LWTOOLS (http://www.lwtools.ca/)
-- enter exported_asm
+- enter the exported_asm folder
 - update build.bat with the lwasm path
 - run build.bat
 - a downland.bin will be generated
 
 
-The Notes folder is where the research findings (fun facts!) are located.
