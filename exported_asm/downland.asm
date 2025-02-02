@@ -1,4 +1,10 @@
-; Converted to LWASM-compatible assembly by GhidraTOLWTOOLS
+; Converted to LWASM-compatible assembly by GhidraToLWTOOLS
+; Tool written by pw_32x
+
+; Downland by Michael Aichlmayr
+; For the Tandy Color Computer
+; Released in 1983 by Spectral Associates
+
 
 ; Hardware constants
 PIA0_A_DATA_REG__FF00 equ 0xff00

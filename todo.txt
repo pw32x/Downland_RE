@@ -1,0 +1,31 @@
+GhidraToLWTOOLS TODO
+
+    in variable declaration, add an empty line before a label if there's more than one comment preceeding it
+    
+    remove XREFs
+    
+    remove unneeded function declarations
+    
+    remove ;-- flow overrides
+    
+    remove ;undefined
+    
+    remove EOL comments with "; undefined"
+
+
+Reverse Engineering TODO
+
+	go through unnamed functions
+	
+	go through unnamed labels
+
+	go through Maybe functions
+	
+	when and how are sounds handled?
+	
+		what sounds are there?
+		
+			player walk
+			player treasure pick up
+			screen transition
+			splat sound

@@ -1,11 +1,30 @@
-﻿using System.Globalization;
+﻿using System.Drawing;
+using System.Globalization;
 using System.Text;
 
+// by pw_32x
+//
 // Converts the downland.ghidra.txt listing into downland.asm, an
 // assembly file that is buildable in LWTOOLS
 //
-// The code is hacky and is fragile. It assums the layout of the 
-// Ghidra listing and the size of the columns.
+// The code is hacky and is fragile. It only works for this project
+// and isn't a generic Ghidra 6809-to-asm tool, although it would be
+// nice. 
+//
+// It assumes the layout of the Ghidra listing and the size of the
+// columns. It will likely not work out of the box without modifying
+// the code or messing with the columns in the listing view.
+//
+// Ghidra can make mistakes interpreting opcodes. In that case, you
+// can replace the code automatically. 
+// To replace code, add "REPLACE: " to an EOL comment in Ghidra
+// example:
+//          TFR        B,U ; REPLACE: TFR        D,U ; 
+//          Ghidra thinks the opcodes 1f 03 should make TFR B,U when it should
+//          make TFR D,U instead. 
+
+
+
 
 namespace MyProject;
 
@@ -385,7 +404,13 @@ class Program
         // write to file
         StringBuilder sb = new StringBuilder();
 
-        sb.AppendLine("; Converted to LWASM-compatible assembly by GhidraTOLWTOOLS");
+        sb.AppendLine("; Converted to LWASM-compatible assembly by GhidraToLWTOOLS");
+        sb.AppendLine("; Tool written by pw_32x");
+        sb.AppendLine();
+        sb.AppendLine("; Downland by Michael Aichlmayr");
+        sb.AppendLine("; For the Tandy Color Computer");
+        sb.AppendLine("; Released in 1983 by Spectral Associates");
+        sb.AppendLine();
         sb.AppendLine();
 
         AddHardwareVariables(sb);

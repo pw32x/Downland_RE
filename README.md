@@ -11,9 +11,6 @@ The reverse engineering is not complete. There are a lot of small areas and func
 
 While the RE isn't complete, what is there is enough to build a Downland rom idential to the original from the assembly. 
 
-The Notes folder is where the research findings (fun facts!) are located.
-
-
 To Generate downland.asm:
 
 - Build the GhidraToLWTOOLS solution
@@ -26,3 +23,6 @@ To build downland.asm into downland.bin:
 - update build.bat with the lwasm path
 - run build.bat
 - a downland.bin will be generated
+
+
+The Notes folder is where the research findings (fun facts!) are located.

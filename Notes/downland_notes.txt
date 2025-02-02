@@ -107,23 +107,7 @@ Questions
 
 	how does the player code flow?
 
-Todo
 
-	go through unnamed functions
-	
-	go through unnamed labels
-
-	go through Maybe functions
-	
-	when and how are sounds handled?
-	
-		what sounds are there?
-		
-			player walk
-			player treasure pick up
-			screen transition
-			splat sound
-	
 	
 How To	
 
