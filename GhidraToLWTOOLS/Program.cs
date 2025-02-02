@@ -46,11 +46,13 @@ class Program
     class ParsedLine
     {
         public uint m_address;
+        public string m_addressString;
 
         public string m_comment = "";
         public string m_label = "";
         public string m_code = "";
         public bool m_isDataLabel = false; // we only know if it's a data label after reading the next line
+        public bool m_addSpacing = false;
 
         public enum ParsedLineType
         {
@@ -66,29 +68,37 @@ class Program
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
+            string spacing = "                                                                     ";
 
             switch (m_parsedLineType) 
             {
             case ParsedLineType.Label: 
+                
+                if (!m_isDataLabel)
+                    sb.Append("\n");
+
                 sb.Append(m_label);
+
                 if (m_isDataLabel)
                 {
                     sb.Append(" equ 0x");
-                    sb.Append(Convert.ToString(m_address, 16));
+                    sb.Append(m_addressString);
                 }
                 else
                 {
                     sb.Append(":");
                 }
+                sb.Append(spacing.Substring(sb.ToString().Length));
                 break;
             case ParsedLineType.Code:
+                sb.Append("        ");
                 sb.Append(m_code);
+                
                 break;
             }
 
-            string spacing = "                                                           ";
-
-            sb.Append(spacing.Substring(sb.ToString().Length));
+            if (m_addSpacing)
+                sb.Append(spacing.Substring(sb.ToString().Length));
 
             sb.Append(m_comment);
 
@@ -97,13 +107,24 @@ class Program
 
         public ParsedLine(string line, ParseState parseState)
         {
+            string trimmedLine = line.Trim();
+
             // if the line is only a comment
-            if (line.Trim().StartsWith("//"))
+            if (trimmedLine.StartsWith("//"))
             {
-                m_comment = line;
+                m_comment = line.Replace("//", ";").Trim();
                 m_parsedLineType = ParsedLineType.Comment;
                 return;
             }
+
+            if (trimmedLine.StartsWith("*"))
+            {
+                m_comment = ';' + trimmedLine;
+                m_parsedLineType = ParsedLineType.Comment;
+                return;                
+            }
+
+            m_addSpacing = true;
 
             // find the comment at the end of the line
             int commentIndex = line.IndexOf(';');
@@ -111,11 +132,12 @@ class Program
             {
                 string comment = line.Substring(commentIndex);
 
-                if (comment != "; = ??")
+                if (!comment.StartsWith("; = "))
                 {
                     if (parseState.m_lastParsedLine != null && 
                         parseState.m_lastParsedLine.m_parsedLineType == ParsedLineType.Label &&
-                        string.IsNullOrEmpty(parseState.m_lastParsedLine.m_comment))
+                        string.IsNullOrEmpty(parseState.m_lastParsedLine.m_comment) &&
+                        parseState.m_isInRamAddressSpace)
                     {
                         parseState.m_lastParsedLine.m_comment = comment;
                     }
@@ -127,7 +149,7 @@ class Program
                 }
             }
 
-            m_address = ExtractAddress(line);
+            (m_address, m_addressString) = ExtractAddress(line);
 
             parseState.UpdateAddress(m_address);
 
@@ -138,8 +160,18 @@ class Program
 
                 if (!string.IsNullOrEmpty(label))
                 {
-                    m_label = label;
-                    m_parsedLineType = ParsedLineType.Label; 
+                    if (label.Contains(' ')) // if the label contains a space, then it's a comment.
+                    {
+                        m_comment = "\n; " + label.Trim();
+                        m_parsedLineType= ParsedLineType.Comment;
+                        m_addSpacing = false;
+                    }
+                    else
+                    {
+                        m_label = label;
+                        m_parsedLineType = ParsedLineType.Label; 
+                    }
+
                 }
             }
             else 
@@ -168,6 +200,7 @@ class Program
                                 {
                                     previousLine.m_isDataLabel = true;
                                     previousLine.m_address = m_address;
+                                    previousLine.m_addressString = m_addressString;
                                 }
                             }
                         }
@@ -186,24 +219,35 @@ class Program
                     {
                         m_code = line.Substring(36, line.Length - 36).Trim();
                     }
+
+                    int arrowIndex = m_code.IndexOf("=>");
+                    if (arrowIndex >= 0) 
+                    {
+                        m_code = m_code.Substring(0, arrowIndex);
+                    }
+
                     m_parsedLineType = ParsedLineType.Code;                    
                 }
             }
         }
 
-        private uint ExtractAddress(string line)
+        private (uint, string) ExtractAddress(string line)
         {
-            string address = line.Substring(12, 4);
+            string addressString = line.Substring(12, 4);
+            uint result = ParseState.NoAddress;
 
-            if (string.IsNullOrWhiteSpace(address))
-                return ParseState.NoAddress;
+            if (!string.IsNullOrWhiteSpace(addressString))
+            {
+                if (!uint.TryParse(addressString, 
+                                   NumberStyles.HexNumber, 
+                                   CultureInfo.CurrentCulture, out result))
+                {
+                    addressString = "";
+                    result = ParseState.NoAddress;
+                }
+            }
 
-            if (uint.TryParse(address, 
-                              NumberStyles.HexNumber, 
-                              CultureInfo.CurrentCulture, out uint result))
-                return result;
-
-            return ParseState.NoAddress;
+            return (result, addressString);
         }
     }
 

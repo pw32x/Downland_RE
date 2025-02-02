@@ -456,12 +456,13 @@
                                                                                           ShiftBitsInSpriteDrawingBuffer:cdd2(RW), 
                                                                                           ShiftBitsInSpriteDrawingBuffer:cdd8(RW)  
             0085                    undefined1 ??
-                             DAT_0086+1                                      XREF[3,2]:   DrawDoorOrMultipleDoors_Maybe:cdad(W), 
-                             DAT_0086                                                     ShiftBitsInSpriteDrawingBuffer:cdce(RW), 
-                                                                                          ShiftBitsInSpriteDrawingBuffer:cdd4(RW), 
-                                                                                          ShiftBitsInSpriteDrawingBuffer:cdd0(RW), 
+                             DAT_0086                                        XREF[3]:     DrawDoorOrMultipleDoors_Maybe:cdad(W), 
+                                                                                          ShiftBitsInSpriteDrawingBuffer:cdce(RW), 
+                                                                                          ShiftBitsInSpriteDrawingBuffer:cdd4(RW)  
+            0086                    db         ??
+                             DAT_0087                                        XREF[2]:     ShiftBitsInSpriteDrawingBuffer:cdd0(RW), 
                                                                                           ShiftBitsInSpriteDrawingBuffer:cdd6(RW)  
-            0086                    undefined2 ??
+            0087                    ??         ??
                              DAT_0088                                        XREF[3]:     DrawDoorOrMultipleDoors_Maybe:cdaf(W), 
                                                                                           ShiftBitsInSpriteDrawingBuffer:cdd2(RW), 
                                                                                           ShiftBitsInSpriteDrawingBuffer:cdd8(RW)  
@@ -17293,7 +17294,7 @@
                              print player one score
             c0bd ce 00 bb           LDU        #PlayerOneScoreString_0xbb                       ; = ??
             c0c0 bd c2 22           JSR        CheckScoreStringAgainstHighScoreString           ; = ??
-                                                                                                ; undefined CheckScoreStringAgainstHighScoreString(undefined param_1, un
+                                                                                                ; undefined CheckScoreStringAgainstHighScoreString(undefined A, undefine
             c0c3 ce 00 bb           LDU        #PlayerOneScoreString_0xbb                       ; = ??
             c0c6 8e 18 12           LDX        #DAT_1812                                        ; screen location
             c0c9 bd db 21           JSR        FindFirstNonZeroCharacterInString                ; = ??
@@ -17303,7 +17304,7 @@
                              print player two score
             c0cf ce 00 c3           LDU        #PlayerTwoScoreString_0xc3                       ; = ??
             c0d2 bd c2 22           JSR        CheckScoreStringAgainstHighScoreString           ; = ??
-                                                                                                ; undefined CheckScoreStringAgainstHighScoreString(undefined param_1, un
+                                                                                                ; undefined CheckScoreStringAgainstHighScoreString(undefined A, undefine
             c0d5 ce 00 c3           LDU        #PlayerTwoScoreString_0xc3                       ; = ??
             c0d8 8e 19 52           LDX        #DAT_1952                                        ; screen location
             c0db bd db 21           JSR        FindFirstNonZeroCharacterInString                ; = ??
@@ -17530,30 +17531,30 @@
                              **************************************************************
                              undefined __stdcall CheckScoreStringAgainstHighScoreStri
              undefined         A:1            <RETURN>
-             undefined         A:1            param_1
-             undefined         B:1            param_2
-             undefined2        X:2            param_3
-             undefined2        Y:2            param_4
-             byte *            U:2            param_5
+             undefined         A:1            A
+             undefined         B:1            B
+             undefined2        X:2            X
+             undefined2        Y:2            Y
+             byte *            U:2            U
                              CheckScoreStringAgainstHighScoreString          XREF[2]:     UpdatePlayerSoundAndCollisionsAndPhysics:c0c0(c), 
                                                                                           UpdatePlayerSoundAndCollisionsAndPhysics:c0d2(c)  
             c222 8e 00 b3           LDX        #HighScoreString_0xb3                            ; = ??
-            c225 34 50              PSHS        param_5 param_3
+            c225 34 50              PSHS        U X
                              Loop_SameCharacter                              XREF[1]:     c22d(j)  
-            c227 a6 c0              LDA        ,param_5+                                        ; load letter from source string, advance U
+            c227 a6 c0              LDA        ,U+                                              ; load letter from source string, advance U
             c229 2b 06              BMI        Jump_HitEndOfString                              ; hit end of source string
-            c22b a1 80              CMPA       ,param_3+=>HighScoreString_0xb3                  ; compare the letter in the source string
+            c22b a1 80              CMPA       ,X+=>HighScoreString_0xb3                        ; compare the letter in the source string
                                                                                                 ; with the letter in the highscore string
             c22d 27 f8              BEQ        Loop_SameCharacter                               ; if equal, loop
             c22f 22 02              BHI        Jump_SourceCharacterIsHigher
                              Jump_HitEndOfString                             XREF[1]:     c229(j)  
-            c231 35 d0              PULS        param_3 param_5 PC
+            c231 35 d0              PULS        X U PC
                              Jump_SourceCharacterIsHigher                    XREF[1]:     c22f(j)  
-            c233 35 50              PULS        param_3 param_5
+            c233 35 50              PULS        X U
                              Loop_NextCharacterToCopy                        XREF[1]:     c23b(j)  
-            c235 a6 c0              LDA        ,param_5+                                        ; load next character
+            c235 a6 c0              LDA        ,U+                                              ; load next character
             c237 2b e8              BMI        Jump_ToRTS                                       ; if at the end, jump so we can return
-            c239 a7 80              STA        ,param_3+=>HighScoreString_0xb3                  ; copy the character to the highscore string
+            c239 a7 80              STA        ,X+=>HighScoreString_0xb3                        ; copy the character to the highscore string
             c23b 20 f8              BRA        Loop_NextCharacterToCopy
                              TextScreenPositions                             XREF[2]:     UpdatePlayerSoundAndCollisionsAndPhysics:c0a7(*), 
                                                                                           UpdatePlayerSoundAndCollisionsAndPhysics:c0b0(R)  
