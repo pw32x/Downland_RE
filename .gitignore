@@ -400,3 +400,4 @@ FodyWeavers.xsd
 *.sln.iml
 exported_asm/downland.sym
 exported_asm/downland.map
+GhidraToLWTOOLS/Properties/launchSettings.json

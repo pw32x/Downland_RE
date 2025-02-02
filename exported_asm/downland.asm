@@ -1,3 +1,5 @@
+; Converted to LWASM-compatible assembly by GhidraTOLWTOOLS
+
 ; Hardware constants
 PIA0_A_DATA_REG__FF00 equ 0xff00
 PIA0_A_CONTROL_REG__FF01 equ 0xff01

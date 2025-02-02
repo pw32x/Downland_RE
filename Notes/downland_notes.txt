@@ -65,7 +65,7 @@ Background Piece codes
 	
 Sprite Data Fun Facts
 
-	some animations are copied to ram, creating four copies
+	some animations are copied to ram, creating four copies increasily offset by one bit
 	drops already have their four copies stored in rom	
 	splat and doors are copied to a dedicated work buffer on demand when needed to be drawn
 
@@ -97,15 +97,17 @@ Questions
 	
 	how is detecting vertical ropes done?
 	
-		starts at 0xc85f
+		starts at LAB_c85f
 	
 	how is detecting horizontal ropes done?
-		probably the same way vertical ropes are found, by looking at two 
+		Unsure, probably the same way vertical ropes are found, by looking at two 
 		consecutive white pixels
 
 	how does the player bounce off walls when jumping?
 
 	how does the player code flow?
+
+Todo
 
 	go through unnamed functions
 	
@@ -122,10 +124,6 @@ Questions
 			screen transition
 			splat sound
 	
-Todo
-
-	name all the LAB_ labels
-	name all the functions	
 	
 How To	
 

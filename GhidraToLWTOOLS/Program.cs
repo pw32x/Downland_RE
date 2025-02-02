@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.Linq;
-using System.Reflection.Emit;
+﻿using System.Globalization;
 using System.Text;
 
-
+// Converts the downland.ghidra.txt listing into downland.asm, an
+// assembly file that is buildable in LWTOOLS
+//
+// The code is hacky and is fragile. It assums the layout of the 
+// Ghidra listing and the size of the columns.
 
 namespace MyProject;
 
@@ -372,7 +372,7 @@ class Program
 
     static void Main(string[] args)
     {
-        var fileLines = File.ReadAllLines(@"..\..\..\..\downland.txt");
+        var fileLines = File.ReadAllLines(@"downland.ghidra.txt");
 
         var parseState = new ParseState();
 
@@ -384,6 +384,9 @@ class Program
 
         // write to file
         StringBuilder sb = new StringBuilder();
+
+        sb.AppendLine("; Converted to LWASM-compatible assembly by GhidraTOLWTOOLS");
+        sb.AppendLine();
 
         AddHardwareVariables(sb);
 
@@ -397,10 +400,8 @@ class Program
             sb.AppendLine(exportedLine);
         }
 
-        Directory.CreateDirectory(@"..\..\..\..\exported_asm");
-        File.WriteAllText(@"..\..\..\..\exported_asm\downland.asm", sb.ToString());
-
-
+        Directory.CreateDirectory(@"exported_asm");
+        File.WriteAllText(@"exported_asm\downland.asm", sb.ToString());
     }
 
 
