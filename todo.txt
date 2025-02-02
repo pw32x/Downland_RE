@@ -1,20 +1,7 @@
 GhidraToLWTOOLS TODO
 
-    in variable declaration, add an empty line before a label if there's more than one comment preceeding it
-    
-    remove XREFs
-    
     remove unneeded DAT_ variables
     
-    remove unneeded function declarations
-    
-    remove ;-- flow overrides
-    
-    remove ;undefined
-    
-    remove EOL comments with "; undefined"
-    
-    what's up with TimerNumbers ?
 
 
 Reverse Engineering TODO

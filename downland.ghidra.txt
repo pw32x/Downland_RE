@@ -563,9 +563,10 @@
                              TimerNumbers_34_0xce
             00ce                    db         ??
             00cf                    ??         ??
-                             TimerNumbers_0_0xd1 (00d0+1)                    XREF[2,1]:   InitRoom_Maybe:cd72(W), AddPickupPointsToScore:db9c(R), 
-                             TimerNumbers_1_0xd0                                          AddPickupPointsToScore:db9c(R)  
-            00d0                    undefined2 ??
+                             TimerNumbers_1_0xd0                             XREF[2]:     InitRoom_Maybe:cd72(W), AddPickupPointsToScore:db9c(R)  
+            00d0                    db         ??
+                             TimerNumbers_0_0xd1                             XREF[1]:     AddPickupPointsToScore:db9c(R)  
+            00d1                    ??         ??
                              StringDataEnd_0xd2                              XREF[2]:     SetupStringEndCharactersForDynamicStrings:c21f(*), 
                                                                                           AddPickupPointsToScore:db93(*)  
             00d2                    ??         ??

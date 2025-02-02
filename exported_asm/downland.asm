@@ -139,9 +139,8 @@ GameTimerString_0xcb equ 0x00cb
 DAT_00cc equ 0x00cc                                                       
 DAT_0xcd equ 0x00cd                                                       
 TimerNumbers_34_0xce equ 0x00ce                                           
-
-;TimerNumbers_0_0xd1 (00d0+1)                    XREF[2,1]:   InitRoom_Maybe:cd72(W), AddPickupPointsToScore:db9c(R),
 TimerNumbers_1_0xd0 equ 0x00d0                                            
+TimerNumbers_0_0xd1 equ 0x00d1                                            
 StringDataEnd_0xd2 equ 0x00d2                                             
 InterruptJumpInstruction_0x10c equ 0x010c                                 
 InterruptHandlerAddress_0x10d equ 0x010d                                  
@@ -433,17 +432,12 @@ Jump_OverPaletteSetting:
 LAB_c043:                                                                
         STA        <SAM_SETUP_BITS_MAYBE_0x6a                             ; store at address 106
         JSR        WaitForVSync_Maybe                                     
-                                                                          ; undefined WaitForVSync_Maybe(void)
         LDD        #VideoMemory_Page1_0x1c00                              
         JSR        SetupSAMPages                                          
-                                                                          ; undefined SetupSAMPages(byte param_1)
         JSR        InitVideoRegisters                                     
-                                                                          ; undefined InitVideoRegisters(void)
         CLRA                                                              
         JSR        Clear512BytesInRamFrom_0x7e00_To_0x8000                
-                                                                          ; undefined Clear512BytesInRamFrom_0x7e00_To_0x8000(undefined param_1)
         JSR        SetupStringEndCharactersForDynamicStrings              
-                                                                          ; undefined SetupStringEndCharactersForDynamicStrings(void)
         STA        RomRam_MapType_FFDE                                    
         LDX        #CartridgeRomStart                                     ; Load the number c000 into X
         STX        <RomAddressCounter_0xc000to0xdf5a_0x61                 
@@ -451,7 +445,6 @@ LAB_c043:
         LDA        #01010101b                                             ; some mask, maybe?
         STA        <UnusedMask_Maybe_0x71                                 
         JSR        CopySpritesFromRomToRam                                
-                                                                          ; undefined CopySpritesFromRomToRam(void)
         INC        <SelectedNumberOfPlayers_0x51                          
 
 LAB_c06b:                                                                
@@ -464,27 +457,20 @@ LOOP_Clear10Bytes_c070:
         DECA                                                              
         BNE        LOOP_Clear10Bytes_c070                                 
         JSR        EnableSound                                            
-                                                                          ; undefined EnableSound(void)
         LDA        #1                                                     ; store 1 to 0x3a. 
         STA        <GameCompletionCount_0x3a                              ; set this so that the title screen has 10 drops
         JSR        InitDrops                                              
-                                                                          ; undefined InitDrops(void)
         LDA        #0xa                                                   ; menu screen room number
         STA        <CurrentRoomNumber_0x39                                
         LDA        #01010101b                                             ; store the character drawing mask
         STA        <CharacterDrawingMask_0x69_Nice                        
         JSR        LoadPage1AddressToX                                    
-                                                                          ; undefined LoadPage1AddressToX(void)
         JSR        WaitForVSync_Maybe                                     
-                                                                          ; undefined WaitForVSync_Maybe(void)
         LDD        #VideoMemory_Page1_0x1c00                              ; somewhere in video memory?
                                                                           ; get overriden  by SetupSAMPages
         JSR        SetupSAMPages                                          
-                                                                          ; undefined SetupSAMPages(byte param_1)
         JSR        InitVideoRegisters                                     
-                                                                          ; undefined InitVideoRegisters(void)
         JSR        ClearVideoMemory_0x0400_to_0x3400                      
-                                                                          ; undefined ClearVideoMemory_0x0400_to_0x3400(void)
         LDX        #0x400                                                 ; likely page 0 location
         STX        <CurrentVideoMemLocation_0x4e                          ; store 0x400 to 0x4e
 ;**************************************************************
@@ -492,7 +478,7 @@ LOOP_Clear10Bytes_c070:
 ;**************************************************************
         LDU        #TitleScreenBackground_DrawCommands                    
         JSR        DrawBackground                                         
-                                                                          ; undefined DrawBackground(void)
+
 ;Print Intro Text To Screen
         LDU        #TextStrings                                           
         LDX        #TextScreenPositions                                   
@@ -503,7 +489,6 @@ Loop_PrintString:
         PSHS        X                                                     
         LDX        ,X                                                     ; load to X the address stored in X (c23d)
         JSR        PrintString                                            
-                                                                          ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
         PULS        X                                                     
         LEAX       0x2,X                                                  ; move to next screen position
         DEC        <UtilityCounter_0x26                                   
@@ -512,33 +497,27 @@ Loop_PrintString:
 ;print player one score
         LDU        #PlayerOneScoreString_0xbb                             
         JSR        CheckScoreStringAgainstHighScoreString                 
-                                                                          ; undefined CheckScoreStringAgainstHighScoreString(undefined A, undefine
         LDU        #PlayerOneScoreString_0xbb                             
         LDX        #DAT_1812                                              ; screen location
         JSR        FindFirstNonZeroCharacterInString                      
-                                                                          ; undefined FindFirstNonZeroCharacterInString(void)
         JSR        PrintString                                            
-                                                                          ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
+
 ;print player two score
         LDU        #PlayerTwoScoreString_0xc3                             
         JSR        CheckScoreStringAgainstHighScoreString                 
-                                                                          ; undefined CheckScoreStringAgainstHighScoreString(undefined A, undefine
         LDU        #PlayerTwoScoreString_0xc3                             
         LDX        #DAT_1952                                              ; screen location
         JSR        FindFirstNonZeroCharacterInString                      
-                                                                          ; undefined FindFirstNonZeroCharacterInString(void)
         JSR        PrintString                                            
-                                                                          ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
+
 ;print high score
         LDU        #HighScoreString_0xb3                                  
         LDX        #DAT_16cc                                              ; screen location
         JSR        FindFirstNonZeroCharacterInString                      
-                                                                          ; undefined FindFirstNonZeroCharacterInString(void)
         JSR        PrintString                                            
-                                                                          ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
         LDD        #VideoMemory_Page0_0x0400                              ; A = 0x04, B = 0x00. A is Sam Page setup bits
         JSR        SetupSAMPages                                          
-                                                                          ; undefined SetupSAMPages(byte param_1)
+
 ;Done drawing. Copy from page 0 to page 1
         LDX        #VideoMemory_Page0_0x0400                              ; setup loop to copy page 0 to page 1
 
@@ -561,9 +540,7 @@ LOOP_Copy_TitleScreen_Page0_to_Page1:
 
 Loop_TitleScreenLoop:                                                    
         JSR        IncrementRomAddressCounter                             
-                                                                          ; undefined IncrementRomAddressCounter(undefined A, undefined B, undefin
         JSR        UpdateJoystick_Maybe                                   
-                                                                          ; undefined UpdateJoystick_Maybe(void)
         LDA        <Player_JoystickDirection_0x15                         
         CMPA       #0x4                                                   ; holding left on the joystick
         BNE        Jump_NotHoldingLeft                                    
@@ -595,7 +572,6 @@ Jump_DrawOnePlayerCursor:
 
 Jump_UpdateAndDrawDrops:                                                 
         JSR        UpdateAndDrawDrops                                     
-                                                                          ; undefined UpdateAndDrawDrops(void)
         LDA        PIA0_A_DATA_REG__FF00                                  
         BITA       #0x1                                                   ; test for joystick button
         BNE        Loop_TitleScreenLoop                                   ; if not pressed, then loop back
@@ -606,7 +582,6 @@ Jump_UpdateAndDrawDrops:
         STB        <PlayerOne_Lives                                       
         STB        <PlayerTwo_Lives                                       
         JSR        ClearTimerAndScoreStrings                              
-                                                                          ; undefined ClearTimerAndScoreStrings(void)
         CLR        <GameCompletionCount_0x3a                              ; init the completion count
         LDA        #0x1                                                   ; set player one
         STA        <CurrentPlayer_0x52                                    ; set current player
@@ -616,26 +591,16 @@ Jump_UpdateAndDrawDrops:
         STD        <StoredPlayerPosition_0x5e                             
         CLR        <TempRoomNumberHolder_0x60                             
         JSR        InitAllTimers                                          
-                                                                          ; undefined InitAllTimers(undefined A, undefined B, undefined2 * X)
         JSR        InitDrops                                              
-                                                                          ; undefined InitDrops(void)
         JSR        InitRoomKeysAndPickups                                 
-                                                                          ; undefined InitRoomKeysAndPickups(void)
         JSR        InitVideoAndSetupRoomAndGraphics                       
-                                                                          ; undefined InitVideoAndSetupRoomAndGraphics(void)
         JSR        InitKeyStateData                                       
-                                                                          ; undefined InitKeyStateData(void)
         JSR        Init_PlayerLivesIconParameters                         
-                                                                          ; undefined Init_PlayerLivesIconParameters(void)
         JSR        LoadPlayerPhysicsToYAndRoomDataInfoX                   
-                                                                          ; undefined LoadPlayerPhysicsToYAndRoomDataInfoX(void)
         JSR        InitRoom_Maybe                                         
-                                                                          ; undefined InitRoom_Maybe()
         JSR        InitPlayerSomething                                    
-                                                                          ; undefined InitPlayerSomething(void)
         LDY        #Player_PhysicsData_0x1aa                              
         JSR        BigInitFunction_Maybe                                  
-                                                                          ; undefined BigInitFunction_Maybe(undefined A, undefined B, byte * X, sh
 
 Loop_MainGameLoop_Maybe:                                                 
         LDA        <Player_NeedsUpdate_Maybe_0x48                         
@@ -643,19 +608,15 @@ Loop_MainGameLoop_Maybe:
         CLR        <Player_NeedsUpdate_Maybe_0x48                         
         LDY        #Player_PhysicsData_0x1aa                              
         JSR        EraseAndUpdateAndDrawObject                            
-                                                                          ; undefined EraseAndUpdateAndDrawObject(void)
 
 Jump_SkipPlayerUpdate:                                                   
         JSR        FUN_ccb1                                               
-                                                                          ; undefined FUN_ccb1()
         JSR        UpdatePlayerSoundAndCollisionsAndPhysics               
-                                                                          ; undefined UpdatePlayerSoundAndCollisionsAndPhysics(undefined A, undefi
         LDA        <Ball_IsActive_0x49                                    
         BEQ        Jump_SkipBallUpdate                                    
         CLR        <Ball_IsActive_0x49                                    
         LDY        #Ball_Physics_0x1bf                                    
         JSR        EraseAndUpdateAndDrawObject                            
-                                                                          ; undefined EraseAndUpdateAndDrawObject(void)
 
 Jump_SkipBallUpdate:                                                     
         LDX        #PIA0_A_DATA_REG__FF00                                 
@@ -688,13 +649,10 @@ LAB_c1c4:
 
 LAB_c1d8:                                                                
         JSR        UpdateAndDrawDrops                                     
-                                                                          ; undefined UpdateAndDrawDrops(void)
         LDA        #00000010b                                             
         STA        PIA1_A_DATA_REG__FF20                                  
         JSR        UpdateBall                                             
-                                                                          ; undefined UpdateBall(void)
         JSR        UpdateRoomTimers                                       
-                                                                          ; undefined UpdateRoomTimers(void)
 
 Loop_WaitForInterrupt:                                                   
         LDA        <InterruptHasBeenHitCounter_0x14                       
@@ -705,14 +663,10 @@ Loop_WaitForInterrupt:
 Jump_InterruptNotHitYet:                                                 
         LDX        #0x23                                                  
         JSR        IncrementRomAddressCounter                             
-                                                                          ; undefined IncrementRomAddressCounter(undefined A, undefined B, undefin
         BRA        Loop_WaitForInterrupt                                  
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall Clear512BytesInRamFrom_0x7e00_To_0x8
-;undefined         A:1            <RETURN>
-;undefined         A:1            param_1
 
 Clear512BytesInRamFrom_0x7e00_To_0x8000:                                 
         LDX        #0x7e00                                                
@@ -725,8 +679,6 @@ LAB_c1f9:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall WaitForVSync_Maybe(void)
-;undefined         A:1            <RETURN>
 
 WaitForVSync_Maybe:                                                      
         PSHS        CC                                                    
@@ -741,8 +693,6 @@ LoopUntilInterruptChanges0x14:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall ClearTimerAndScoreStrings(void)
-;undefined         A:1            <RETURN>
 
 ClearTimerAndScoreStrings:                                               
         LDX        #PlayerOneScoreString_0xbb                             
@@ -754,8 +704,6 @@ Loop_ClearCharacter:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall SetupStringEndCharactersForDynamicSt
-;undefined         A:1            <RETURN>
 
 SetupStringEndCharactersForDynamicStrings:                               
         LDA        #0xff                                                  
@@ -769,13 +717,6 @@ Jump_ToRTS:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall CheckScoreStringAgainstHighScoreStri
-;undefined         A:1            <RETURN>
-;undefined         A:1            A
-;undefined         B:1            B
-;undefined2        X:2            X
-;undefined2        Y:2            Y
-;byte *            U:2            U
 
 CheckScoreStringAgainstHighScoreString:                                  
         LDX        #HighScoreString_0xb3                                  
@@ -839,7 +780,7 @@ Loop_CollisionTestPickup:
         STD        <Object_CollisionY_0x41                                
         LDA        0x3,Y                                                  
         STA        <Object_CollisionX_0x42                                
-        JSR        TestPlayerObjectCollision                              ; undefined TestPlayerObjectCollision(void)
+        JSR        TestPlayerObjectCollision                              
         BNE        Jump_CollidesWithPickup                                
 
 Jump_PickupIsInactive:                                                   
@@ -863,7 +804,7 @@ Loop_ProcessCollisionWithDrop:
         STA        <Object_CollisionY_0x41                                
         LDA        0x5,Y                                                  
         STA        <Object_CollisionX_0x42                                
-        JSR        TestPlayerObjectCollision                              ; undefined TestPlayerObjectCollision(void)
+        JSR        TestPlayerObjectCollision                              
         BEQ        Jump_NoCollisionOrCollisionIgnored                     ; no collision occured
         LDA        ,Y                                                     ; don't collide if the drop is still wiggling
         BMI        Jump_NoCollisionOrCollisionIgnored                     ; no collision because the drop is still wiggling
@@ -884,7 +825,7 @@ Jump_NoCollisionOrCollisionIgnored:
         STA        <Object_CollisionY_0x41                                
         LDA        Ball_X_0x1c5                                           
         STA        <Object_CollisionX_0x42                                
-        JSR        TestPlayerObjectCollision                              ; undefined TestPlayerObjectCollision(void)
+        JSR        TestPlayerObjectCollision                              
         BNE        Jump_CollidesWithObjectThatKills                       
 ;**************************************************************
 ;* Test player collision with the bird                        *
@@ -897,7 +838,7 @@ Jump_NoCollisionOrCollisionIgnored:
         STA        <Object_CollisionY_0x41                                
         LDA        Bird_X_0x1da                                           
         STA        <Object_CollisionX_0x42                                
-        JSR        TestPlayerObjectCollision                              ; undefined TestPlayerObjectCollision(void)
+        JSR        TestPlayerObjectCollision                              
         BNE        Jump_CollidesWithObjectThatKills                       
         LDY        #Player_PhysicsData_0x1aa                              
         JMP        Jump_HandlePlayerJumpAndRope                           
@@ -923,7 +864,7 @@ Jump_CollidesWithPickup:
         ORA        <CurrentPlayer_0x52                                    
         STA        ,X                                                     ; activate the door for the selected key for this player
                                                                           ; 
-        JSR        LoadRoomDoorDataAddrIntoX                              ; undefined LoadRoomDoorDataAddrIntoX(void)
+        JSR        LoadRoomDoorDataAddrIntoX                              
 
 Loop_Doors:                                                              
         CMPB       0x5,X                                                  ; compare B with the room number of the door
@@ -937,10 +878,10 @@ Loop_Doors:
 Jump_DoneDoorSearch:                                                     
         LDU        #VideoMemory_Page1_0x1c00                              ; draw the unlocked door on both video memory pages
         STU        <CurrentVideoMemLocation_0x4e                          
-        JSR        DrawDoorOrMultipleDoors_Maybe                          ; undefined DrawDoorOrMultipleDoors_Maybe(undefined A, undefined B, usho
+        JSR        DrawDoorOrMultipleDoors_Maybe                          
         LDU        #VideoMemory_Page0_0x0400                              
         STU        <CurrentVideoMemLocation_0x4e                          
-        JSR        DrawDoorOrMultipleDoors_Maybe                          ; undefined DrawDoorOrMultipleDoors_Maybe(undefined A, undefined B, usho
+        JSR        DrawDoorOrMultipleDoors_Maybe                          
 
 Jump_SkipDoorActivation:                                                 
         LDD        <ZeroValue                                             
@@ -968,27 +909,20 @@ Jump_IsDiamond:
 
 Jump_AddToScore:                                                         
         PSHS        Y                                                     
-        JSR        UpdateAndPrintPlayerScore                              ; undefined UpdateAndPrintPlayerScore(undefined A, undefined B, undefine
+        JSR        UpdateAndPrintPlayerScore                              
         PULS        Y                                                     
-        JSR        SetupPickupScreenLocationAndNumLinesToClear            ; undefined SetupPickupScreenLocationAndNumLinesToClear(void)
+        JSR        SetupPickupScreenLocationAndNumLinesToClear            
         STB        <UtilityCounter_0x26                                   
-        BSR        ClearPickupFromScreen                                  ; undefined ClearPickupFromScreen(undefined A, undefined B, undefined2 *
+        BSR        ClearPickupFromScreen                                  
         LDD        #0x1280                                                ; setup A and B parameters for pickup sound
-        BSR        PlaySound                                              ; undefined PlaySound(undefined A, undefined B)
+        BSR        PlaySound                                              
         LDY        #Player_PhysicsData_0x1aa                              
         JMP        EraseAndUpdateAndDrawObject                            
-
-;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
 ;**************************************************************
 ;* Clears the sprite graphics from page 0                     *
 ;* How: copies two bytes from page1 to page0 for              *
 ;* the number of lines specified in UtilityCounter_0x26       *
 ;**************************************************************
-;undefined __stdcall ClearPickupFromScreen(undefined A, u
-;undefined         A:1            <RETURN>
-;undefined         A:1            A
-;undefined         B:1            B
-;undefined2 *      X:2            X
 
 ClearPickupFromScreen:                                                   
         .db        0xEC                                                   ; load value to D on second page
@@ -1004,10 +938,6 @@ ClearPickupFromScreen:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall PlaySound(undefined A, undefined B)
-;undefined         A:1            <RETURN>
-;undefined         A:1            A
-;undefined         B:1            B
 
 PlaySound:                                                               
         STA        <SecondUtilityCounter_0x4d                             
@@ -1016,18 +946,16 @@ PlaySound:
 Loop_UpdateRegisters:                                                    
         LDA        #11111111b                                             
         STA        PIA1_A_DATA_REG__FF20                                  
-        BSR        DoIdleLoopOnB                                          ; undefined DoIdleLoopOnB(void)
+        BSR        DoIdleLoopOnB                                          
         LDA        #00000010b                                             
         STA        PIA1_A_DATA_REG__FF20                                  
-        BSR        DoIdleLoopOnB                                          ; undefined DoIdleLoopOnB(void)
+        BSR        DoIdleLoopOnB                                          
         DEC        <UtilityCounter_0x26                                   
         BNE        Loop_UpdateRegisters                                   
         RTS                                                               
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DoIdleLoopOnB(void)
-;undefined         A:1            <RETURN>
 
 DoIdleLoopOnB:                                                           
         LDB        <SecondUtilityCounter_0x4d                             
@@ -1039,8 +967,6 @@ Loop_DecrementB:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall TestPlayerObjectCollision(void)
-;undefined         A:1            <RETURN>
 
 TestPlayerObjectCollision:                                               
         LDX        #Player_PhysicsData_0x1aa                              
@@ -1087,12 +1013,6 @@ Jump_Return_Helper:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall UpdatePlayerSoundAndCollisionsAndPhy
-;undefined         A:1            <RETURN>
-;undefined         A:1            A
-;undefined         B:1            B
-;ushort *          X:2            X
-;undefined2        Stack[-0x2]:2  previousFunctionOnStack_Maybe           XREF[1]:     c69f(*)
 
 UpdatePlayerSoundAndCollisionsAndPhysics:                                
         LDY        #Player_PhysicsData_0x1aa                              
@@ -1312,8 +1232,6 @@ Jump_NotHitTerminalVelocity:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;char __stdcall ComputeSomeScreenOffset_Maybe(void)
-;char              A:1            <RETURN>
 
 ComputeSomeScreenOffset_Maybe:                                           
         LDX        #SomeKindOfHorizontalBitOffsetTable                    ; set X to this table
@@ -1372,8 +1290,6 @@ RopeShapeLookupTable_Maybe:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall ClearSpeedToZero(void)
-;undefined         A:1            <RETURN>
 
 ClearSpeedToZero:                                                        
         LDD        <ZeroValue                                             
@@ -1390,7 +1306,7 @@ Jump_PlayerIsNotFalling:
         LBNE       Jump_PlayerLanding_Maybe                               
 
 Jump_PerformPlayerDeath:                                                 
-        BSR        ClearSpeedToZero                                       ; undefined ClearSpeedToZero(void)
+        BSR        ClearSpeedToZero                                       
         CLR        -0xb,Y                                                 
         CLR        <Player_JumpUpInTheAirCounter_0x2c                     
         CLR        <Player_CantJumpAfterLandingCounter_Maybe_0x2f         
@@ -1429,7 +1345,7 @@ Jump_PlayerStartDeathFallling:
 Jump_PlayerIsDead_Maybe:                                                 
         LDA        <Player_IsFalling_0x2d                                 
         BNE        Jump_NotTouchingGround                                 
-        BSR        ClearSpeedToZero                                       ; undefined ClearSpeedToZero(void)
+        BSR        ClearSpeedToZero                                       
         LDA        -0x2,Y                                                 
         DECA                                                              
         BEQ        LAB_c5ac                                               
@@ -1462,7 +1378,7 @@ Loop_LoadUndentifiedData:
 ;adjust the sprite to draw
         STA        <UtilityCounter_0x26                                   ; pixel offset
         LDB        #0x10                                                  ; 16 lines in the sprite
-        JSR        ShiftBitsInSpriteDrawingBuffer                         ; undefined ShiftBitsInSpriteDrawingBuffer(undefined param_1, char param
+        JSR        ShiftBitsInSpriteDrawingBuffer                         
 
 Jump_PlaySplatSound:                                                     
         LDD        #0x2508                                                ; setup A and B parameters for splat sound 
@@ -1470,7 +1386,7 @@ Jump_PlaySplatSound:
 
 ;perform actual drawing of sprite
         LDU        #SpriteDrawingBuffer_0x83                              
-        JSR        DrawLifeIconsAndPlayerRegeneration                     ; undefined DrawLifeIconsAndPlayerRegeneration(undefined A, undefined B,
+        JSR        DrawLifeIconsAndPlayerRegeneration                     
 
 LAB_c5ac:                                                                
         DEC        -0x3,Y                                                 
@@ -1479,7 +1395,7 @@ LAB_c5ac:
         BEQ        ResetTimerTo2048IfAtZeroWhenDied_Maybe                 
         LDA        #0xc                                                   
         STA        -0x1,Y                                                 
-        LBSR       EraseSpriteFromScreen                                  ; undefined EraseSpriteFromScreen(void)
+        LBSR       EraseSpriteFromScreen                                  
         LDA        #0x10                                                  
         STA        -0x1,Y                                                 
         LDA        #0x46                                                  
@@ -1488,8 +1404,6 @@ LAB_c5ac:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall GetPlayerLivesAddress(void)
-;undefined         A:1            <RETURN>
 
 GetPlayerLivesAddress:                                                   
         LDX        #PlayerLivesAddresses                                  
@@ -1513,7 +1427,7 @@ PTR_String_GetReadyPlayerOne_c5da:
 ResetTimerTo2048IfAtZeroWhenDied_Maybe:                                  
         LDA        Bird_InitState_0x1cf                                   
         BEQ        Jump_SkipResettingTimerAndBird                         
-        JSR        GetPlayerRoomTimerBuffer                               ; undefined GetPlayerRoomTimerBuffer(void)
+        JSR        GetPlayerRoomTimerBuffer                               
         LDB        <CurrentRoomNumber_0x39                                
         LSLB                                                              ; double B to get relative address in buffer
         ABX                                                               ; get timer location in room timer buffer
@@ -1523,7 +1437,7 @@ ResetTimerTo2048IfAtZeroWhenDied_Maybe:
         STA        Bird_InitState_0x1cf                                   
 
 Jump_SkipResettingTimerAndBird:                                          
-        BSR        GetPlayerLivesAddress                                  ; undefined GetPlayerLivesAddress(void)
+        BSR        GetPlayerLivesAddress                                  
         LDA        ,X                                                     
         CMPA       #0x5                                                   
         BLS        Jump_SkipClampingLivesCount                            
@@ -1559,21 +1473,21 @@ DoneSetupPlayer_DrawGetReadyScreen:
         STD        0x2,X                                                  
         LDA        <CurrentRoomNumber_0x39                                
         STA        0x4,X                                                  
-        JSR        ClearVideoMemory_0x0400_to_0x3400                      ; undefined ClearVideoMemory_0x0400_to_0x3400(void)
+        JSR        ClearVideoMemory_0x0400_to_0x3400                      
         LDD        #VideoMemory_Page1_0x1c00                              
-        JSR        SetupSAMPages                                          ; undefined SetupSAMPages(byte param_1)
+        JSR        SetupSAMPages                                          
         LDU        #TitleScreenBackground_DrawCommands                    
-        JSR        DrawBackground                                         ; undefined DrawBackground(void)
+        JSR        DrawBackground                                         
         LDA        <CurrentPlayer_0x52                                    
         ANDA       #0x2                                                   
         LDX        #PTR_String_GetReadyPlayerOne_c5da                     
         LDU        A,X                                                    
         LDX        #DAT_0f66                                              
-        JSR        PrintString                                            ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
-        JSR        WaitForVSync_Maybe                                     ; undefined WaitForVSync_Maybe(void)
+        JSR        PrintString                                            
+        JSR        WaitForVSync_Maybe                                     
         ANDCC      #0xef                                                  
         LDD        #VideoMemory_Page0_0x0400                              ; A = 0x04, B = 0x00. A is Sam Page setup bits
-        JSR        SetupSAMPages                                          ; undefined SetupSAMPages(byte param_1)
+        JSR        SetupSAMPages                                          
         LDX        #VideoMemory_Page0_0x0400                              ; setup loop to copy page 0 to page 1
 
 LOOP_Copy_Page0_to_Page1:                                                
@@ -1583,13 +1497,13 @@ LOOP_Copy_Page0_to_Page1:
         BNE        LOOP_Copy_Page0_to_Page1                               
 
 ;Init drops
-        JSR        InitDrops                                              ; undefined InitDrops(void)
+        JSR        InitDrops                                              
         LDA        #10                                                    ; menu screen room number
         STA        <NumberOfDropsToProcess_0x3f                           ; set to 10 drops
         STA        <CurrentRoomNumber_0x39                                
 
 Loop_ProcessGetReadyScreen:                                              
-        JSR        UpdateAndDrawDrops                                     ; undefined UpdateAndDrawDrops(void)
+        JSR        UpdateAndDrawDrops                                     
         LDX        #PIA0_A_DATA_REG__FF00                                 
         LDA        #11111111b                                             
         STA        0x2,X                                                  
@@ -1612,7 +1526,7 @@ Jump_PlayerPressedButtonAndIsReady:
         ANDA       #0x2                                                   
         LDX        A,X                                                    
         LDY        ,S                                                     
-        JSR        InitRoom_Maybe                                         ; undefined InitRoom_Maybe()
+        JSR        InitRoom_Maybe                                         
 
 Jump_IncrementGameState:                                                 
         PULS        Y                                                     
@@ -1620,12 +1534,6 @@ Jump_IncrementGameState:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall BigInitFunction_Maybe(undefined A, u
-;undefined         A:1            <RETURN>
-;undefined         A:1            A
-;undefined         B:1            B
-;byte *            X:2            X
-;short *           Y:2            Y
 
 BigInitFunction_Maybe:                                                   
         LDA        #0x28                                                  ; 40 frames for initial pause when the game starts
@@ -1640,7 +1548,7 @@ BigInitFunction_Maybe:
 ;**************************************************************
 
 Jump_JoystickCheck:                                                      
-        JSR        UpdateJoystick_Maybe                                   ; undefined UpdateJoystick_Maybe(void)
+        JSR        UpdateJoystick_Maybe                                   
         LDA        <Player_JoystickDirection_0x15                         
         BEQ        Jump_DecrementRegenTimer                               ; if player is moving, then set the
                                                                           ; regeneration timer to zero
@@ -1672,7 +1580,7 @@ Jump_CheckActiveRegenTimers:
 ;The player stopped regenerating, so erase the
 ;regenerating head icon for the current life.
         LDY        #CurrentPlayerSpritePointer_0x1e9                      
-        JSR        GetPlayerLivesAddress                                  ; undefined GetPlayerLivesAddress(void)
+        JSR        GetPlayerLivesAddress                                  
         LDA        ,X                                                     
         LDB        -0x5,Y                                                 
         MUL                                                               
@@ -1724,7 +1632,7 @@ Jump_RegenTimersNotDone:
         JMP        LAB_c85f                                               
 
 Jump_ProcessPlayerControls_Maybe:                                        
-        JSR        UpdateJoystick_Maybe                                   ; undefined UpdateJoystick_Maybe(void)
+        JSR        UpdateJoystick_Maybe                                   
         LDA        -0xb,Y                                                 
         BEQ        LAB_c763                                               
         CMPA       #0x1                                                   ; compare to going up?
@@ -1786,7 +1694,7 @@ Jump_GoToLeftOfRope:
 
 Jump_HandledXPositionOfOneHandedRope:                                    
         STB        0x6,Y                                                  
-        JSR        ClearSpeedToZero                                       ; undefined ClearSpeedToZero(void)
+        JSR        ClearSpeedToZero                                       
         STA        <Player_MoveLeftRightHoldingRopeCounter_0x36           
         LDA        -0xb,Y                                                 
         BMI        Jump_SetupHandingFromSideOfRope                        
@@ -1840,7 +1748,7 @@ Jump_FacingLeft_Already:
         BEQ        Jump_UpdateLeftSpeed                                   
 
 ;Pressing left while holding on to the rope to go one handed
-        JSR        ClearSpeedToZero                                       ; undefined ClearSpeedToZero(void)
+        JSR        ClearSpeedToZero                                       
         INC        <Player_MoveLeftRightHoldingRopeCounter_0x36           
         LDA        <Player_MoveLeftRightHoldingRopeCounter_0x36           
         CMPA       #InterruptHasBeenHitCounter_0x14                       
@@ -1865,7 +1773,7 @@ Jump_ClimbingUp_Maybe:
 
 Jump_NotMovingJoystick_Maybe:                                            
         CLR        <Player_MoveLeftRightHoldingRopeCounter_0x36           
-        JSR        ClearSpeedToZero                                       ; undefined ClearSpeedToZero(void)
+        JSR        ClearSpeedToZero                                       
         LDB        -0xb,Y                                                 
         BPL        LAB_c85f                                               
         LDA        -0x8,Y                                                 
@@ -1907,7 +1815,7 @@ LAB_c83f:
         BEQ        Jump_SetRightSpeed                                     
 
 ;Handle pressing right to go one handed while holding rope
-        JSR        ClearSpeedToZero                                       ; undefined ClearSpeedToZero(void)
+        JSR        ClearSpeedToZero                                       
         INC        <Player_MoveLeftRightHoldingRopeCounter_0x36           
         LDA        <Player_MoveLeftRightHoldingRopeCounter_0x36           
         CMPA       #InterruptHasBeenHitCounter_0x14                       
@@ -1974,12 +1882,10 @@ LAB_c8a4:
 ;Set player as climbing
         LDA        #0xff                                                  
         STA        -0xb,Y                                                 
-        JSR        ClearSpeedToZero                                       ; undefined ClearSpeedToZero(void)
+        JSR        ClearSpeedToZero                                       
         CLR        <Player_JumpUpInTheAirCounter_0x2c                     
         CLR        <Player_SafeLandingFromFalling_0x2e                    
-        BRA        Jump_IsAlreadyClimbing                                 ; undefined Jump_IsAlreadyClimbing(undefined A, undefined B, char * X, s
-
-;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+        BRA        Jump_IsAlreadyClimbing                                 
 
 Jump_NotTouchingRope_Maybe:                                              
         CLR        -0xb,Y                                                 
@@ -1987,9 +1893,6 @@ Jump_NotTouchingRope_Maybe:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;byte __stdcall RopeCollisionTest(byte param_1)
-;byte              A:1            <RETURN>
-;byte              A:1            param_1
 
 RopeCollisionTest:                                                       
         JSR        TerrainCollisionTest                                   ; byte TerrainCollisionTest(byte A)
@@ -2000,12 +1903,6 @@ RopeCollisionTest:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall Jump_IsAlreadyClimbing(undefined A,
-;undefined         A:1            <RETURN>
-;undefined         A:1            A
-;undefined         B:1            B
-;char *            X:2            X
-;short *           Y:2            Y
 
 Jump_IsAlreadyClimbing:                                                  
         LDA        <Player_JumpUpInTheAirCounter_0x2c                     
@@ -2064,7 +1961,7 @@ Jump_NoClimbingRope:
         TFR        B,A                                                    
         LDB        B,X                                                    
         PSHS        B,A                                                   
-        JSR        LoadPosRelativeToYAndComputeScreenPos                  ; undefined LoadPosRelativeToYAndComputeScreenPos(void)
+        JSR        LoadPosRelativeToYAndComputeScreenPos                  
         STD        0x8,Y                                                  
         TFR        D,X                                                    
         PULS        A,B                                                   
@@ -2104,7 +2001,7 @@ LAB_c96b:
         COM        -0x4,Y                                                 
 
 Jump_ClimbingRope:                                                       
-        JSR        LoadPosRelativeToYAndComputeScreenPos                  ; undefined LoadPosRelativeToYAndComputeScreenPos(void)
+        JSR        LoadPosRelativeToYAndComputeScreenPos                  
         STD        0x8,Y                                                  
 
 LAB_c97f:                                                                
@@ -2130,13 +2027,6 @@ LAB_c990:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawLifeIconsAndPlayerRegeneration(u
-;undefined         A:1            <RETURN>
-;undefined         A:1            A
-;undefined         B:1            B
-;char *            X:2            X
-;short             Y:2            Y
-;ushort            U:2            U
 ;Check whether we need to draw the player
 
 DrawLifeIconsAndPlayerRegeneration:                                      
@@ -2169,7 +2059,7 @@ Jump_ContinueDrawing:
         STU        ,Y                                                     
         LDU        0x2,Y                                                  
         STU        0x4,Y                                                  
-        JSR        GetPlayerLivesAddress                                  ; undefined GetPlayerLivesAddress(void)
+        JSR        GetPlayerLivesAddress                                  
         LDA        ,X                                                     ; contains player lives
         LDB        -0x2,Y                                                 
         BPL        Jump_PlayerIsAlive                                     ; if plus, then player state is not generating
@@ -2205,7 +2095,7 @@ Jump_SkipDecrementLives:
 
 Jump_SkipGettingLeftFacingSprites:                                       
         STU        <Player_SpriteFrameAddress_Temp_0x45                   
-        JSR        IncrementRomAddressCounter                             ; undefined IncrementRomAddressCounter(undefined A, undefined B, undefin
+        JSR        IncrementRomAddressCounter                             
         TFR        PC,Y                                                   ; setup Y to become a random data generator
         LEAY       B,Y                                                    
 
@@ -2222,7 +2112,6 @@ Loop_DrawRegenHeadLifeIcon:
         STD        ,X                                                     ; draw the messed up bytes to the address in the
                                                                           ; first page of video memory stored in X
 ;do the same to the third byte of the sprite's three
-;bytes per line
         LDA        ,U                                                     
         LSLA                                                              
         ORA        ,U+                                                    
@@ -2247,7 +2136,7 @@ Loop_DrawRegenHeadLifeIcon:
         MUL                                                               ; find which sprite to use
         LEAU         D,U ; move U to the sprite frame that depends on     
         CLR        0xe,Y                                                  
-        JSR        IncrementRomAddressCounter                             ; undefined IncrementRomAddressCounter(undefined A, undefined B, undefin
+        JSR        IncrementRomAddressCounter                             
         TFR        PC,Y                                                   ; setup Y to become a random data generator
         LEAY       B,Y                                                    
 
@@ -2306,9 +2195,6 @@ Jump_PlayerIsDead:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;byte __stdcall TerrainCollisionTest(byte A)
-;byte              A:1            <RETURN>
-;byte              A:1            A
 
 TerrainCollisionTest:                                                    
         STA        <SomeValue_0x34                                        ; store pixel from A here
@@ -2331,8 +2217,6 @@ Jump_ToBallInit:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall UpdateBall(void)
-;undefined         A:1            <RETURN>
 
 UpdateBall:                                                              
         LDY        #Ball_Physics_0x1bf                                    
@@ -2452,7 +2336,7 @@ Jump_UpdateBallPosition:
         TFR        B,A                                                    
         LDB        B,X                                                    
         PSHS        B,A                                                   
-        JSR        LoadPosRelativeToYAndComputeScreenPos                  ; undefined LoadPosRelativeToYAndComputeScreenPos(void)
+        JSR        LoadPosRelativeToYAndComputeScreenPos                  
         STD        0x8,Y                                                  
         TFR        D,X                                                    
         PULS        A,B                                                   
@@ -2502,14 +2386,9 @@ Jump_SkipSetSquishedBallSprite:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall InitAllTimers(undefined A, undefined
-;undefined         A:1            <RETURN>
-;undefined         A:1            A
-;undefined         B:1            B
-;undefined2 *      X:2            X
 
 InitAllTimers:                                                           
-        BSR        GetPlayerRoomTimerBuffer                               ; undefined GetPlayerRoomTimerBuffer(void)
+        BSR        GetPlayerRoomTimerBuffer                               
         LDB        #20                                                    ; total number of player one and two timers
         STB        <UtilityCounter_0x26                                   
         LDD        #0x1000                                                ; aka 4096
@@ -2526,8 +2405,6 @@ PlayerRoomTimerBufferPointers_0xccb5:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall GetPlayerRoomTimerBuffer(void)
-;undefined         A:1            <RETURN>
 
 GetPlayerRoomTimerBuffer:                                                
         LDX        #PlayerRoomTimerBufferPointers_0xccb5                  
@@ -2538,17 +2415,15 @@ GetPlayerRoomTimerBuffer:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall UpdateRoomTimers(void)
-;undefined         A:1            <RETURN>
 
 UpdateRoomTimers:                                                        
         LDB        <CurrentRoomNumber_0x39                                
         LSLB                                                              
-        BSR        GetPlayerRoomTimerBuffer                               ; undefined GetPlayerRoomTimerBuffer(void)
+        BSR        GetPlayerRoomTimerBuffer                               
         LDD        B,X                                                    ; get current room timer in player room timer data
         LDX        #0x1b14                                                ; screen location
-        JSR        PrintTimerStringToScreen                               ; undefined PrintTimerStringToScreen(void)
-        BSR        GetPlayerRoomTimerBuffer                               ; undefined GetPlayerRoomTimerBuffer(void)
+        JSR        PrintTimerStringToScreen                               
+        BSR        GetPlayerRoomTimerBuffer                               
         CLR        <UtilityCounter_0x26                                   ; init room timer counter
 
 ;increment other room timers
@@ -2584,7 +2459,7 @@ Jump_DoneIncrementingOtherRoomTimers:
         LDA        Player_State_AliveDeadRegenState_0x1a8                 
         BMI        Jump_PlayerIsRegenerating                              ; don't update the timer if the player is in the
                                                                           ; regeneration state
-        BSR        GetPlayerRoomTimerBuffer                               ; undefined GetPlayerRoomTimerBuffer(void)
+        BSR        GetPlayerRoomTimerBuffer                               
         LDB        <CurrentRoomNumber_0x39                                
         LSLB                                                              
         ABX                                                               
@@ -2605,7 +2480,7 @@ Jump_TimerOverInitTheBird:
                                                                           ; y: 23 (0-191) x: 35 (0-127, maybe)
         STA        0x4,Y                                                  
         STB        0x6,Y                                                  
-        JSR        LoadPosRelativeToYAndComputeScreenPos                  ; undefined LoadPosRelativeToYAndComputeScreenPos(void)
+        JSR        LoadPosRelativeToYAndComputeScreenPos                  
         STD        0x8,Y                                                  
         LDA        #0x1                                                   
         STA        -0x5,Y                                                 ; bird in active state
@@ -2617,7 +2492,7 @@ Jump_TimerOverInitTheBird:
                                                                           ; cart rom addresses
         STD        ,Y                                                     ; set Y speed to 0x1XX where XX comes from
                                                                           ; the value computed from IncrementRomAddressCounter
-        JSR        IncrementRomAddressCounter                             ; undefined IncrementRomAddressCounter(undefined A, undefined B, undefin
+        JSR        IncrementRomAddressCounter                             
         STD        0x2,Y                                                  
 
 Jump_BirdIsActive:                                                       
@@ -2697,7 +2572,7 @@ Jump_UpdateBirdXPosition:
 
 Jump_BirdUpdateAnimation:                                                
         STD        0x6,Y                                                  
-        JSR        LoadPosRelativeToYAndComputeScreenPos                  ; undefined LoadPosRelativeToYAndComputeScreenPos(void)
+        JSR        LoadPosRelativeToYAndComputeScreenPos                  
         STD        0x8,Y                                                  
         LDU        #BirdSprite_ClonedInRam_0x3ee2                         
         LDA        -0x2,Y                                                 
@@ -2716,21 +2591,15 @@ Jump_DontGoToFrame1OfAnimation:
         LEAU       D,U                                                    
         STU        0xa,Y                                                  
         JMP        EraseAndUpdateAndDrawObject                            
-
-;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall LoadPlayerPhysicsToYAndRoomDataInfoX
-;undefined         A:1            <RETURN>
 
 LoadPlayerPhysicsToYAndRoomDataInfoX:                                    
         LDY        #Player_PhysicsData_0x1aa                              
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall LoadRoomDoorDataAddrIntoX(void)
-;undefined         A:1            <RETURN>
 
 LoadRoomDoorDataAddrIntoX:                                               
         LDX        <RoomGraphicsAndDoorDataAddress_0x3b                   
@@ -2744,12 +2613,10 @@ LAB_ccb0:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined FUN_ccb1()
-;undefined         A:1            <RETURN>
 
 FUN_ccb1:                                                                
-        JSR        DrawPickups                                            ; undefined DrawPickups(undefined A, undefined B, byte * X)
-        BSR        LoadPlayerPhysicsToYAndRoomDataInfoX                   ; undefined LoadPlayerPhysicsToYAndRoomDataInfoX(void)
+        JSR        DrawPickups                                            
+        BSR        LoadPlayerPhysicsToYAndRoomDataInfoX                   
 
 LAB_ccb6:                                                                
         LDA        ,X                                                     
@@ -2767,8 +2634,6 @@ LAB_ccb6:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined InitRoom_Maybe()
-;undefined         A:1            <RETURN>
 
 InitRoom_Maybe:                                                          
         LDA        0x5,X                                                  ; get the room number from the door data
@@ -2778,9 +2643,9 @@ InitRoom_Maybe:
         INC        <GameCompletionCount_0x3a                              ; we've completed a run of the game
                                                                           ; increase the difficulty
         JSR        InitRoomKeysAndPickups                                 ; reinit the rooms and keys for hard difficulty
-        JSR        InitKeyStateData                                       ; undefined InitKeyStateData(void)
+        JSR        InitKeyStateData                                       
         LDD        #0x2710                                                
-        JSR        UpdateAndPrintPlayerScore                              ; undefined UpdateAndPrintPlayerScore(undefined A, undefined B, undefine
+        JSR        UpdateAndPrintPlayerScore                              
         PULS        X,Y                                                   
 
 Jump_NotTheLastDoor:                                                     
@@ -2791,8 +2656,8 @@ Jump_NotTheLastDoor:
         STA        <CurrentRoomNumber_0x39                                
         LDA        #0x1                                                   
         STA        -0x5,Y                                                 
-        JSR        ClearSpeedToZero                                       ; undefined ClearSpeedToZero(void)
-        JSR        InitDrops                                              ; undefined InitDrops(void)
+        JSR        ClearSpeedToZero                                       
+        JSR        InitDrops                                              
         CLR        Ball_InitState_0x1ba                                   
         CLR        <Ball_FallStateCounter_0x32                            
         CLR        Bird_InitState_0x1cf                                   
@@ -2802,9 +2667,9 @@ Jump_NotTheLastDoor:
         LDU        [A,X]                                                  
         LDX        #VideoMemory_Page1_0x1c00                              
         STX        <CurrentVideoMemLocation_0x4e                          
-        LBSR       LoadPage1AddressToX                                    ; undefined LoadPage1AddressToX(void)
-        JSR        DrawBackground                                         ; undefined DrawBackground(void)
-        BSR        LoadRoomDoorDataAddrIntoX                              ; undefined LoadRoomDoorDataAddrIntoX(void)
+        LBSR       LoadPage1AddressToX                                    
+        JSR        DrawBackground                                         
+        BSR        LoadRoomDoorDataAddrIntoX                              
         LDY        #Player_DoorStateData_0x3ec0                           ; address to room or door graphics?
 
 ;Draw the activated doors for this room
@@ -2816,7 +2681,7 @@ Loop_DrawNextDoor:
         LDA        A,Y                                                    
         ANDA       <CurrentPlayer_0x52                                    ; is it active for this player?
         BEQ        Jump_SkipDrawingDoor                                   ; skip if not
-        BSR        DrawDoorOrMultipleDoors_Maybe                          ; undefined DrawDoorOrMultipleDoors_Maybe(undefined A, undefined B, usho
+        BSR        DrawDoorOrMultipleDoors_Maybe                          
 
 Jump_SkipDrawingDoor:                                                    
         .db 0x30,0x88,0x06 ; LEAX [0x6],X in 3 bytes                      
@@ -2829,7 +2694,7 @@ Jump_SkipDrawingDoor:
         LDX        PlayerLives_DrawLocationInPage_0x1eb                   
         LEAX       -0x4,X                                                 ; get the player sprite address? and then not use it?
         LDU        <CurrentInGamePlayerStringPointer                      
-        JSR        PrintString                                            ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
+        JSR        PrintString                                            
         LDA        <CurrentRoomNumber_0x39                                
         BEQ        Jump_AlreadyVisitedThisRoom                            
         LDX        #RoomsPlayersHaveVisited_0x36b                         
@@ -2849,18 +2714,16 @@ Jump_AlreadyVisitedThisRoom:
         LDD        <ZeroValue                                             
 
 LAB_cd5f:                                                                
-        JSR        UpdateAndPrintPlayerScore                              ; undefined UpdateAndPrintPlayerScore(undefined A, undefined B, undefine
+        JSR        UpdateAndPrintPlayerScore                              
         LDX        #DAT_0455                                              
         LDU        #String_Chamber                                        
-        JSR        PrintString                                            ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
+        JSR        PrintString                                            
         LDU        #0xd0                                                  
         LDA        #0x24                                                  
         LDB        <CurrentRoomNumber_0x39                                
         STD        ,U                                                     
-        JSR        PrintString                                            ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
+        JSR        PrintString                                            
         JMP        GetRoomDataForCurrentRoom                              
-
-;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
 
 LAB_cd7a:                                                                
         .db        0x30                                                   
@@ -2871,13 +2734,6 @@ LAB_cd7a:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawDoorOrMultipleDoors_Maybe(undefi
-;undefined         A:1            <RETURN>
-;undefined         A:1            A
-;undefined         B:1            B
-;ushort *          X:2            X
-;undefined2        Y:2            Y
-;undefined2        U:2            U
 
 DrawDoorOrMultipleDoors_Maybe:                                           
         PSHS        U,X                                                   
@@ -2896,7 +2752,7 @@ Jump_OffsetLeft:
 
 LAB_cd92:                                                                
         PSHS        B                                                     ; save the X screen position
-        JSR        ComputeScreenLocationFromAAndB                         ; undefined ComputeScreenLocationFromAAndB(void)
+        JSR        ComputeScreenLocationFromAAndB                         
 
 ;save the drawing location into U
         TFR        D,U ;                                                  
@@ -2923,7 +2779,7 @@ LOOP_DrawOneLineOfDoorToBufferAt0x83:
         LDA        <UtilityCounter_0x26                                   
         BEQ        Jump_DoneWork_RTS_cde2                                 
         LDB        #0x10                                                  ; num lines in a sprite? 16
-        BSR        ShiftBitsInSpriteDrawingBuffer                         ; undefined ShiftBitsInSpriteDrawingBuffer(undefined param_1, char param
+        BSR        ShiftBitsInSpriteDrawingBuffer                         
         PULS        U                                                     ; pull back the drawing location into U
         LDX        #SpriteDrawingBuffer_0x83                              
         LDA        #16                                                    ; 16 lines of a sprite
@@ -2937,10 +2793,6 @@ LOOP_AlreadyDone:
 ;* we use this function to shift the graphics in a sprite     *
 ;* drawing buffer so that they land on the appropriate pix... *
 ;**************************************************************
-;undefined __stdcall ShiftBitsInSpriteDrawingBuffer(undef
-;undefined         A:1            <RETURN>
-;undefined         A:1            param_1
-;char              B:1            param_2
 ;A: number of bits to shift by. the result will be A * 2
 ;B: number of lines of the sprite to process
 
@@ -2972,8 +2824,6 @@ Jump_DoneWork_RTS_cde2:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall InitVideoRegisters(void)
-;undefined         A:1            <RETURN>
 
 InitVideoRegisters:                                                      
         LDA        PIA1_B_DATA_REG__FF22                                  
@@ -2989,9 +2839,6 @@ InitVideoRegisters:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall SetupSAMPages(byte param_1)
-;undefined         A:1            <RETURN>
-;byte              A:1            param_1
 
 SetupSAMPages:                                                           
         LDX        #SAM_PAGE_SELECT_REG_SAM_F0_FFC6                       ; The first Sam Page Select Register Address
@@ -3024,8 +2871,6 @@ LAB_ce05:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall LoadPage1AddressToX(void)
-;undefined         A:1            <RETURN>
 
 LoadPage1AddressToX:                                                     
         LDX        #VideoMemory_Page1_0x1c00                              
@@ -3033,8 +2878,6 @@ LoadPage1AddressToX:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall ClearVideoMemory_0x0400_to_0x3400(vo
-;undefined         A:1            <RETURN>
 
 ClearVideoMemory_0x0400_to_0x3400:                                       
         LDX        #0x400                                                 ; start of video memory?
@@ -3050,9 +2893,6 @@ LOOP_UntilReachingAddress0x3400:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;char __stdcall ScreenTransitionWipe(void)
-;char              A:1            <RETURN>
-;undefined1        Stack[-0x1]:1  drawDottedLineFlag                      XREF[3]:     ce1d(*), ce38(*),
 
 ScreenTransitionWipe:                                                    
         CLR        ,-S                                                    ; save some space on the stack
@@ -3109,8 +2949,6 @@ Jump_SkipSettingDrawDottedLineFlag:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall InitPlayerSomething(void)
-;undefined         A:1            <RETURN>
 
 InitPlayerSomething:                                                     
         LDY        #Player_PhysicsData_0x1aa                              
@@ -3122,8 +2960,6 @@ InitPlayerSomething:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall InitBouncingBall(void)
-;undefined         A:1            <RETURN>
 ;Check whether we need to init the ball for the level.
 
 InitBouncingBall:                                                        
@@ -3161,7 +2997,7 @@ Loop_ClearBallData:
                                                                           ; same start position for every level
         STA        0x4,Y                                                  
         STB        0x6,Y                                                  
-        JSR        LoadPosRelativeToYAndComputeScreenPos                  ; undefined LoadPosRelativeToYAndComputeScreenPos(void)
+        JSR        LoadPosRelativeToYAndComputeScreenPos                  
         STD        0x8,Y                                                  
 
 Jump_NoBallForThisRoom:                                                  
@@ -3184,12 +3020,10 @@ BYTE_cead:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall InitVideoAndSetupRoomAndGraphics(void)
-;undefined         A:1            <RETURN>
 
 InitVideoAndSetupRoomAndGraphics:                                        
-        JSR        ClearVideoMemory_0x0400_to_0x3400                      ; undefined ClearVideoMemory_0x0400_to_0x3400(void)
-        JSR        InitVideoRegisters                                     ; undefined InitVideoRegisters(void)
+        JSR        ClearVideoMemory_0x0400_to_0x3400                      
+        JSR        InitVideoRegisters                                     
         LDX        #RoomGraphicsAndDoorData_0xd25a                        
         STX        <RoomGraphicsAndDoorDataAddress_0x3b                   
         CLR        <CurrentRoomNumber_0x39                                
@@ -3210,8 +3044,6 @@ TitleScreenBackground_DrawCommands:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall InitKeyStateData(void)
-;undefined         A:1            <RETURN>
 
 InitKeyStateData:                                                        
         LDB        #0x22                                                  ; 34 bytes to clear
@@ -3258,13 +3090,11 @@ BYTE_ceeb:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall Init_PlayerLivesIconParameters(void)
-;undefined         A:1            <RETURN>
 
 Init_PlayerLivesIconParameters:                                          
         LDY        #CurrentPlayerSpritePointer_0x1e9                      
         LDD        #0x214                                                 
-        JSR        ComputeScreenLocationFromAAndB                         ; undefined ComputeScreenLocationFromAAndB(void)
+        JSR        ComputeScreenLocationFromAAndB                         
         STD        0x2,Y                                                  
         LDA        #0x7                                                   
         STA        -0x1,Y                                                 
@@ -3274,11 +3104,6 @@ Init_PlayerLivesIconParameters:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall GetRoomDataForCurrentRoom(undefined
-;undefined         A:1            <RETURN>
-;undefined         A:1            param_1
-;undefined         B:1            B
-;byte *            X:2            param_3
 
 GetRoomDataForCurrentRoom:                                               
         LDY        #PerRoomPickupData_0x271                               
@@ -3290,11 +3115,6 @@ GetRoomDataForCurrentRoom:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawPickups(undefined A, undefined B
-;undefined         A:1            <RETURN>
-;undefined         A:1            A
-;undefined         B:1            B
-;byte *            X:2            X
 
 DrawPickups:                                                             
         LDA        #0x5                                                   
@@ -3305,7 +3125,7 @@ Jump_ProcessPickup:
         LDA        ,Y                                                     
         ANDA       <CurrentPlayer_0x52                                    ; is active for this player?
         BEQ        Jump_SkipToNextPickup                                  
-        JSR        SetupPickupScreenLocationAndNumLinesToClear            ; undefined SetupPickupScreenLocationAndNumLinesToClear(void)
+        JSR        SetupPickupScreenLocationAndNumLinesToClear            
         LSLB                                                              
         LDA        0x1,Y                                                  
         MUL                                                               
@@ -3313,7 +3133,7 @@ Jump_ProcessPickup:
         LEAU         D,U                                                  
         LDB        #10                                                    ; number of lines in the pickup sprite
         STB        <UtilityCounter_0x26                                   
-        BSR        DrawSprite_16PixelsWide                                ; undefined DrawSprite_16PixelsWide(undefined param_1, undefined param_2
+        BSR        DrawSprite_16PixelsWide                                
 
 Jump_SkipToNextPickup:                                                   
         LEAY       0x5,Y                                                  
@@ -3323,12 +3143,6 @@ Jump_SkipToNextPickup:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawSprite_16PixelsWide(undefined pa
-;undefined         A:1            <RETURN>
-;undefined         A:1            param_1
-;undefined         B:1            param_2
-;byte *            X:2            X
-;undefined2        Y:2            param_4
 
 DrawSprite_16PixelsWide:                                                 
         LDD        ,U++                                                   ; load two bytes of the sprite (one line)
@@ -3343,8 +3157,6 @@ DrawSprite_16PixelsWide:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall UpdateAndDrawDrops(void)
-;undefined         A:1            <RETURN>
 
 UpdateAndDrawDrops:                                                      
         LDY        #DropDataBlock_0x1ef                                   
@@ -3390,7 +3202,7 @@ Jump_UpdateDropPosition:
 ;erase drop from screen
         LDA        0x3,Y                                                  
         LDB        0x5,Y                                                  
-        JSR        ComputeScreenLocationFromAAndB                         ; undefined ComputeScreenLocationFromAAndB(void)
+        JSR        ComputeScreenLocationFromAAndB                         
         STD        0x8,Y                                                  
         LBSR       EraseDropSpriteFromScreen                              ; byte EraseDropSpriteFromScreen(void)
 
@@ -3402,7 +3214,7 @@ Jump_UpdateDropPosition:
         LDU        0x6,Y                                                  
         LDB        #0x6                                                   ; number of lines in the sprite
         STB        <UtilityCounter_0x26                                   
-        BSR        DrawSprite_16PixelsWide                                ; undefined DrawSprite_16PixelsWide(undefined param_1, undefined param_2
+        BSR        DrawSprite_16PixelsWide                                
         LEAY       0x1a,Y                                                 ; advance by two drops?
         CMPY       #EndOfDropDataBuffer_0x271                             
         BCS        Jump_ProcessDrop                                       ; continue processing drops
@@ -3441,11 +3253,11 @@ Jump_InitSingleDrop:
                                                                           ; The number in the data is one less than the actual count
                                                                           ; ie having one area means the value is 0, three areas makes 
                                                                           ; the value 2
-        JSR        GenerateRandomNumberFrom0ToB                           ; undefined GenerateRandomNumberFrom0ToB()
+        JSR        GenerateRandomNumberFrom0ToB                           
         MUL                                                               ; multiply A and B to figure out which drops area to use
         ABX                                                               ; move X to the selected drops area
         LDB        ,X                                                     ; load the number of drops positions in the area into B
-        JSR        GenerateRandomNumberFrom0ToB                           ; undefined GenerateRandomNumberFrom0ToB()
+        JSR        GenerateRandomNumberFrom0ToB                           
         LDA        #0x8                                                   ; spacing between drops
         MUL                                                               ; multiply the selected horizontal drops position by the 
                                                                           ; spacing in A
@@ -3466,7 +3278,7 @@ Jump_SkipPositionAdjustment:
         STB        0x5,Y                                                  
         ADDA       #0x6                                                   
         ADDB       #0x4                                                   
-        JSR        ComputeScreenLocationFromAAndB                         ; undefined ComputeScreenLocationFromAAndB(void)
+        JSR        ComputeScreenLocationFromAAndB                         
         TFR        D,X                                                    
         LDA        DAT_1800,X                                             ; load source pixel
         LDX        #Drawing_PixelBits_d84a                                
@@ -3480,7 +3292,7 @@ Jump_SkipPositionAdjustment:
 LAB_d00e:                                                                
         LDA        0x3,Y                                                  
         LDB        0x5,Y                                                  
-        JSR        ComputeScreenLocationFromAAndB                         ; undefined ComputeScreenLocationFromAAndB(void)
+        JSR        ComputeScreenLocationFromAAndB                         
         STD        0x8,Y                                                  
         STD        0xa,Y                                                  
         LDU        #Data_DropSprites_0xdf2a                               
@@ -3503,8 +3315,6 @@ Drop_CollisionMasks_0xd031:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;byte __stdcall EraseDropSpriteFromScreen(void)
-;byte              A:1            <RETURN>
 
 EraseDropSpriteFromScreen:                                               
         LDX        0xa,Y                                                  ; previous position
@@ -3547,11 +3357,7 @@ Drops_SpawnPositionsTable:
 
 ;Drop Positions
 ;Format:
-;byte 0: number of drops areas (add 1)
 ;for every area
-;byte 0: drop positions count
-;byte 1: vertical position in screen pixels
-;byte 2: horizontal position in screen pixels
 
 Room0_DropPositions:                                                     
         .db        6                                                      
@@ -3744,13 +3550,11 @@ Room10_DropPositions:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall InitDrops(void)
-;undefined         A:1            <RETURN>
 
 InitDrops:                                                               
         CLRA                                                              ; Disable all the drops in memory
         LDB        #10                                                    ; num drops
-        BSR        SetFirstByteOfEachDrop                                 ; undefined SetFirstByteOfEachDrop(byte value, byte numDrops)
+        BSR        SetFirstByteOfEachDrop                                 
 
 ;determine how many drops to init
         LDA        <GameCompletionCount_0x3a                              
@@ -3774,15 +3578,11 @@ Jump_IncrementDropCount:
 Jump_InitDrops:                                                          
         STB        <NumberOfDropsToProcess_0x3f                           ; Store the current B count
         LDA        #0x1                                                   ; indicate that the drop needs to be initialized
-        BSR        SetFirstByteOfEachDrop                                 ; undefined SetFirstByteOfEachDrop(byte value, byte numDrops)
+        BSR        SetFirstByteOfEachDrop                                 
         RTS                                                               
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall SetFirstByteOfEachDrop(byte value, b
-;undefined         A:1            <RETURN>
-;byte              A:1            value
-;byte              B:1            numDrops
 
 SetFirstByteOfEachDrop:                                                  
         LDX        #Drop0_CeilingWiggleTimer_0x1ef                        ; point X to this address. 
@@ -3797,20 +3597,16 @@ Loop_NextDrop:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall SetupPickupScreenLocationAndNumLines
-;undefined         A:1            <RETURN>
 
 SetupPickupScreenLocationAndNumLinesToClear:                             
         LDD        0x2,Y                                                  
-        JSR        ComputeScreenLocationFromAAndB                         ; undefined ComputeScreenLocationFromAAndB(void)
+        JSR        ComputeScreenLocationFromAAndB                         
         TFR        D,X                                                    
         LDB        #0xa                                                   
         RTS                                                               
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall InitRoomKeysAndPickups(void)
-;undefined         A:1            <RETURN>
 
 InitRoomKeysAndPickups:                                                  
         LDA        #0xff                                                  
@@ -4051,8 +3847,6 @@ DAT_d1f4:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawBackground(void)
-;undefined         A:1            <RETURN>
 ;Each room has an array of draw commands.
 ;Each command defines a shape to draw.
 ;Commands with the highest bit set get repeated
@@ -4961,8 +4755,6 @@ DrawPiece_00_Stalactite:
         LDU        #DrawData_00_Stalactite                                
         JMP        DrawBackgroundPiece                                    
 
-;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
-
 DrawData_00_Stalactite:                                                  
         .db        0x03                                                   ; num segments
                                                                           ; 
@@ -4987,8 +4779,6 @@ DrawPiece_01_WallGoingDown:
 
 Jump_JumpToDrawBackgroundPiece:                                          
         JMP        DrawBackgroundPiece                                    
-
-;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
 
 DrawData_01_WallGoingDown:                                               
         .db        0x03                                                   
@@ -5036,8 +4826,6 @@ DrawPiece_08_CornerPieceGoingDownLeft:
 Jump_AnotherJumpToDrawBackgroundPiece:                                   
         JMP        DrawBackgroundPiece                                    
 
-;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
-
 DrawData_08_CornerPieceGoingDownLeft:                                    
         .db        0x03                                                   
         .db        0xFF                                                   
@@ -5072,8 +4860,6 @@ DrawPiece_04_TopRightHandCornerPiece2:
 Jump_AgainAnotherJumpToDrawBackgroundPiece:                              
         JMP        DrawBackgroundPiece                                    
 
-;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
-
 DrawData_04_TopRightHandCornerPiece2:                                    
         .db        0x03                                                   
         .db        0x80                                                   
@@ -5106,7 +4892,7 @@ DrawPiece_14_HorizontalRopeStartGoingRight:
         LDU        #DrawData_14_HorizontalRopeStartGoingRight             
         LDA        #0x3                                                   
         STA        <CrtArtifactDrawingMaskIndex_0x20                      
-        BSR        DrawBackgroundPieceWrapper                             ; undefined DrawBackgroundPieceWrapper(void)
+        BSR        DrawBackgroundPieceWrapper                             
         LDA        #0x1                                                   
         STA        <CrtArtifactDrawingMaskIndex_0x20                      
         RTS                                                               
@@ -5121,7 +4907,7 @@ DrawPiece_15_HorizontalRopeEndGoingRight:
         LDU        #DrawData_15_HorizontalRopeEndGoingRight               
         LDA        #0x3                                                   
         STA        <CrtArtifactDrawingMaskIndex_0x20                      
-        BSR        DrawBackgroundPieceWrapper                             ; undefined DrawBackgroundPieceWrapper(void)
+        BSR        DrawBackgroundPieceWrapper                             
         LDA        #0x1                                                   
         STA        <CrtArtifactDrawingMaskIndex_0x20                      
         RTS                                                               
@@ -5137,9 +4923,7 @@ DrawPiece_06_FloorPieceGoingRight:
 ;**************************************************************
 ;*                       THUNK FUNCTION                       *
 ;**************************************************************
-;thunk undefined __stdcall DrawBackgroundPieceWrapper(void)
 ;Thunked-Function: DrawBackgroundPiece
-;undefined         A:1            <RETURN>
 
 DrawBackgroundPieceWrapper:                                              
         JMP        DrawBackgroundPiece                                    
@@ -5152,9 +4936,7 @@ DrawData_17_BlankAreaGoingRight:
 
 DrawPiece_09_FloorPieceGoingLeft:                                        
         LDU        #DrawData_18_BlankAreaGoingLeft                        
-        BRA        DrawBackgroundPieceWrapper                             ; undefined DrawBackgroundPieceWrapper(void)
-
-;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+        BRA        DrawBackgroundPieceWrapper                             
 
 DrawData_18_BlankAreaGoingLeft:                                          
         .db        0x01                                                   
@@ -5164,9 +4946,7 @@ DrawData_18_BlankAreaGoingLeft:
 
 DrawPiece_0a_ShortLineGoingDown:                                         
         LDU        #DrawData_19_BlankAreaGoingDownRight                   
-        BRA        DrawBackgroundPieceWrapper                             ; undefined DrawBackgroundPieceWrapper(void)
-
-;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+        BRA        DrawBackgroundPieceWrapper                             
 
 DrawData_19_BlankAreaGoingDownRight:                                     
         .db        0x01                                                   
@@ -5176,9 +4956,7 @@ DrawData_19_BlankAreaGoingDownRight:
 
 DrawPiece_0b_ShortLineGoingUp:                                           
         LDU        #DrawData_0b_ShortLineGoingUp                          
-        BRA        DrawBackgroundPieceWrapper                             ; undefined DrawBackgroundPieceWrapper(void)
-
-;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+        BRA        DrawBackgroundPieceWrapper                             
 
 DrawData_0b_ShortLineGoingUp:                                            
         .db        0x01                                                   
@@ -5192,7 +4970,7 @@ DrawPiece_17_BlankAreaGoingRight:
 Jump_DrawBlankArea:                                                      
         LDA        #0xff                                                  
         STA        <CrtArtifactDrawingMaskIndex_0x20                      
-        JSR        DrawBackgroundPiece                                    ; undefined DrawBackgroundPiece(void)
+        JSR        DrawBackgroundPiece                                    
         LDA        #0x1                                                   
         STA        <CrtArtifactDrawingMaskIndex_0x20                      
         RTS                                                               
@@ -5316,17 +5094,15 @@ DrawData_13_RediculouslyLongRope:
 Jump_DrawRope:                                                           
         PSHS        X                                                     
         LDU        #DrawData_PreRope_Maybe                                
-        BSR        DrawBackgroundPiece                                    ; undefined DrawBackgroundPiece(void)
+        BSR        DrawBackgroundPiece                                    
         LDA        #0x3                                                   
         STA        <CrtArtifactDrawingMaskIndex_0x20                      
         PULS        U                                                     
-        BSR        DrawBackgroundPiece                                    ; undefined DrawBackgroundPiece(void)
+        BSR        DrawBackgroundPiece                                    
         LDU        #DrawData_PostRope_Maybe                               
         LDA        #0x1                                                   
         STA        <CrtArtifactDrawingMaskIndex_0x20                      
-        BRA        DrawBackgroundPiece                                    ; undefined DrawBackgroundPiece(void)
-
-;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+        BRA        DrawBackgroundPiece                                    
 
 DrawData_PreRope_Maybe:                                                  
         .db        0x01                                                   
@@ -5344,15 +5120,13 @@ DrawPiece_16_HorizontalRopeGoingRight:
         LDU        #DrawData_17_BlankAreaGoingRight                       
         LDA        #0x3                                                   
         STA        <CrtArtifactDrawingMaskIndex_0x20                      
-        BSR        DrawBackgroundPiece                                    ; undefined DrawBackgroundPiece(void)
+        BSR        DrawBackgroundPiece                                    
         LDA        #0x1                                                   
         STA        <CrtArtifactDrawingMaskIndex_0x20                      
         RTS                                                               
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawBackgroundPiece(void)
-;undefined         A:1            <RETURN>
 
 DrawBackgroundPiece:                                                     
         LDA        ,U+                                                    ; get segment count
@@ -5384,96 +5158,56 @@ LineDrawingFunctions_0xd77d:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawSegment_Orientation0_UpAndRight(
-;undefined         A:1            <RETURN>
-;undefined         A:1            param_1
-;undefined         B:1            param_2
 
 DrawSegment_Orientation0_UpAndRight:                                     
         LDX        #DrawSegment_MovePosUpAndRight                         
         CLR        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25         
-        BRA        DrawVerticalSegment                                    ; undefined DrawVerticalSegment(undefined A, undefined B, undefined * X)
-
-;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+        BRA        DrawVerticalSegment                                    
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawSegment_Orientation1_RightAndUp(
-;undefined         A:1            <RETURN>
-;undefined         A:1            param_1
-;undefined         B:1            param_2
 
 DrawSegment_Orientation1_RightAndUp:                                     
         LDX        #DrawSegment_MovePosRightAndUp                         
         LDA        #0xff                                                  
         STA        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25         
-        BRA        DrawHorizontalSegment                                  ; undefined DrawHorizontalSegment(undefined A, undefined B, undefined * X)
-
-;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+        BRA        DrawHorizontalSegment                                  
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawSegment_Orientation2_RightAndDow
-;undefined         A:1            <RETURN>
-;undefined         A:1            param_1
-;undefined         B:1            param_2
 
 DrawSegment_Orientation2_RightAndDown:                                   
         LDX        #DrawSegment_MovePosRightAndDown                       
         CLR        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25         
-        BRA        DrawHorizontalSegment                                  ; undefined DrawHorizontalSegment(undefined A, undefined B, undefined * X)
-
-;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+        BRA        DrawHorizontalSegment                                  
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawSegment_Orientation3_DownAndRigh
-;undefined         A:1            <RETURN>
-;undefined         A:1            param_1
-;undefined         B:1            param_2
 
 DrawSegment_Orientation3_DownAndRight:                                   
         LDX        #DrawSegment_MovePosDownAndRight                       
         CLR        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25         
-        BRA        DrawVerticalSegment                                    ; undefined DrawVerticalSegment(undefined A, undefined B, undefined * X)
-
-;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+        BRA        DrawVerticalSegment                                    
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawSegment_Orientation4_DownAndLeft
-;undefined         A:1            <RETURN>
-;undefined         A:1            param_1
-;undefined         B:1            param_2
 
 DrawSegment_Orientation4_DownAndLeft:                                    
         LDX        #DrawSegment_MovePosDownAndLeft                        
         LDA        #0xff                                                  
         STA        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25         
-        BRA        DrawVerticalSegment                                    ; undefined DrawVerticalSegment(undefined A, undefined B, undefined * X)
-
-;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+        BRA        DrawVerticalSegment                                    
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawSegment_Orientation5_LeftAndDown
-;undefined         A:1            <RETURN>
-;undefined         A:1            param_1
-;undefined         B:1            param_2
 
 DrawSegment_Orientation5_LeftAndDown:                                    
         LDX        #DrawSegment_MovePosLeftAndDown                        
         CLR        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25         
-        BRA        DrawHorizontalSegment                                  ; undefined DrawHorizontalSegment(undefined A, undefined B, undefined * X)
-
-;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+        BRA        DrawHorizontalSegment                                  
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawSegment_Orientation6_LeftAndUp(u
-;undefined         A:1            <RETURN>
-;undefined         A:1            param_1
-;undefined         B:1            param_2
 
 DrawSegment_Orientation6_LeftAndUp_2:                                    
 
@@ -5481,24 +5215,16 @@ DrawSegment_Orientation6_LeftAndUp:
         LDX        #DrawSegment_MovePosLeftAndUp                          
         LDA        #0xff                                                  
         STA        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25         
-        BRA        DrawHorizontalSegment                                  ; undefined DrawHorizontalSegment(undefined A, undefined B, undefined * X)
-
-;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+        BRA        DrawHorizontalSegment                                  
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawSegment_Orientation7_UpAndLeft(u
-;undefined         A:1            <RETURN>
-;undefined         A:1            param_1
-;undefined         B:1            param_2
 
 DrawSegment_Orientation7_UpAndLeft:                                      
         LDX        #DrawSegment_MovePosUpAndLeft                          
         LDA        #0xff                                                  
         STA        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25         
-        BRA        DrawVerticalSegment                                    ; undefined DrawVerticalSegment(undefined A, undefined B, undefined * X)
-
-;-- Flow Override: CALL_RETURN (CALL_TERMINATOR)
+        BRA        DrawVerticalSegment                                    
 ;**************************************************************
 ;* Draw a segment horizontally pixel by pixel, for            *
 ;* the number specified in DrawSegmentLine_Counter.           *
@@ -5507,11 +5233,6 @@ DrawSegment_Orientation7_UpAndLeft:
 ;* A DrawSegment_MovePos function determines whether          *
 ;* we're going left or first, then up or down.                *
 ;**************************************************************
-;undefined __stdcall DrawHorizontalSegment(undefined A, u
-;undefined         A:1            <RETURN>
-;undefined         A:1            A
-;undefined         B:1            B
-;undefined *       X:2            X
 ;X contains a DrawSegment_MovePos function
 
 DrawHorizontalSegment:                                                   
@@ -5522,7 +5243,7 @@ DrawHorizontalSegment:
 
 Loop_DrawHorizontalPixels:                                               
         PSHS        U,X,B,A                                               
-        BSR        DrawPixelWithCrtArtifacts                              ; undefined DrawPixelWithCrtArtifacts(void)
+        BSR        DrawPixelWithCrtArtifacts                              
         PULS        A,B,X,U                                               
         DEC        <DrawSegmentLine_Counter_0x1d                          
         BEQ        Jump_DoneDrawingHorizontalPixels                       
@@ -5540,11 +5261,6 @@ Jump_DoneDrawingHorizontalPixels:
 ;* A DrawSegment_MovePos function determines whether          *
 ;* we're going up or down first, then left or right.          *
 ;**************************************************************
-;undefined __stdcall DrawVerticalSegment(undefined A, und
-;undefined         A:1            <RETURN>
-;undefined         A:1            A
-;undefined         B:1            B
-;undefined *       X:2            X
 ;X contains a DrawSegment_MovePos function
 
 DrawVerticalSegment:                                                     
@@ -5557,7 +5273,7 @@ DrawVerticalSegment:
 
 Loop_DrawVerticalPixels:                                                 
         PSHS        U,X,B,A                                               
-        BSR        DrawPixelWithCrtArtifacts                              ; undefined DrawPixelWithCrtArtifacts(void)
+        BSR        DrawPixelWithCrtArtifacts                              
         PULS        A,B,X,U                                               
         DEC        <DrawSegmentLine_Counter_0x1d                          
         BEQ        Jump_DoneDrawingVerticalPixels                         
@@ -5582,8 +5298,6 @@ Jump_DoneDrawingVerticalPixels:
 ;* The mem location used to modify the secondary axis's po... *
 ;* is 0x1e, but only 0x1f can have an actual value.           *
 ;**************************************************************
-;undefined __stdcall DrawSegment_MovePosUpAndRight(void)
-;undefined         A:1            <RETURN>
 
 DrawSegment_MovePosUpAndRight:                                           
         DEC        <DrawSegment_CurrentScreenY_0x21                       
@@ -5592,8 +5306,6 @@ DrawSegment_MovePosUpAndRight:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawSegment_MovePosRightAndUp(void)
-;undefined         A:1            <RETURN>
 
 DrawSegment_MovePosRightAndUp:                                           
         INC        <DrawSegment_CurrentScreenX_0x22                       
@@ -5602,8 +5314,6 @@ DrawSegment_MovePosRightAndUp:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawSegment_MovePosRightAndDown(void)
-;undefined         A:1            <RETURN>
 
 DrawSegment_MovePosRightAndDown:                                         
         INC        <DrawSegment_CurrentScreenX_0x22                       
@@ -5612,8 +5322,6 @@ DrawSegment_MovePosRightAndDown:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawSegment_MovePosDownAndRight(void)
-;undefined         A:1            <RETURN>
 
 DrawSegment_MovePosDownAndRight:                                         
         INC        <DrawSegment_CurrentScreenY_0x21                       
@@ -5622,8 +5330,6 @@ DrawSegment_MovePosDownAndRight:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawSegment_MovePosDownAndLeft(void)
-;undefined         A:1            <RETURN>
 
 DrawSegment_MovePosDownAndLeft:                                          
         INC        <DrawSegment_CurrentScreenY_0x21                       
@@ -5632,8 +5338,6 @@ DrawSegment_MovePosDownAndLeft:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawSegment_MovePosLeftAndDown(void)
-;undefined         A:1            <RETURN>
 
 DrawSegment_MovePosLeftAndDown:                                          
         DEC        <DrawSegment_CurrentScreenX_0x22                       
@@ -5642,8 +5346,6 @@ DrawSegment_MovePosLeftAndDown:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawSegment_MovePosLeftAndUp(void)
-;undefined         A:1            <RETURN>
 
 DrawSegment_MovePosLeftAndUp:                                            
         DEC        <DrawSegment_CurrentScreenX_0x22                       
@@ -5652,8 +5354,6 @@ DrawSegment_MovePosLeftAndUp:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawSegment_MovePosUpAndLeft(void)
-;undefined         A:1            <RETURN>
 
 DrawSegment_MovePosUpAndLeft:                                            
         DEC        <DrawSegment_CurrentScreenY_0x21                       
@@ -5662,13 +5362,10 @@ DrawSegment_MovePosUpAndLeft:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DrawPixelWithCrtArtifacts(void)
-;undefined         A:1            <RETURN>
-;undefined1        Stack[-0x1]:1  local_1                                 XREF[1]:     d83e(*)
 
 DrawPixelWithCrtArtifacts:                                               
         LDD        <DrawSegment_CurrentScreenYXPosition_0x21              
-        BSR        ComputeScreenLocationFromAAndB                         ; undefined ComputeScreenLocationFromAAndB(void)
+        BSR        ComputeScreenLocationFromAAndB                         
         TFR        D,Y                                                    ; move screen position to Y
         LDB        <DrawSegment_CurrentScreenX_0x22                       ; which pair of bits will it draw on?
         ANDB       #0x3                                                   ; get the last two bits of the x position
@@ -5714,8 +5411,6 @@ CrtArtifactDrawing_LineDrawingMask:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall LoadPosRelativeToYAndComputeScreenPo
-;undefined         A:1            <RETURN>
 
 LoadPosRelativeToYAndComputeScreenPos:                                   
         LDA        0x4,Y                                                  
@@ -5746,8 +5441,6 @@ LoadPosRelativeToYAndComputeScreenPos:
 ;* background draw origin point: Y:0x10, X:0xF                *
 ;* (0x10 * 0x20) + (0xf * 2 / 8) + 0x400 = 0x603 (603.C)      *
 ;**************************************************************
-;undefined __stdcall ComputeScreenLocationFromAAndB(void)
-;undefined         A:1            <RETURN>
 
 ComputeScreenLocationFromAAndB:                                          
         LSLB                                                              
@@ -5762,8 +5455,6 @@ ComputeScreenLocationFromAAndB:
 ;**************************************************************
 ;* Used by the player, the ball, and the bird                 *
 ;**************************************************************
-;undefined __stdcall EraseAndUpdateAndDrawObject(void)
-;undefined         A:1            <RETURN>
 
 EraseAndUpdateAndDrawObject:                                             
         LDA        -0x5,Y                                                 
@@ -5771,7 +5462,7 @@ EraseAndUpdateAndDrawObject:
         BMI        Jump_StateIsFFAndUninitialized                         
         DECA                                                              
         BEQ        Jump_StateIsNowZero                                    
-        BSR        EraseSpriteFromScreen                                  ; undefined EraseSpriteFromScreen(void)
+        BSR        EraseSpriteFromScreen                                  
         .db        0x8C                                                   
 
 Jump_StateIsNowZero:                                                     
@@ -5790,7 +5481,7 @@ Jump_StateIsNowZero:
         LDA        #12                                                    ; a length or a count of some kind
                                                                           ; or the short rope? (draw object 12)
         STA        <DrawSegmentLine_Counter_0x1d                          
-        JSR        DrawSegment_Orientation3_DownAndRight                  ; undefined DrawSegment_Orientation3_DownAndRight(undefined param_1, und
+        JSR        DrawSegment_Orientation3_DownAndRight                  
         LDY        #Player_PhysicsData_0x1aa                              
 
 Jump_SkipRopeHandling:                                                   
@@ -5802,8 +5493,6 @@ Jump_SkipRopeHandling:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined DrawingFunctionFor3ByteWideSprites()
-;undefined         A:1            <RETURN>
 
 DrawingFunctionFor3ByteWideSprites:                                      
         STA        <UtilityCounter_0x26                                   
@@ -5828,8 +5517,6 @@ Jump_StateIsFFAndUninitialized:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall EraseSpriteFromScreen(void)
-;undefined         A:1            <RETURN>
 
 EraseSpriteFromScreen:                                                   
         LDU        0xc,Y                                                  
@@ -5868,13 +5555,6 @@ Loop_ClearNextRow:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall PrintString(undefined A, undefined B
-;undefined         A:1            <RETURN>
-;undefined         A:1            A
-;undefined         B:1            B
-;byte *            X:2            X
-;undefined2        Y:2            Y
-;byte *            U:2            U
 
 PrintString:                                                             
         LDY        #CharacterFont                                         
@@ -6535,30 +6215,20 @@ String_Chamber:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall UpdateAndPrintPlayerScore(undefined
-;undefined         A:1            <RETURN>
-;undefined         A:1            A
-;undefined         B:1            B
-;undefined2        X:2            X
-;undefined2        Y:2            Y
 
 UpdateAndPrintPlayerScore:                                               
-        BSR        ConvertDRegisterToString                               ; undefined ConvertDRegisterToString(void)
+        BSR        ConvertDRegisterToString                               
         LDU        #PlayerScoreStringLocationPointers                     
         LDA        <CurrentPlayer_0x52                                    
         ANDA       #0x2                                                   
         LDU        A,U                                                    
-        BSR        AddPickupPointsToScore                                 ; undefined AddPickupPointsToScore(void)
+        BSR        AddPickupPointsToScore                                 
         LDX        #0x1b03                                                ; screen position
-        BSR        FindFirstNonZeroCharacterInString                      ; undefined FindFirstNonZeroCharacterInString(void)
+        BSR        FindFirstNonZeroCharacterInString                      
         JMP        PrintString                                            
-
-;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall FindFirstNonZeroCharacterInString(vo
-;undefined         A:1            <RETURN>
 
 FindFirstNonZeroCharacterInString:                                       
         LDA        ,U                                                     ; get character
@@ -6581,23 +6251,17 @@ PlayerScoreStringLocationPointers:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall PrintTimerStringToScreen(void)
-;undefined         A:1            <RETURN>
 
 PrintTimerStringToScreen:                                                
         PSHS        X                                                     
-        BSR        ConvertDRegisterToString                               ; undefined ConvertDRegisterToString(void)
+        BSR        ConvertDRegisterToString                               
         PULS        X                                                     
         LDU        #GameTimerString_0xcb                                  
-        BSR        ReplaceZerosToSpaces_Maybe                             ; undefined ReplaceZerosToSpaces_Maybe(void)
+        BSR        ReplaceZerosToSpaces_Maybe                             
         JMP        PrintString                                            
-
-;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall ReplaceZerosToSpaces_Maybe(void)
-;undefined         A:1            <RETURN>
 
 ReplaceZerosToSpaces_Maybe:                                              
         TFR        U,Y                                                    
@@ -6618,8 +6282,6 @@ Jump_ToExit:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall ConvertDRegisterToString(void)
-;undefined         A:1            <RETURN>
 
 ConvertDRegisterToString:                                                
         STD        <GameTimerLastDigit_0x6e                               ; store the timer here
@@ -6634,21 +6296,19 @@ Loop_ClearGameTimerString:
         BNE        Loop_ClearGameTimerString                              
         LDX        #DAT_0xcd                                              
         LDD        #10000                                                 
-        BSR        ConvertNumberAtPlaceToCharacter                        ; undefined ConvertNumberAtPlaceToCharacter()
+        BSR        ConvertNumberAtPlaceToCharacter                        
         LDD        #1000                                                  
-        BSR        ConvertNumberAtPlaceToCharacter                        ; undefined ConvertNumberAtPlaceToCharacter()
+        BSR        ConvertNumberAtPlaceToCharacter                        
         LDD        #100                                                   
-        BSR        ConvertNumberAtPlaceToCharacter                        ; undefined ConvertNumberAtPlaceToCharacter()
+        BSR        ConvertNumberAtPlaceToCharacter                        
         LDD        #10                                                    
-        BSR        ConvertNumberAtPlaceToCharacter                        ; undefined ConvertNumberAtPlaceToCharacter()
+        BSR        ConvertNumberAtPlaceToCharacter                        
         LDB        <SomeStringConversionValue_0x6f                        ; store to 0x6f, but why? it's unused.
         STB        ,X                                                     
         RTS                                                               
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined ConvertNumberAtPlaceToCharacter()
-;undefined         A:1            <RETURN>
 
 ConvertNumberAtPlaceToCharacter:                                         
         CLR        <GameTimerSecondDigit_0x6b                             
@@ -6669,8 +6329,6 @@ Jump_DoneFindingCharacter:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall AddPickupPointsToScore(void)
-;undefined         A:1            <RETURN>
 ;The area in memory used to contain
 ;the timer now contains the score of
 ;the pick up the player touched. Add
@@ -6698,8 +6356,6 @@ Loop_NextCharacterInString:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall CopySpritesFromRomToRam(void)
-;undefined         A:1            <RETURN>
 
 CopySpritesFromRomToRam:                                                 
         LDU        #SpriteCopyInfo                                        ; set U to start of data block
@@ -6711,7 +6367,7 @@ Jump_CopyNextAnimation:
         LDY        ,U++                                                   ; destination address
 
 Jump_CopySpriteToRam:                                                    
-        BSR        CopySpritesFromRomToRamHelper                          ; undefined CopySpritesFromRomToRamHelper()
+        BSR        CopySpritesFromRomToRamHelper                          
         DECA                                                              
         BNE        Jump_CopySpriteToRam                                   
         BRA        Jump_CopyNextAnimation                                 
@@ -6746,10 +6402,6 @@ NextSpriteToCopy_Size:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined CopySpritesFromRomToRamHelper()
-;undefined         A:1            <RETURN>
-;undefined2        Stack[-0x6]:2  StackValue1_0x6                         XREF[4,1]:   dbdd(*), dbe5(*),
-;undefined1        Stack[-0xa]:1  StackValue2_0xa                         XREF[1]:     dbf9(*)
 
 CopySpritesFromRomToRamHelper:                                           
         PSHS        U,B,A                                                 ; D -> 0x0a10
@@ -6804,8 +6456,6 @@ Jump_PlayerOutOfLives:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined GenerateRandomNumberFrom0ToB()
-;undefined         A:1            <RETURN>
 
 GenerateRandomNumberFrom0ToB:                                            
         PSHS        X,A                                                   
@@ -6824,7 +6474,7 @@ LAB_dc2d:
         COM        <SomeValue_RelatedToDrops_0x64                         
 
 LAB_dc2f:                                                                
-        BSR        IncrementRomAddressCounter                             ; undefined IncrementRomAddressCounter(undefined A, undefined B, undefin
+        BSR        IncrementRomAddressCounter                             
         ANDB       <SomeValue_RelatedToDrops_0x64                         
         CMPB       <SomeValue_AlsoRelatedToDrops_0x65                     
         BHI        LAB_dc2f                                               
@@ -6832,11 +6482,6 @@ LAB_dc2f:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall IncrementRomAddressCounter(undefined
-;undefined         A:1            <RETURN>
-;undefined         A:1            A
-;undefined         B:1            B
-;undefined2        X:2            X
 
 IncrementRomAddressCounter:                                              
         PSHS        X                                                     
@@ -6853,8 +6498,6 @@ Jump_NotReachedLimit:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall InterruptHandler(void)
-;undefined         A:1            <RETURN>
 
 InterruptHandler:                                                        
         LDA        PIA0_B_DATA_REG__FF02                                  ; get keyboard state
@@ -6864,26 +6507,13 @@ InterruptHandler:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall SetupJoystickBits_Maybe(undefined pa
-;undefined         A:1            <RETURN>
-;undefined         A:1            param_1
-;byte              B:1            param_2
-;undefined2        X:2            param_3
-;undefined2        Y:2            param_4
 
 SetupJoystickBits_Maybe:                                                 
         LDU        #PIA0_A_CONTROL_REG__FF01                              ; setup left joystick maybe
-        BSR        ResetJoystickAxisBit_Maybe                             ; undefined ResetJoystickAxisBit_Maybe(undefined A, byte B, undefined2 X
+        BSR        ResetJoystickAxisBit_Maybe                             
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall ResetJoystickAxisBit_Maybe(undefined
-;undefined         A:1            <RETURN>
-;undefined         A:1            A
-;byte              B:1            B
-;undefined2        X:2            X
-;undefined2        Y:2            Y
-;byte *            U:2            U
 
 ResetJoystickAxisBit_Maybe:                                              
         LDA        ,U                                                     
@@ -6899,11 +6529,9 @@ Jump_StoreToA:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall UpdateJoystick_Maybe(void)
-;undefined         A:1            <RETURN>
 
 UpdateJoystick_Maybe:                                                    
-        BSR        DisableSound                                           ; undefined DisableSound(void)
+        BSR        DisableSound                                           
         LDX        #InterruptHasBeenHitCounter_0x14                       
         LDB        #0x1                                                   
 
@@ -6913,7 +6541,7 @@ LAB_dc6d:
         ANDA       #0x2                                                   
         PSHS        A                                                     
         ADDB       ,S+                                                    
-        BSR        SetupJoystickBits_Maybe                                ; undefined SetupJoystickBits_Maybe(undefined param_1, byte param_2, und
+        BSR        SetupJoystickBits_Maybe                                
         LDD        #0x4080                                                
 
 LAB_dc7c:                                                                
@@ -6976,12 +6604,10 @@ LAB_dcbf:
         LDA        #00000010b                                             
         STA        PIA1_A_DATA_REG__FF20                                  
         CLRB                                                              
-        BSR        SetupJoystickBits_Maybe                                ; undefined SetupJoystickBits_Maybe(undefined param_1, byte param_2, und
+        BSR        SetupJoystickBits_Maybe                                
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall EnableSound(void)
-;undefined         A:1            <RETURN>
 
 EnableSound:                                                             
         LDA        PIA1_B_CONTROL_REG__FF23                               
@@ -6990,8 +6616,6 @@ EnableSound:
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
-;undefined __stdcall DisableSound(void)
-;undefined         A:1            <RETURN>
 
 DisableSound:                                                            
         LDA        PIA1_B_CONTROL_REG__FF23                               

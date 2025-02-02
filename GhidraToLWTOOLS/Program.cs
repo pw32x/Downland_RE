@@ -162,7 +162,8 @@ class Program
             {
                 string comment = line.Substring(commentIndex);
 
-                if (!comment.StartsWith("; = "))
+                if (!comment.StartsWith("; = ") &&
+                    !comment.StartsWith("; undefined"))
                 {
                     if (parseState.m_lastParsedLine != null && 
                         parseState.m_lastParsedLine.m_parsedLineType == ParsedLineType.Label &&
@@ -185,14 +186,28 @@ class Program
 
             if (m_address == ParseState.NoAddress) 
             {
-                // is this a label?
-                var label = line.Length >= 77 ? line.Substring(29, 48).Trim() : line.Trim();
+                string trimmed = line.Trim();
 
-                if (!string.IsNullOrEmpty(label))
+                // is this a label?
+                var label = line.Length >= 77 ? line.Substring(29, 48).Trim() : trimmed;
+
+
+
+                if (!string.IsNullOrEmpty(label) &&
+                    !trimmed.StartsWith("undefined") &&
+                    !trimmed.StartsWith("-- Flow") &&
+                    !trimmed.StartsWith("char") &&
+                    !trimmed.StartsWith("byte") &&
+                    !trimmed.StartsWith("short") &&
+                    !trimmed.StartsWith("ushort") &&
+                    !trimmed.StartsWith("thunk"))
                 {
                     if (label.Contains(' ') || // if the label contains a space, then for sure it's a comment.
                         label.Contains(':'))   // or punctuation. yes, very hardcoded
                     {
+                        
+                            
+
                         // if the last line isn't a comment, add a line separator
                         if (parseState.m_lastParsedLine.m_parsedLineType != ParsedLineType.Comment)
                             m_comment = "\n";
