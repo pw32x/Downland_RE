@@ -6889,9 +6889,10 @@
             17fd                    ??         ??
             17fe                    ??         ??
             17ff                    ??         ??
-                             DAT_1800                                        XREF[2]:     cadc(*), UpdateAndDrawDrops:cffa(*)  
+                             DAT_1800                                        XREF[3]:     Jump_IsAlreadyClimbing:c942(*), cadc(*), 
+                                                                                          UpdateAndDrawDrops:cffa(*)  
             1800                    ??         ??
-                             DAT_1801                                        XREF[1]:     cae0(*)  
+                             DAT_1801                                        XREF[2]:     Jump_IsAlreadyClimbing:c946(*), cae0(*)  
             1801                    ??         ??
             1802                    ??         ??
             1803                    ??         ??
@@ -7127,8 +7128,9 @@
             18dd                    ??         ??
             18de                    ??         ??
             18df                    ??         ??
-                             DAT_18e0                                        XREF[1]:     UpdateAndDrawDrops:cf77(*)  
+                             DAT_18e0                                        XREF[2]:     Jump_IsAlreadyClimbing:c8d6(*), UpdateAndDrawDrops:cf77(*)  
             18e0                    ??         ??
+                             DAT_18e1                                        XREF[1]:     Jump_IsAlreadyClimbing:c8da(*)  
             18e1                    ??         ??
             18e2                    ??         ??
             18e3                    ??         ??
@@ -17366,12 +17368,12 @@
                                                                                                 ; the number of players
             c12f 44                 LSRA
             c130 27 08              BEQ        Jump_DrawOnePlayerCursor                         ; in one player mode
-            c132 7f 13 64           CLR        1364                                             ; REPLACE: CLR       0x1364 ; clear the cursor next to one player
-            c135 f7 13 70           STB        1370                                             ; REPLACE: STB       0x1370 ; draw the cursor pos for two player mode
+            c132 7f 13 64           CLR        1364                                             ; REPLACE: CLR        0x1364 ; clear the cursor next to one player
+            c135 f7 13 70           STB        1370                                             ; REPLACE: STB        0x1370 ; draw the cursor pos for two player mode
             c138 20 06              BRA        Jump_UpdateAndDrawDrops                          ; Jump_SkipDrawOnePlayerCursor
                              Jump_DrawOnePlayerCursor                        XREF[1]:     c130(j)  
-            c13a f7 13 64           STB        1364                                             ; REPLACE: STB        0x1364 ; draw the cursor pos for one player mode
-            c13d 7f 13 70           CLR        1370                                             ; REPLACE: CLR        0x1370 ; clear the cursor pos for two player mode
+            c13a f7 13 64           STB        1364                                             ; REPLACE: STB         0x1364 ; draw the cursor pos for one player mode
+            c13d 7f 13 70           CLR        1370                                             ; REPLACE: CLR         0x1370 ; clear the cursor pos for two player mode
                              Jump_UpdateAndDrawDrops                         XREF[1]:     c138(j)  
             c140 bd cf 53           JSR        UpdateAndDrawDrops                               ; = ??
                                                                                                 ; undefined UpdateAndDrawDrops(void)
@@ -17862,15 +17864,15 @@
             c3e2 c6 3c              LDB        #0x3c                                            ; size of the four collision masks for a frame along 4 pixels
                                                                                                 ; (5 lines * 3 bytes * 4 frames)
             c3e4 3d                 MUL
-            c3e5 33 cb              LEAU       B,U                                              ; compute the address of the set of collision masks we want
+            c3e5 33 cb              LEAU       B,U                                              ; REPLACE: LEAU         D,U ; compute the address of the set of collisio
             c3e7 a6 26              LDA        0x6,Y=>PlayerX_0x1b0                             ; = ??
             c3e9 84 03              ANDA       #0x3                                             ; get the last two bits if player X. this gets 
                                                                                                 ; us which collision mask for the X position 
                                                                                                 ; to look for (0 - 3)
             c3eb c6 0f              LDB        #0xf                                             ; the size of one collision mask (5 lines * 3 bytes)
             c3ed 3d                 MUL
-            c3ee 33 cb              LEAU       B,U                                              ; compute the address of the collision mask to use for this
-                                                                                                ; particular X position
+            c3ee 33 cb              LEAU       B,U                                              ; REPLACE: LEAU         D,U ; compute the address of the 
+                                                                                                ; collision mask to use for this particular X position
             c3f0 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2       ; = ??
             c3f2 81 03              CMPA       #0x3                                             ; compare the animation frame with 3. The run animation
                                                                                                 ; goes from 0 to 3.
@@ -17927,12 +17929,12 @@
             c435 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2       ; = ??
             c437 c6 c0              LDB        #0xc0                                            ; size of sprite for animation frame: 16 lines * 3 bytes * 4 positions o
             c439 3d                 MUL
-            c43a 33 cb              LEAU       B,U                                              ; set U to the current animation sprite
+            c43a 33 cb              LEAU       B,U                                              ; REPLACE: LEAU         D,U ; set U to the current animation sprite
             c43c a6 26              LDA        0x6,Y=>PlayerX_0x1b0                             ; = ??
             c43e 84 03              ANDA       #0x3
             c440 c6 30              LDB        #0x30
             c442 3d                 MUL
-            c443 33 cb              LEAU       B,U                                              ; set U to the current animation sprite along X
+            c443 33 cb              LEAU       B,U                                              ; REPLACE: LEAU         D,U ; set U to the current animation sprite alon
             c445 33 43              LEAU       0x3,U                                            ; move to the next line in the sprite
             c447 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2       ; = ??
             c449 81 03              CMPA       #0x3                                             ; check if we're running or standing
@@ -18369,7 +18371,7 @@
             c6e5 e6 3b              LDB        -0x5,Y=>PlayerLives_HeadIcons_Spacing_0x1e4      ; = ??
             c6e7 3d                 MUL
             c6e8 ae 22              LDX        0x2,Y=>PlayerLives_DrawLocationInPage_0x1eb      ; = ??
-            c6ea 30 8b              LEAX       B,X                                              ; X will contain the location on screen of the
+            c6ea 30 8b              LEAX       B,X                                              ; REPLACE: LEAX        D,X ; X will contain the location on screen of the
                                                                                                 ; current life head icon
             c6ec a6 3f              LDA        -0x1,Y=>PlayerLives_HeadIcon_LinesToDraw_0x1e7   ; = ??
             c6ee 97 26              STA        <UtilityCounter_0x26                             ; = ??
@@ -18667,8 +18669,8 @@
             c8cd 30 89 00 e0        LEAX       0xe0,X
             c8d1 ce c5 1d           LDU        #RopeShapeLookupTable_Maybe                      ; = 0000001100000000b
             c8d4 ec c6              LDD        A,U=>RopeShapeLookupTable_Maybe                  ; = 0000001100000000b
-            c8d6 a4 89 18 00        ANDA       0x1800,X
-            c8da e4 89 18 01        ANDB       0x1801,X
+            c8d6 a4 89 18 00        ANDA       0x1800,X=>DAT_18e0                               ; = ??
+            c8da e4 89 18 01        ANDB       0x1801,X=>DAT_18e1                               ; = ??
             c8de 10 93 1b           CMPD       <ZeroValue                                       ; = ??
             c8e1 27 0c              BEQ        Loop_SkipRopeChecks
             c8e3 34 04              PSHS        B
@@ -18716,15 +18718,15 @@
             c92c 34 06              PSHS        B A
             c92e bd d8 52           JSR        LoadPosRelativeToYAndComputeScreenPos            ; undefined LoadPosRelativeToYAndComputeScreenPos(void)
             c931 ed 28              STD        0x8,Y=>Player_VideoPageDrawDestination_0x1b2     ; = ??
-            c933 1f 01              TFR        B,X
+            c933 1f 01              TFR        B,X                                              ; REPLACE: TFR        D,X
             c935 35 06              PULS        A B
             c937 30 89 01 e0        LEAX       0x1e0,X
             c93b 3a                 ABX
             c93c 48                 LSLA
             c93d ce c5 0d           LDU        #PlayerFloorCollisionMask                        ; = 0000001111000000b
             c940 ec c6              LDD        A,U=>PlayerFloorCollisionMask                    ; = 0000001111000000b
-            c942 a4 89 18 00        ANDA       0x1800,X
-            c946 e4 89 18 01        ANDB       0x1801,X
+            c942 a4 89 18 00        ANDA       DAT_1800,X                                       ; = ??
+            c946 e4 89 18 01        ANDB       DAT_1801,X                                       ; = ??
             c94a 10 93 1b           CMPD       <ZeroValue                                       ; = ??
             c94d 27 30              BEQ        LAB_c97f
             c94f 34 04              PSHS        B
@@ -18766,13 +18768,13 @@
             c990 a6 38              LDA        -0x8,Y=>Player_CurrentAnimationFrame_0x1a2       ; = ??
             c992 c6 c0              LDB        #0xc0
             c994 3d                 MUL
-            c995 33 cb              LEAU       B,U
+            c995 33 cb              LEAU       B,U                                              ; REPLACE: LEAU         D,U 
             c997 df 37              STU        <Player_CurrentSpriteFrame_Maybe_0x37            ; = ??
             c999 a6 26              LDA        0x6,Y=>PlayerX_0x1b0                             ; = ??
             c99b 84 03              ANDA       #0x3
             c99d c6 30              LDB        #0x30
             c99f 3d                 MUL
-            c9a0 33 cb              LEAU       B,U
+            c9a0 33 cb              LEAU       B,U                                              ; REPLACE: LEAU         D,U 
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
@@ -18880,7 +18882,7 @@
                                                                                                 ; (2 bytes * 16 lines) + 1 byte extra 
                                                                                                 ; per line: 0x30
             ca43 3d                 MUL                                                         ; find which sprite to use
-            ca44 33 cb              LEAU       B,U                                              ; move U to the sprite frame that depends on the X position
+            ca44 33 cb              LEAU       B,U                                              ; REPLACE: LEAU         D,U ; move U to the sprite frame that depends on
             ca46 6f 2e              CLR        0xe,Y=>Player_PreviousSpritePointer_0x1b8        ; = ??
             ca48 bd dc 39           JSR        IncrementRomAddressCounter                       ; undefined IncrementRomAddressCounter(undefined A, undefined B, undefin
             ca4b 1f 52              TFR        PC,Y                                             ; setup Y to become a random data generator
@@ -19470,7 +19472,7 @@
             cd92 34 04              PSHS        B                                               ; save the X screen position
             cd94 bd d8 56           JSR        ComputeScreenLocationFromAAndB                   ; undefined ComputeScreenLocationFromAAndB(void)
                              save the drawing location into U
-            cd97 1f 03              TFR        B,U
+            cd97 1f 03              TFR        B,U                                              ; REPLACE: TFR        D,U ; 
             cd99 35 02              PULS        A                                               ; retrieve the X screen position
             cd9b 84 03              ANDA       #0x3
             cd9d 97 26              STA        <UtilityCounter_0x26                             ; pixel offset to draw door with?
@@ -19822,7 +19824,7 @@
             cf13 96 39              LDA        <CurrentRoomNumber_0x39                          ; = ??
             cf15 c6 19              LDB        #0x19
             cf17 3d                 MUL
-            cf18 31 ab              LEAY       B,Y
+            cf18 31 ab              LEAY       B,Y                                              ; REPLACE: LEAY        D,Y ; 
             cf1a 10 9f 3d           STY        <PerRoomPickupDataAddress_0x3d                   ; = ??
                              **************************************************************
                              *                          FUNCTION                          *
@@ -19845,7 +19847,7 @@
             cf2e a6 21              LDA        0x1,Y
             cf30 3d                 MUL
             cf31 ce de b3           LDU        #PickupSpriteData                                ; = 0001000100010000b
-            cf34 33 cb              LEAU       B,U
+            cf34 33 cb              LEAU       B,U                                              ; REPLACE: LEAU         D,U 
             cf36 c6 0a              LDB        #10                                              ; number of lines in the pickup sprite
             cf38 d7 26              STB        <UtilityCounter_0x26                             ; = ??
             cf3a 8d 07              BSR        DrawSprite_16PixelsWide                          ; undefined DrawSprite_16PixelsWide(undefined param_1, undefined param_2
@@ -22254,7 +22256,7 @@
             d8e8 a6 c0              LDA        ,U+                                              ; U points to the text strings
             d8ea 2b 1b              BMI        Loop_HitEndOfString                              ; last character was 0xff
             d8ec 3d                 MUL
-            d8ed 31 ab              LEAY       B,Y                                              ; Jump to the specified character in rom
+            d8ed 31 ab              LEAY       B,Y                                              ; REPLACE: LEAY         D,Y ; Jump to the specified character in rom
             d8ef c6 07              LDB        #0x7                                             ; number of lines in a character
                              Loop_DrawCharacter                              XREF[1]:     d8ff(j)  
             d8f1 a6 a0              LDA        ,Y+=>CharacterFont                               ; get the character row
@@ -23088,7 +23090,7 @@
             dc10 84 02              ANDA       #0x2
             dc12 10 27 e4 55        LBEQ       LAB_c06b
             dc16 0a 50              DEC        <CurrentNumberOfPlayers_0x50                     ; one of the players lost all their lives
-            dc18 1f 20              TFR        Y,B
+            dc18 1f 20              TFR        Y,B                                              ; REPLACE: TFR         Y,D
             dc1a 34 16              PSHS        X B A
             dc1c 7e c6 10           JMP        LAB_c610
                              **************************************************************

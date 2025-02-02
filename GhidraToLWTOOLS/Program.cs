@@ -72,7 +72,7 @@ class Program
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            string spacing = "                                                                     ";
+            string spacing = "                                                                          ";
 
             switch (m_parsedLineType) 
             {
@@ -276,7 +276,7 @@ class Program
 
                         int counter = 1;
                         m_dataValue = tokens[counter];
-                        while (string.IsNullOrEmpty(m_dataValue))
+                        while (string.IsNullOrEmpty(m_dataValue) || m_dataValue == "*")
                         {
                             counter++;
                             m_dataValue = tokens[counter];
@@ -297,8 +297,8 @@ class Program
                             m_code = m_code.Substring(0, arrowIndex);
                         }
 
-                        if (m_code.StartsWith("PULS") ||
-                            m_code.StartsWith("PSHS"))
+                        if (m_code.StartsWith("PUL") ||
+                            m_code.StartsWith("PSH"))
                          {
                             // add commas to the registers
                             string registers = m_code.Substring(4).Trim();
