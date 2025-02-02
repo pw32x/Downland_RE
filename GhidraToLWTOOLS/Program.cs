@@ -230,6 +230,12 @@ class Program
                 }
                 else
                 {
+                    // first line of code, add the "org 0xC000" to the previous label
+                    if (m_address == 0xc000)
+                    {
+                        parseState.m_lastParsedLine.m_label = "        org 0xc000\n" + parseState.m_lastParsedLine.m_label;
+                    }
+
                     string subString = "";
                     if (commentIndex != -1)
                     {
@@ -285,14 +291,20 @@ class Program
                     {
                         m_code = subString;
 
-                        if (m_code.Contains(" offset "))
-                            m_code = m_code.Replace("offset ", "");
-
                         int arrowIndex = m_code.IndexOf("=>");
                         if (arrowIndex >= 0) 
                         {
                             m_code = m_code.Substring(0, arrowIndex);
                         }
+
+                        if (m_code.StartsWith("PULS") ||
+                            m_code.StartsWith("PSHS"))
+                         {
+                            // add commas to the registers
+                            string registers = m_code.Substring(4).Trim();
+                            registers = registers.Replace(" ", ",");
+                            m_code = m_code.Substring(0, 4) + "        " + registers;
+                         }
 
                         string replaceTag = "REPLACE: ";
 
@@ -377,9 +389,6 @@ class Program
 
         foreach (var parsedLine in parseState.m_parsedLines)
         {
-            if (parsedLine.m_address == 0xc000)
-                sb.AppendLine("        org 0xc000");
-
             string exportedLine = parsedLine.ToString();
             //Console.WriteLine(exportedLine);
 

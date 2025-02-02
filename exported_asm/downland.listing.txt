@@ -378,8 +378,8 @@
                       (     downland.asm):00378         ;* Game rom start and initial setup                           *
                       (     downland.asm):00379         ;**************************************************************
                       (     downland.asm):00380         
-0000                  (     downland.asm):00381         CartridgeRomStart:                                                  
-                      (     downland.asm):00382                 org 0xc000
+                      (     downland.asm):00381                 org 0xc000
+C000                  (     downland.asm):00382         CartridgeRomStart:                               
 C000 12               (     downland.asm):00383                 NOP                                                          
 C001 1A50             (     downland.asm):00384                 ORCC       #01010000b                                        
 C003 10CE019F         (     downland.asm):00385                 LDS        #StackStart_0x019f                                ; setup stack at address 415 019f
@@ -436,7 +436,7 @@ C052 BDC1F6           (     downland.asm):00434                 JSR        Clear
 C055 BDC217           (     downland.asm):00436                 JSR        SetupStringEndCharactersForDynamicStrings         
                       (     downland.asm):00437                                                                              ; undefined SetupStringEndCharactersForDynamicStrings(void)
 C058 B7FFDE           (     downland.asm):00438                 STA        RomRam_MapType_FFDE                               
-C05B 8E0000           (     downland.asm):00439                 LDX        #CartridgeRomStart                                ; Load the number c000 into X
+C05B 8EC000           (     downland.asm):00439                 LDX        #CartridgeRomStart                                ; Load the number c000 into X
 C05E 9F61             (     downland.asm):00440                 STX        <RomAddressCounter_0xc000to0xdf5a_0x61            
 C060 9F72             (     downland.asm):00441                 STX        <RomStartAddress_0xc000                           
 C062 8655             (     downland.asm):00442                 LDA        #01010101b                                        ; some mask, maybe?
@@ -576,13 +576,13 @@ C12D C6FF             (     downland.asm):00575                 LDB        #0xff
                       (     downland.asm):00576                                                                              ; the number of players
 C12F 44               (     downland.asm):00577                 LSRA                                                         
 C130 2708             (     downland.asm):00578                 BEQ        Jump_DrawOnePlayerCursor                          ; in one player mode
-C132 7F0554           (     downland.asm):00579                 CLR        1364                                              ; clear the cursor next to one player
-C135 F7055A           (     downland.asm):00580                 STB        1370                                              ; draw the cursor pos for two player mode
+C132 7F1364           (     downland.asm):00579                 CLR       0x1364 ; clear the cursor next to one player       
+C135 F71370           (     downland.asm):00580                 STB       0x1370 ; draw the cursor pos for two player mode   
 C138 2006             (     downland.asm):00581                 BRA        Jump_UpdateAndDrawDrops                           ; Jump_SkipDrawOnePlayerCursor
                       (     downland.asm):00582         
 C13A                  (     downland.asm):00583         Jump_DrawOnePlayerCursor:                                           
-C13A F70554           (     downland.asm):00584                 STB        1364                                              ; draw the cursor pos for one player mode
-C13D 7F055A           (     downland.asm):00585                 CLR        1370                                              ; clear the cursor pos for two player mode
+C13A F71364           (     downland.asm):00584                 STB        0x1364 ; draw the cursor pos for one player mode  
+C13D 7F1370           (     downland.asm):00585                 CLR        0x1370 ; clear the cursor pos for two player mode 
                       (     downland.asm):00586         
 C140                  (     downland.asm):00587         Jump_UpdateAndDrawDrops:                                            
 C140 BDCF53           (     downland.asm):00588                 JSR        UpdateAndDrawDrops                                
@@ -664,7 +664,7 @@ C1BA A702             (     downland.asm):00663                 STA        0x2,X
 C1BC E684             (     downland.asm):00664                 LDB        ,X                                                
 C1BE C440             (     downland.asm):00665                 ANDB       #01000000b                                        
 C1C0 26F6             (     downland.asm):00666                 BNE        LAB_c1b8                                          
-C1C2 3501             (     downland.asm):00667                 PULS       CC                                                
+C1C2 3501             (     downland.asm):00667                 PULS        CC                                               
                       (     downland.asm):00668         
 C1C4                  (     downland.asm):00669         LAB_c1c4:                                                           
 C1C4 B601A2           (     downland.asm):00670                 LDA        Player_CurrentAnimationFrame_0x1a2                
@@ -728,7 +728,7 @@ C205 1CEF             (     downland.asm):00725                 ANDCC      #1110
 C207                  (     downland.asm):00728         LoopUntilInterruptChanges0x14:                                      
 C207 9614             (     downland.asm):00729                 LDA        <InterruptHasBeenHitCounter_0x14                  
 C209 27FC             (     downland.asm):00730                 BEQ        LoopUntilInterruptChanges0x14                     
-C20B 3501             (     downland.asm):00731                 PULS       CC PC                                             ; pop CC and PC, effectively return
+C20B 3581             (     downland.asm):00731                 PULS        CC,PC                                            ; pop CC and PC, effectively return
                       (     downland.asm):00732         ;**************************************************************
                       (     downland.asm):00733         ;*                          FUNCTION                          *
                       (     downland.asm):00734         ;**************************************************************
@@ -770,7 +770,7 @@ C221 39               (     downland.asm):00759                 RTS
                       (     downland.asm):00770         
 C222                  (     downland.asm):00771         CheckScoreStringAgainstHighScoreString:                             
 C222 8E00B3           (     downland.asm):00772                 LDX        #HighScoreString_0xb3                             
-C225 3440             (     downland.asm):00773                 PSHS        U X                                              
+C225 3450             (     downland.asm):00773                 PSHS        U,X                                              
                       (     downland.asm):00774         
 C227                  (     downland.asm):00775         Loop_SameCharacter:                                                 
 C227 A6C0             (     downland.asm):00776                 LDA        ,U+                                               ; load letter from source string, advance U
@@ -781,10 +781,10 @@ C22D 27F8             (     downland.asm):00780                 BEQ        Loop_
 C22F 2202             (     downland.asm):00781                 BHI        Jump_SourceCharacterIsHigher                      
                       (     downland.asm):00782         
 C231                  (     downland.asm):00783         Jump_HitEndOfString:                                                
-C231 3510             (     downland.asm):00784                 PULS        X U PC                                           
+C231 35D0             (     downland.asm):00784                 PULS        X,U,PC                                           
                       (     downland.asm):00785         
 C233                  (     downland.asm):00786         Jump_SourceCharacterIsHigher:                                       
-C233 3510             (     downland.asm):00787                 PULS        X U                                              
+C233 3550             (     downland.asm):00787                 PULS        X,U                                              
                       (     downland.asm):00788         
 C235                  (     downland.asm):00789         Loop_NextCharacterToCopy:                                           
 C235 A6C0             (     downland.asm):00790                 LDA        ,U+                                               ; load next character
@@ -2054,11 +2054,11 @@ C924 E626             (     downland.asm):02053                 LDB        0x6,Y
 C926 C403             (     downland.asm):02054                 ANDB       #0x3                                              
 C928 1F98             (     downland.asm):02055                 TFR        B,A                                               
 C92A E685             (     downland.asm):02056                 LDB        B,X                                               
-C92C 3404             (     downland.asm):02057                 PSHS        B A                                              
+C92C 3406             (     downland.asm):02057                 PSHS        B,A                                              
 C92E BDD852           (     downland.asm):02058                 JSR        LoadPosRelativeToYAndComputeScreenPos             ; undefined LoadPosRelativeToYAndComputeScreenPos(void)
 C931 ED28             (     downland.asm):02059                 STD        0x8,Y                                             
 C933 1F91             (     downland.asm):02060                 TFR        B,X                                               
-C935 3502             (     downland.asm):02061                 PULS        A B                                              
+C935 3506             (     downland.asm):02061                 PULS        A,B                                              
 C937 308901E0         (     downland.asm):02062                 LEAX       0x1e0,X                                           
 C93B 3A               (     downland.asm):02063                 ABX                                                          
 C93C 48               (     downland.asm):02064                 LSLA                                                         
@@ -2442,11 +2442,11 @@ CB50 E626             (     downland.asm):02441                 LDB        0x6,Y
 CB52 C403             (     downland.asm):02442                 ANDB       #0x3                                              
 CB54 1F98             (     downland.asm):02443                 TFR        B,A                                               
 CB56 E685             (     downland.asm):02444                 LDB        B,X                                               
-CB58 3404             (     downland.asm):02445                 PSHS        B A                                              
+CB58 3406             (     downland.asm):02445                 PSHS        B,A                                              
 CB5A BDD852           (     downland.asm):02446                 JSR        LoadPosRelativeToYAndComputeScreenPos             ; undefined LoadPosRelativeToYAndComputeScreenPos(void)
 CB5D ED28             (     downland.asm):02447                 STD        0x8,Y                                             
 CB5F 1F01             (     downland.asm):02448                 TFR        D,X                                               
-CB61 3502             (     downland.asm):02449                 PULS        A B                                              
+CB61 3506             (     downland.asm):02449                 PULS        A,B                                              
 CB63 308900A0         (     downland.asm):02450                 LEAX       0xa0,X                                            ; sensor 5 pixels underneath
 CB67 3A               (     downland.asm):02451                 ABX                                                          
 CB68 48               (     downland.asm):02452                 LSLA                                                         
@@ -2765,14 +2765,14 @@ CCD3                  (     downland.asm):02764         InitRoom_Maybe:
 CCD3 A605             (     downland.asm):02765                 LDA        0x5,X                                             ; get the room number from the door data
 CCD5 8121             (     downland.asm):02766                 CMPA       #0x21                                             ; touching the last door?
 CCD7 2612             (     downland.asm):02767                 BNE        Jump_NotTheLastDoor                               
-CCD9 3420             (     downland.asm):02768                 PSHS        Y X                                              
+CCD9 3430             (     downland.asm):02768                 PSHS        Y,X                                              
 CCDB 0C3A             (     downland.asm):02769                 INC        <GameCompletionCount_0x3a                         ; we've completed a run of the game
                       (     downland.asm):02770                                                                              ; increase the difficulty
 CCDD BDD14C           (     downland.asm):02771                 JSR        InitRoomKeysAndPickups                            ; reinit the rooms and keys for hard difficulty
 CCE0 BDCECF           (     downland.asm):02772                 JSR        InitKeyStateData                                  ; undefined InitKeyStateData(void)
 CCE3 CC2710           (     downland.asm):02773                 LDD        #0x2710                                           
 CCE6 BDDB0C           (     downland.asm):02774                 JSR        UpdateAndPrintPlayerScore                         ; undefined UpdateAndPrintPlayerScore(undefined A, undefined B, undefine
-CCE9 3510             (     downland.asm):02775                 PULS        X Y                                              
+CCE9 3530             (     downland.asm):02775                 PULS        X,Y                                              
                       (     downland.asm):02776         
 CCEB                  (     downland.asm):02777         Jump_NotTheLastDoor:                                                
 CCEB EC02             (     downland.asm):02778                 LDD        0x2,X                                             
@@ -2871,7 +2871,7 @@ CD80 39               (     downland.asm):02861                 .db        0x39
                       (     downland.asm):02871         ;undefined2        U:2            U
                       (     downland.asm):02872         
 CD81                  (     downland.asm):02873         DrawDoorOrMultipleDoors_Maybe:                                      
-CD81 3440             (     downland.asm):02874                 PSHS        U X                                              
+CD81 3450             (     downland.asm):02874                 PSHS        U,X                                              
 CD83 EC84             (     downland.asm):02875                 LDD        ,X                                                ; load the drawing address of the door
 CD85 81FF             (     downland.asm):02876                 CMPA       #0xff                                             ; check if the address is for the start up door? (0xffff)
 CD87 273E             (     downland.asm):02877                 BEQ        LOOP_AlreadyDone                                  
@@ -2921,7 +2921,7 @@ CDC2 8610             (     downland.asm):02920                 LDA        #16  
 CDC4 BDD89B           (     downland.asm):02921                 JSR        DrawingFunctionFor3ByteWideSprites                ; draw the sprite from the buffer in 0x83
                       (     downland.asm):02922         
 CDC7                  (     downland.asm):02923         LOOP_AlreadyDone:                                                   
-CDC7 3510             (     downland.asm):02924                 PULS        X U PC                                           
+CDC7 35D0             (     downland.asm):02924                 PULS        X,U,PC                                           
                       (     downland.asm):02925         ;**************************************************************
                       (     downland.asm):02926         ;* ShiftBitsInSpriteDrawingBuffer                             *
                       (     downland.asm):02927         ;* To maintain the CRT artifacts when drawing to the screen   *
@@ -4904,10 +4904,10 @@ D5AE 48               (     downland.asm):04903                 LSLA            
                       (     downland.asm):04904                                                                              ; offset from the DrawCommandFunctions array
                       (     downland.asm):04905         
 D5AF                  (     downland.asm):04906         Loop_CallDrawCommand:                                               
-D5AF 3440             (     downland.asm):04907                 PSHS        U X B A                                          ; push to the stack
+D5AF 3456             (     downland.asm):04907                 PSHS        U,X,B,A                                          ; push to the stack
 D5B1 AD96             (     downland.asm):04908                 JSR        [A,X]                                             ; call function from DrawCommandFunctions_d5bb table 
                       (     downland.asm):04909                                                                              ; A is the offset into the table
-D5B3 3502             (     downland.asm):04910                 PULS        A B X U                                          ; done calling the function
+D5B3 3556             (     downland.asm):04910                 PULS        A,B,X,U                                          ; done calling the function
 D5B5 5A               (     downland.asm):04911                 DECB                                                         
 D5B6 26F7             (     downland.asm):04912                 BNE        Loop_CallDrawCommand                              ; are we done?
 D5B8 20E7             (     downland.asm):04913                 BRA        LOOP_GetNextDrawCommand                           
@@ -5512,9 +5512,9 @@ D7D1 2712             (     downland.asm):05511                 BEQ        Jump_
 D7D3 D625             (     downland.asm):05512                 LDB        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25    
                       (     downland.asm):05513         
 D7D5                  (     downland.asm):05514         Loop_DrawHorizontalPixels:                                          
-D7D5 3440             (     downland.asm):05515                 PSHS        U X B A                                          
+D7D5 3456             (     downland.asm):05515                 PSHS        U,X,B,A                                          
 D7D7 8D4E             (     downland.asm):05516                 BSR        DrawPixelWithCrtArtifacts                         ; undefined DrawPixelWithCrtArtifacts(void)
-D7D9 3502             (     downland.asm):05517                 PULS        A B X U                                          
+D7D9 3556             (     downland.asm):05517                 PULS        A,B,X,U                                          
 D7DB 0A1D             (     downland.asm):05518                 DEC        <DrawSegmentLine_Counter_0x1d                     
 D7DD 2706             (     downland.asm):05519                 BEQ        Jump_DoneDrawingHorizontalPixels                  
 D7DF AD84             (     downland.asm):05520                 JSR        ,X                                                ; call the DrawSegment_MovePos function
@@ -5547,9 +5547,9 @@ D7EA 2712             (     downland.asm):05544                 BEQ        Jump_
 D7EC D625             (     downland.asm):05547                 LDB        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25    
                       (     downland.asm):05548         
 D7EE                  (     downland.asm):05549         Loop_DrawVerticalPixels:                                            
-D7EE 3440             (     downland.asm):05550                 PSHS        U X B A                                          
+D7EE 3456             (     downland.asm):05550                 PSHS        U,X,B,A                                          
 D7F0 8D35             (     downland.asm):05551                 BSR        DrawPixelWithCrtArtifacts                         ; undefined DrawPixelWithCrtArtifacts(void)
-D7F2 3502             (     downland.asm):05552                 PULS        A B X U                                          
+D7F2 3556             (     downland.asm):05552                 PULS        A,B,X,U                                          
 D7F4 0A1D             (     downland.asm):05553                 DEC        <DrawSegmentLine_Counter_0x1d                     
 D7F6 2706             (     downland.asm):05554                 BEQ        Jump_DoneDrawingVerticalPixels                    
 D7F8 AD84             (     downland.asm):05555                 JSR        ,X                                                ; call the DrawSegment_MovePos function
@@ -6743,14 +6743,14 @@ DBD9 FF               (     downland.asm):06736                 .db        0xFF 
                       (     downland.asm):06743         ;undefined1        Stack[-0xa]:1  StackValue2_0xa                         XREF[1]:     dbf9(*)
                       (     downland.asm):06744         
 DBDA                  (     downland.asm):06745         CopySpritesFromRomToRamHelper:                                      
-DBDA 3440             (     downland.asm):06746                 PSHS        U B A                                            ; D -> 0x0a10
+DBDA 3446             (     downland.asm):06746                 PSHS        U,B,A                                            ; D -> 0x0a10
                       (     downland.asm):06747                                                                              ; X -> 0xdcd7
                       (     downland.asm):06748                                                                              ; Y -> 0x3400
 DBDC 4F               (     downland.asm):06749                 CLRA                                                         
                       (     downland.asm):06750         
 DBDD                  (     downland.asm):06751         LAB_dbdd:                                                           
 DBDD EDE3             (     downland.asm):06752                 STD        ,--S                                              
-DBDF 3410             (     downland.asm):06753                 PSHS        X B A                                            
+DBDF 3416             (     downland.asm):06753                 PSHS        X,B,A                                            
                       (     downland.asm):06754         
 DBE1                  (     downland.asm):06755         LAB_dbe1:                                                           
 DBE1 6F22             (     downland.asm):06756                 CLR        0x2,Y                                             
@@ -6775,13 +6775,13 @@ DBF9 A6E4             (     downland.asm):06774                 LDA        ,S
 DBFB A764             (     downland.asm):06775                 STA        0x4,S                                             
 DBFD 6A65             (     downland.asm):06776                 DEC        0x5,S                                             
 DBFF 26E0             (     downland.asm):06777                 BNE        LAB_dbe1                                          
-DC01 3502             (     downland.asm):06778                 PULS        A B X U                                          
+DC01 3556             (     downland.asm):06778                 PULS        A,B,X,U                                          
 DC03 4C               (     downland.asm):06779                 INCA                                                         
 DC04 8104             (     downland.asm):06780                 CMPA       #0x4                                              
 DC06 26D5             (     downland.asm):06781                 BNE        LAB_dbdd                                          
 DC08 58               (     downland.asm):06782                 LSLB                                                         
 DC09 3A               (     downland.asm):06783                 ABX                                                          
-DC0A 3502             (     downland.asm):06784                 PULS        A B U PC                                         
+DC0A 35C6             (     downland.asm):06784                 PULS        A,B,U,PC                                         
                       (     downland.asm):06785         
 DC0C                  (     downland.asm):06786         Jump_PlayerOutOfLives:                                              
 DC0C 3510             (     downland.asm):06787                 PULS        X                                                
@@ -6790,7 +6790,7 @@ DC10 8402             (     downland.asm):06789                 ANDA       #0x2
 DC12 1027E455         (     downland.asm):06790                 LBEQ       LAB_c06b                                          
 DC16 0A50             (     downland.asm):06791                 DEC        <CurrentNumberOfPlayers_0x50                      ; one of the players lost all their lives
 DC18 1F29             (     downland.asm):06792                 TFR        Y,B                                               
-DC1A 3410             (     downland.asm):06793                 PSHS        X B A                                            
+DC1A 3416             (     downland.asm):06793                 PSHS        X,B,A                                            
 DC1C 7EC610           (     downland.asm):06794                 JMP        LAB_c610                                          
                       (     downland.asm):06795         ;**************************************************************
                       (     downland.asm):06796         ;*                          FUNCTION                          *
@@ -6799,7 +6799,7 @@ DC1C 7EC610           (     downland.asm):06794                 JMP        LAB_c
                       (     downland.asm):06799         ;undefined         A:1            <RETURN>
                       (     downland.asm):06800         
 DC1F                  (     downland.asm):06801         GenerateRandomNumberFrom0ToB:                                       
-DC1F 3410             (     downland.asm):06802                 PSHS        X A                                              
+DC1F 3412             (     downland.asm):06802                 PSHS        X,A                                              
 DC21 4F               (     downland.asm):06803                 CLRA                                                         
 DC22 DD64             (     downland.asm):06804                 STD        <SomeValue_RelatedToDrops_0x64                    
 DC24 43               (     downland.asm):06805                 COMA                                                         
@@ -6819,7 +6819,7 @@ DC2F 8D08             (     downland.asm):06818                 BSR        Incre
 DC31 D464             (     downland.asm):06819                 ANDB       <SomeValue_RelatedToDrops_0x64                    
 DC33 D165             (     downland.asm):06820                 CMPB       <SomeValue_AlsoRelatedToDrops_0x65                
 DC35 22F8             (     downland.asm):06821                 BHI        LAB_dc2f                                          
-DC37 3502             (     downland.asm):06822                 PULS        A X PC                                           
+DC37 3592             (     downland.asm):06822                 PULS        A,X,PC                                           
                       (     downland.asm):06823         ;**************************************************************
                       (     downland.asm):06824         ;*                          FUNCTION                          *
                       (     downland.asm):06825         ;**************************************************************
@@ -6835,12 +6835,12 @@ DC3B 9E61             (     downland.asm):06834                 LDX        <RomA
 DC3D 3001             (     downland.asm):06835                 LEAX       0x1,X                                             
 DC3F 8CDF5A           (     downland.asm):06836                 CMPX       #EndOfGameRom                                     ; count until this address
 DC42 2503             (     downland.asm):06837                 BCS        Jump_NotReachedLimit                              
-DC44 8E0000           (     downland.asm):06838                 LDX        #CartridgeRomStart                                
+DC44 8EC000           (     downland.asm):06838                 LDX        #CartridgeRomStart                                
                       (     downland.asm):06839         
 DC47                  (     downland.asm):06840         Jump_NotReachedLimit:                                               
 DC47 9F61             (     downland.asm):06841                 STX        <RomAddressCounter_0xc000to0xdf5a_0x61            
 DC49 E684             (     downland.asm):06842                 LDB        ,X                                                
-DC4B 3510             (     downland.asm):06843                 PULS        X PC                                             
+DC4B 3590             (     downland.asm):06843                 PULS        X,PC                                             
                       (     downland.asm):06844         ;**************************************************************
                       (     downland.asm):06845         ;*                          FUNCTION                          *
                       (     downland.asm):06846         ;**************************************************************
@@ -7586,7 +7586,7 @@ Symbol Table:
 [ G] BYTE_cead                        CEAD
 [ G] BYTE_ceeb                        CEEB
 [ G] BYTE_d909                        D909
-[ G] CartridgeRomStart                0000
+[ G] CartridgeRomStart                C000
 [ G] CharacterDrawingMask_0x69_Nice   0069
 [ G] CharacterFont                    D908
 [ G] CheckScoreStringAgainstHighScoreString C222

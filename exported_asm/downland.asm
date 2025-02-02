@@ -378,8 +378,8 @@ BirdSprite_ClonedInRam_0x3ee2 equ 0x3ee2
 ;* Game rom start and initial setup                           *
 ;**************************************************************
 
-CartridgeRomStart:                                                  
         org 0xc000
+CartridgeRomStart:                               
         NOP                                                          
         ORCC       #01010000b                                        
         LDS        #StackStart_0x019f                                ; setup stack at address 415 019f
@@ -576,13 +576,13 @@ Jump_NotHoldingRight:
                                                                      ; the number of players
         LSRA                                                         
         BEQ        Jump_DrawOnePlayerCursor                          ; in one player mode
-        CLR        1364                                              ; clear the cursor next to one player
-        STB        1370                                              ; draw the cursor pos for two player mode
+        CLR       0x1364 ; clear the cursor next to one player       
+        STB       0x1370 ; draw the cursor pos for two player mode   
         BRA        Jump_UpdateAndDrawDrops                           ; Jump_SkipDrawOnePlayerCursor
 
 Jump_DrawOnePlayerCursor:                                           
-        STB        1364                                              ; draw the cursor pos for one player mode
-        CLR        1370                                              ; clear the cursor pos for two player mode
+        STB        0x1364 ; draw the cursor pos for one player mode  
+        CLR        0x1370 ; clear the cursor pos for two player mode 
 
 Jump_UpdateAndDrawDrops:                                            
         JSR        UpdateAndDrawDrops                                
@@ -664,7 +664,7 @@ LAB_c1b8:
         LDB        ,X                                                
         ANDB       #01000000b                                        
         BNE        LAB_c1b8                                          
-        PULS       CC                                                
+        PULS        CC                                               
 
 LAB_c1c4:                                                           
         LDA        Player_CurrentAnimationFrame_0x1a2                
@@ -728,7 +728,7 @@ WaitForVSync_Maybe:
 LoopUntilInterruptChanges0x14:                                      
         LDA        <InterruptHasBeenHitCounter_0x14                  
         BEQ        LoopUntilInterruptChanges0x14                     
-        PULS       CC PC                                             ; pop CC and PC, effectively return
+        PULS        CC,PC                                            ; pop CC and PC, effectively return
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
@@ -770,7 +770,7 @@ Jump_ToRTS:
 
 CheckScoreStringAgainstHighScoreString:                             
         LDX        #HighScoreString_0xb3                             
-        PSHS        U X                                              
+        PSHS        U,X                                              
 
 Loop_SameCharacter:                                                 
         LDA        ,U+                                               ; load letter from source string, advance U
@@ -781,10 +781,10 @@ Loop_SameCharacter:
         BHI        Jump_SourceCharacterIsHigher                      
 
 Jump_HitEndOfString:                                                
-        PULS        X U PC                                           
+        PULS        X,U,PC                                           
 
 Jump_SourceCharacterIsHigher:                                       
-        PULS        X U                                              
+        PULS        X,U                                              
 
 Loop_NextCharacterToCopy:                                           
         LDA        ,U+                                               ; load next character
@@ -2054,11 +2054,11 @@ Jump_NoClimbingRope:
         ANDB       #0x3                                              
         TFR        B,A                                               
         LDB        B,X                                               
-        PSHS        B A                                              
+        PSHS        B,A                                              
         JSR        LoadPosRelativeToYAndComputeScreenPos             ; undefined LoadPosRelativeToYAndComputeScreenPos(void)
         STD        0x8,Y                                             
         TFR        B,X                                               
-        PULS        A B                                              
+        PULS        A,B                                              
         LEAX       0x1e0,X                                           
         ABX                                                          
         LSLA                                                         
@@ -2442,11 +2442,11 @@ Jump_UpdateBallPosition:
         ANDB       #0x3                                              
         TFR        B,A                                               
         LDB        B,X                                               
-        PSHS        B A                                              
+        PSHS        B,A                                              
         JSR        LoadPosRelativeToYAndComputeScreenPos             ; undefined LoadPosRelativeToYAndComputeScreenPos(void)
         STD        0x8,Y                                             
         TFR        D,X                                               
-        PULS        A B                                              
+        PULS        A,B                                              
         LEAX       0xa0,X                                            ; sensor 5 pixels underneath
         ABX                                                          
         LSLA                                                         
@@ -2765,14 +2765,14 @@ InitRoom_Maybe:
         LDA        0x5,X                                             ; get the room number from the door data
         CMPA       #0x21                                             ; touching the last door?
         BNE        Jump_NotTheLastDoor                               
-        PSHS        Y X                                              
+        PSHS        Y,X                                              
         INC        <GameCompletionCount_0x3a                         ; we've completed a run of the game
                                                                      ; increase the difficulty
         JSR        InitRoomKeysAndPickups                            ; reinit the rooms and keys for hard difficulty
         JSR        InitKeyStateData                                  ; undefined InitKeyStateData(void)
         LDD        #0x2710                                           
         JSR        UpdateAndPrintPlayerScore                         ; undefined UpdateAndPrintPlayerScore(undefined A, undefined B, undefine
-        PULS        X Y                                              
+        PULS        X,Y                                              
 
 Jump_NotTheLastDoor:                                                
         LDD        0x2,X                                             
@@ -2871,7 +2871,7 @@ LAB_cd7a:
 ;undefined2        U:2            U
 
 DrawDoorOrMultipleDoors_Maybe:                                      
-        PSHS        U X                                              
+        PSHS        U,X                                              
         LDD        ,X                                                ; load the drawing address of the door
         CMPA       #0xff                                             ; check if the address is for the start up door? (0xffff)
         BEQ        LOOP_AlreadyDone                                  
@@ -2921,7 +2921,7 @@ LOOP_DrawOneLineOfDoorToBufferAt0x83:
         JSR        DrawingFunctionFor3ByteWideSprites                ; draw the sprite from the buffer in 0x83
 
 LOOP_AlreadyDone:                                                   
-        PULS        X U PC                                           
+        PULS        X,U,PC                                           
 ;**************************************************************
 ;* ShiftBitsInSpriteDrawingBuffer                             *
 ;* To maintain the CRT artifacts when drawing to the screen   *
@@ -4904,10 +4904,10 @@ LAB_d5ae:
                                                                      ; offset from the DrawCommandFunctions array
 
 Loop_CallDrawCommand:                                               
-        PSHS        U X B A                                          ; push to the stack
+        PSHS        U,X,B,A                                          ; push to the stack
         JSR        [A,X]                                             ; call function from DrawCommandFunctions_d5bb table 
                                                                      ; A is the offset into the table
-        PULS        A B X U                                          ; done calling the function
+        PULS        A,B,X,U                                          ; done calling the function
         DECB                                                         
         BNE        Loop_CallDrawCommand                              ; are we done?
         BRA        LOOP_GetNextDrawCommand                           
@@ -5512,9 +5512,9 @@ DrawHorizontalSegment:
         LDB        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25    
 
 Loop_DrawHorizontalPixels:                                          
-        PSHS        U X B A                                          
+        PSHS        U,X,B,A                                          
         BSR        DrawPixelWithCrtArtifacts                         ; undefined DrawPixelWithCrtArtifacts(void)
-        PULS        A B X U                                          
+        PULS        A,B,X,U                                          
         DEC        <DrawSegmentLine_Counter_0x1d                     
         BEQ        Jump_DoneDrawingHorizontalPixels                  
         JSR        ,X                                                ; call the DrawSegment_MovePos function
@@ -5547,9 +5547,9 @@ DrawVerticalSegment:
         LDB        <DrawSegmentLine_SubPixelStartValue_Maybe_0x25    
 
 Loop_DrawVerticalPixels:                                            
-        PSHS        U X B A                                          
+        PSHS        U,X,B,A                                          
         BSR        DrawPixelWithCrtArtifacts                         ; undefined DrawPixelWithCrtArtifacts(void)
-        PULS        A B X U                                          
+        PULS        A,B,X,U                                          
         DEC        <DrawSegmentLine_Counter_0x1d                     
         BEQ        Jump_DoneDrawingVerticalPixels                    
         JSR        ,X                                                ; call the DrawSegment_MovePos function
@@ -6743,14 +6743,14 @@ NextSpriteToCopy_Size:
 ;undefined1        Stack[-0xa]:1  StackValue2_0xa                         XREF[1]:     dbf9(*)
 
 CopySpritesFromRomToRamHelper:                                      
-        PSHS        U B A                                            ; D -> 0x0a10
+        PSHS        U,B,A                                            ; D -> 0x0a10
                                                                      ; X -> 0xdcd7
                                                                      ; Y -> 0x3400
         CLRA                                                         
 
 LAB_dbdd:                                                           
         STD        ,--S                                              
-        PSHS        X B A                                            
+        PSHS        X,B,A                                            
 
 LAB_dbe1:                                                           
         CLR        0x2,Y                                             
@@ -6775,13 +6775,13 @@ LAB_dbf5:
         STA        0x4,S                                             
         DEC        0x5,S                                             
         BNE        LAB_dbe1                                          
-        PULS        A B X U                                          
+        PULS        A,B,X,U                                          
         INCA                                                         
         CMPA       #0x4                                              
         BNE        LAB_dbdd                                          
         LSLB                                                         
         ABX                                                          
-        PULS        A B U PC                                         
+        PULS        A,B,U,PC                                         
 
 Jump_PlayerOutOfLives:                                              
         PULS        X                                                
@@ -6790,7 +6790,7 @@ Jump_PlayerOutOfLives:
         LBEQ       LAB_c06b                                          
         DEC        <CurrentNumberOfPlayers_0x50                      ; one of the players lost all their lives
         TFR        Y,B                                               
-        PSHS        X B A                                            
+        PSHS        X,B,A                                            
         JMP        LAB_c610                                          
 ;**************************************************************
 ;*                          FUNCTION                          *
@@ -6799,7 +6799,7 @@ Jump_PlayerOutOfLives:
 ;undefined         A:1            <RETURN>
 
 GenerateRandomNumberFrom0ToB:                                       
-        PSHS        X A                                              
+        PSHS        X,A                                              
         CLRA                                                         
         STD        <SomeValue_RelatedToDrops_0x64                    
         COMA                                                         
@@ -6819,7 +6819,7 @@ LAB_dc2f:
         ANDB       <SomeValue_RelatedToDrops_0x64                    
         CMPB       <SomeValue_AlsoRelatedToDrops_0x65                
         BHI        LAB_dc2f                                          
-        PULS        A X PC                                           
+        PULS        A,X,PC                                           
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
@@ -6840,7 +6840,7 @@ IncrementRomAddressCounter:
 Jump_NotReachedLimit:                                               
         STX        <RomAddressCounter_0xc000to0xdf5a_0x61            
         LDB        ,X                                                
-        PULS        X PC                                             
+        PULS        X,PC                                             
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************

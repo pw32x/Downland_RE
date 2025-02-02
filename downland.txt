@@ -17366,12 +17366,12 @@
                                                                                                 ; the number of players
             c12f 44                 LSRA
             c130 27 08              BEQ        Jump_DrawOnePlayerCursor                         ; in one player mode
-            c132 7f 13 64           CLR        1364                                             ; clear the cursor next to one player
-            c135 f7 13 70           STB        1370                                             ; draw the cursor pos for two player mode
+            c132 7f 13 64           CLR        1364                                             ; REPLACE: CLR       0x1364 ; clear the cursor next to one player
+            c135 f7 13 70           STB        1370                                             ; REPLACE: STB       0x1370 ; draw the cursor pos for two player mode
             c138 20 06              BRA        Jump_UpdateAndDrawDrops                          ; Jump_SkipDrawOnePlayerCursor
                              Jump_DrawOnePlayerCursor                        XREF[1]:     c130(j)  
-            c13a f7 13 64           STB        1364                                             ; draw the cursor pos for one player mode
-            c13d 7f 13 70           CLR        1370                                             ; clear the cursor pos for two player mode
+            c13a f7 13 64           STB        1364                                             ; REPLACE: STB        0x1364 ; draw the cursor pos for one player mode
+            c13d 7f 13 70           CLR        1370                                             ; REPLACE: CLR        0x1370 ; clear the cursor pos for two player mode
                              Jump_UpdateAndDrawDrops                         XREF[1]:     c138(j)  
             c140 bd cf 53           JSR        UpdateAndDrawDrops                               ; = ??
                                                                                                 ; undefined UpdateAndDrawDrops(void)
