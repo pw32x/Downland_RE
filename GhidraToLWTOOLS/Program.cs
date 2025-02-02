@@ -294,6 +294,15 @@ class Program
                             m_code = m_code.Substring(0, arrowIndex);
                         }
 
+                        string replaceTag = "REPLACE: ";
+
+                        if (m_comment.Contains(replaceTag))
+                        {
+                            int startIndex = m_comment.IndexOf(replaceTag) + replaceTag.Length;
+                            m_code = m_comment.Substring(startIndex);
+                            m_comment = "";
+                        }
+
                         m_parsedLineType = ParsedLineType.Code;                    
                     }
                 }

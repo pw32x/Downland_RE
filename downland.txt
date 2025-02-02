@@ -563,10 +563,9 @@
                              TimerNumbers_34_0xce
             00ce                    db         ??
             00cf                    ??         ??
-                             TimerNumbers_1_0xd0                             XREF[2]:     InitRoom_Maybe:cd72(W), AddPickupPointsToScore:db9c(R)  
-            00d0                    ??         ??
-                             TimerNumbers_0_0xd1                             XREF[1]:     AddPickupPointsToScore:db9c(R)  
-            00d1                    ??         ??
+                             TimerNumbers_0_0xd1 (00d0+1)                    XREF[2,1]:   InitRoom_Maybe:cd72(W), AddPickupPointsToScore:db9c(R), 
+                             TimerNumbers_1_0xd0                                          AddPickupPointsToScore:db9c(R)  
+            00d0                    undefined2 ??
                              StringDataEnd_0xd2                              XREF[2]:     SetupStringEndCharactersForDynamicStrings:c21f(*), 
                                                                                           AddPickupPointsToScore:db93(*)  
             00d2                    ??         ??
@@ -1844,6 +1843,7 @@
             0452                    ??         ??
             0453                    ??         ??
             0454                    ??         ??
+                             DAT_0455                                        XREF[1]:     InitRoom_Maybe:cd62(*)  
             0455                    ??         ??
             0456                    ??         ??
             0457                    ??         ??
@@ -1890,6 +1890,7 @@
             0480                    ??         ??
             0481                    ??         ??
             0482                    ??         ??
+                             DAT_0483                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAndPhysics:c465(*)  
             0483                    ??         ??
                              DAT_0484                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAndPhysics:c465(*)  
             0484                    ??         ??
@@ -13705,7 +13706,9 @@
             327d                    ??         ??
             327e                    ??         ??
             327f                    ??         ??
+                             DAT_3280                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAndPhysics:c4a3(*)  
             3280                    ??         ??
+                             DAT_3281                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAndPhysics:c4a7(*)  
             3281                    ??         ??
             3282                    ??         ??
             3283                    ??         ??
@@ -16852,12 +16855,15 @@
             3ec2                    ??         ??
             3ec3                    ??         ??
             3ec4                    ??         ??
+                             DAT_3ec5                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAndPhysics:c2fd(*)  
             3ec5                    ??         ??
+                             DAT_3ec6                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAndPhysics:c305(*)  
             3ec6                    ??         ??
             3ec7                    ??         ??
             3ec8                    ??         ??
             3ec9                    ??         ??
             3eca                    ??         ??
+                             DAT_3ecb                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAndPhysics:c2fd(*)  
             3ecb                    ??         ??
             3ecc                    ??         ??
             3ecd                    ??         ??
@@ -17669,10 +17675,11 @@
                                                                                                 ; 
             c2fa bd cc a7           JSR        LoadRoomDoorDataAddrIntoX                        ; undefined LoadRoomDoorDataAddrIntoX(void)
                              Loop_Doors                                      XREF[1]:     c307(j)  
-            c2fd e1 05              CMPB       0x5,X                                            ; compare B with the room number of the door
+            c2fd e1 05              CMPB       0x5,X=>DAT_3ec5                                  ; compare B with the room number of the door
             c2ff 27 0a              BEQ        Jump_DoneDoorSearch                              ; if door index is the same as in B, we're done
-            c301 30 89 00 06        LEAX       0x6,X                                            ; jump to next door
-            c305 a6 84              LDA        ,X                                               ; get the first value of the door data block
+            c301 30 89 00 06        LEAX       0x6,X                                            ; REPLACE: LEAX       >0x6,X
+                                                                                                ; jump to next door
+            c305 a6 84              LDA        ,X=>DAT_3ec6                                     ; get the first value of the door data block
             c307 26 f4              BNE        Loop_Doors                                       ; if the value isn't the zero sentinel value, loop
             c309 20 10              BRA        Jump_SkipDoorActivation
                              Jump_DoneDoorSearch                             XREF[1]:     c2ff(j)  
@@ -17987,8 +17994,8 @@
             c4a1 ec c6              LDD        A,U=>PlayerFloorCollisionMask                    ; A will contain offset into the array for the 
                                                                                                 ; x position
                              detecting whether we're standing or not, maybe
-            c4a3 a4 89 18 00        ANDA       0x1800,X
-            c4a7 e4 89 18 01        ANDB       0x1801,X
+            c4a3 a4 89 18 00        ANDA       0x1800,X=>DAT_3280                               ; = ??
+            c4a7 e4 89 18 01        ANDB       0x1801,X=>DAT_3281                               ; = ??
             c4ab 10 93 1b           CMPD       <ZeroValue                                       ; check if A and B are empty. if they are
                                                                                                 ; then we need to fall.
             c4ae 27 0e              BEQ        Jump_HandleFall
@@ -19389,7 +19396,8 @@
             cd25 27 02              BEQ        Jump_SkipDrawingDoor                             ; skip if not
             cd27 8d 58              BSR        DrawDoorOrMultipleDoors_Maybe                    ; undefined DrawDoorOrMultipleDoors_Maybe(undefined A, undefined B, usho
                              Jump_SkipDrawingDoor                            XREF[1]:     cd25(j)  
-            cd29 30 88 06           LEAX       0x6,X                                            ; Skip to next door information
+            cd29 30 88 06           LEAX       0x6,X                                            ; REPLACE: .db 0x30,0x88,0x06 ; LEAX [0x6],X in 3 bytes 
+                                                                                                ; Skip to next door information
             cd2c a6 84              LDA        ,X=>DAT_1c06                                     ; get the first byte
             cd2e 26 ef              BNE        Loop_DrawNextDoor                                ; loop if it's not 0, the sentinel value
             cd30 8e 04 00           LDX        #0x400
@@ -19417,7 +19425,7 @@
             cd5d dc 1b              LDD        <ZeroValue                                       ; = ??
                              LAB_cd5f                                        XREF[1]:     cd5c  
             cd5f bd db 0c           JSR        UpdateAndPrintPlayerScore                        ; undefined UpdateAndPrintPlayerScore(undefined A, undefined B, undefine
-            cd62 8e 04 55           LDX        #0x455
+            cd62 8e 04 55           LDX        #DAT_0455                                        ; = ??
             cd65 ce db 04           LDU        #String_Chamber                                  ; = 12
             cd68 bd d8 e2           JSR        PrintString                                      ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
             cd6b ce 00 d0           LDU        #0xd0
@@ -19428,7 +19436,9 @@
             cd77 7e cf 0f           JMP        GetRoomDataForCurrentRoom
                              -- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
                              LAB_cd7a                                        XREF[2]:     ccbe(j), ccc4(j)  
-            cd7a 30 88 06           LEAX       0x6,X
+            cd7a 30                 ??         30h    0
+            cd7b 88                 ??         88h
+            cd7c 06                 ??         06h
             cd7d 7e cc b6           JMP        LAB_ccb6
             cd80 39                 ??         39h    9
                              **************************************************************
@@ -19902,11 +19912,11 @@
             cf7f 26 41              BNE        Jump_DropTouchedTerrain
                              Jump_UpdateDropPosition                         XREF[1]:     cfc0(j)  
             cf81 ec 23              LDD        0x3,Y=>Drop1_Y_0x1ff                             ; = ??
-            cf83 e3 21              ADDD       offset Drop1_SpeedY_0x1fd,Y                      ; = ??
+            cf83 e3 21              ADDD       offset Drop1_SpeedY_0x1fd,Y                      ; REPLACE: .db 0xe3,0x21 ; ADDD offset, Drop1_SpeedY_0x1fd,y
             cf85 ed 23              STD        0x3,Y=>Drop1_Y_0x1ff                             ; = ??
             cf87 cc 02 00           LDD        #0x200                                           ; falling drop speed to this, even if 
                                                                                                 ; we were wiggling. 
-            cf8a ed 21              STD        offset Drop1_SpeedY_0x1fd,Y                      ; = ??
+            cf8a ed 21              STD        offset Drop1_SpeedY_0x1fd,Y                      ; REPLACE: .db 0xed,0x21 ; STD offset, Drop1_SpeedY_0x1fd,y
                              erase drop from screen
             cf8c a6 23              LDA        0x3,Y=>Drop1_Y_0x1ff                             ; = ??
             cf8e e6 25              LDB        0x5,Y=>Drop1_X_0x201                             ; = ??
@@ -19936,7 +19946,7 @@
                              Jump_WiggleUpwards                              XREF[1]:     cfb4(j)  
             cfbb cc ff 80           LDD        #0xff80                                          ; drop speed?
                              Jump_StoreDropSpeedY                            XREF[1]:     cfb9(j)  
-            cfbe ed 21              STD        offset Drop1_SpeedY_0x1fd,Y                      ; = ??
+            cfbe ed 21              STD        offset Drop1_SpeedY_0x1fd,Y                      ; REPLACE: .db 0xed,0x21 ; STD offset, Drop1_SpeedY_0x1fd,y
             cfc0 20 bf              BRA        Jump_UpdateDropPosition
                              Jump_DropTouchedTerrain                         XREF[2]:     cf75(j), cf7f(j)  
             cfc2 8d 71              BSR        EraseDropSpriteFromScreen                        ; byte EraseDropSpriteFromScreen(void)

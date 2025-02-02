@@ -131,8 +131,9 @@ GameTimerString_0xcb equ 0x00cb
 DAT_00cc equ 0x00cc                                                  
 DAT_0xcd equ 0x00cd                                                  
 TimerNumbers_34_0xce equ 0x00ce                                      
+
+;TimerNumbers_0_0xd1 (00d0+1)                    XREF[2,1]:   InitRoom_Maybe:cd72(W), AddPickupPointsToScore:db9c(R),
 TimerNumbers_1_0xd0 equ 0x00d0                                       
-TimerNumbers_0_0xd1 equ 0x00d1                                       
 StringDataEnd_0xd2 equ 0x00d2                                        
 InterruptJumpInstruction_0x10c equ 0x010c                            
 InterruptHandlerAddress_0x10d equ 0x010d                             
@@ -318,6 +319,8 @@ Room1VisitedPlayerFlags_0x36c equ 0x036c
 VideoMemory_Page0_0x0400 equ 0x0400                                  
 DAT_0402 equ 0x0402                                                  
 DAT_0420 equ 0x0420                                                  
+DAT_0455 equ 0x0455                                                  
+DAT_0483 equ 0x0483                                                  
 DAT_0484 equ 0x0484                                                  
 DAT_0485 equ 0x0485                                                  
 DAT_048c equ 0x048c                                                  
@@ -347,6 +350,8 @@ DAT_1c06 equ 0x1c06
 DAT_1c0b equ 0x1c0b                                                  
 SUB_1d86 equ 0x1d86                                                  
 DAT_2000 equ 0x2000                                                  
+DAT_3280 equ 0x3280                                                  
+DAT_3281 equ 0x3281                                                  
 SpriteData_ClonedDestination_0x3400 equ 0x3400                       ; This is where sprites are copied over four times, offset one bit per c
                                                                      ; To make it easier to draw sprites when moving along bits.
 PlayerSprite_Left_Stand_InRam_0x3880 equ 0x3880                      
@@ -361,6 +366,9 @@ PlayerOne_PerRoomTimers_0x3e98 equ 0x3e98                            ; level tim
 PlayerTwo_PerRoomTimers_0x3eac equ 0x3eac                            ; level timers start at 0x1000 (4096)
 Player_DoorStateData_0x3ec0 equ 0x3ec0                               
 DAT_3ec1 equ 0x3ec1                                                  
+DAT_3ec5 equ 0x3ec5                                                  
+DAT_3ec6 equ 0x3ec6                                                  
+DAT_3ecb equ 0x3ecb                                                  
 BirdSprite_ClonedInRam_0x3ee2 equ 0x3ee2                             
 ;
 ; ROM
@@ -911,7 +919,8 @@ Jump_CollidesWithPickup:
 Loop_Doors:                                                         
         CMPB       0x5,X                                             ; compare B with the room number of the door
         BEQ        Jump_DoneDoorSearch                               ; if door index is the same as in B, we're done
-        LEAX       0x6,X                                             ; jump to next door
+        LEAX       >0x6,X                                            
+                                                                     ; jump to next door
         LDA        ,X                                                ; get the first value of the door data block
         BNE        Loop_Doors                                        ; if the value isn't the zero sentinel value, loop
         BRA        Jump_SkipDoorActivation                           
@@ -2801,7 +2810,8 @@ Loop_DrawNextDoor:
         BSR        DrawDoorOrMultipleDoors_Maybe                     ; undefined DrawDoorOrMultipleDoors_Maybe(undefined A, undefined B, usho
 
 Jump_SkipDrawingDoor:                                               
-        LEAX       0x6,X                                             ; Skip to next door information
+        .db 0x30,0x88,0x06 ; LEAX [0x6],X in 3 bytes                 
+                                                                     ; Skip to next door information
         LDA        ,X                                                ; get the first byte
         BNE        Loop_DrawNextDoor                                 ; loop if it's not 0, the sentinel value
         LDX        #0x400                                            
@@ -2831,7 +2841,7 @@ Jump_AlreadyVisitedThisRoom:
 
 LAB_cd5f:                                                           
         JSR        UpdateAndPrintPlayerScore                         ; undefined UpdateAndPrintPlayerScore(undefined A, undefined B, undefine
-        LDX        #0x455                                            
+        LDX        #DAT_0455                                         
         LDU        #String_Chamber                                   
         JSR        PrintString                                       ; undefined PrintString(undefined A, undefined B, byte * X, undefined2 Y
         LDU        #0xd0                                             
@@ -2844,7 +2854,9 @@ LAB_cd5f:
 ;-- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
 
 LAB_cd7a:                                                           
-        LEAX       0x6,X                                             
+        .db        0x30                                              
+        .db        0x88                                              
+        .db        0x06                                              
         JMP        LAB_ccb6                                          
         .db        0x39                                              
 ;**************************************************************
@@ -3360,11 +3372,11 @@ Jump_ProcessDrop:
 
 Jump_UpdateDropPosition:                                            
         LDD        0x3,Y                                             
-        ADDD       Drop1_SpeedY_0x1fd,Y                              
+        .db 0xe3,0x21 ; ADDD offset, Drop1_SpeedY_0x1fd,y            
         STD        0x3,Y                                             
         LDD        #0x200                                            ; falling drop speed to this, even if 
                                                                      ; we were wiggling. 
-        STD        Drop1_SpeedY_0x1fd,Y                              
+        .db 0xed,0x21 ; STD offset, Drop1_SpeedY_0x1fd,y             
 
 ;erase drop from screen
         LDA        0x3,Y                                             
@@ -3401,7 +3413,7 @@ Jump_WiggleUpwards:
         LDD        #0xff80                                           ; drop speed?
 
 Jump_StoreDropSpeedY:                                               
-        STD        Drop1_SpeedY_0x1fd,Y                              
+        .db 0xed,0x21 ; STD offset, Drop1_SpeedY_0x1fd,y             
         BRA        Jump_UpdateDropPosition                           
 
 Jump_DropTouchedTerrain:                                            
