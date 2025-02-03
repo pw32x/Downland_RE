@@ -451,7 +451,7 @@ class Program
         sb.AppendLine("; Tool written by pw_32x");
         sb.AppendLine("; https://github.com/pw32x/Downland_RE");
         sb.AppendLine(";");
-        sb.AppendLine("; Downland by Michael Aichlmayr");
+        sb.AppendLine("; Downland V1.1 by Michael Aichlmayr");
         sb.AppendLine("; For the Tandy Color Computer");
         sb.AppendLine("; Released in 1983 by Spectral Associates");
         sb.AppendLine(";");

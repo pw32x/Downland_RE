@@ -2,7 +2,7 @@
 ; Tool written by pw_32x
 ; https://github.com/pw32x/Downland_RE
 ;
-; Downland by Michael Aichlmayr
+; Downland V1.1 by Michael Aichlmayr
 ; For the Tandy Color Computer
 ; Released in 1983 by Spectral Associates
 ;
