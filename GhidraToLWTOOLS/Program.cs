@@ -455,6 +455,7 @@ class Program
         sb.AppendLine("; For the Tandy Color Computer");
         sb.AppendLine("; Originally released in 1983 by Spectral Associates");
         sb.AppendLine("; V1.1 is a later release to support the Coco 3");
+        sb.AppendLine("; https://www.cocopedia.com/wiki/index.php/Downland");
         sb.AppendLine(";");
         sb.AppendLine("; Get LWTOOLS here: http://www.lwtools.ca/");
         sb.AppendLine("; How to build this: lwasm.exe downland.asm --6809 --output=downland.bin --format=raw");

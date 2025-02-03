@@ -6,6 +6,7 @@
 ; For the Tandy Color Computer
 ; Originally released in 1983 by Spectral Associates
 ; V1.1 is a later release to support the Coco 3
+; https://www.cocopedia.com/wiki/index.php/Downland
 ;
 ; Get LWTOOLS here: http://www.lwtools.ca/
 ; How to build this: lwasm.exe downland.asm --6809 --output=downland.bin --format=raw

@@ -7,6 +7,8 @@ Downland is a game for the Tandy Color Computer written by Micheal Aichlmayr. It
 
 This project is to reverse engineer the Downland game rom and produce an assembly file that is buildable by LWTOOLS (http://www.lwtools.ca/) that will create a byte-for-byte reproduction.
 
+Information about Downland can be found here: https://www.cocopedia.com/wiki/index.php/Downland
+
 The work is based on Downland V1.1, released later to support the Tandy Color Computer 3.
 
 The reverse engineering is not complete. There are a lot of small areas and functions that need to be figured out, but a lot of the major parts are there. And what is there is very likely not 100% accurate and some parts are probably completely wrong. Fair warning! :)
