@@ -7,173 +7,142 @@
 
 
 ; Hardware constants
-PIA0_A_DATA_REG__FF00 equ 0xff00
-PIA0_A_CONTROL_REG__FF01 equ 0xff01
-PIA0_B_DATA_REG__FF02 equ 0xff02
-PIA0_B_CTRL_REG__FF03 equ 0xff03
-VMODE_REG__FF98 equ 0xff98
-PIA1_A_DATA_REG__FF20 equ 0xff20
-PIA1_B_DATA_REG__FF22 equ 0xff22
-PIA1_B_CONTROL_REG__FF23 equ 0xff23
-PALETTE_FFB4 equ 0xffb4
-PALETTE_FFB6 equ 0xffb6
-SAM_V0_FFC0 equ 0xffc0
-SAM_V1_FFC3 equ 0xffc3
-SAM_V2_FFC5 equ 0xffc5
-SAM_PAGE_SELECT_REG_SAM_F0_FFC6 equ 0xffc6
-RomRam_MapType_FFDE equ 0xffde
+PIA0_A_DATA_REG__FF00            equ 0xff00
+PIA0_A_CONTROL_REG__FF01         equ 0xff01
+PIA0_B_DATA_REG__FF02            equ 0xff02
+PIA0_B_CTRL_REG__FF03            equ 0xff03
+VMODE_REG__FF98                  equ 0xff98
+PIA1_A_DATA_REG__FF20            equ 0xff20
+PIA1_B_DATA_REG__FF22            equ 0xff22
+PIA1_B_CONTROL_REG__FF23         equ 0xff23
+PALETTE_FFB4                     equ 0xffb4
+PALETTE_FFB6                     equ 0xffb6
+SAM_V0_FFC0                      equ 0xffc0
+SAM_V1_FFC3                      equ 0xffc3
+SAM_V2_FFC5                      equ 0xffc5
+SAM_PAGE_SELECT_REG_SAM_F0_FFC6  equ 0xffc6
+RomRam_MapType_FFDE              equ 0xffde
 
 
 ;
 ; Coco Ram
 ; RAM:0000-RAM:3fff
 ;
-SomeTickTockValue_0x10 equ 0x0010                                         
-SomeCounter_0x11 equ 0x0011                                               
-Joystick_LeftRight_Value_0x12 equ 0x0012                                  
-Joystick_UpDown_Value_0x13 equ 0x0013                                     
-InterruptHasBeenHitCounter_0x14 equ 0x0014                                
-Player_JoystickDirection_0x15 equ 0x0015                                  ; possible values:
+SomeTickTockValue_0x10                                      equ 0x0010    
+SomeCounter_0x11                                            equ 0x0011    
+InterruptHasBeenHitCounter_0x14                             equ 0x0014    
+Player_JoystickDirection_0x15                               equ 0x0015    ; possible values:
                                                                           ; left: 4
                                                                           ; right: 2
                                                                           ; up: 1
                                                                           ; down: 3
                                                                           ; 
-ZeroValue equ 0x001b                                                      
-DrawSegmentLine_Counter_0x1d equ 0x001d                                   
-DrawSegment_SecondaryAxisSubpixelInc_0x1e equ 0x001e                      
-DrawSegmentLine_SubPixelOffset_0x1f equ 0x001f                            
-CrtArtifactDrawingMaskIndex_0x20 equ 0x0020                               
-DrawSegment_CurrentScreenYXPosition_0x21 equ 0x0021                       
-DrawSegment_CurrentScreenY_0x21 equ 0x0021                                
-DrawSegment_CurrentScreenX_0x22 equ 0x0022                                
-PlayerY_AsSingleByte_0x23 equ 0x0023                                      
-CurrentSegmentCounter_0x24 equ 0x0024                                     
-DrawSegmentLine_SubPixelStartValue_Maybe_0x25 equ 0x0025                  
-UtilityCounter_0x26 equ 0x0026                                            
-Player_JumpUpInTheAirCounter_0x2c equ 0x002c                              ; counts down only when going upwards
+ZeroValue                                                   equ 0x001b    
+DrawSegmentLine_Counter_0x1d                                equ 0x001d    
+DrawSegment_SecondaryAxisSubpixelInc_0x1e                   equ 0x001e    
+DrawSegmentLine_SubPixelOffset_0x1f                         equ 0x001f    
+CrtArtifactDrawingMaskIndex_0x20                            equ 0x0020    
+DrawSegment_CurrentScreenYXPosition_0x21                    equ 0x0021    
+DrawSegment_CurrentScreenY_0x21                             equ 0x0021    
+DrawSegment_CurrentScreenX_0x22                             equ 0x0022    
+PlayerY_AsSingleByte_0x23                                   equ 0x0023    
+CurrentSegmentCounter_0x24                                  equ 0x0024    
+DrawSegmentLine_SubPixelStartValue_Maybe_0x25               equ 0x0025    
+UtilityCounter_0x26                                         equ 0x0026    
+Player_JumpUpInTheAirCounter_0x2c                           equ 0x002c    ; counts down only when going upwards
                                                                           ; looks like the value that controls how
                                                                           ; far up the jump goes. Can change to make
                                                                           ; jump higher or lower
-Player_IsFalling_0x2d equ 0x002d                                          ; 0: is touching ground
+Player_IsFalling_0x2d                                       equ 0x002d    ; 0: is touching ground
                                                                           ; ff: is not touching ground
-Player_SafeLandingFromFalling_0x2e equ 0x002e                             ; 0: will die when landing
+Player_SafeLandingFromFalling_0x2e                          equ 0x002e    ; 0: will die when landing
                                                                           ; ff: will not die when landing
-Player_CantJumpAfterLandingCounter_Maybe_0x2f equ 0x002f                  
-Player_DeathPauseInTheAirTimer equ 0x0030                                 
-Player_IsJumping_0x31 equ 0x0031                                          
-Ball_FallStateCounter_0x32 equ 0x0032                                     
-SomeValue_0x34 equ 0x0034                                                 
-SomeValue_0x35 equ 0x0035                                                 
-Player_MoveLeftRightHoldingRopeCounter_0x36 equ 0x0036                    
-Player_CurrentSpriteFrame_Maybe_0x37 equ 0x0037                           
-CurrentRoomNumber_0x39 equ 0x0039                                         
-GameCompletionCount_0x3a equ 0x003a                                       
-RoomGraphicsAndDoorDataAddress_0x3b equ 0x003b                            
-PerRoomPickupDataAddress_0x3d equ 0x003d                                  
-NumberOfDropsToProcess_0x3f equ 0x003f                                    
-Drop_TickTockBetweenFFto0andBack_0x40 equ 0x0040                          
-Object_CollisionY_0x41 equ 0x0041                                         
-Object_CollisionX_0x42 equ 0x0042                                         
-Object_CollisionHeight_0x43 equ 0x0043                                    
-Object_CollisionWidth_0x44 equ 0x0044                                     
-Player_SpriteFrameAddress_Temp_0x45 equ 0x0045                            
-Player_NeedsUpdate_Maybe_0x48 equ 0x0048                                  
-Ball_IsActive_0x49 equ 0x0049                                             
-Player_RegenerationTimer_0x4b equ 0x004b                                  
-SecondUtilityCounter_0x4d equ 0x004d                                      
-CurrentVideoMemLocation_0x4e equ 0x004e                                   
-CurrentNumberOfPlayers_0x50 equ 0x0050                                    
-SelectedNumberOfPlayers_0x51 equ 0x0051                                   
-CurrentPlayer_0x52 equ 0x0052                                             
-CurrentInGamePlayerStringPointer equ 0x0053                               
-PlayerOne_Lives equ 0x0055                                                
-PlayerTwo_Lives equ 0x0056                                                
-Player1_SomeDataAddress_Always0Maybe equ 0x0057                           
-DAT_0059 equ 0x0059                                                       
-DAT_005b equ 0x005b                                                       
-Player2_SomeDataAddress_Always0Maybe equ 0x005c                           
-StoredPlayerPosition_0x5e equ 0x005e                                      
-TempRoomNumberHolder_0x60 equ 0x0060                                      
-RomAddressCounter_0xc000to0xdf5a_0x61 equ 0x0061                          
-InterruptHitCount equ 0x0063                                              ; not really used, but incremented in the vsync interrupt
-SomeValue_RelatedToDrops_0x64 equ 0x0064                                  
-SomeValue_AlsoRelatedToDrops_0x65 equ 0x0065                              
-CharacterDrawingMask_0x69_Nice equ 0x0069                                 ; ensures that characters are 
+Player_CantJumpAfterLandingCounter_Maybe_0x2f               equ 0x002f    
+Player_DeathPauseInTheAirTimer                              equ 0x0030    
+Player_IsJumping_0x31                                       equ 0x0031    
+Ball_FallStateCounter_0x32                                  equ 0x0032    
+SomeValue_0x34                                              equ 0x0034    
+SomeValue_0x35                                              equ 0x0035    
+Player_MoveLeftRightHoldingRopeCounter_0x36                 equ 0x0036    
+Player_CurrentSpriteFrame_Maybe_0x37                        equ 0x0037    
+CurrentRoomNumber_0x39                                      equ 0x0039    
+GameCompletionCount_0x3a                                    equ 0x003a    
+RoomGraphicsAndDoorDataAddress_0x3b                         equ 0x003b    
+PerRoomPickupDataAddress_0x3d                               equ 0x003d    
+NumberOfDropsToProcess_0x3f                                 equ 0x003f    
+Drop_TickTockBetweenFFto0andBack_0x40                       equ 0x0040    
+Object_CollisionY_0x41                                      equ 0x0041    
+Object_CollisionX_0x42                                      equ 0x0042    
+Object_CollisionHeight_0x43                                 equ 0x0043    
+Object_CollisionWidth_0x44                                  equ 0x0044    
+Player_SpriteFrameAddress_Temp_0x45                         equ 0x0045    
+Player_NeedsUpdate_Maybe_0x48                               equ 0x0048    
+Ball_IsActive_0x49                                          equ 0x0049    
+Player_RegenerationTimer_0x4b                               equ 0x004b    
+SecondUtilityCounter_0x4d                                   equ 0x004d    
+CurrentVideoMemLocation_0x4e                                equ 0x004e    
+CurrentNumberOfPlayers_0x50                                 equ 0x0050    
+SelectedNumberOfPlayers_0x51                                equ 0x0051    
+CurrentPlayer_0x52                                          equ 0x0052    
+CurrentInGamePlayerStringPointer                            equ 0x0053    
+PlayerOne_Lives                                             equ 0x0055    
+PlayerTwo_Lives                                             equ 0x0056    
+Player1_SomeDataAddress_Always0Maybe                        equ 0x0057    
+Player2_SomeDataAddress_Always0Maybe                        equ 0x005c    
+StoredPlayerPosition_0x5e                                   equ 0x005e    
+TempRoomNumberHolder_0x60                                   equ 0x0060    
+RomAddressCounter_0xc000to0xdf5a_0x61                       equ 0x0061    
+InterruptHitCount                                           equ 0x0063    ; not really used, but incremented in the vsync interrupt
+SomeValue_RelatedToDrops_0x64                               equ 0x0064    
+SomeValue_AlsoRelatedToDrops_0x65                           equ 0x0065    
+CharacterDrawingMask_0x69_Nice                              equ 0x0069    ; ensures that characters are 
                                                                           ; drawn taking into account
                                                                           ; CRT artifact effects
-SAM_SETUP_BITS_MAYBE_0x6a equ 0x006a                                      
-GameTimerSecondDigit_0x6b equ 0x006b                                      
-DividerForNumberToStringConversion_0x6c equ 0x006c                        
-GameTimerLastDigit_0x6e equ 0x006e                                        
-SomeStringConversionValue_0x6f equ 0x006f                                 
-UnusedMask_Maybe_0x71 equ 0x0071                                          
-RomStartAddress_0xc000 equ 0x0072                                         
-Player_CollisionMaskBuffer_0x74 equ 0x0074                                
-DAT_0075 equ 0x0075                                                       
-DAT_0076 equ 0x0076                                                       
-DAT_0077 equ 0x0077                                                       
-DAT_0078 equ 0x0078                                                       
-DAT_0079 equ 0x0079                                                       
-SpriteDrawingBuffer_0x83 equ 0x0083                                       ; This is a 48 byte buffer for the player splat sprite
+SAM_SETUP_BITS_MAYBE_0x6a                                   equ 0x006a    
+GameTimerSecondDigit_0x6b                                   equ 0x006b    
+DividerForNumberToStringConversion_0x6c                     equ 0x006c    
+GameTimerLastDigit_0x6e                                     equ 0x006e    
+SomeStringConversionValue_0x6f                              equ 0x006f    
+UnusedMask_Maybe_0x71                                       equ 0x0071    
+RomStartAddress_0xc000                                      equ 0x0072    
+Player_CollisionMaskBuffer_0x74                             equ 0x0074    
+SpriteDrawingBuffer_0x83                                    equ 0x0083    ; This is a 48 byte buffer for the player splat sprite
                                                                           ; and doors. 
                                                                           ; The splat sprite is 3 bytes for 9 lines, but this space
                                                                           ; is 3 bytes for 16 lines.
                                                                           ; The door is 2 bytes for 16 lines.
-DAT_0084 equ 0x0084                                                       
-DAT_0085 equ 0x0085                                                       
-DAT_0086 equ 0x0086                                                       
-DAT_0087 equ 0x0087                                                       
-DAT_0088 equ 0x0088                                                       
-PlayerSplatSpriteInRam_0x98 equ 0x0098                                    
-DAT_0099 equ 0x0099                                                       
-SpriteDrawingBufferEnd_0xb3 equ 0x00b3                                    
-HighScoreString_0xb3 equ 0x00b3                                           
-HighScoreStringEnd_0xba equ 0x00ba                                        
-PlayerOneScoreString_0xbb equ 0x00bb                                      
-DAT_00bc equ 0x00bc                                                       
-PlayerOneScoreStringEnd_0xc2 equ 0x00c2                                   
-PlayerTwoScoreString_0xc3 equ 0x00c3                                      
-PlayerTwoScoreStringEnd_0xca equ 0x00ca                                   
-GameTimerString_0xcb equ 0x00cb                                           
-DAT_00cc equ 0x00cc                                                       
-DAT_0xcd equ 0x00cd                                                       
-TimerNumbers_34_0xce equ 0x00ce                                           
-TimerNumbers_1_0xd0 equ 0x00d0                                            
-TimerNumbers_0_0xd1 equ 0x00d1                                            
-StringDataEnd_0xd2 equ 0x00d2                                             
-InterruptJumpInstruction_0x10c equ 0x010c                                 
-InterruptHandlerAddress_0x10d equ 0x010d                                  
-DAT_0168 equ 0x0168                                                       
-DAT_0169 equ 0x0169                                                       
-DAT_016a equ 0x016a                                                       
-DAT_016b equ 0x016b                                                       
-DAT_016c equ 0x016c                                                       
-DAT_016d equ 0x016d                                                       
-DAT_019b equ 0x019b                                                       
-DAT_019d equ 0x019d                                                       
-DAT_019e equ 0x019e                                                       
-StackStart_0x019f equ 0x019f                                              
-Player_IsClimbingRope_0x19f equ 0x019f                                    ; 0: Not climbing
+PlayerSplatSpriteInRam_0x98                                 equ 0x0098    
+HighScoreString_0xb3                                        equ 0x00b3    
+HighScoreStringEnd_0xba                                     equ 0x00ba    
+PlayerOneScoreString_0xbb                                   equ 0x00bb    
+PlayerOneScoreStringEnd_0xc2                                equ 0x00c2    
+PlayerTwoScoreString_0xc3                                   equ 0x00c3    
+PlayerTwoScoreStringEnd_0xca                                equ 0x00ca    
+GameTimerString_0xcb                                        equ 0x00cb    
+DAT_0xcd                                                    equ 0x00cd    
+StringDataEnd_0xd2                                          equ 0x00d2    
+InterruptJumpInstruction_0x10c                              equ 0x010c    
+InterruptHandlerAddress_0x10d                               equ 0x010d    
+StackStart_0x019f                                           equ 0x019f    
+Player_IsClimbingRope_0x19f                                 equ 0x019f    ; 0: Not climbing
                                                                           ; 1: is climbing but hanging to the side
                                                                           ; FF: is climbing
-ConstantZeroToFFCounter equ 0x01a0                                        ; used for various things, including animation timing for running, maybe
-Player_CurrentAnimationFrame_0x1a2 equ 0x01a2                             
-Player_GameStateCounter_0x1a5 equ 0x01a5                                  ; 0: entering room
+ConstantZeroToFFCounter                                     equ 0x01a0    ; used for various things, including animation timing for running, maybe
+Player_CurrentAnimationFrame_0x1a2                          equ 0x01a2    
+Player_GameStateCounter_0x1a5                               equ 0x01a5    ; 0: entering room
                                                                           ; 1: playing in room
                                                                           ; then increments every time the player dies.
                                                                           ; resets when changing rooms
-Player_FacingDirection_0x1a6 equ 0x01a6                                   ; facing left: 0
+Player_FacingDirection_0x1a6                                equ 0x01a6    ; facing left: 0
                                                                           ; facing right: ff
-Player_CantMoveCounter_Maybe_0x1a7 equ 0x01a7                             ; used for pausing between deaths and regen
-Player_State_AliveDeadRegenState_0x1a8 equ 0x01a8                         ; State:
+Player_CantMoveCounter_Maybe_0x1a7                          equ 0x01a7    ; used for pausing between deaths and regen
+Player_State_AliveDeadRegenState_0x1a8                      equ 0x01a8    ; State:
                                                                           ; 0: alive
                                                                           ; 1: dead
                                                                           ; 2: dead and falling, or dead and checking the ground
                                                                           ; FF: regenerating
-Player_NumRowsInSprite_0x1a9 equ 0x01a9                                   
-Player_PhysicsData_0x1aa equ 0x01aa                                       
-Player_SpeedY_0x1aa equ 0x01aa                                            ; Player Physics Data
+Player_PhysicsData_0x1aa                                    equ 0x01aa    
+Player_SpeedY_0x1aa                                         equ 0x01aa    ; Player Physics Data
                                                                           ; 0-1: speed y
                                                                           ; 2-3: speed x
                                                                           ; 4-5: y
@@ -182,21 +151,10 @@ Player_SpeedY_0x1aa equ 0x01aa                                            ; Play
                                                                           ; 10-11: sprite pointer
                                                                           ; 12-13: previous video page destination
                                                                           ; 14-15: previous sprite pointer
-Player_SpeedX_0x1ac equ 0x01ac                                            
-PlayerY_0x1ae equ 0x01ae                                                  
-PlayerX_0x1b0 equ 0x01b0                                                  
-Player_VideoPageDrawDestination_0x1b2 equ 0x01b2                          
-Player_SpritePointer_0x1b4 equ 0x01b4                                     
-PlayerY_PreviousVideoPageDrawPosition_0x1b6 equ 0x01b6                    
-Player_PreviousSpritePointer_0x1b8 equ 0x01b8                             
-Ball_InitState_0x1ba equ 0x01ba                                           ; goes from 0, to 1, 2, FF, and 0 again
+Ball_InitState_0x1ba                                        equ 0x01ba    ; goes from 0, to 1, 2, FF, and 0 again
                                                                           ; during lifetime
-Ball_Unused_Maybe_0x1bb equ 0x01bb                                        
-Ball_Unused2_Maybe_0x1bc equ 0x01bc                                       
-Ball_FallCounter_UselessMaybe_0x1bd equ 0x01bd                            
-Ball_NumRowsInSpriteSetTo8_0x1be equ 0x01be                               
-Ball_Physics_0x1bf equ 0x01bf                                             
-Ball_SpeedY_0x1bf equ 0x01bf                                              ; The layout of the ball physics data match the one 
+Ball_Physics_0x1bf                                          equ 0x01bf    
+Ball_SpeedY_0x1bf                                           equ 0x01bf    ; The layout of the ball physics data match the one 
                                                                           ; for the player.
                                                                           ; Some functions rely on them matching.
                                                                           ; 0-1: speed y 
@@ -207,38 +165,17 @@ Ball_SpeedY_0x1bf equ 0x01bf                                              ; The 
                                                                           ; 10-11: sprite pointer 
                                                                           ; 12-13: previous video page destination 
                                                                           ; 14-15: previous sprite pointer
-Ball_SpeedX_0x1c1 equ 0x01c1                                              
-Ball_Y_0x1c3 equ 0x01c3                                                   
-Ball_X_0x1c5 equ 0x01c5                                                   
-Ball_VideoPageDrawPosition_0x1c7 equ 0x01c7                               
-Ball_SpriteData_0xc1c9 equ 0x01c9                                         
-Ball_PreviousVideoPageDrawPosition_0x1cb equ 0x01cb                       
-Ball_PreviousSpritePointer_0x1cd equ 0x01cd                               
-EndOfBallData equ 0x01cf                                                  
-Bird_InitState_0x1cf equ 0x01cf                                           
-Bird_AnimationCounter_0x1d1 equ 0x01d1                                    
-Bird_AnimationFrame0or1_0x1d2 equ 0x01d2                                  
-Bird_NumRowsInSpriteSetTo6_0x1d3 equ 0x01d3                               
-Bird_PhysicsData equ 0x01d4                                               
-Bird_SpeedY_0x1d4 equ 0x01d4                                              
-Bird_SpeedX_0x1d6 equ 0x01d6                                              
-Bird_Y_0x1d8 equ 0x01d8                                                   
-Bird_X_0x1da equ 0x01da                                                   
-Bird_VideoPageDrawPosition_0x1dc equ 0x01dc                               
-Bird_SpriteData_0x1de equ 0x01de                                          
-Bird_PreviousVideoPageDrawPosition_0x1e0 equ 0x01e0                       
-Bird_PreviousSpriteData_0x1e2 equ 0x01e2                                  
-PlayerLives_HeadIcons_Spacing_0x1e4 equ 0x01e4                            
-Player_FacingDirection_Copy_0x1e5 equ 0x01e5                              
-Player_NumLifeIcons_Counter_0x1e6 equ 0x01e6                              
-Player_State_Copy_0x1e7 equ 0x01e7                                        
-PlayerLives_HeadIcon_LinesToDraw_0x1e7 equ 0x01e8                         
-CurrentPlayerSpritePointer_0x1e9 equ 0x01e9                               
-PlayerLives_DrawLocationInPage_0x1eb equ 0x01eb                           
-PlayerLives_DrawLocationInPage_Copy_0x1ed equ 0x01ed                      
-Drop0_Data_0x1ef equ 0x01ef                                               
-DropDataBlock_0x1ef equ 0x01ef                                            
-Drop0_CeilingWiggleTimer_0x1ef equ 0x01ef                                 ; Each drop data is 13 bytes long.
+Ball_Y_0x1c3                                                equ 0x01c3    
+Ball_X_0x1c5                                                equ 0x01c5    
+EndOfBallData                                               equ 0x01cf    
+Bird_InitState_0x1cf                                        equ 0x01cf    
+Bird_PhysicsData                                            equ 0x01d4    
+Bird_Y_0x1d8                                                equ 0x01d8    
+Bird_X_0x1da                                                equ 0x01da    
+CurrentPlayerSpritePointer_0x1e9                            equ 0x01e9    
+PlayerLives_DrawLocationInPage_0x1eb                        equ 0x01eb    
+DropDataBlock_0x1ef                                         equ 0x01ef    
+Drop0_CeilingWiggleTimer_0x1ef                              equ 0x01ef    ; Each drop data is 13 bytes long.
                                                                           ; byte : description
                                                                           ; 0: state / ceiling wiggle countdown 
                                                                           ;     values:
@@ -260,35 +197,9 @@ Drop0_CeilingWiggleTimer_0x1ef equ 0x01ef                                 ; Each
                                                                           ;         the mask is different depending on which frame
                                                                           ;         of the drop sprite it uses.
                                                                           ; 
-Drop0_SpeedY_01f0 equ 0x01f0                                              
-Drop0_Y_0x1f2 equ 0x01f2                                                  
-Drop0_X_0x1f4 equ 0x01f4                                                  
-Drop0_SpriteData_0x1f5 equ 0x01f5                                         
-Drop0_VideoPageDrawLocation_0x1f7 equ 0x01f7                              
-Drop0_PreviousVideoPageDrawLocation_0x1f9 equ 0x01f9                      
-Drop0_CollisionMask_0x1fb equ 0x01fb                                      
-Drop1_Data_0x1fc equ 0x01fc                                               
-Drop1_CeilingWiggleTimer_0x1fc equ 0x01fc                                 
-Drop1_SpeedY_0x1fd equ 0x01fd                                             
-Drop1_Y_0x1ff equ 0x01ff                                                  
-Drop1_X_0x201 equ 0x0201                                                  
-Drop1_SpriteData_0x202 equ 0x0202                                         
-Drop1_VideoPageDrawLocation_0x204 equ 0x0204                              
-Drop1_PreviousVideoPageDrawLocation_0x206 equ 0x0206                      
-Drop1_CollisionMask_0x208 equ 0x0208                                      
-Drop2_Data equ 0x0209                                                     
-Drop3_Data equ 0x0216                                                     
-Drop4_Data equ 0x0223                                                     
-Drop5_Data equ 0x0230                                                     
-Drop6_Data equ 0x023d                                                     
-Drop7_Data equ 0x024a                                                     
-Drop8_Data equ 0x0257                                                     
-Drop9_Data equ 0x0264                                                     
-DropData_End equ 0x0270                                                   
-EndOfDropDataBuffer_0x271 equ 0x0271                                      
-Room0_Data equ 0x0271                                                     
-PickUp_VisibleState_0x271 equ 0x0271                                      
-PerRoomPickupData_0x271 equ 0x0271                                        ; Each room has five pick ups.
+Drop1_SpeedY_0x1fd                                          equ 0x01fd    
+EndOfDropDataBuffer_0x271                                   equ 0x0271    
+PerRoomPickupData_0x271                                     equ 0x0271    ; Each room has five pick ups.
                                                                           ; Two Keys, then diamonds and money bags.
                                                                           ; byte:description
                                                                           ; 0: pick up state (bit 1 for player 1, bit 2 for player 2)
@@ -299,85 +210,24 @@ PerRoomPickupData_0x271 equ 0x0271                                        ; Each
                                                                           ; 3: x pos
                                                                           ; 4: if key, then which door it unlocks
                                                                           ; In the buffer, the two keys are always first.
-PickUp_Type equ 0x0272                                                    
-PickUp_X equ 0x0273                                                       
-PickUp_Y equ 0x0274                                                       
-PickUp_DoorUnlockIndex equ 0x0275                                         
-PickUp_Key2_VisibleState equ 0x0276                                       
-PickUp_Key2_Type equ 0x0277                                               
-PickUp_Key2_Y equ 0x0278                                                  
-PickUp_Key2_X equ 0x0279                                                  
-PickUp_Key2_DoorUnlockIndex equ 0x027a                                    
-Room1Data equ 0x028a                                                      
-DAT_028b equ 0x028b                                                       
-DAT_028e equ 0x028e                                                       
-DAT_0290 equ 0x0290                                                       
-DAT_0293 equ 0x0293                                                       
-Room2Data equ 0x02a3                                                      
-Room3Data equ 0x02bc                                                      
-Room4Data equ 0x02d5                                                      
-Room5Data equ 0x02ee                                                      
-Room6Data equ 0x0307                                                      
-Room7Data equ 0x0320                                                      
-Room8Data equ 0x0339                                                      
-Room9Data equ 0x0352                                                      
-RoomsPlayersHaveVisited_0x36b equ 0x036b                                  
-Room1VisitedPlayerFlags_0x36c equ 0x036c                                  
-VideoMemory_Page0_0x0400 equ 0x0400                                       
-DAT_0402 equ 0x0402                                                       
-DAT_0420 equ 0x0420                                                       
-DAT_0455 equ 0x0455                                                       
-DAT_0483 equ 0x0483                                                       
-DAT_0484 equ 0x0484                                                       
-DAT_0485 equ 0x0485                                                       
-DAT_048c equ 0x048c                                                       
-DAT_048d equ 0x048d                                                       
-DAT_07c9 equ 0x07c9                                                       
-DAT_0800 equ 0x0800                                                       
-DAT_090a equ 0x090a                                                       
-DAT_0f66 equ 0x0f66                                                       
-DAT_16cc equ 0x16cc                                                       
-DAT_1800 equ 0x1800                                                       
-DAT_1801 equ 0x1801                                                       
-DAT_1812 equ 0x1812                                                       
-DAT_1820 equ 0x1820                                                       
-DAT_1821 equ 0x1821                                                       
-DAT_1822 equ 0x1822                                                       
-DAT_1880 equ 0x1880                                                       
-DAT_1881 equ 0x1881                                                       
-DAT_1882 equ 0x1882                                                       
-DAT_18c0 equ 0x18c0                                                       
-DAT_18e0 equ 0x18e0                                                       
-DAT_18e1 equ 0x18e1                                                       
-DAT_1952 equ 0x1952                                                       
-DAT_1b14 equ 0x1b14                                                       
-VideoMemory_Page1_0x1c00 equ 0x1c00                                       
-DAT_1c02 equ 0x1c02                                                       
-DAT_1c05 equ 0x1c05                                                       
-DAT_1c06 equ 0x1c06                                                       
-DAT_1c0b equ 0x1c0b                                                       
-SUB_1d86 equ 0x1d86                                                       
-DAT_2000 equ 0x2000                                                       
-DAT_3280 equ 0x3280                                                       
-DAT_3281 equ 0x3281                                                       
-SpriteData_ClonedDestination_0x3400 equ 0x3400                            ; This is where sprites are copied over four times, offset one bit per c
+RoomsPlayersHaveVisited_0x36b                               equ 0x036b    
+VideoMemory_Page0_0x0400                                    equ 0x0400    
+DAT_0455                                                    equ 0x0455    
+DAT_0f66                                                    equ 0x0f66    
+DAT_16cc                                                    equ 0x16cc    
+DAT_1800                                                    equ 0x1800    
+DAT_1801                                                    equ 0x1801    
+DAT_1812                                                    equ 0x1812    
+DAT_1952                                                    equ 0x1952    
+VideoMemory_Page1_0x1c00                                    equ 0x1c00    
+SpriteData_ClonedDestination_0x3400                         equ 0x3400    ; This is where sprites are copied over four times, offset one bit per c
                                                                           ; To make it easier to draw sprites when moving along bits.
-PlayerSprite_Left_Stand_InRam_0x3880 equ 0x3880                           
-DAT_3881 equ 0x3881                                                       
-DAT_3882 equ 0x3882                                                       
-DAT_3883 equ 0x3883                                                       
-DAT_3884 equ 0x3884                                                       
-DAT_3885 equ 0x3885                                                       
-Player_CollisionMasks_InRam_0x3b80 equ 0x3b80                             
-BouncyBall_ClonedInRam_0x3dd8 equ 0x3dd8                                  
-PlayerOne_PerRoomTimers_0x3e98 equ 0x3e98                                 ; level timers start at 0x1000 (4096)
-PlayerTwo_PerRoomTimers_0x3eac equ 0x3eac                                 ; level timers start at 0x1000 (4096)
-Player_DoorStateData_0x3ec0 equ 0x3ec0                                    
-DAT_3ec1 equ 0x3ec1                                                       
-DAT_3ec5 equ 0x3ec5                                                       
-DAT_3ec6 equ 0x3ec6                                                       
-DAT_3ecb equ 0x3ecb                                                       
-BirdSprite_ClonedInRam_0x3ee2 equ 0x3ee2                                  
+Player_CollisionMasks_InRam_0x3b80                          equ 0x3b80    
+BouncyBall_ClonedInRam_0x3dd8                               equ 0x3dd8    
+PlayerOne_PerRoomTimers_0x3e98                              equ 0x3e98    ; level timers start at 0x1000 (4096)
+PlayerTwo_PerRoomTimers_0x3eac                              equ 0x3eac    ; level timers start at 0x1000 (4096)
+Player_DoorStateData_0x3ec0                                 equ 0x3ec0    
+BirdSprite_ClonedInRam_0x3ee2                               equ 0x3ee2    
 ;
 ; ROM
 ; RAM:c000-RAM:dfff

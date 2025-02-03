@@ -1,6 +1,5 @@
 GhidraToLWTOOLS TODO
 
-    remove unneeded DAT_ variables
     
 
 

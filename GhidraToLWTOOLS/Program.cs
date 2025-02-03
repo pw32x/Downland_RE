@@ -74,6 +74,7 @@ class Program
         public string m_dataToken = "";
         private string m_dataValue = "";
         public bool m_isDataLabel = false; // we only know if it's a data label after reading the next line
+        public bool m_isDataLabelUsed = false;
         public bool m_addSpacing = false;
 
         public enum ParsedLineType
@@ -104,7 +105,11 @@ class Program
 
                 if (m_isDataLabel)
                 {
-                    sb.Append(" equ 0x");
+                    int tabPosition = 60 - m_label.Length;
+                    for (int i = 0; i < tabPosition; i++)
+                        sb.Append(" ");
+
+                    sb.Append("equ 0x");
                     sb.Append(m_addressString);
                 }
                 else
@@ -171,6 +176,7 @@ class Program
                         parseState.m_isInRamAddressSpace)
                     {
                         parseState.m_lastParsedLine.m_comment = comment;
+                        parseState.m_lastParsedLine.m_isDataLabelUsed = true;
                     }
                     else
                     {
@@ -205,9 +211,6 @@ class Program
                     if (label.Contains(' ') || // if the label contains a space, then for sure it's a comment.
                         label.Contains(':'))   // or punctuation. yes, very hardcoded
                     {
-                        
-                            
-
                         // if the last line isn't a comment, add a line separator
                         if (parseState.m_lastParsedLine.m_parsedLineType != ParsedLineType.Comment)
                             m_comment = "\n";
@@ -320,6 +323,19 @@ class Program
                         {
                             m_dataValue = "0x" + m_dataValue.Substring(0, m_dataValue.Length - 1);
                         }
+
+                        // check if the value is a variable. marked that it's being used
+                        foreach (var parsedLine in parseState.m_parsedLines.Where(l => l.m_isDataLabel))
+                        {
+                            // only for variables in ram
+                            if (parsedLine.m_address >= 0xc000)
+                                break;
+
+                            if (m_dataValue.Contains(parsedLine.m_label))
+                            {
+                                parsedLine.m_isDataLabelUsed = true;
+                            }
+                        }
                     }
                     else
                     {
@@ -347,6 +363,20 @@ class Program
                             int startIndex = m_comment.IndexOf(replaceTag) + replaceTag.Length;
                             m_code = m_comment.Substring(startIndex);
                             m_comment = "";
+                        }
+
+                        // check for any variables being used, mark them as such
+                        // if that's the case
+                        foreach (var parsedLine in parseState.m_parsedLines.Where(l => l.m_isDataLabel))
+                        {
+                            // only for variables in ram
+                            if (parsedLine.m_address >= 0xc000)
+                                break;
+
+                            if (m_code.Contains(parsedLine.m_label))
+                            {
+                                parsedLine.m_isDataLabelUsed = true;
+                            }
                         }
 
                         m_parsedLineType = ParsedLineType.Code;                    
@@ -378,28 +408,26 @@ class Program
     private static void AddHardwareVariables(StringBuilder sb)
     {
         sb.AppendLine("; Hardware constants");
-        sb.AppendLine("PIA0_A_DATA_REG__FF00 equ 0xff00");
-        sb.AppendLine("PIA0_A_CONTROL_REG__FF01 equ 0xff01");
-        sb.AppendLine("PIA0_B_DATA_REG__FF02 equ 0xff02");
-        sb.AppendLine("PIA0_B_CTRL_REG__FF03 equ 0xff03");
+        sb.AppendLine("PIA0_A_DATA_REG__FF00            equ 0xff00");
+        sb.AppendLine("PIA0_A_CONTROL_REG__FF01         equ 0xff01");
+        sb.AppendLine("PIA0_B_DATA_REG__FF02            equ 0xff02");
+        sb.AppendLine("PIA0_B_CTRL_REG__FF03            equ 0xff03");
 
-        sb.AppendLine("VMODE_REG__FF98 equ 0xff98");
+        sb.AppendLine("VMODE_REG__FF98                  equ 0xff98");
 
-        sb.AppendLine("PIA1_A_DATA_REG__FF20 equ 0xff20");
-        sb.AppendLine("PIA1_B_DATA_REG__FF22 equ 0xff22");
-        sb.AppendLine("PIA1_B_CONTROL_REG__FF23 equ 0xff23");
+        sb.AppendLine("PIA1_A_DATA_REG__FF20            equ 0xff20");
+        sb.AppendLine("PIA1_B_DATA_REG__FF22            equ 0xff22");
+        sb.AppendLine("PIA1_B_CONTROL_REG__FF23         equ 0xff23");
 
-        sb.AppendLine("PALETTE_FFB4 equ 0xffb4");
-        sb.AppendLine("PALETTE_FFB6 equ 0xffb6");
+        sb.AppendLine("PALETTE_FFB4                     equ 0xffb4");
+        sb.AppendLine("PALETTE_FFB6                     equ 0xffb6");
 
-        //sb.AppendLine("LAB_c003 equ ");
+        sb.AppendLine("SAM_V0_FFC0                      equ 0xffc0");
+        sb.AppendLine("SAM_V1_FFC3                      equ 0xffc3");
+        sb.AppendLine("SAM_V2_FFC5                      equ 0xffc5");
+        sb.AppendLine("SAM_PAGE_SELECT_REG_SAM_F0_FFC6  equ 0xffc6");
 
-        sb.AppendLine("SAM_V0_FFC0 equ 0xffc0");
-        sb.AppendLine("SAM_V1_FFC3 equ 0xffc3");
-        sb.AppendLine("SAM_V2_FFC5 equ 0xffc5");
-        sb.AppendLine("SAM_PAGE_SELECT_REG_SAM_F0_FFC6 equ 0xffc6");
-
-        sb.AppendLine("RomRam_MapType_FFDE equ 0xffde");        
+        sb.AppendLine("RomRam_MapType_FFDE              equ 0xffde");        
         sb.AppendLine();
         sb.AppendLine();
     }
@@ -432,10 +460,11 @@ class Program
 
         foreach (var parsedLine in parseState.m_parsedLines)
         {
+            if (parsedLine.m_isDataLabel && !parsedLine.m_isDataLabelUsed)
+                continue;
+
             string exportedLine = parsedLine.ToString();
             //Console.WriteLine(exportedLine);
-
-
 
             sb.AppendLine(exportedLine);
         }
