@@ -1,9 +1,14 @@
-; Converted to LWASM-compatible assembly by GhidraToLWTOOLS
+; Converted to LWASM-compatible assembly from Ghidra listing by GhidraToLWTOOLS
 ; Tool written by pw_32x
-
+; https://github.com/pw32x/Downland_RE
+;
 ; Downland by Michael Aichlmayr
 ; For the Tandy Color Computer
 ; Released in 1983 by Spectral Associates
+;
+; Get LWTOOLS here: http://www.lwtools.ca/
+; How to build this: lwasm.exe downland.asm --6809 --output=downland.bin --format=raw
+;
 
 
 ; Hardware constants

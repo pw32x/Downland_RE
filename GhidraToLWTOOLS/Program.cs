@@ -447,12 +447,17 @@ class Program
         // write to file
         StringBuilder sb = new StringBuilder();
 
-        sb.AppendLine("; Converted to LWASM-compatible assembly by GhidraToLWTOOLS");
+        sb.AppendLine("; Converted to LWASM-compatible assembly from Ghidra listing by GhidraToLWTOOLS");
         sb.AppendLine("; Tool written by pw_32x");
-        sb.AppendLine();
+        sb.AppendLine("; https://github.com/pw32x/Downland_RE");
+        sb.AppendLine(";");
         sb.AppendLine("; Downland by Michael Aichlmayr");
         sb.AppendLine("; For the Tandy Color Computer");
         sb.AppendLine("; Released in 1983 by Spectral Associates");
+        sb.AppendLine(";");
+        sb.AppendLine("; Get LWTOOLS here: http://www.lwtools.ca/");
+        sb.AppendLine("; How to build this: lwasm.exe downland.asm --6809 --output=downland.bin --format=raw");
+        sb.AppendLine(";");
         sb.AppendLine();
         sb.AppendLine();
 
