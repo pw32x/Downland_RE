@@ -11,7 +11,7 @@ The reverse engineering is not complete. There are a lot of small areas and func
 
 The Notes folder is where the research findings (fun facts!) are located.
 
-While the RE isn't complete, what is there is enough to build a Downland rom idential to the original from the assembly. 
+While the RE isn't complete, what is there is enough to build a Downland rom identical to the original from the assembly. 
 
 To Generate downland.asm:
 
