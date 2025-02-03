@@ -1,4 +1,7 @@
+Information about the falling drops system in Downland
+
 Each drop data is 13 bytes long.
+
 byte : description
 0: state / ceiling wiggle countdown 
     values:

@@ -1,4 +1,7 @@
-Each room has an array of draw commands. Each command defines a shape to draw. Commands with a code higher than 127 get repeated with the next byte in the buffer being the repeat count. The first image shows the order in which the shapes are drawn. The second image shows the draw command buffer for the title screen. 
+Each room has an array of draw commands. Each command defines a shape to draw. Commands with a code higher than 127 get repeated with the next byte in the buffer being the repeat count. 
+
+"downland room drawing.gif" shows the order in which the shapes are drawn. 
+"DownlandTitleScreenDrawCommands.png" shows the draw command buffer for the title screen. 
 
 
 Some shapes are invisible which moves the "plotter" without drawing pixels.

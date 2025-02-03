@@ -29,3 +29,6 @@ The drawing computations are done in a half-resolution horizontal space. Y is 19
 Misc observations:
 - Segments starts and ends tend to overlap.
 - Ropes seem to be handled differently, being two vertical segments side-by-side but there's nothing to specify to move along the X axis.
+
+"Background piece segments.png" shows how the individual segments of a shape are processed.
+"Background piece drawing.png" shows the process in which the drawing of the shape goes from a 128x192 "logical" screen to the real 256x192 screen with CRT artifacing applied.

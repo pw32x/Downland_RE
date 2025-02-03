@@ -1,3 +1,5 @@
+The alphabet used by the game
+
 index:character
 
 0
