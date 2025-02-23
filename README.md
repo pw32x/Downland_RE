@@ -11,7 +11,7 @@ Information about Downland can be found here: https://www.cocopedia.com/wiki/ind
 
 The work is based on Downland V1.1, released later to support the Tandy Color Computer 3.
 
-The reverse engineering is not complete. There are a lot of small areas and functions that need to be figured out, but a lot of the major parts are there. And what is there is very likely not 100% accurate and some parts are probably completely wrong. Fair warning! :)
+The reverse engineering is not complete. There are a lot of small areas and functions that need to be figured out, but a lot of the major parts are there. And what is there is very likely not 100% accurate and some parts are probably completely wrong. I am not an assembly language expert nor a Color Computer hardware expert. Fair warning! :)
 
 The Notes folder is where the research findings (fun facts!) are located.
 
