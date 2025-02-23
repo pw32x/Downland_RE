@@ -28,10 +28,11 @@ Fun Facts
 	which level.
 	
 	there's an offscreen buffer with a clean version of the level 
-	it's used for terrain collisions for the player?
-	it's used to clean the screen when preparing the next frame?
+	it's used for terrain collisions for the player
+	and used to clean the background when erasing sprites from the screen
 	
 	A running memory counter seems part of the memory protection. 
+	   or maybe it's just the random number generator
 	In this version just seems to read every byte location.
 
 Background Piece codes
