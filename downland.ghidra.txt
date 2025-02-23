@@ -17832,8 +17832,9 @@
             c3cb 96 30              LDA        <Player_DeathPauseInTheAirTimer                  ; are we in a death animation?
             c3cd 10 26 01 7b        LBNE       Jump_PlayerStillDyingInTheAir
             c3d1 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1a8   ; = ??
-            c3d3 10 2b 02 e1        LBMI       Jump_JoystickCheck                               ; jump if player state is FF
-            c3d7 10 26 00 bd        LBNE       Jump_PlayerIsDeadSoSkipStuff                     ; jump if the state is 1 or more
+            c3d3 10 2b 02 e1        LBMI       Jump_JoystickCheck                               ; player is regenerating, so skip
+                                                                                                ; all this
+            c3d7 10 26 00 bd        LBNE       Jump_PlayerIsDeadSoSkipCollisionMaskCheck        ; jump if the state is 1 or more
             c3db 6c 36              INC        -0xa,Y=>ConstantZeroToFFCounter                  ; = ??
                              The "mysterious sprites" located between the player and 
                              ball sprites in rom data are masks used to extract five 
@@ -17968,10 +17969,11 @@
             c48c 96 2c              LDA        <Player_JumpUpInTheAirCounter_0x2c               ; = ??
             c48e 10 26 03 17        LBNE       Jump_PlayerIsJumpingUpwards
             c492 a6 35              LDA        -0xb,Y=>Player_ClimbingRopeState_0x19f           ; = ??
-            c494 10 26 00 94        LBNE       Jump_PlayerIsNotFalling                          ; 0 means not on rope
+            c494 10 26 00 94        LBNE       Jump_PlayerIsOnGround                            ; 0 means not on rope
                                                                                                 ; 1 or FF means on rope
-                             Jump_PlayerIsDeadSoSkipStuff                    XREF[1]:     c3d7(j)  
+                             Jump_PlayerIsDeadSoSkipCollisionMaskCheck       XREF[1]:     c3d7(j)  
             c498 8d 4d              BSR        AddOffsetToXDependingOnHorzPos                   ; char AddOffsetToXDependingOnHorzPos(void)
+                             perform floor detection
                              At this point
                              B -> 0 or 1
                              X -> 0, 2, 4, 6
@@ -17988,9 +17990,9 @@
             c4b0 34 04              PSHS        B
             c4b2 bd ca 9b           JSR        TerrainCollisionTest                             ; call the function but then do nothing about it?
             c4b5 35 02              PULS        A
-            c4b7 26 73              BNE        Jump_PlayerIsNotFalling
+            c4b7 26 73              BNE        Jump_PlayerIsOnGround
             c4b9 bd ca 9b           JSR        TerrainCollisionTest                             ; byte TerrainCollisionTest(byte A)
-            c4bc 26 6e              BNE        Jump_PlayerIsNotFalling
+            c4bc 26 6e              BNE        Jump_PlayerIsOnGround
                              Jump_HandleFall                                 XREF[1]:     c4ae(j)  
             c4be 86 ff              LDA        #0xff
             c4c0 97 2d              STA        <Player_IsFalling_0x2d                           ; = ??
@@ -18038,7 +18040,7 @@
             c500 ed 22              STD        0x2,Y=>Player_SpeedX_0x1ac                       ; = ??
                              Jump_PlayerLandingIsSafe                        XREF[1]:     c4d6(j)  
             c502 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1a8   ; = ??
-            c504 26 69              BNE        Jump_PlayerIsDead_Maybe
+            c504 26 69              BNE        Jump_PlayerIsDeadOrDying
                              Jump_NotTouchingGround                          XREF[1]:     c571(j)  
             c506 7e c7 83           JMP        Jump_JumpToClimbingRopeSubroutine
                              HorizontalOffsetTable                           XREF[8]:     AddOffsetToXDependingOnHorzPos:c4e7(*), 
@@ -18085,10 +18087,10 @@
             c529 ed 22              STD        0x2,Y
             c52b 39                 RTS
                              landing?
-                             Jump_PlayerIsNotFalling                         XREF[3]:     c494(j), c4b7(j), c4bc(j)  
+                             Jump_PlayerIsOnGround                           XREF[3]:     c494(j), c4b7(j), c4bc(j)  
             c52c 0f 2d              CLR        <Player_IsFalling_0x2d                           ; = ??
             c52e a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1a8   ; = ??
-            c530 26 3d              BNE        Jump_PlayerIsDead_Maybe
+            c530 26 3d              BNE        Jump_PlayerIsDeadOrDying
             c532 ec a4              LDD        ,Y=>Player_SpeedY_0x1aa                          ; = ??
             c534 10 83 01 00        CMPD       #0x100
             c538 10 26 01 dc        LBNE       Jump_PlayerLanding_Maybe
@@ -18124,13 +18126,13 @@
             c568 86 02              LDA        #0x2                                             ; set to the mid-air jump frame
             c56a a7 3e              STA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1a8   ; = ??
             c56c 7e c3 b2           JMP        Jump_Return_Helper
-                             Jump_PlayerIsDead_Maybe                         XREF[2]:     c504(j), c530(j)  
+                             Jump_PlayerIsDeadOrDying                        XREF[2]:     c504(j), c530(j)  
             c56f 96 2d              LDA        <Player_IsFalling_0x2d                           ; = ??
             c571 26 93              BNE        Jump_NotTouchingGround
             c573 8d b0              BSR        ClearXAndYSpeedsToZero                           ; undefined ClearXAndYSpeedsToZero(void)
             c575 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1a8   ; = ??
-            c577 4a                 DECA
-            c578 27 32              BEQ        LAB_c5ac
+            c577 4a                 DECA                                                        ; go from state 2 to state 1
+            c578 27 32              BEQ        Jump_CheckPlayerImmobility
                              clear from 0x83 to 0xb3 for the
                              sprite drawing buffer
             c57a 8e 00 83           LDX        #SpriteDrawingBuffer_0x83                        ; = ??
@@ -18143,11 +18145,11 @@
             c584 8e 00 98           LDX        #PlayerSplatSpriteInRam_0x98                     ; = ??
             c587 ce de ef           LDU        #PlayerSplatSprite                               ; = 0000010000000000b
             c58a 86 1b              LDA        #0x1b                                            ; 27 bytes. 9 lines of 3 bytes each
-                             Loop_LoadUndentifiedData                        XREF[1]:     c591(j)  
+                             Loop_LoadSplatSprite                            XREF[1]:     c591(j)  
             c58c e6 c0              LDB        ,U+=>PlayerSplatSprite                           ; = 0000010000000000b
             c58e e7 80              STB        ,X+=>PlayerSplatSpriteInRam_0x98                 ; = ??
             c590 4a                 DECA
-            c591 26 f9              BNE        Loop_LoadUndentifiedData                         ; 27 bytes
+            c591 26 f9              BNE        Loop_LoadSplatSprite                             ; 27 bytes
             c593 a6 26              LDA        0x6,Y=>PlayerX_0x1b0                             ;         
             c595 84 03              ANDA       #0x3                                             ; get 0 to 3 offset
                                                                                                 ; so, for every four pixels...
@@ -18162,9 +18164,11 @@
                              perform actual drawing of sprite
             c5a6 ce 00 83           LDU        #SpriteDrawingBuffer_0x83                        ; = ??
             c5a9 bd c9 a2           JSR        DrawLifeIconsAndPlayerRegeneration               ; undefined DrawLifeIconsAndPlayerRegeneration(undefined A, undefined B,
-                             LAB_c5ac                                        XREF[1]:     c578(j)  
+                             Jump_CheckPlayerImmobility                      XREF[1]:     c578(j)  
             c5ac 6a 3d              DEC        -0x3,Y=>Player_CantMoveCounter_Maybe_0x1a7       ; = ??
-            c5ae 10 26 fe 00        LBNE       Jump_Return_Helper
+            c5ae 10 26 fe 00        LBNE       Jump_Return_Helper                               ; the player is immobile, so skip
+                             respawn the player, erase a head icon
+                             immobilize the player for 0x46 (70) frames
             c5b2 6a 3e              DEC        -0x2,Y=>Player_State_AliveDeadRegenState_0x1a8   ; = ??
             c5b4 27 28              BEQ        ResetTimerTo2048IfAtZeroWhenDied_Maybe
             c5b6 86 0c              LDA        #0xc

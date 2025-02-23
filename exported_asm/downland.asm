@@ -890,8 +890,9 @@ Jump_SkipPlaySound:
         LDA        <Player_DeathPauseInTheAirTimer                        ; are we in a death animation?
         LBNE       Jump_PlayerStillDyingInTheAir                          
         LDA        -0x2,Y                                                 
-        LBMI       Jump_JoystickCheck                                     ; jump if player state is FF
-        LBNE       Jump_PlayerIsDeadSoSkipStuff                           ; jump if the state is 1 or more
+        LBMI       Jump_JoystickCheck                                     ; player is regenerating, so skip
+                                                                          ; all this
+        LBNE       Jump_PlayerIsDeadSoSkipCollisionMaskCheck              ; jump if the state is 1 or more
         INC        -0xa,Y                                                 
 
 ;The "mysterious sprites" located between the player and
@@ -1042,12 +1043,13 @@ Jump_HandlePlayerJumpAndRope:
         LDA        <Player_JumpUpInTheAirCounter_0x2c                     
         LBNE       Jump_PlayerIsJumpingUpwards                            
         LDA        -0xb,Y                                                 
-        LBNE       Jump_PlayerIsNotFalling                                ; 0 means not on rope
+        LBNE       Jump_PlayerIsOnGround                                  ; 0 means not on rope
                                                                           ; 1 or FF means on rope
 
-Jump_PlayerIsDeadSoSkipStuff:                                            
+Jump_PlayerIsDeadSoSkipCollisionMaskCheck:                               
         BSR        AddOffsetToXDependingOnHorzPos                         ; char AddOffsetToXDependingOnHorzPos(void)
 
+;perform floor detection
 ;At this point
 ;B -> 0 or 1
 ;X -> 0, 2, 4, 6
@@ -1064,9 +1066,9 @@ Jump_PlayerIsDeadSoSkipStuff:
         PSHS        B                                                     
         JSR        TerrainCollisionTest                                   ; call the function but then do nothing about it?
         PULS        A                                                     
-        BNE        Jump_PlayerIsNotFalling                                
+        BNE        Jump_PlayerIsOnGround                                  
         JSR        TerrainCollisionTest                                   ; byte TerrainCollisionTest(byte A)
-        BNE        Jump_PlayerIsNotFalling                                
+        BNE        Jump_PlayerIsOnGround                                  
 
 Jump_HandleFall:                                                         
         LDA        #0xff                                                  
@@ -1117,7 +1119,7 @@ Jump_SetPlayerYSpeed:
 
 Jump_PlayerLandingIsSafe:                                                
         LDA        -0x2,Y                                                 
-        BNE        Jump_PlayerIsDead_Maybe                                
+        BNE        Jump_PlayerIsDeadOrDying                               
 
 Jump_NotTouchingGround:                                                  
         JMP        Jump_JumpToClimbingRopeSubroutine                      
@@ -1159,10 +1161,10 @@ ClearXAndYSpeedsToZero:
 
 landing?:                                                                
 
-Jump_PlayerIsNotFalling:                                                 
+Jump_PlayerIsOnGround:                                                   
         CLR        <Player_IsFalling_0x2d                                 
         LDA        -0x2,Y                                                 
-        BNE        Jump_PlayerIsDead_Maybe                                
+        BNE        Jump_PlayerIsDeadOrDying                               
         LDD        ,Y                                                     
         CMPD       #0x100                                                 
         LBNE       Jump_PlayerLanding_Maybe                               
@@ -1204,13 +1206,13 @@ Jump_PlayerStartDeathFallling:
         STA        -0x2,Y                                                 
         JMP        Jump_Return_Helper                                     
 
-Jump_PlayerIsDead_Maybe:                                                 
+Jump_PlayerIsDeadOrDying:                                                
         LDA        <Player_IsFalling_0x2d                                 
         BNE        Jump_NotTouchingGround                                 
         BSR        ClearXAndYSpeedsToZero                                 
         LDA        -0x2,Y                                                 
-        DECA                                                              
-        BEQ        LAB_c5ac                                               
+        DECA                                                              ; go from state 2 to state 1
+        BEQ        Jump_CheckPlayerImmobility                             
 
 ;clear from 0x83 to 0xb3 for the
 ;sprite drawing buffer
@@ -1227,11 +1229,11 @@ Loop_ClearSpriteDrawingBuffer:
         LDU        #PlayerSplatSprite                                     
         LDA        #0x1b                                                  ; 27 bytes. 9 lines of 3 bytes each
 
-Loop_LoadUndentifiedData:                                                
+Loop_LoadSplatSprite:                                                    
         LDB        ,U+                                                    
         STB        ,X+                                                    
         DECA                                                              
-        BNE        Loop_LoadUndentifiedData                               ; 27 bytes
+        BNE        Loop_LoadSplatSprite                                   ; 27 bytes
         LDA        0x6,Y                                                  ;         
         ANDA       #0x3                                                   ; get 0 to 3 offset
                                                                           ; so, for every four pixels...
@@ -1250,9 +1252,12 @@ Jump_PlaySplatSound:
         LDU        #SpriteDrawingBuffer_0x83                              
         JSR        DrawLifeIconsAndPlayerRegeneration                     
 
-LAB_c5ac:                                                                
+Jump_CheckPlayerImmobility:                                              
         DEC        -0x3,Y                                                 
-        LBNE       Jump_Return_Helper                                     
+        LBNE       Jump_Return_Helper                                     ; the player is immobile, so skip
+
+;respawn the player, erase a head icon
+;immobilize the player for 0x46 (70) frames
         DEC        -0x2,Y                                                 
         BEQ        ResetTimerTo2048IfAtZeroWhenDied_Maybe                 
         LDA        #0xc                                                   
