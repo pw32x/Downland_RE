@@ -34,6 +34,12 @@ Fun Facts
 	A running memory counter seems part of the memory protection. 
 	   or maybe it's just the random number generator
 	In this version just seems to read every byte location.
+	
+    If you complete the game three times in a row the drops' X coordinate get adjusted 
+    (clearing their LSB, making it even) so that the drops fall just a bit closer to the 
+    right side of the rope. But because of how collision works, they can only kill the 
+    player when climbing if the visible animation frame is the one with the right arm up 
+    and not the left.	
 
 Background Piece codes
 
@@ -76,8 +82,19 @@ Room Pickups Fun Facts
 	There are exactly five pick ups per room
 	The first two are always keys, the last three are treasures
 	treasures are randomly chosen
+	   key:        200 points
+	   money bag:  300 points
+	   diamond:    400 points
 
-	completing the game once changes the pick up positions and keys
+    The scoring system also has a random-based component. The three treasures are randomly chosen at game 
+    start. When they're picked up, the player gets the base points, plus the game adds a random amount 
+    anywhere from 0 to 127. The random points depend on an wandering pointer that goes linearly along 
+    the rom's address space (c000 - df5a). When those points are needed, the value at the pointer's 
+    current location is read and the first 7 bits are returned. 
+
+
+	completing the game once changes the pick up positions and keys, 
+	like a hard mode.
 
 Clean Background
 
@@ -126,6 +143,10 @@ How To
 		
 	how to change the game timer at runtime?
 		player 1 timers are located at 3e89
+	
+	modify player lives
+	   
+	   address 0x55 and 0x56
 	
 	How to limit the number of drops to 1?	
 	

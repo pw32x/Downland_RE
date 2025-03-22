@@ -60,11 +60,11 @@ Player_JumpUpInTheAirCounter_0x2c                           equ 0x002c    ; coun
                                                                           ; looks like the value that controls how
                                                                           ; far up the jump goes. Can change to make
                                                                           ; jump higher or lower
-Player_IsFalling_0x2d                                       equ 0x002d    ; 0: is touching ground
+Player_IsJumpingOrFalling_0x2d                              equ 0x002d    ; 0: is touching ground
                                                                           ; ff: is not touching ground
-Player_SafeLandingFromFalling_0x2e                          equ 0x002e    ; 0: will die when landing
-                                                                          ; ff: will not die when landing
-Player_CantJumpAfterLandingCounter_Maybe_0x2f               equ 0x002f    
+Player_PreserveAirMomentum_0x2e                             equ 0x002e    ; 0: slow down x speed in the air
+                                                                          ; ff: keep x speed in the air
+Player_CantJumpAfterLandingCounter_0x2f                     equ 0x002f    
 Player_DeathPauseInTheAirTimer                              equ 0x0030    
 
 ;0 if not jumping
@@ -400,7 +400,7 @@ LOOP_Copy_TitleScreen_Page0_to_Page1:
 
 Loop_TitleScreenLoop:                                                    
         JSR        IncrementRomAddressCounter                             
-        JSR        UpdateJoystick_Maybe                                   
+        JSR        UpdateJoystickState                                    
         LDA        <Player_JoystickDirection_0x15                         
         CMPA       #0x4                                                   ; holding left on the joystick
         BNE        Jump_NotHoldingLeft                                    
@@ -456,7 +456,7 @@ Jump_UpdateAndDrawDrops:
         JSR        InitVideoAndSetupRoomAndGraphics                       
         JSR        InitKeyStateData                                       
         JSR        Init_PlayerLivesIconParameters                         
-        JSR        LoadPlayerPhysicsToYAndRoomDataInfoX                   
+        JSR        LoadPlayerPhysicsToYAndDoorDataInfoX                   
         JSR        InitRoom_Maybe                                         
         JSR        InitPlayerSomething                                    
         LDY        #Player_PhysicsData_0x1aa                              
@@ -650,7 +650,7 @@ Jump_PickupIsInactive:
 ;**************************************************************
 ;* Test collisions with drops                                 *
 ;**************************************************************
-        LDY        #Drop0_CeilingWiggleTimer_0x1ef                        
+        LDY        #DropDataBlock_0x1ef                                   
         LDA        #0x6                                                   
         STA        <Object_CollisionHeight_0x43                           
         LDA        #0x4                                                   
@@ -1043,7 +1043,7 @@ Jump_HandlePlayerJumpAndRope:
         LDA        <Player_JumpUpInTheAirCounter_0x2c                     
         LBNE       Jump_PlayerIsJumpingUpwards                            
         LDA        -0xb,Y                                                 
-        LBNE       Jump_PlayerIsOnGround                                  ; 0 means not on rope
+        LBNE       Jump_PlayerIsOnGround_Maybe                            ; 0 means not on rope
                                                                           ; 1 or FF means on rope
 
 Jump_PlayerIsDeadSoSkipCollisionMaskCheck:                               
@@ -1066,23 +1066,23 @@ Jump_PlayerIsDeadSoSkipCollisionMaskCheck:
         PSHS        B                                                     
         JSR        TerrainCollisionTest                                   ; call the function but then do nothing about it?
         PULS        A                                                     
-        BNE        Jump_PlayerIsOnGround                                  
+        BNE        Jump_PlayerIsOnGround_Maybe                            
         JSR        TerrainCollisionTest                                   ; byte TerrainCollisionTest(byte A)
-        BNE        Jump_PlayerIsOnGround                                  
+        BNE        Jump_PlayerIsOnGround_Maybe                            
 
 Jump_HandleFall:                                                         
         LDA        #0xff                                                  
-        STA        <Player_IsFalling_0x2d                                 
+        STA        <Player_IsJumpingOrFalling_0x2d                        
         LDD        ,Y                                                     
         ADDD       #0x6                                                   ; add falling speed
         CMPD       #0x100                                                 ; max falling speed, likely
         BLS        Jump_NotHitTerminalVelocity                            
-        CLR        <Player_SafeLandingFromFalling_0x2e                    ; set to 0, will die when landing. maybe.
+        CLR        <Player_PreserveAirMomentum_0x2e                       ; set to 0, will die when landing. maybe.
         LDD        #0x100                                                 ; clamp the falling speed
 
 Jump_NotHitTerminalVelocity:                                             
         STD        ,Y                                                     
-        LDA        <Player_SafeLandingFromFalling_0x2e                    
+        LDA        <Player_PreserveAirMomentum_0x2e                       
         BMI        Jump_PlayerLandingIsSafe                               
         LDA        -0x4,Y                                                 
         BMI        Jump_UpdateXGoingLeft                                  
@@ -1161,8 +1161,8 @@ ClearXAndYSpeedsToZero:
 
 landing?:                                                                
 
-Jump_PlayerIsOnGround:                                                   
-        CLR        <Player_IsFalling_0x2d                                 
+Jump_PlayerIsOnGround_Maybe:                                             
+        CLR        <Player_IsJumpingOrFalling_0x2d                        
         LDA        -0x2,Y                                                 
         BNE        Jump_PlayerIsDeadOrDying                               
         LDD        ,Y                                                     
@@ -1173,15 +1173,15 @@ Jump_PerformPlayerDeath:
         BSR        ClearXAndYSpeedsToZero                                 
         CLR        -0xb,Y                                                 
         CLR        <Player_JumpUpInTheAirCounter_0x2c                     
-        CLR        <Player_CantJumpAfterLandingCounter_Maybe_0x2f         
-        LDA        <Player_IsFalling_0x2d                                 
-        BEQ        Jump_PlayerStartDeathFallling                          
+        CLR        <Player_CantJumpAfterLandingCounter_0x2f               
+        LDA        <Player_IsJumpingOrFalling_0x2d                        
+        BEQ        Jump_PlayerStartDeathStanding                          
         LDA        #0x32                                                  
         STA        <Player_DeathPauseInTheAirTimer                        
 
 Jump_PlayerStillDyingInTheAir:                                           
         DEC        <Player_DeathPauseInTheAirTimer                        
-        BEQ        Jump_PlayerStartDeathFallling                          
+        BEQ        Jump_PlayerStartDeathStanding                          
         LDA        <Player_DeathPauseInTheAirTimer                        
         ANDA       #0x4                                                   ; use the timer to swap the player direction while
                                                                           ; hanging in the air, maybe
@@ -1199,15 +1199,15 @@ LAB_c55d:
         STA        -0x8,Y                                                 
         JMP        Jump_NoWallDetected_SetupPlayerAnimation               
 
-Jump_PlayerStartDeathFallling:                                           
+Jump_PlayerStartDeathStanding:                                           
         LDA        #0xa                                                   
         STA        -0x3,Y                                                 
-        LDA        #0x2                                                   ; set to the mid-air jump frame
+        LDA        #0x2                                                   ; set to death state
         STA        -0x2,Y                                                 
         JMP        Jump_Return_Helper                                     
 
 Jump_PlayerIsDeadOrDying:                                                
-        LDA        <Player_IsFalling_0x2d                                 
+        LDA        <Player_IsJumpingOrFalling_0x2d                        
         BNE        Jump_NotTouchingGround                                 
         BSR        ClearXAndYSpeedsToZero                                 
         LDA        -0x2,Y                                                 
@@ -1256,15 +1256,17 @@ Jump_CheckPlayerImmobility:
         DEC        -0x3,Y                                                 
         LBNE       Jump_Return_Helper                                     ; the player is immobile, so skip
 
-;respawn the player, erase a head icon
-;immobilize the player for 0x46 (70) frames
+;erase the top part of the player splat sprite
+;to simulate animation. erase the 12 top lines
+;where the player was
         DEC        -0x2,Y                                                 
         BEQ        ResetTimerTo2048IfAtZeroWhenDied_Maybe                 
         LDA        #0xc                                                   
         STA        -0x1,Y                                                 
         LBSR       EraseSpriteFromScreen                                  
         LDA        #0x10                                                  
-        STA        -0x1,Y                                                 
+        STA        -0x1,Y                                                 ; restore the number of lines in a 
+                                                                          ; player sprite
         LDA        #0x46                                                  
         STA        -0x3,Y                                                 
         LBRA       Jump_Return_Helper                                     
@@ -1415,7 +1417,7 @@ BigInitFunction_Maybe:
 ;**************************************************************
 
 Jump_JoystickCheck:                                                      
-        JSR        UpdateJoystick_Maybe                                   
+        JSR        UpdateJoystickState                                    
         LDA        <Player_JoystickDirection_0x15                         
         BEQ        Jump_DecrementRegenTimer                               ; if player is moving, then set the
                                                                           ; regeneration timer to zero
@@ -1487,9 +1489,9 @@ Jump_PlayerLanding_Maybe:
         LDD        ,Y                                                     
         BEQ        Jump_ProcessPlayerControls                             
         LDA        #0x4                                                   
-        STA        <Player_CantJumpAfterLandingCounter_Maybe_0x2f         
+        STA        <Player_CantJumpAfterLandingCounter_0x2f               
         CLR        -0x8,Y                                                 
-        CLR        <Player_SafeLandingFromFalling_0x2e                    
+        CLR        <Player_PreserveAirMomentum_0x2e                       
         LDA        #01111111b                                             
         STA        PIA1_A_DATA_REG__FF20                                  
         JMP        Jump_ClearSpeedAndClimbingRopeFlag                     
@@ -1499,12 +1501,12 @@ Jump_RegenTimersNotDone:
         JMP        Jump_HangingOnTheSide                                  
 
 Jump_ProcessPlayerControls:                                              
-        JSR        UpdateJoystick_Maybe                                   
+        JSR        UpdateJoystickState                                    
         LDA        -0xb,Y                                                 
         BEQ        Jump_CheckButtonPress                                  ; climbing rope is 0, so we're on the ground
         CMPA       #0x1                                                   ; Is hanging to the side of the rope?
-        LBEQ       Jump_ClearIsJumpingFlag                                
-
+        LBEQ       Jump_ClearIsJumpingFlag                                ; don't handle jump if we're hanging
+                                                                          ; off the rope
 ;at this point we're running
         LDA        <Player_JoystickDirection_0x15                         
         CMPA       #0x2                                                   ; compare to going right
@@ -1514,21 +1516,21 @@ Jump_ProcessPlayerControls:
 
 ;at this point we're not moving
         CLR        <Player_JumpUpInTheAirCounter_0x2c                     
-        CLR        <Player_CantJumpAfterLandingCounter_Maybe_0x2f         
-        CLR        <Player_SafeLandingFromFalling_0x2e                    
+        CLR        <Player_CantJumpAfterLandingCounter_0x2f               
+        CLR        <Player_PreserveAirMomentum_0x2e                       
         BRA        Jump_ClearIsJumpingFlag                                
 
 Jump_PlayerRunningLeft:                                                  
         CLR        -0x4,Y                                                 ; set the facing direction to 0
         LDD        #0xffca                                                ; speed -54
-        BRA        Jump_UpdateSpeed_X                                     
+        BRA        Jump_Update_RunSpeed_X                                 
 
 Jump_PlayerRunningRight:                                                 
         LDA        #0xff                                                  
         STA        -0x4,Y                                                 ; set the facing direction to FF
         LDD        #0x36                                                  ; speed 54
 
-Jump_UpdateSpeed_X:                                                      
+Jump_Update_RunSpeed_X:                                                  
         STD        0x2,Y                                                  
 
 Jump_CheckButtonPress:                                                   
@@ -1543,7 +1545,7 @@ Jump_CheckButtonPress:
 
 ;start the jumping state
         DEC        <Player_IsJumping_0x31                                 ; set to FF
-        LDA        <Player_CantJumpAfterLandingCounter_Maybe_0x2f         
+        LDA        <Player_CantJumpAfterLandingCounter_0x2f               
 
 ;don't jump if this timer isn't done
         BNE        Jump_ClearIsJumpingFlag                                
@@ -1554,8 +1556,8 @@ Jump_CheckButtonPress:
         LDA        #0x28                                                  
         STA        <Player_JumpUpInTheAirCounter_0x2c                     
         LDA        #0xff                                                  
-        STA        <Player_SafeLandingFromFalling_0x2e                    
-        STA        <Player_IsFalling_0x2d                                 
+        STA        <Player_PreserveAirMomentum_0x2e                       
+        STA        <Player_IsJumpingOrFalling_0x2d                        
 
 Jump_JumpToClimbingRopeSubroutine:                                       
         JMP        Jump_SetPlayerJumpAnimationFrame                       
@@ -1640,12 +1642,12 @@ Jump_FacingLeft_Already:
         CMPA       #InterruptHasBeenHitCounter_0x14                       
         BHI        Jump_HandleGoingToOneHandedRope                        
         LDD        <ZeroValue                                             
-        BRA        Jump_UpdateSpeed_Y                                     
+        BRA        Jump_UpdateSpeed_X                                     
 
 Jump_UpdateRunLeft:                                                      
         LDD        #0xffca                                                ; speed going left
 
-Jump_UpdateSpeed_Y:                                                      
+Jump_UpdateSpeed_X:                                                      
         STD        0x2,Y                                                  
         BRA        Jump_UpdateRunAnimationFrame                           
 
@@ -1748,9 +1750,9 @@ Jump_SetPlayerJumpAnimationFrame:
 
 Jump_SkipHangingAnimationFrame:                                          
         STA        -0x8,Y                                                 
-        LDB        <Player_CantJumpAfterLandingCounter_Maybe_0x2f         
+        LDB        <Player_CantJumpAfterLandingCounter_0x2f               
         BEQ        Jump_HandleRopeDetection                               
-        DEC        <Player_CantJumpAfterLandingCounter_Maybe_0x2f         
+        DEC        <Player_CantJumpAfterLandingCounter_0x2f               
 
 Jump_HandleRopeDetection:                                                
         LDA        -0xb,Y                                                 
@@ -1758,7 +1760,7 @@ Jump_HandleRopeDetection:
         BEQ        Jump_SkipToUpdatePlayerPhysics                         
 
 ;update player when moving horizontally
-;on a rope.
+;on a rope, maybe
         JSR        AddOffsetToXDependingOnHorzPos                         ; char AddOffsetToXDependingOnHorzPos(void)
         LEAX       0x100,X                                                ; eight pixels down. rope sensor. 
         LDU        #RopeShapeLookupTable_Maybe                            
@@ -1783,7 +1785,7 @@ Jump_PlayerIsTouchingRope:
         STA        -0xb,Y                                                 
         JSR        ClearXAndYSpeedsToZero                                 
         CLR        <Player_JumpUpInTheAirCounter_0x2c                     
-        CLR        <Player_SafeLandingFromFalling_0x2e                    
+        CLR        <Player_PreserveAirMomentum_0x2e                       
         BRA        UpdateClimbing                                         
 
 Jump_NotTouchingRopeOrAnything:                                          
@@ -2508,7 +2510,7 @@ Jump_DontGoToFrame1OfAnimation:
 ;*                          FUNCTION                          *
 ;**************************************************************
 
-LoadPlayerPhysicsToYAndRoomDataInfoX:                                    
+LoadPlayerPhysicsToYAndDoorDataInfoX:                                    
         LDY        #Player_PhysicsData_0x1aa                              
 ;**************************************************************
 ;*                          FUNCTION                          *
@@ -2521,7 +2523,7 @@ LoadRoomDoorDataAddrIntoX:
         LDX        A,X                                                    ; find the right room graphics and door data
         LEAX       0x2,X                                                  ; skip the graphics pointer?
 
-LAB_ccb0:                                                                
+Jump_ReturnToSubroutine:                                                 
         RTS                                                               
 ;**************************************************************
 ;*                          FUNCTION                          *
@@ -2529,21 +2531,24 @@ LAB_ccb0:
 
 FUN_ccb1:                                                                
         JSR        DrawPickups                                            ; So... pickups are drawn every frame
-        BSR        LoadPlayerPhysicsToYAndRoomDataInfoX                   
+        BSR        LoadPlayerPhysicsToYAndDoorDataInfoX                   
 
-LAB_ccb6:                                                                
-        LDA        ,X                                                     
-        BEQ        LAB_ccb0                                               
-        LDB        0x1,X                                                  
-        CMPA       0x4,Y                                                  
-        LBNE       LAB_cd7a                                               
-        CMPB       0x6,Y                                                  
-        LBNE       LAB_cd7a                                               
+Loop_CheckDoorCollisions:                                                
+        LDA        ,X                                                     ; get door Y coordinate
+        BEQ        Jump_ReturnToSubroutine                                ; if reached 0, finish processing doors
+                                                                          ; we're done, go to an RTS above
+        LDB        0x1,X                                                  ; get door X coordinate
+        CMPA       0x4,Y                                                  ; compare player Y coordinate with A
+        LBNE       Jump_MoveToNextDoorInfo                                ; no collision, move to next door
+        CMPB       0x6,Y                                                  ; compare player X coordinate with B
+        LBNE       Jump_MoveToNextDoorInfo                                
         LDU        #Player_DoorStateData_0x3ec0                           
-        LDA        0x5,X                                                  
-        LDA        A,U                                                    
-        ANDA       <CurrentPlayer_0x52                                    
-        BEQ        LAB_ccb0                                               
+        LDA        0x5,X                                                  ; get the global door index from the door info
+        LDA        A,U                                                    ; get the state of the door
+        ANDA       <CurrentPlayer_0x52                                    ; check if the player activated it already
+        BEQ        Jump_ReturnToSubroutine                                ; if not, then return. If the door is
+                                                                          ; active, then continue on, which will
+                                                                          ; initialize the next room
 ;**************************************************************
 ;*                          FUNCTION                          *
 ;**************************************************************
@@ -2647,11 +2652,12 @@ LAB_cd5f:
                                                                           ; "Chamber"
         JMP        GetRoomDataForCurrentRoom                              
 
-LAB_cd7a:                                                                
-        .db        0x30                                                   
+Jump_MoveToNextDoorInfo:                                                 
+        .db        0x30                                                   ; LEAX       0x6,X  - move to next door info
+                                                                          ; 
         .db        0x88                                                   
         .db        0x06                                                   
-        JMP        LAB_ccb6                                               
+        JMP        Loop_CheckDoorCollisions                               
         RTS                                                               
 ;**************************************************************
 ;*                          FUNCTION                          *
@@ -2662,7 +2668,7 @@ DrawDoorOrMultipleDoors_Maybe:
         LDD        ,X                                                     ; load the drawing address of the door
         CMPA       #0xff                                                  ; check if the address is for the start up door? (0xffff)
         BEQ        LOOP_AlreadyDone                                       
-        CMPB       #0x40                                                  ; check against the door index?
+        CMPB       #0x40                                                  ; check against some x value
         BCS        Jump_OffsetLeft                                        
         ADDB       #0x7                                                   ; otherwise offset to the right.
                                                                           ; for some reason
@@ -3186,11 +3192,10 @@ Jump_InitSingleDrop:
         ADDB       0x2,X                                                  ; add the horizontal position of the drop area
         LDA        <GameCompletionCount_0x3a                              
         CMPA       #0x3                                                   
-        BCS        Jump_SkipPositionAdjustment                            ; when the player has completed the game less
-                                                                          ; than 3 times, it adjusts horizontal positions 
-                                                                          ; of drops to be even. Otherwise X positions are
-                                                                          ; unaffected, which (I think) means that drops are 
-                                                                          ; closer to the sides of vines.
+        BCS        Jump_SkipPositionAdjustment                            ; when the player has completed the game 3 times
+                                                                          ; or more, it adjusts horizontal positions 
+                                                                          ; of drops to be even. This makes the drops on the
+                                                                          ; right side of ropes to fall closer to the player.
         ANDB       #11111110b                                             ; ensure X position is even when in hard mode?
                                                                           ; 
 ;check if the drop overlaps anything, like a rope
@@ -6456,7 +6461,7 @@ Jump_StoreToA:
 ;*                          FUNCTION                          *
 ;**************************************************************
 
-UpdateJoystick_Maybe:                                                    
+UpdateJoystickState:                                                     
         BSR        DisableSound                                           
         LDX        #InterruptHasBeenHitCounter_0x14                       
         LDB        #0x1                                                   

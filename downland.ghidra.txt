@@ -18,28 +18,27 @@
             000d                    ??         ??
             000e                    ??         ??
             000f                    ??         ??
-                             SomeTickTockValue_0x10                          XREF[2]:     UpdateJoystick_Maybe:dc6d(*), UpdateJoystick_Maybe:dc98(*)  
+                             SomeTickTockValue_0x10                          XREF[2]:     UpdateJoystickState:dc6d(*), UpdateJoystickState:dc98(*)  
             0010                    ??         ??
-                             SomeCounter_0x11                                XREF[3]:     UpdateJoystick_Maybe:dc7c(*), UpdateJoystick_Maybe:dc8a(*), 
-                                                                                          UpdateJoystick_Maybe:dc8f(*)  
+                             SomeCounter_0x11                                XREF[3]:     UpdateJoystickState:dc7c(*), UpdateJoystickState:dc8a(*), 
+                                                                                          UpdateJoystickState:dc8f(*)  
             0011                    ??         ??
                              Joystick_LeftRight_Value_0x12
             0012                    ??         ??
-                             Joystick_UpDown_Value_0x13                      XREF[2]:     UpdateJoystick_Maybe:dc96(W), UpdateJoystick_Maybe:dc9d(R)  
+                             Joystick_UpDown_Value_0x13                      XREF[2]:     UpdateJoystickState:dc96(W), UpdateJoystickState:dc9d(R)  
             0013                    db         ??
                              InterruptHasBeenHitCounter_0x14                 XREF[8]:     UpdatePlayerSoundAndCollisionsAndPhysics:c1e6(*), 
                                                                                           UpdatePlayerSoundAndCollisionsAndPhysics:c1ea(*), 
                                                                                           WaitForVSync_Maybe:c203(*), WaitForVSync_Maybe:c207(*), 
                                                                                           BigInitFunction_Maybe:c7ee(*), 
                                                                                           BigInitFunction_Maybe:c84a(*), InterruptHandler:dc50(*), 
-                                                                                          UpdateJoystick_Maybe:dc68(*)  
+                                                                                          UpdateJoystickState:dc68(*)  
             0014                    ??         ??
                              Player_JoystickDirection_0x15                   XREF[7]:     UpdatePlayerSoundAndCollisionsAndPhysics:c113(*), 
                                                                                           BigInitFunction_Maybe:c6bb(*), 
                                                                                           BigInitFunction_Maybe:c741(*), 
-                                                                                          BigInitFunction_Maybe:c7c9(*), 
-                                                                                          UpdateJoystick_Maybe:dc9f(*), UpdateJoystick_Maybe:dcae(*), 
-                                                                                          UpdateJoystick_Maybe:dcbd(*)  
+                                                                                          BigInitFunction_Maybe:c7c9(*), UpdateJoystickState:dc9f(*), 
+                                                                                          UpdateJoystickState:dcae(*), UpdateJoystickState:dcbd(*)  
             0015                    db         ??                                               ; possible values:
                                                                                                 ; left: 4
                                                                                                 ; right: 2
@@ -156,22 +155,22 @@
                                                                                                 ; looks like the value that controls how
                                                                                                 ; far up the jump goes. Can change to make
                                                                                                 ; jump higher or lower
-                             Player_IsFalling_0x2d                           XREF[5]:     UpdatePlayerSoundAndCollisionsAndPhysics:c4c0(*), 
+                             Player_IsJumpingOrFalling_0x2d                  XREF[5]:     UpdatePlayerSoundAndCollisionsAndPhysics:c4c0(*), 
                                                                                           UpdatePlayerSoundAndCollisionsAndPhysics:c52c(*), 
                                                                                           UpdatePlayerSoundAndCollisionsAndPhysics:c544(*), 
                                                                                           UpdatePlayerSoundAndCollisionsAndPhysics:c56f(*), 
                                                                                           BigInitFunction_Maybe:c781(*)  
             002d                    ??         ??                                               ; 0: is touching ground
                                                                                                 ; ff: is not touching ground
-                             Player_SafeLandingFromFalling_0x2e              XREF[6]:     UpdatePlayerSoundAndCollisionsAndPhysics:c4cd(*), 
+                             Player_PreserveAirMomentum_0x2e                 XREF[6]:     UpdatePlayerSoundAndCollisionsAndPhysics:c4cd(*), 
                                                                                           UpdatePlayerSoundAndCollisionsAndPhysics:c4d4(*), 
                                                                                           BigInitFunction_Maybe:c726(*), 
                                                                                           BigInitFunction_Maybe:c74f(*), 
                                                                                           BigInitFunction_Maybe:c77f(*), 
                                                                                           BigInitFunction_Maybe:c8b1(*)  
-            002e                    ??         ??                                               ; 0: will die when landing
-                                                                                                ; ff: will not die when landing
-                             Player_CantJumpAfterLandingCounter_Maybe_0x2f   XREF[6]:     UpdatePlayerSoundAndCollisionsAndPhysics:c542(*), 
+            002e                    ??         ??                                               ; 0: slow down x speed in the air
+                                                                                                ; ff: keep x speed in the air
+                             Player_CantJumpAfterLandingCounter_0x2f         XREF[6]:     UpdatePlayerSoundAndCollisionsAndPhysics:c542(*), 
                                                                                           BigInitFunction_Maybe:c722(*), 
                                                                                           BigInitFunction_Maybe:c74d(*), 
                                                                                           BigInitFunction_Maybe:c770(*), 
@@ -17331,8 +17330,8 @@
                              Loop_TitleScreenLoop                            XREF[1]:     c148(j)  
             c10d bd dc 39           JSR        IncrementRomAddressCounter                       ; = ??
                                                                                                 ; undefined IncrementRomAddressCounter(undefined A, undefined B, undefin
-            c110 bd dc 66           JSR        UpdateJoystick_Maybe                             ; = ??
-                                                                                                ; undefined UpdateJoystick_Maybe(void)
+            c110 bd dc 66           JSR        UpdateJoystickState                              ; = ??
+                                                                                                ; undefined UpdateJoystickState(void)
             c113 96 15              LDA        <Player_JoystickDirection_0x15                   ; = ??
             c115 81 04              CMPA       #0x4                                             ; holding left on the joystick
             c117 26 08              BNE        Jump_NotHoldingLeft
@@ -17392,8 +17391,8 @@
                                                                                                 ; undefined InitKeyStateData(void)
             c174 bd ce fa           JSR        Init_PlayerLivesIconParameters                   ; = ??
                                                                                                 ; undefined Init_PlayerLivesIconParameters(void)
-            c177 bd cc a3           JSR        LoadPlayerPhysicsToYAndRoomDataInfoX             ; = ??
-                                                                                                ; undefined LoadPlayerPhysicsToYAndRoomDataInfoX(void)
+            c177 bd cc a3           JSR        LoadPlayerPhysicsToYAndDoorDataInfoX             ; = ??
+                                                                                                ; undefined LoadPlayerPhysicsToYAndDoorDataInfoX(void)
             c17a bd cc d3           JSR        InitRoom_Maybe                                   ; = ??
                                                                                                 ; undefined InitRoom_Maybe()
             c17d bd ce 68           JSR        InitPlayerSomething                              ; = ??
@@ -17591,7 +17590,7 @@
                              **************************************************************
                              * Test collisions with drops                                 *
                              **************************************************************
-            c27e 10 8e 01 ef        LDY        #Drop0_CeilingWiggleTimer_0x1ef                  ; = ??
+            c27e 10 8e 01 ef        LDY        #DropDataBlock_0x1ef                             ; = ??
             c282 86 06              LDA        #0x6
             c284 97 43              STA        <Object_CollisionHeight_0x43                     ; = ??
             c286 86 04              LDA        #0x4
@@ -17969,7 +17968,7 @@
             c48c 96 2c              LDA        <Player_JumpUpInTheAirCounter_0x2c               ; = ??
             c48e 10 26 03 17        LBNE       Jump_PlayerIsJumpingUpwards
             c492 a6 35              LDA        -0xb,Y=>Player_ClimbingRopeState_0x19f           ; = ??
-            c494 10 26 00 94        LBNE       Jump_PlayerIsOnGround                            ; 0 means not on rope
+            c494 10 26 00 94        LBNE       Jump_PlayerIsOnGround_Maybe                      ; 0 means not on rope
                                                                                                 ; 1 or FF means on rope
                              Jump_PlayerIsDeadSoSkipCollisionMaskCheck       XREF[1]:     c3d7(j)  
             c498 8d 4d              BSR        AddOffsetToXDependingOnHorzPos                   ; char AddOffsetToXDependingOnHorzPos(void)
@@ -17990,21 +17989,21 @@
             c4b0 34 04              PSHS        B
             c4b2 bd ca 9b           JSR        TerrainCollisionTest                             ; call the function but then do nothing about it?
             c4b5 35 02              PULS        A
-            c4b7 26 73              BNE        Jump_PlayerIsOnGround
+            c4b7 26 73              BNE        Jump_PlayerIsOnGround_Maybe
             c4b9 bd ca 9b           JSR        TerrainCollisionTest                             ; byte TerrainCollisionTest(byte A)
-            c4bc 26 6e              BNE        Jump_PlayerIsOnGround
+            c4bc 26 6e              BNE        Jump_PlayerIsOnGround_Maybe
                              Jump_HandleFall                                 XREF[1]:     c4ae(j)  
             c4be 86 ff              LDA        #0xff
-            c4c0 97 2d              STA        <Player_IsFalling_0x2d                           ; = ??
+            c4c0 97 2d              STA        <Player_IsJumpingOrFalling_0x2d                  ; = ??
             c4c2 ec a4              LDD        ,Y=>Player_SpeedY_0x1aa                          ; = ??
             c4c4 c3 00 06           ADDD       #0x6                                             ; add falling speed
             c4c7 10 83 01 00        CMPD       #0x100                                           ; max falling speed, likely
             c4cb 23 05              BLS        Jump_NotHitTerminalVelocity
-            c4cd 0f 2e              CLR        <Player_SafeLandingFromFalling_0x2e              ; set to 0, will die when landing. maybe.
+            c4cd 0f 2e              CLR        <Player_PreserveAirMomentum_0x2e                 ; set to 0, will die when landing. maybe.
             c4cf cc 01 00           LDD        #0x100                                           ; clamp the falling speed
                              Jump_NotHitTerminalVelocity                     XREF[1]:     c4cb(j)  
             c4d2 ed a4              STD        ,Y=>Player_SpeedY_0x1aa                          ; = ??
-            c4d4 96 2e              LDA        <Player_SafeLandingFromFalling_0x2e              ; = ??
+            c4d4 96 2e              LDA        <Player_PreserveAirMomentum_0x2e                 ; = ??
             c4d6 2b 2a              BMI        Jump_PlayerLandingIsSafe
             c4d8 a6 3c              LDA        -0x4,Y=>Player_FacingDirection_0x1a6             ; = ??
             c4da 2b 1b              BMI        Jump_UpdateXGoingLeft
@@ -18087,8 +18086,8 @@
             c529 ed 22              STD        0x2,Y
             c52b 39                 RTS
                              landing?
-                             Jump_PlayerIsOnGround                           XREF[3]:     c494(j), c4b7(j), c4bc(j)  
-            c52c 0f 2d              CLR        <Player_IsFalling_0x2d                           ; = ??
+                             Jump_PlayerIsOnGround_Maybe                     XREF[3]:     c494(j), c4b7(j), c4bc(j)  
+            c52c 0f 2d              CLR        <Player_IsJumpingOrFalling_0x2d                  ; = ??
             c52e a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1a8   ; = ??
             c530 26 3d              BNE        Jump_PlayerIsDeadOrDying
             c532 ec a4              LDD        ,Y=>Player_SpeedY_0x1aa                          ; = ??
@@ -18098,14 +18097,14 @@
             c53c 8d e7              BSR        ClearXAndYSpeedsToZero                           ; undefined ClearXAndYSpeedsToZero(void)
             c53e 6f 35              CLR        -0xb,Y=>Player_ClimbingRopeState_0x19f           ; = ??
             c540 0f 2c              CLR        <Player_JumpUpInTheAirCounter_0x2c               ; = ??
-            c542 0f 2f              CLR        <Player_CantJumpAfterLandingCounter_Maybe_0x2f   ; = ??
-            c544 96 2d              LDA        <Player_IsFalling_0x2d                           ; = ??
-            c546 27 1c              BEQ        Jump_PlayerStartDeathFallling
+            c542 0f 2f              CLR        <Player_CantJumpAfterLandingCounter_0x2f         ; = ??
+            c544 96 2d              LDA        <Player_IsJumpingOrFalling_0x2d                  ; = ??
+            c546 27 1c              BEQ        Jump_PlayerStartDeathStanding
             c548 86 32              LDA        #0x32
             c54a 97 30              STA        <Player_DeathPauseInTheAirTimer                  ; = ??
                              Jump_PlayerStillDyingInTheAir                   XREF[1]:     c3cd(j)  
             c54c 0a 30              DEC        <Player_DeathPauseInTheAirTimer                  ; = ??
-            c54e 27 14              BEQ        Jump_PlayerStartDeathFallling
+            c54e 27 14              BEQ        Jump_PlayerStartDeathStanding
             c550 96 30              LDA        <Player_DeathPauseInTheAirTimer                  ; = ??
             c552 84 04              ANDA       #0x4                                             ; use the timer to swap the player direction while
                                                                                                 ; hanging in the air, maybe
@@ -18120,14 +18119,14 @@
             c55d 86 02              LDA        #0x2
             c55f a7 38              STA        -0x8,Y=>Player_CurrentAnimationFrameNumber_0x1a2 ; = ??
             c561 7e c9 7f           JMP        Jump_NoWallDetected_SetupPlayerAnimation
-                             Jump_PlayerStartDeathFallling                   XREF[2]:     c546(j), c54e(j)  
+                             Jump_PlayerStartDeathStanding                   XREF[2]:     c546(j), c54e(j)  
             c564 86 0a              LDA        #0xa
             c566 a7 3d              STA        -0x3,Y=>Player_CantMoveCounter_Maybe_0x1a7       ; = ??
-            c568 86 02              LDA        #0x2                                             ; set to the mid-air jump frame
+            c568 86 02              LDA        #0x2                                             ; set to death state
             c56a a7 3e              STA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1a8   ; = ??
             c56c 7e c3 b2           JMP        Jump_Return_Helper
                              Jump_PlayerIsDeadOrDying                        XREF[2]:     c504(j), c530(j)  
-            c56f 96 2d              LDA        <Player_IsFalling_0x2d                           ; = ??
+            c56f 96 2d              LDA        <Player_IsJumpingOrFalling_0x2d                  ; = ??
             c571 26 93              BNE        Jump_NotTouchingGround
             c573 8d b0              BSR        ClearXAndYSpeedsToZero                           ; undefined ClearXAndYSpeedsToZero(void)
             c575 a6 3e              LDA        -0x2,Y=>Player_State_AliveDeadRegenState_0x1a8   ; = ??
@@ -18167,15 +18166,17 @@
                              Jump_CheckPlayerImmobility                      XREF[1]:     c578(j)  
             c5ac 6a 3d              DEC        -0x3,Y=>Player_CantMoveCounter_Maybe_0x1a7       ; = ??
             c5ae 10 26 fe 00        LBNE       Jump_Return_Helper                               ; the player is immobile, so skip
-                             respawn the player, erase a head icon
-                             immobilize the player for 0x46 (70) frames
+                             erase the top part of the player splat sprite
+                             to simulate animation. erase the 12 top lines
+                             where the player was
             c5b2 6a 3e              DEC        -0x2,Y=>Player_State_AliveDeadRegenState_0x1a8   ; = ??
             c5b4 27 28              BEQ        ResetTimerTo2048IfAtZeroWhenDied_Maybe
             c5b6 86 0c              LDA        #0xc
             c5b8 a7 3f              STA        -0x1,Y=>Player_NumRowsInSprite_0x1a9             ; = ??
             c5ba 17 12 f8           LBSR       EraseSpriteFromScreen                            ; undefined EraseSpriteFromScreen(void)
             c5bd 86 10              LDA        #0x10
-            c5bf a7 3f              STA        -0x1,Y=>Player_NumRowsInSprite_0x1a9             ; = ??
+            c5bf a7 3f              STA        -0x1,Y=>Player_NumRowsInSprite_0x1a9             ; restore the number of lines in a 
+                                                                                                ; player sprite
             c5c1 86 46              LDA        #0x46
             c5c3 a7 3d              STA        -0x3,Y=>Player_CantMoveCounter_Maybe_0x1a7       ; = ??
             c5c5 16 fd ea           LBRA       Jump_Return_Helper
@@ -18322,7 +18323,7 @@
                              * if the player has moved, then set the regen timer to 0     *
                              **************************************************************
                              Jump_JoystickCheck                              XREF[1]:     UpdatePlayerSoundAndCollisionsAndPhysics:c3d3(j)  
-            c6b8 bd dc 66           JSR        UpdateJoystick_Maybe                             ; undefined UpdateJoystick_Maybe(void)
+            c6b8 bd dc 66           JSR        UpdateJoystickState                              ; undefined UpdateJoystickState(void)
             c6bb 96 15              LDA        <Player_JoystickDirection_0x15                   ; = ??
             c6bd 27 04              BEQ        Jump_DecrementRegenTimer                         ; if player is moving, then set the
                                                                                                 ; regeneration timer to zero
@@ -18386,9 +18387,9 @@
             c71c ec a4              LDD        ,Y=>Player_SpeedY_0x1aa                          ; = ??
             c71e 27 14              BEQ        Jump_ProcessPlayerControls
             c720 86 04              LDA        #0x4
-            c722 97 2f              STA        <Player_CantJumpAfterLandingCounter_Maybe_0x2f   ; = ??
+            c722 97 2f              STA        <Player_CantJumpAfterLandingCounter_0x2f         ; = ??
             c724 6f 38              CLR        -0x8,Y=>Player_CurrentAnimationFrameNumber_0x1a2 ; = ??
-            c726 0f 2e              CLR        <Player_SafeLandingFromFalling_0x2e              ; = ??
+            c726 0f 2e              CLR        <Player_PreserveAirMomentum_0x2e                 ; = ??
             c728 86 7f              LDA        #01111111b
             c72a b7 ff 20           STA        PIA1_A_DATA_REG__FF20
             c72d 7e c7 be           JMP        Jump_ClearSpeedAndClimbingRopeFlag
@@ -18396,11 +18397,12 @@
             c730 4f                 CLRA
             c731 7e c8 5f           JMP        Jump_HangingOnTheSide
                              Jump_ProcessPlayerControls                      XREF[2]:     c71a(j), c71e(j)  
-            c734 bd dc 66           JSR        UpdateJoystick_Maybe                             ; undefined UpdateJoystick_Maybe(void)
+            c734 bd dc 66           JSR        UpdateJoystickState                              ; undefined UpdateJoystickState(void)
             c737 a6 35              LDA        -0xb,Y=>Player_ClimbingRopeState_0x19f           ; = ??
             c739 27 28              BEQ        Jump_CheckButtonPress                            ; climbing rope is 0, so we're on the ground
             c73b 81 01              CMPA       #0x1                                             ; Is hanging to the side of the rope?
-            c73d 10 27 00 86        LBEQ       Jump_ClearIsJumpingFlag
+            c73d 10 27 00 86        LBEQ       Jump_ClearIsJumpingFlag                          ; don't handle jump if we're hanging
+                                                                                                ; off the rope
                              at this point we're running
             c741 96 15              LDA        <Player_JoystickDirection_0x15                   ; = ??
             c743 81 02              CMPA       #0x2                                             ; compare to going right
@@ -18409,18 +18411,18 @@
             c749 27 08              BEQ        Jump_PlayerRunningLeft                           ; Jump_GoingLeft
                              at this point we're not moving
             c74b 0f 2c              CLR        <Player_JumpUpInTheAirCounter_0x2c               ; = ??
-            c74d 0f 2f              CLR        <Player_CantJumpAfterLandingCounter_Maybe_0x2f   ; = ??
-            c74f 0f 2e              CLR        <Player_SafeLandingFromFalling_0x2e              ; = ??
+            c74d 0f 2f              CLR        <Player_CantJumpAfterLandingCounter_0x2f         ; = ??
+            c74f 0f 2e              CLR        <Player_PreserveAirMomentum_0x2e                 ; = ??
             c751 20 74              BRA        Jump_ClearIsJumpingFlag
                              Jump_PlayerRunningLeft                          XREF[1]:     c749(j)  
             c753 6f 3c              CLR        -0x4,Y=>Player_FacingDirection_0x1a6             ; set the facing direction to 0
             c755 cc ff ca           LDD        #0xffca                                          ; speed -54
-            c758 20 07              BRA        Jump_UpdateSpeed_X
+            c758 20 07              BRA        Jump_Update_RunSpeed_X
                              Jump_PlayerRunningRight                         XREF[1]:     c745(j)  
             c75a 86 ff              LDA        #0xff
             c75c a7 3c              STA        -0x4,Y=>Player_FacingDirection_0x1a6             ; set the facing direction to FF
             c75e cc 00 36           LDD        #0x36                                            ; speed 54
-                             Jump_UpdateSpeed_X                              XREF[1]:     c758(j)  
+                             Jump_Update_RunSpeed_X                          XREF[1]:     c758(j)  
             c761 ed 22              STD        0x2,Y=>Player_SpeedX_0x1ac                       ; = ??
                              Jump_CheckButtonPress                           XREF[1]:     c739(j)  
             c763 96 52              LDA        <CurrentPlayer_0x52                              ; = ??
@@ -18432,7 +18434,7 @@
             c76c 26 5b              BNE        Player_SkipJumpSetup
                              start the jumping state
             c76e 0a 31              DEC        <Player_IsJumping_0x31                           ; set to FF
-            c770 96 2f              LDA        <Player_CantJumpAfterLandingCounter_Maybe_0x2f   ; = ??
+            c770 96 2f              LDA        <Player_CantJumpAfterLandingCounter_0x2f         ; = ??
                              don't jump if this timer isn't done
             c772 26 53              BNE        Jump_ClearIsJumpingFlag
                              setup jump physics
@@ -18441,8 +18443,8 @@
             c779 86 28              LDA        #0x28
             c77b 97 2c              STA        <Player_JumpUpInTheAirCounter_0x2c               ; = ??
             c77d 86 ff              LDA        #0xff
-            c77f 97 2e              STA        <Player_SafeLandingFromFalling_0x2e              ; = ??
-            c781 97 2d              STA        <Player_IsFalling_0x2d                           ; = ??
+            c77f 97 2e              STA        <Player_PreserveAirMomentum_0x2e                 ; = ??
+            c781 97 2d              STA        <Player_IsJumpingOrFalling_0x2d                  ; = ??
                              Jump_JumpToClimbingRopeSubroutine               XREF[1]:     UpdatePlayerSoundAndCollisionsAndPhysics:c506(j)  
             c783 7e c8 6f           JMP        Jump_SetPlayerJumpAnimationFrame
                              Jump_HandleGoingToOneHandedRope                 XREF[2]:     c7f0(j), c84c(j)  
@@ -18513,10 +18515,10 @@
             c7ee 81 14              CMPA       #InterruptHasBeenHitCounter_0x14                 ; = ??
             c7f0 22 94              BHI        Jump_HandleGoingToOneHandedRope
             c7f2 dc 1b              LDD        <ZeroValue                                       ; = ??
-            c7f4 20 03              BRA        Jump_UpdateSpeed_Y
+            c7f4 20 03              BRA        Jump_UpdateSpeed_X
                              Jump_UpdateRunLeft                              XREF[1]:     c7e5(j)  
             c7f6 cc ff ca           LDD        #0xffca                                          ; speed going left
-                             Jump_UpdateSpeed_Y                              XREF[1]:     c7f4(j)  
+                             Jump_UpdateSpeed_X                              XREF[1]:     c7f4(j)  
             c7f9 ed 22              STD        0x2,Y=>Player_SpeedX_0x1ac                       ; = ??
             c7fb 20 5c              BRA        Jump_UpdateRunAnimationFrame
                              Jump_PressingUp                                 XREF[1]:     c7d3(j)  
@@ -18601,9 +18603,9 @@
                                                                                                 ; (of left or right run animation)
                              Jump_SkipHangingAnimationFrame                  XREF[3]:     c861(j), c869(j), c86d(j)  
             c871 a7 38              STA        -0x8,Y=>Player_CurrentAnimationFrameNumber_0x1a2 ; = ??
-            c873 d6 2f              LDB        <Player_CantJumpAfterLandingCounter_Maybe_0x2f   ; = ??
+            c873 d6 2f              LDB        <Player_CantJumpAfterLandingCounter_0x2f         ; = ??
             c875 27 02              BEQ        Jump_HandleRopeDetection
-            c877 0a 2f              DEC        <Player_CantJumpAfterLandingCounter_Maybe_0x2f   ; = ??
+            c877 0a 2f              DEC        <Player_CantJumpAfterLandingCounter_0x2f         ; = ??
                              Jump_HandleRopeDetection                        XREF[6]:     c79f(j), c7a6(j), 
                                                                                           UpdatePlayerSoundAndCollisionsAndPhysics:c7ba(j), c7c4(j), 
                                                                                           c833(j), c875(j)  
@@ -18611,7 +18613,7 @@
             c87b 81 01              CMPA       #0x1                                             ; player is holding to the side of a rope
             c87d 27 78              BEQ        Jump_SkipToUpdatePlayerPhysics
                              update player when moving horizontally
-                             on a rope. 
+                             on a rope, maybe
             c87f bd c4 e7           JSR        AddOffsetToXDependingOnHorzPos                   ; char AddOffsetToXDependingOnHorzPos(void)
             c882 30 89 01 00        LEAX       0x100,X                                          ; eight pixels down. rope sensor. 
             c886 ce c5 1d           LDU        #RopeShapeLookupTable_Maybe                      ; = 0000001100000000b
@@ -18634,7 +18636,7 @@
             c8aa a7 35              STA        -0xb,Y=>Player_ClimbingRopeState_0x19f           ; = ??
             c8ac bd c5 25           JSR        ClearXAndYSpeedsToZero                           ; undefined ClearXAndYSpeedsToZero(void)
             c8af 0f 2c              CLR        <Player_JumpUpInTheAirCounter_0x2c               ; = ??
-            c8b1 0f 2e              CLR        <Player_SafeLandingFromFalling_0x2e              ; = ??
+            c8b1 0f 2e              CLR        <Player_PreserveAirMomentum_0x2e                 ; = ??
             c8b3 20 0d              BRA        UpdateClimbing                                   ; undefined UpdateClimbing(undefined A, undefined B, char * X, short * Y)
                              -- Flow Override: CALL_RETURN (CALL_TERMINATOR)
                              Jump_NotTouchingRopeOrAnything                  XREF[2]:     c896(j), c8a2(j)  
@@ -19321,9 +19323,9 @@
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall LoadPlayerPhysicsToYAndRoomDataInfoX
+                             undefined __stdcall LoadPlayerPhysicsToYAndDoorDataInfoX
              undefined         A:1            <RETURN>
-                             LoadPlayerPhysicsToYAndRoomDataInfoX            XREF[2]:     UpdatePlayerSoundAndCollisionsAndPhysics:c177(c), 
+                             LoadPlayerPhysicsToYAndDoorDataInfoX            XREF[2]:     UpdatePlayerSoundAndCollisionsAndPhysics:c177(c), 
                                                                                           FUN_ccb1:ccb4(c)  
             cca3 10 8e 01 aa        LDY        #Player_PhysicsData_0x1aa                        ; = ??
                              **************************************************************
@@ -19338,7 +19340,7 @@
             ccab 48                 LSLA
             ccac ae 86              LDX        A,X                                              ; find the right room graphics and door data
             ccae 30 02              LEAX       0x2,X                                            ; skip the graphics pointer?
-                             LAB_ccb0                                        XREF[2]:     FUN_ccb1:ccb8(j), FUN_ccb1:ccd1(j)  
+                             Jump_ReturnToSubroutine                         XREF[2]:     FUN_ccb1:ccb8(j), FUN_ccb1:ccd1(j)  
             ccb0 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -19347,20 +19349,23 @@
              undefined         A:1            <RETURN>
                              FUN_ccb1                                        XREF[1]:     UpdatePlayerSoundAndCollisionsAndPhysics:c194(c)  
             ccb1 bd cf 1d           JSR        DrawPickups                                      ; So... pickups are drawn every frame
-            ccb4 8d ed              BSR        LoadPlayerPhysicsToYAndRoomDataInfoX             ; undefined LoadPlayerPhysicsToYAndRoomDataInfoX(void)
-                             LAB_ccb6                                        XREF[1]:     cd7d(j)  
-            ccb6 a6 84              LDA        ,X
-            ccb8 27 f6              BEQ        LAB_ccb0
-            ccba e6 01              LDB        0x1,X
-            ccbc a1 24              CMPA       0x4,Y
-            ccbe 10 26 00 b8        LBNE       LAB_cd7a
-            ccc2 e1 26              CMPB       0x6,Y
-            ccc4 10 26 00 b2        LBNE       LAB_cd7a
+            ccb4 8d ed              BSR        LoadPlayerPhysicsToYAndDoorDataInfoX             ; undefined LoadPlayerPhysicsToYAndDoorDataInfoX(void)
+                             Loop_CheckDoorCollisions                        XREF[1]:     cd7d(j)  
+            ccb6 a6 84              LDA        ,X                                               ; get door Y coordinate
+            ccb8 27 f6              BEQ        Jump_ReturnToSubroutine                          ; if reached 0, finish processing doors
+                                                                                                ; we're done, go to an RTS above
+            ccba e6 01              LDB        0x1,X                                            ; get door X coordinate
+            ccbc a1 24              CMPA       0x4,Y                                            ; compare player Y coordinate with A
+            ccbe 10 26 00 b8        LBNE       Jump_MoveToNextDoorInfo                          ; no collision, move to next door
+            ccc2 e1 26              CMPB       0x6,Y                                            ; compare player X coordinate with B
+            ccc4 10 26 00 b2        LBNE       Jump_MoveToNextDoorInfo
             ccc8 ce 3e c0           LDU        #Player_DoorStateData_0x3ec0                     ; = ??
-            cccb a6 05              LDA        0x5,X
-            cccd a6 c6              LDA        A,U=>Player_DoorStateData_0x3ec0                 ; = ??
-            cccf 94 52              ANDA       <CurrentPlayer_0x52                              ; = ??
-            ccd1 27 dd              BEQ        LAB_ccb0
+            cccb a6 05              LDA        0x5,X                                            ; get the global door index from the door info
+            cccd a6 c6              LDA        A,U=>Player_DoorStateData_0x3ec0                 ; get the state of the door
+            cccf 94 52              ANDA       <CurrentPlayer_0x52                              ; check if the player activated it already
+            ccd1 27 dd              BEQ        Jump_ReturnToSubroutine                          ; if not, then return. If the door is
+                                                                                                ; active, then continue on, which will
+                                                                                                ; initialize the next room
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
@@ -19460,11 +19465,12 @@
                                                                                                 ; "Chamber"
             cd77 7e cf 0f           JMP        GetRoomDataForCurrentRoom
                              -- Flow Override: CALL_RETURN (COMPUTED_CALL_TERMINATOR)
-                             LAB_cd7a                                        XREF[2]:     ccbe(j), ccc4(j)  
-            cd7a 30                 ??         30h    0
+                             Jump_MoveToNextDoorInfo                         XREF[2]:     ccbe(j), ccc4(j)  
+            cd7a 30                 ??         30h    0                                         ; LEAX       0x6,X  - move to next door info
+                                                                                                ; 
             cd7b 88                 ??         88h
             cd7c 06                 ??         06h
-            cd7d 7e cc b6           JMP        LAB_ccb6
+            cd7d 7e cc b6           JMP        Loop_CheckDoorCollisions
             cd80 39                 RTS
                              **************************************************************
                              *                          FUNCTION                          *
@@ -19483,7 +19489,7 @@
             cd83 ec 84              LDD        ,X                                               ; load the drawing address of the door
             cd85 81 ff              CMPA       #0xff                                            ; check if the address is for the start up door? (0xffff)
             cd87 27 3e              BEQ        LOOP_AlreadyDone
-            cd89 c1 40              CMPB       #0x40                                            ; check against the door index?
+            cd89 c1 40              CMPB       #0x40                                            ; check against some x value
             cd8b 25 03              BCS        Jump_OffsetLeft
             cd8d cb 07              ADDB       #0x7                                             ; otherwise offset to the right.
                                                                                                 ; for some reason
@@ -19999,11 +20005,10 @@
             cfe1 eb 02              ADDB       0x2,X                                            ; add the horizontal position of the drop area
             cfe3 96 3a              LDA        <GameCompletionCount_0x3a                        ; = ??
             cfe5 81 03              CMPA       #0x3
-            cfe7 25 02              BCS        Jump_SkipPositionAdjustment                      ; when the player has completed the game less
-                                                                                                ; than 3 times, it adjusts horizontal positions 
-                                                                                                ; of drops to be even. Otherwise X positions are
-                                                                                                ; unaffected, which (I think) means that drops are 
-                                                                                                ; closer to the sides of vines.
+            cfe7 25 02              BCS        Jump_SkipPositionAdjustment                      ; when the player has completed the game 3 times
+                                                                                                ; or more, it adjusts horizontal positions 
+                                                                                                ; of drops to be even. This makes the drops on the
+                                                                                                ; right side of ropes to fall closer to the player.
             cfe9 c4 fe              ANDB       #11111110b                                       ; ensure X position is even when in hard mode?
                                                                                                 ; 
                              check if the drop overlaps anything, like a rope 
@@ -23188,7 +23193,7 @@
              byte              B:1            param_2
              undefined2        X:2            param_3
              undefined2        Y:2            param_4
-                             SetupJoystickBits_Maybe                         XREF[2]:     UpdateJoystick_Maybe:dc77(c), UpdateJoystick_Maybe:dcc5(c)  
+                             SetupJoystickBits_Maybe                         XREF[2]:     UpdateJoystickState:dc77(c), UpdateJoystickState:dcc5(c)  
             dc55 ce ff 01           LDU        #PIA0_A_CONTROL_REG__FF01                        ; setup left joystick maybe
             dc58 8d 00              BSR        ResetJoystickAxisBit_Maybe                       ; undefined ResetJoystickAxisBit_Maybe(undefined A, byte B, undefined2 X
                              **************************************************************
@@ -23214,9 +23219,9 @@
                              **************************************************************
                              *                          FUNCTION                          *
                              **************************************************************
-                             undefined __stdcall UpdateJoystick_Maybe(void)
+                             undefined __stdcall UpdateJoystickState(void)
              undefined         A:1            <RETURN>
-                             UpdateJoystick_Maybe                            XREF[3]:     UpdatePlayerSoundAndCollisionsAndPhysics:c110(c), 
+                             UpdateJoystickState                             XREF[3]:     UpdatePlayerSoundAndCollisionsAndPhysics:c110(c), 
                                                                                           BigInitFunction_Maybe:c6b8(c), 
                                                                                           BigInitFunction_Maybe:c734(c)  
             dc66 8d 66              BSR        DisableSound                                     ; undefined DisableSound(void)
@@ -23297,7 +23302,7 @@
                              **************************************************************
                              undefined __stdcall DisableSound(void)
              undefined         A:1            <RETURN>
-                             DisableSound                                    XREF[1]:     UpdateJoystick_Maybe:dc66(c)  
+                             DisableSound                                    XREF[1]:     UpdateJoystickState:dc66(c)  
             dcce b6 ff 23           LDA        PIA1_B_CONTROL_REG__FF23
             dcd1 84 f7              ANDA       #11110111b
                              JUMP_dcd3_Set_PIA1_B_CONTROL_REG                XREF[1]:     EnableSound:dccc(j)  
