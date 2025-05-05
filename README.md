@@ -30,4 +30,4 @@ To build downland.asm into downland.bin:
 
 ## CONTACT
 
-Send questions, comments, & bugs about Downland_C to pw32x at jump@puffweet.com
+Send questions, comments, & bugs about Downland_RE to pw32x at jump@puffweet.com
