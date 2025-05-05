@@ -28,4 +28,6 @@ To build downland.asm into downland.bin:
 - run build.bat
 - a downland.bin will be generated
 
+## CONTACT
 
+Send questions, comments, & bugs about Downland_C to pw32x at jump@puffweet.com
