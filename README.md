@@ -1,7 +1,5 @@
 # Downland_RE
- Reverse enginerring Downland for the Tandy Color Computer
-
-By pw_32x
+Reverse enginerring Downland for the Tandy Color Computer
 
 Downland is a game for the Tandy Color Computer written by Micheal Aichlmayr. It was released in 1983 by Spectral Associates.
 
@@ -30,4 +28,6 @@ To build downland.asm into downland.bin:
 - run build.bat
 - a downland.bin will be generated
 
+## CONTACT
 
+Send questions, comments, & bugs about Downland_RE to pw32x at jump@puffweet.com
